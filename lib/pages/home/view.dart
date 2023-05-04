@@ -15,11 +15,20 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
         child: Scaffold(
             body: Container(
-                margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 10),
+                      const Text(
+                        "首页",
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
                       const Text(
                         "最近观看",
                         style: TextStyle(
@@ -36,9 +45,16 @@ class _HomePageState extends State<HomePage> {
                           children: List.generate(
                             10,
                             (index) => const SizedBox(
-                              width: 300,
+                              width: 350,
                               child: Card(
-                                child: Center(child: Text("xxx")),
+                                clipBehavior: Clip.antiAlias,
+                                child: Image(
+                                  image: NetworkImage(
+                                      "https://images.weserv.nl/?url=https://artworks.thetvdb.com/banners/v4/episode/9687593/screencap/645188bf7be73.jpg"),
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
                               ),
                             ),
                           ),
@@ -59,20 +75,47 @@ class _HomePageState extends State<HomePage> {
                         shrinkWrap: true,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.7,
+                          crossAxisCount: 3,
+                          childAspectRatio: 0.6,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
                         ),
                         children: List.generate(
                           10,
                           (index) => SizedBox(
                               child: Column(
-                            children: const [
+                            // 居左
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Expanded(
-                                child: Card(
-                                  child: Center(child: Text("xxx")),
+                                child: InkWell(
+                                  child: const Card(
+                                    // 隐藏溢出的部分
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: EdgeInsets.all(0),
+                                    // 显示图片并显示圆角
+                                    child: Image(
+                                      image: NetworkImage(
+                                          "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-2WWJVXIAOG11.png"),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                  ),
+                                  onTap: () => {
+                                    // 跳转路由到详情页
+                                    Navigator.pushNamed(context, "/detail")
+                                  },
                                 ),
                               ),
-                              Text("xxx")
+                              // 文字只显示一行
+                              const SizedBox(
+                                height: 20,
+                                child: Text(
+                                  "我推的孩子",
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ],
                           )),
                         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miru_app/pages/detail/index.dart';
 import 'package:miru_app/pages/main/index.dart';
 
 void main() {
@@ -13,6 +14,9 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       home: const MainPage(),
+      routes: {
+        '/detail': (context) => const DetailPage(),
+      },
     );
   }
 }

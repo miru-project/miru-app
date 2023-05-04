@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:miru_app/pages/extension/index.dart';
 import 'package:miru_app/pages/home/index.dart';
+import 'package:miru_app/pages/search/index.dart';
+import 'package:miru_app/pages/settings/index.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -19,9 +22,9 @@ class _MainPageState extends State<MainPage> {
         index: index,
         children: const [
           HomePage(),
-          Center(child: Text("探索")),
-          Center(child: Text("扩展")),
-          Center(child: Text("设置")),
+          SearchPage(),
+          ExtensionPage(),
+          SettingsPage(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
