@@ -15,7 +15,8 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+        body: SingleChildScrollView(
+      child: Column(
         children: [
           Stack(
             children: [
@@ -32,7 +33,8 @@ class _DetailPageState extends State<DetailPage> {
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.white,
+                        // 主题背景色
+                        Theme.of(context).colorScheme.background,
                         Colors.white.withOpacity(0.1),
                       ],
                     ),
@@ -49,7 +51,7 @@ class _DetailPageState extends State<DetailPage> {
                     Card(
                       clipBehavior: Clip.antiAlias,
                       child: Image.network(
-                        "https://www.7xi.tv/upload/vod/20230413-1/e8b8a6943cfd44142b3e71b106707b32.jpg",
+                        "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx150672-2WWJVXIAOG11.png",
                         fit: BoxFit.cover,
                         width: 100,
                       ),
@@ -94,15 +96,51 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ],
           ),
-          // TabBar 和视图
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text("继续观看第三集"),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.primary),
+                        foregroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.onPrimary),
+                        // 宽度沾满
+                        minimumSize: MaterialStateProperty.all(
+                          const Size(double.infinity, 50),
+                        ),
+                      ),
+                    )),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    child: OutlinedButton.icon(
+                  icon: const Icon(Icons.favorite_border),
+                  label: const Text("收藏"),
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all(
+                      const Size(double.infinity, 50),
+                    ),
+                  ),
+                  onPressed: () {},
+                ))
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
           DefaultTabController(
             length: 3,
             child: Column(
-              children: const [
-                TabBar(
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: Colors.black,
+              children: [
+                const TabBar(
                   tabs: [
                     Tab(text: "剧集"),
                     Tab(text: "概览"),
@@ -110,20 +148,87 @@ class _DetailPageState extends State<DetailPage> {
                   ],
                 ),
                 SizedBox(
-                  height: 400,
+                  height: 1000,
                   child: TabBarView(
                     children: [
-                      Center(child: Text("剧集")),
-                      Center(child: Text("概览")),
-                      Center(child: Text("演员")),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // select 选择框
+                          Container(
+                            margin: const EdgeInsets.only(
+                                left: 20, top: 10, right: 20),
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 5, bottom: 5),
+                            decoration: BoxDecoration(
+                                // 背景颜色为 primaryContainer
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(10))),
+                            child: DropdownButton<String>(
+                              // 内容为 primary 颜色
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary),
+                              isExpanded: true,
+                              underline: const SizedBox(),
+                              value: "1",
+                              items: const [
+                                DropdownMenuItem(
+                                  value: "1",
+                                  child: Text("线路一"),
+                                ),
+                                DropdownMenuItem(
+                                  value: "2",
+                                  child: Text("线路二"),
+                                ),
+                              ],
+                              onChanged: (value) {},
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                                left: 20, top: 10, bottom: 10),
+                            child: const Text(
+                              "共12集",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          ...List.generate(
+                              12,
+                              (index) => InkWell(
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text("第${index + 1}集"),
+                                          ),
+                                          // 图标
+                                          IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(Icons.more_vert))
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {},
+                                  ))
+                        ],
+                      ),
+                      const Center(child: Text("概览")),
+                      const Center(child: Text("演员")),
                     ],
                   ),
                 )
               ],
             ),
-          ),
+          )
         ],
       ),
-    );
+    ));
   }
 }
