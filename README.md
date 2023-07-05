@@ -18,9 +18,9 @@
 ## 截图
 
 |android|||
-|---|---|---|
-|![screenshot](assets/screenshot/Screenshot_20230706-001311_Miru.png)| ![screenshot](image.png)| ![screenshot](Screenshot_20230706-001258_Miru.png)|
-|![screenshot](assets/screenshot/Screenshot_20230706-001254_Miru.png)| ![screenshot](Screenshot_20230706-001111_Miru.png)
+|  :-----: |  :-----: |  :-----: |
+|![screenshot](assets/screenshot/Screenshot_20230706-001311_Miru.png)| ![screenshot](assets/screenshot/Screenshot_20230706-001302_Miru.png)| ![screenshot](assets/screenshot/Screenshot_20230706-001258_Miru.png)|
+|![screenshot](assets/screenshot/Screenshot_20230706-001254_Miru.png)| ![screenshot](assets/screenshot/Screenshot_20230706-001111_Miru.png)
 |windows/linux|||
 |![screenshot](assets/screenshot/592023059159.png)|![screenshot](assets/screenshot/592023059259.png)|![screenshot](assets/screenshot/592023059359.png)|
 |![screenshot](assets/screenshot/592023059559.png)|![screenshot](assets/screenshot/592023059659.png)|![screenshot](assets/screenshot/592023059459.png)
