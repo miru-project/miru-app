@@ -92,13 +92,19 @@ class _SettingsPageState extends State<SettingsPage> {
           trailing: PlatformWidget(
             androidWidget: TextButton(
               onPressed: () {
-                Get.find<MainController>().checkUpdate(context);
+                Get.find<MainController>().checkUpdate(
+                  context,
+                  showSnackbar: true,
+                );
               },
               child: const Text("检查更新"),
             ),
             desktopWidget: fluent.FilledButton(
               onPressed: () {
-                Get.find<MainController>().checkUpdate(context);
+                Get.find<MainController>().checkUpdate(
+                  context,
+                  showSnackbar: true,
+                );
               },
               child: const Text("检查更新"),
             ),

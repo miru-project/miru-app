@@ -18,13 +18,14 @@ class MainController extends GetxController {
   }
 
   // 更新
-  checkUpdate(BuildContext context) async {
+  checkUpdate(BuildContext context, {bool showSnackbar = false}) async {
     try {
       // "https://api.github.com/repos/miru-project/miru-app/releases/latest"
       const url =
           "https://api.github.com/repos/miru-project/miru-app/releases/latest";
       final res = await Dio().get(url);
-      final remoteVersion = res.data["tag_name"];
+      final remoteVersion =
+          (res.data["tag_name"] as String).replaceFirst('v', '');
       if (packageInfo.version != remoteVersion) {
         if (Platform.isAndroid) {
           showDialog(
@@ -88,6 +89,10 @@ class MainController extends GetxController {
           },
         );
       } else {
+        if (!showSnackbar) {
+          return;
+        }
+
         if (Platform.isAndroid) {
           Get.rawSnackbar(
             message: '当前已是最新版本',
@@ -102,13 +107,15 @@ class MainController extends GetxController {
         });
       }
     } catch (e) {
+      if (!showSnackbar) {
+        return;
+      }
       if (Platform.isAndroid) {
         Get.rawSnackbar(
           message: '检查更新失败,网络出现异常',
         );
         return;
       }
-
       fluent.displayInfoBar(context, builder: (context, close) {
         return const fluent.InfoBar(
           title: Text('检查更新失败,网络出现异常'),
