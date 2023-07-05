@@ -8,6 +8,7 @@ import 'package:miru_app/pages/home/view.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/search/view.dart';
 import 'package:miru_app/pages/settings/view.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 import 'package:window_manager/window_manager.dart';
 
 class DesktopMainPage extends StatefulWidget {
@@ -32,6 +33,9 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
   @override
   void initState() {
     c = Get.put(MainController());
+    if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
+      c.checkUpdate(context);
+    }
     super.initState();
   }
 
@@ -150,6 +154,9 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
   @override
   void initState() {
     c = Get.put(MainController());
+    if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
+      c.checkUpdate(context);
+    }
     super.initState();
   }
 

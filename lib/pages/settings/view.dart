@@ -4,10 +4,13 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
+import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
 import 'package:miru_app/pages/settings/widgets/setting_input_tile.dart';
 import 'package:miru_app/pages/settings/widgets/setting_switch_tile.dart';
+import 'package:miru_app/pages/settings/widgets/setting_tile.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:miru_app/utils/package_info.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -79,18 +82,56 @@ class _SettingsPageState extends State<SettingsPage> {
           text: MiruStorage.getSetting(SettingKey.tmdbKay),
         ),
         const SizedBox(height: 8),
+        SettingTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.update),
+            desktopWidget: Icon(fluent.FluentIcons.update_restore, size: 24),
+          ),
+          title: "更新软件",
+          buildSubtitle: () => "当前版本: ${packageInfo.version}",
+          trailing: PlatformWidget(
+            androidWidget: TextButton(
+              onPressed: () {
+                Get.find<MainController>().checkUpdate(context);
+              },
+              child: const Text("检查更新"),
+            ),
+            desktopWidget: fluent.FilledButton(
+              onPressed: () {
+                Get.find<MainController>().checkUpdate(context);
+              },
+              child: const Text("检查更新"),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SettingSwitchTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.autorenew_sharp),
+            desktopWidget:
+                Icon(fluent.FluentIcons.auto_deploy_settings, size: 24),
+          ),
+          title: "自动检查更新",
+          buildSubtitle: () => "启动时检查更新",
+          buildValue: () => MiruStorage.getSetting(SettingKey.autoCheckUpdate),
+          onChanged: (value) {
+            MiruStorage.setSetting(SettingKey.autoCheckUpdate, value);
+          },
+        ),
+        const SizedBox(height: 8),
         if (!Platform.isAndroid)
-          Obx(
-            () => SettingSwitchTile(
+          Obx(() {
+            final value = c.extensionLogWindowId.value != -1;
+            return SettingSwitchTile(
               icon: const Icon(fluent.FluentIcons.bug),
               title: "扩展日志窗口",
               buildSubtitle: () => "用于调试扩展",
-              checked: c.extensionLogWindowId.value != -1,
+              buildValue: () => value,
               onChanged: (value) {
                 c.toggleExtensionLogWindow(value);
               },
-            ),
-          ),
+            );
+          }),
       ],
     );
   }

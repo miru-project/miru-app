@@ -10,11 +10,11 @@ class HomePageController extends GetxController {
 
   @override
   void onInit() {
-    onfresh();
+    onRefresh();
     super.onInit();
   }
 
-  onfresh() async {
+  onRefresh() async {
     resents.clear();
     favorites.clear();
     resents.addAll(

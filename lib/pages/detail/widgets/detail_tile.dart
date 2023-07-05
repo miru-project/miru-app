@@ -16,7 +16,7 @@ class DetailTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 13),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 251, 251, 251),
+        color: FluentTheme.of(context).acrylicBackgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.withOpacity(0.1), width: 1),
       ),

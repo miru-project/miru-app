@@ -9,6 +9,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/main.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/models/history.dart';
+import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/miru_directory.dart';
@@ -150,7 +151,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       coverDir,
       fileName: filename,
     );
-    DatabaseUtils.putHistory(
+    await DatabaseUtils.putHistory(
       History()
         ..url = widget.detailUrl
         ..cover = coverPath!
@@ -161,6 +162,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         ..episodeTitle = epName
         ..title = widget.title,
     );
+    await Get.find<HomePageController>().onRefresh();
   }
 
   _play() async {
@@ -582,17 +584,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
             // 播放列表
             if (showPlayList)
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  color: Colors.white,
-                  child: p.PlayList(
-                    selectIndex: playerIndex,
-                    list: widget.playList.map((e) => e.name).toList(),
-                    title: widget.title,
-                    onChange: (value) {
-                      _togglePlayIndex(index: value);
-                    },
-                  ),
+                child: p.PlayList(
+                  selectIndex: playerIndex,
+                  list: widget.playList.map((e) => e.name).toList(),
+                  title: widget.title,
+                  onChange: (value) {
+                    _togglePlayIndex(index: value);
+                  },
                 ),
               )
           ],

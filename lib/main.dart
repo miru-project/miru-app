@@ -18,6 +18,7 @@ import 'package:miru_app/pages/search/view.dart';
 import 'package:miru_app/pages/settings/view.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:miru_app/utils/package_info.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -43,6 +44,7 @@ void main(List<String> args) async {
   // 主窗口
   await MiruStorage.ensureInitialized();
   await ExtensionUtils.ensureInitialized();
+  await PackageInfoUtil.ensureInitialized();
   MediaKit.ensureInitialized();
 
   if (!Platform.isAndroid) {
@@ -77,7 +79,9 @@ class MainApp extends StatelessWidget {
     return GetMaterialApp(
       title: "Miru",
       debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.system,
       theme: ThemeData(useMaterial3: true),
+      darkTheme: ThemeData.dark(useMaterial3: true),
       home: const AndroidMainPage(),
     );
   }
@@ -87,6 +91,12 @@ class MainApp extends StatelessWidget {
       title: 'Miru',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
+      themeMode: ThemeMode.system,
+      darkTheme: fluent.FluentThemeData(
+        brightness: Brightness.dark,
+        visualDensity: VisualDensity.standard,
+        fontFamily: "Microsoft Yahei",
+      ),
       theme: fluent.FluentThemeData(
         visualDensity: VisualDensity.standard,
         fontFamily: "Microsoft Yahei",

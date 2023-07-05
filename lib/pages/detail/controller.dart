@@ -60,7 +60,7 @@ class DetailPageController extends GetxController {
       name: data.value!.title,
     );
     await refreshFavorite();
-    Get.find<HomePageController>().onfresh();
+    Get.find<HomePageController>().onRefresh();
   }
 
   goWatch(

@@ -15,34 +15,86 @@ class PlayList extends StatelessWidget {
   final int selectIndex;
   final Function(int) onChange;
 
+  Widget _buildAndroid(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      color: Theme.of(context).colorScheme.background,
+      child: ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          final contact = list[index];
+          return PlaylistAndroidTile(
+            title: contact,
+            selected: list[selectIndex] == contact,
+            onTap: () {
+              onChange(index);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDesktop(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      color: fluent.FluentTheme.of(context).micaBackgroundColor,
+      child: ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          final contact = list[index];
+          return fluent.ListTile.selectable(
+            title: Text(contact),
+            selected: list[selectIndex] == contact,
+            onSelectionChange: (value) {
+              onChange(index);
+            },
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PlatformWidget(
-        androidWidget: ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (context, index) {
-            final contact = list[index];
-            return ListTile(
-              title: Text(contact),
-              selected: list[selectIndex] == contact,
-              onTap: () {
-                onChange(index);
-              },
-            );
-          },
+    return PlatformBuildWidget(
+      androidBuilder: _buildAndroid,
+      desktopBuilder: _buildDesktop,
+    );
+  }
+}
+
+class PlaylistAndroidTile extends StatelessWidget {
+  const PlaylistAndroidTile({
+    Key? key,
+    required this.title,
+    required this.onTap,
+    required this.selected,
+  }) : super(key: key);
+  final String title;
+  final Function() onTap;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        color: selected
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.background,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            title,
+            style: TextStyle(
+              color: selected
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onBackground,
+            ),
+          ),
         ),
-        desktopWidget: ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (context, index) {
-            final contact = list[index];
-            return fluent.ListTile.selectable(
-              title: Text(contact),
-              selected: list[selectIndex] == contact,
-              onSelectionChange: (value) {
-                onChange(index);
-              },
-            );
-          },
-        ));
+      ),
+    );
   }
 }

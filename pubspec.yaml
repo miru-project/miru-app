@@ -32,6 +32,7 @@ dependencies:
   media_kit_libs_windows_video: ^1.0.2
   media_kit_native_event_loop: ^1.0.4
   media_kit_video: ^0.0.12
+  package_info_plus: ^4.0.2
   path: ^1.8.3
   path_provider: ^2.0.15
   screenshot: ^2.1.0

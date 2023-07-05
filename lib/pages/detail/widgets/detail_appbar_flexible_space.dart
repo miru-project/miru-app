@@ -58,12 +58,13 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                   colors: [
                     // 主题背景色
+                    Theme.of(context).colorScheme.background.withOpacity(0.3),
                     Theme.of(context).colorScheme.background,
-                    Colors.white.withOpacity(0.3),
+                    Theme.of(context).colorScheme.background,
                   ],
                 ),
               ),

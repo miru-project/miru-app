@@ -34,9 +34,11 @@ class _DetailBackgroundColorState extends State<DetailBackgroundColor> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color.fromARGB(scrollOffset.round(), 249, 249, 249),
-            const Color.fromARGB(255, 243, 243, 243),
-            const Color.fromARGB(255, 243, 243, 243),
+            FluentTheme.of(context).micaBackgroundColor.withOpacity(
+                  scrollOffset / 255,
+                ),
+            FluentTheme.of(context).micaBackgroundColor,
+            FluentTheme.of(context).micaBackgroundColor,
           ],
         ),
       ),

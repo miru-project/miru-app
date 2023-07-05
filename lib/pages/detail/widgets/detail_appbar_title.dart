@@ -39,7 +39,11 @@ class _DetailAppbarTitleState extends State<DetailAppbarTitle> {
     return Text(
       widget.text,
       style: TextStyle(
-        color: Colors.black.withOpacity(_scrollListener()),
+        color: Theme.of(context)
+            .textTheme
+            .bodyMedium
+            ?.color!
+            .withOpacity(_scrollListener()),
       ),
     );
   }
