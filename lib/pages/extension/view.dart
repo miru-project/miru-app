@@ -189,7 +189,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
                   children: [
                     const Text("未安装任何扩展"),
                     const SizedBox(height: 8),
-                    FilledButton(
+                    fluent.FilledButton(
                       child: const Text("扩展仓库"),
                       onPressed: () {
                         router.push('/extension_repo');

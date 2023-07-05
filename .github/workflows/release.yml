@@ -1,0 +1,134 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build
+
+# git push --tags 执行时候进行编译
+on:
+  push:
+    tags:
+      - v*
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build-and-release-android:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Flutter action
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.10.3
+          channel: stable
+      - name: Decode keystore
+        run: |
+          echo $ENCODED_KEYSTORE | base64 -di > android/app/keystore.jks
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.KEYSTORE }}
+
+      - run: flutter pub get
+      # 打包apk
+      - name: Collect Apks
+        run: flutter build apk --release --split-per-abi
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD}}
+
+      # 发布安装包
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: "build/app/outputs/flutter-apk/app-*.apk"
+      - name: Release Packages
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/flutter-apk/app-*.apk"
+          allowUpdates: true
+
+  build-and-release-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.10.3
+          channel: stable
+      - name: Install dependencies
+        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev mpv
+      - name: Install project dependencies
+        run: flutter pub get
+      - name: Generate intermediates
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Enable linux build
+        run: flutter config --enable-linux-desktop
+      - name: Build artifacts
+        run: flutter build linux --release
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: "zip"
+          filename: Miru-${{github.ref_name}}-linux.zip
+          directory: build/linux/x64/release/bundle
+      # 发布安装包
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: "build/linux/x64/release/bundle/Miru-${{github.ref_name}}-linux.zip"
+      - name: Release Packages
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/linux/x64/release/bundle/Miru-${{github.ref_name}}-linux.zip"
+          allowUpdates: true
+
+  build-and-release-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.10.3
+          channel: stable
+      - name: Install project dependencies
+        run: flutter pub get
+      - name: Generate intermediates
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Enable windows build
+        run: flutter config --enable-windows-desktop
+      - name: Build artifacts
+        run: flutter build windows --release
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: "zip"
+          filename: Miru-${{github.ref_name}}-windows.zip
+          directory: build/windows/runner/Release
+      # 发布安装包
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: "build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip"
+      - name: Release Packages
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip"
+          allowUpdates: true
+
+  generate-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
