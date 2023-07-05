@@ -121,6 +121,12 @@ jobs:
           allowUpdates: true
 
   generate-changelog:
+    needs:
+      [
+        "build-and-release-android",
+        "build-and-release-linux",
+        "build-and-release-windows",
+      ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
