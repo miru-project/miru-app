@@ -1,8 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
+import 'package:miru_app/pages/code_edit/view.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
+import 'package:miru_app/widgets/messenger.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path;
@@ -46,11 +49,40 @@ class _ExtensionTileState extends State<ExtensionTile> {
       subtitle: Text(
         '${widget.extension.version}  ${_extensionTypeToString(widget.extension.type)} ',
       ),
+      onTap: () {
+        showPlatformSnackbar(context: context, title: '😣', content: '还没写的（');
+      },
       trailing: IconButton(
         onPressed: () {
-          ExtensionUtils.uninstall(widget.extension.package);
+          // 弹出菜单
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.code),
+                    title: const Text('编辑代码'),
+                    onTap: () async {
+                      Get.back();
+                      Get.to(CodeEditPage(extension: widget.extension));
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const Text('卸载'),
+                    onTap: () {
+                      ExtensionUtils.uninstall(widget.extension.package);
+                      Get.back();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
         },
-        icon: const Icon(Icons.delete),
+        icon: const Icon(Icons.more_vert),
       ),
     );
   }
