@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/utils/package_info.dart';
+import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/messenger.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,33 +28,64 @@ class MainController extends GetxController {
       final res = await Dio().get(url);
       final remoteVersion =
           (res.data["tag_name"] as String).replaceFirst('v', '');
+      debugPrint('remoteVersion: $remoteVersion');
       if (packageInfo.version != remoteVersion) {
         if (Platform.isAndroid) {
-          showPlatformDialog(
-            context: context,
-            title: '检测到新版本$remoteVersion',
-            content: Markdown(data: res.data['body']),
-            actions: [
-              PlatformTextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text('关闭'),
+          Get.to(
+            Scaffold(
+              appBar: AppBar(
+                title: Text('检测到新版本$remoteVersion'),
               ),
-              PlatformFilledButton(
-                onPressed: () {
-                  Get.back();
-                  launchUrl(
-                    Uri.parse(res.data['html_url']),
-                    mode: LaunchMode.externalApplication,
-                  );
-                },
-                child: const Text('前往更新'),
-              )
-            ],
+              body: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Expanded(child: Markdown(data: res.data['body'])),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: PlatformFilledButton(
+                        onPressed: () {
+                          RouterUtils.pop();
+                          launchUrl(
+                            Uri.parse(res.data['html_url']),
+                            mode: LaunchMode.externalApplication,
+                          );
+                        },
+                        child: const Text('前往更新'),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            transition: Transition.rightToLeftWithFade,
           );
           return;
         }
+        showPlatformDialog(
+          context: context,
+          title: '检测到新版本$remoteVersion',
+          content: Markdown(data: res.data['body']),
+          actions: [
+            PlatformTextButton(
+              onPressed: () {
+                RouterUtils.pop();
+              },
+              child: const Text('关闭'),
+            ),
+            PlatformFilledButton(
+              onPressed: () {
+                RouterUtils.pop();
+                launchUrl(
+                  Uri.parse(res.data['html_url']),
+                  mode: LaunchMode.externalApplication,
+                );
+              },
+              child: const Text('前往更新'),
+            )
+          ],
+        );
       } else {
         if (!showSnackbar) {
           return;

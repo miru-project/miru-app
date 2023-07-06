@@ -38,6 +38,7 @@ showPlatformDialog({
       context: context,
       builder: (context) {
         return material.AlertDialog(
+          scrollable: true,
           title: Text(title),
           content: content,
           actions: actions,
