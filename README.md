@@ -15,12 +15,31 @@
 - 支持在线观看多种视频、漫画、小说源，实现多平台的统一。
 - 统一系统 UI 的设计语言
 
+## Todo
+
+- [x] Windows 支持
+- [x] Android 支持
+- [x] Linux 支持
+- [ ] 字幕
+- [ ] BT 种子播放
+- [ ] 漫画支持
+- [ ] 小说支持
+- [x] 影视支持
+- [ ] TMDB 元数据
+- [ ] 数据同步
+
 ## 截图
 
-|android|||
-|  :-----: |  :-----: |  :-----: |
-|![screenshot](assets/screenshot/Screenshot_20230706-001311_Miru.png)| ![screenshot](assets/screenshot/Screenshot_20230706-001302_Miru.png)| ![screenshot](assets/screenshot/Screenshot_20230706-001258_Miru.png)|
-|![screenshot](assets/screenshot/Screenshot_20230706-001254_Miru.png)| ![screenshot](assets/screenshot/Screenshot_20230706-001111_Miru.png)
-|windows/linux|||
-|![screenshot](assets/screenshot/592023059159.png)|![screenshot](assets/screenshot/592023059259.png)|![screenshot](assets/screenshot/592023059359.png)|
-|![screenshot](assets/screenshot/592023059559.png)|![screenshot](assets/screenshot/592023059659.png)|![screenshot](assets/screenshot/592023059459.png)
+### Android
+
+![Miru](assets/screenshot/miru-app.jpg.png)
+
+### windows/linux
+
+![Miru](assets/screenshot/miru-desktop.jpg.png)
+
+## 交流
+
+Telegram: https://t.me/MiruChat
+
+Telegram 频道: https://t.me/MiruChannel
