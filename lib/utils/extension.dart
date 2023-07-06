@@ -5,13 +5,15 @@ import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/main.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/extension/controller.dart';
 import 'package:miru_app/pages/search/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/miru_directory.dart';
+import 'package:miru_app/utils/router.dart';
+import 'package:miru_app/widgets/button.dart';
+import 'package:miru_app/widgets/messenger.dart';
 import 'package:path/path.dart' as path;
 
 class ExtensionUtils {
@@ -86,20 +88,18 @@ class ExtensionUtils {
       // 保存文件
       File(savePath).writeAsStringSync(res.data!);
     } catch (e) {
-      showDialog(
+      showPlatformDialog(
         context: context,
-        builder: (context) => ContentDialog(
-          title: const Text("安装错误"),
-          content: Text(e.toString()),
-          actions: [
-            Button(
-              child: const Text("关闭"),
-              onPressed: () {
-                router.pop();
-              },
-            )
-          ],
-        ),
+        title: "安装错误",
+        content: Text(e.toString()),
+        actions: [
+          PlatformButton(
+            child: const Text("关闭"),
+            onPressed: () {
+              RouterUtils.pop();
+            },
+          )
+        ],
       );
       rethrow;
     }

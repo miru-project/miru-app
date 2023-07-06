@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/main.dart';
 import 'package:miru_app/pages/extension/controller.dart';
 import 'package:miru_app/pages/extension/widgets/extension_tile.dart';
 import 'package:miru_app/pages/extension_repo/view.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/router.dart';
+import 'package:miru_app/widgets/button.dart';
+import 'package:miru_app/widgets/messenger.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,90 +34,121 @@ class _ExtensionPageState extends State<ExtensionPage> {
   // 导入扩展对话框
   _importDialog() {
     String url = '';
-    fluent.showDialog(
+    showPlatformDialog(
       context: context,
-      builder: (context) => fluent.ContentDialog(
-        title: const Text("导入扩展"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            fluent.TextBox(
+      title: "导入扩展",
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          PlatformWidget(
+            androidWidget: TextField(
+              decoration: const InputDecoration(
+                labelText: "扩展地址",
+                hintText: "https://example.com/extension.js",
+              ),
+              onChanged: (value) {
+                url = value;
+              },
+            ),
+            desktopWidget: fluent.TextBox(
               placeholder: "扩展地址",
               onChanged: (value) {
                 url = value;
               },
             ),
-            const SizedBox(height: 16),
-            const Row(
-              children: [
-                Icon(fluent.FluentIcons.error),
-                SizedBox(width: 8),
-                Text(
-                  "你可以通过链接导入扩展，\n或者点击下方的扩展目录，将扩展文件\n放入其中。",
-                  softWrap: true,
-                )
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          fluent.Button(
-            onPressed: () {
-              router.pop();
-            },
-            child: const Text("取消"),
           ),
-          fluent.FilledButton(
-            onPressed: () async {
-              router.pop();
-              // 定位目录
-              final dir = await ExtensionUtils.getExtensionsDir;
-              final uri = Uri.directory(dir);
-              await launchUrl(uri);
-            },
-            child: const Text("扩展目录"),
-          ),
-          fluent.FilledButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              await ExtensionUtils.install(url, context);
-            },
-            child: const Text("通过链接导入"),
+          const SizedBox(height: 16),
+          const Row(
+            children: [
+              Icon(fluent.FluentIcons.error),
+              SizedBox(width: 8),
+              Text(
+                "你可以通过链接导入扩展，\n或者点击下方的扩展目录，将扩展文件\n放入其中。",
+                softWrap: true,
+              )
+            ],
           ),
         ],
       ),
+      actions: [
+        PlatformButton(
+          onPressed: () {
+            RouterUtils.pop();
+          },
+          child: const Text("取消"),
+        ),
+        PlatformFilledButton(
+          onPressed: () async {
+            RouterUtils.pop();
+            // 定位目录
+            final dir = await ExtensionUtils.getExtensionsDir;
+            if (Platform.isAndroid) {
+              // 复制 dir
+              Clipboard.setData(ClipboardData(text: dir));
+              // ignore: use_build_context_synchronously
+              showPlatformSnackbar(
+                context: context,
+                title: '扩展目录',
+                content: '已复制到剪贴板',
+              );
+              return;
+            }
+            final uri = Uri.directory(dir);
+            await launchUrl(uri);
+          },
+          child: const Text("扩展目录"),
+        ),
+        PlatformFilledButton(
+          onPressed: () async {
+            RouterUtils.pop();
+            await ExtensionUtils.install(url, context);
+          },
+          child: const Text("通过链接导入"),
+        ),
+      ],
     );
   }
 
   // 加载错误对话框
   _loadErrorDialog() {
-    fluent.showDialog(
+    showPlatformDialog(
       context: context,
-      builder: (context) => fluent.ContentDialog(
-        title: const Text("错误信息"),
-        content: ListView(
-          shrinkWrap: true,
+      title: "错误信息",
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // 输出key 和 value
             for (final e in c.errors.entries)
-              fluent.Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  "${e.key}: ${e.value}",
+              PlatformWidget(
+                androidWidget: Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      "${e.key}: ${e.value}",
+                    ),
+                  ),
+                ),
+                desktopWidget: fluent.Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    "${e.key}: ${e.value}",
+                  ),
                 ),
               ),
           ],
         ),
-        actions: [
-          fluent.Button(
-            onPressed: () {
-              router.pop();
-            },
-            child: const Text("确定"),
-          ),
-        ],
       ),
+      actions: [
+        PlatformButton(
+          onPressed: () {
+            RouterUtils.pop();
+          },
+          child: const Text("确定"),
+        ),
+      ],
     );
   }
 
@@ -122,10 +159,27 @@ class _ExtensionPageState extends State<ExtensionPage> {
         child: Scaffold(
           appBar: AppBar(
             title: const Text("扩展"),
-            bottom: const TabBar(tabs: [
-              Tab(text: "已安装"),
-              Tab(text: "仓库"),
-            ]),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: "已安装"),
+                Tab(text: "仓库"),
+              ],
+            ),
+            actions: [
+              if (c.errors.isNotEmpty)
+                IconButton(
+                  icon: const Icon(Icons.error),
+                  onPressed: () {
+                    _loadErrorDialog();
+                  },
+                ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _importDialog();
+            },
+            child: const Icon(Icons.add),
           ),
           body: TabBarView(children: [
             ListView(
