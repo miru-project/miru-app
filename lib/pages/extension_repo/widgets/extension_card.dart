@@ -78,43 +78,39 @@ class _ExtensionCardState extends State<ExtensionCard> {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (isInstall && hasUpdate)
-            isLoading
-                ? const SizedBox(
-                    width: 25,
-                    height: 25,
-                    child: fluent.ProgressRing(),
-                  )
-                : FilledButton(
-                    child: const Text("更新"),
-                    onPressed: () async {
-                      await _install();
-                      setState(() {});
-                    }),
-          const SizedBox(width: 8),
-          if (isInstall)
-            TextButton(
-              child: const Text("卸载"),
-              onPressed: () async {
-                await ExtensionUtils.uninstall(widget.package);
-                setState(() {
-                  isInstall = false;
-                });
-              },
+          if (isLoading)
+            const SizedBox(
+              width: 25,
+              height: 25,
+              child: ProgressRing(),
             )
-          else
-            isLoading
-                ? const SizedBox(
-                    width: 25,
-                    height: 25,
-                    child: ProgressRing(),
-                  )
-                : TextButton(
-                    onPressed: () async {
-                      await _install();
-                    },
-                    child: const Text("安装"),
-                  )
+          else if (isInstall) ...[
+            if (hasUpdate)
+              FilledButton(
+                child: const Text("更新"),
+                onPressed: () async {
+                  await _install();
+                  setState(() {});
+                },
+              ),
+            const SizedBox(width: 8),
+            if (isInstall)
+              TextButton(
+                child: const Text("卸载"),
+                onPressed: () async {
+                  await ExtensionUtils.uninstall(widget.package);
+                  setState(() {
+                    isInstall = false;
+                  });
+                },
+              )
+          ] else
+            TextButton(
+              onPressed: () async {
+                await _install();
+              },
+              child: const Text("安装"),
+            )
         ],
       ),
     );
@@ -167,43 +163,39 @@ class _ExtensionCardState extends State<ExtensionCard> {
                 children: [
                   Text(widget.version, style: const TextStyle(fontSize: 12)),
                   const Spacer(),
-                  if (isInstall && hasUpdate)
-                    isLoading
-                        ? const SizedBox(
-                            width: 25,
-                            height: 25,
-                            child: fluent.ProgressRing(),
-                          )
-                        : fluent.FilledButton(
-                            child: const Text("更新"),
-                            onPressed: () async {
-                              await _install();
-                              setState(() {});
-                            }),
-                  const SizedBox(width: 8),
-                  if (isInstall)
-                    fluent.FilledButton(
-                      child: const Text("卸载"),
-                      onPressed: () async {
-                        await ExtensionUtils.uninstall(widget.package);
-                        setState(() {
-                          isInstall = false;
-                        });
-                      },
+                  if (isLoading)
+                    const SizedBox(
+                      width: 25,
+                      height: 25,
+                      child: ProgressRing(),
                     )
-                  else
-                    isLoading
-                        ? const SizedBox(
-                            width: 25,
-                            height: 25,
-                            child: ProgressRing(),
-                          )
-                        : fluent.FilledButton(
-                            onPressed: () async {
-                              await _install();
-                            },
-                            child: const Text("安装"),
-                          )
+                  else if (isInstall) ...[
+                    if (hasUpdate)
+                      fluent.FilledButton(
+                        child: const Text("更新"),
+                        onPressed: () async {
+                          await _install();
+                          setState(() {});
+                        },
+                      ),
+                    const SizedBox(width: 8),
+                    if (isInstall)
+                      fluent.FilledButton(
+                        child: const Text("卸载"),
+                        onPressed: () async {
+                          await ExtensionUtils.uninstall(widget.package);
+                          setState(() {
+                            isInstall = false;
+                          });
+                        },
+                      )
+                  ] else
+                    fluent.FilledButton(
+                      onPressed: () async {
+                        await _install();
+                      },
+                      child: const Text("安装"),
+                    )
                 ],
               ),
             ],
