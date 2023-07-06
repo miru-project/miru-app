@@ -1,10 +1,18 @@
-<img align="right" width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
+<p align="center">
+<img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
+</p>
 
-# Miru App
+<h1 align="center">
+Miru App
+</h1>
+
+<h1 align="center">
 
 [![License](https://img.shields.io/github/license/miru-project/miru-app)](https://github.com/miru-project/miru-app/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/miru-project/miru-app)](https://github.com/miru-project/miru-app/stargazers)
 [![GitHub all releases](https://img.shields.io/github/downloads/miru-project/miru-app/total)](https://github.com/miru-project/miru-app/releases/latest)
+
+</h1>
 
 ## 特性
 
