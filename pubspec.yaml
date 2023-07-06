@@ -18,6 +18,7 @@ dependencies:
   flutter_animate: ^4.1.1+1
   flutter_code_editor: ^0.3.0
   flutter_js: ^0.7.1
+  flutter_markdown: ^0.6.16
   get: ^4.6.5
   go_router: ^8.0.5
   hive: ^2.2.3

@@ -3,11 +3,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/main.dart';
 import 'package:miru_app/utils/package_info.dart';
+import 'package:miru_app/widgets/button.dart';
+import 'package:miru_app/widgets/messenger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainController extends GetxController {
@@ -28,99 +29,50 @@ class MainController extends GetxController {
           (res.data["tag_name"] as String).replaceFirst('v', '');
       if (packageInfo.version != remoteVersion) {
         if (Platform.isAndroid) {
-          showDialog(
+          showPlatformDialog(
             context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(
-                  '检测到新版本$remoteVersion',
-                  style: Get.theme.textTheme.bodyLarge,
-                ),
-                content: Text(res.data['body']),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: const Text('关闭'),
-                  ),
-                  FilledButton(
-                    onPressed: () {
-                      Get.back();
-                      launchUrl(
-                        Uri.parse(res.data['html_url']),
-                        mode: LaunchMode.externalApplication,
-                      );
-                    },
-                    child: const Text('前往更新'),
-                  )
-                ],
-              );
-            },
+            title: '检测到新版本$remoteVersion',
+            content: Markdown(data: res.data['body']),
+            actions: [
+              PlatformTextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('关闭'),
+              ),
+              PlatformFilledButton(
+                onPressed: () {
+                  Get.back();
+                  launchUrl(
+                    Uri.parse(res.data['html_url']),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                child: const Text('前往更新'),
+              )
+            ],
           );
           return;
         }
-
-        fluent.showDialog(
-          context: context,
-          builder: (context) {
-            return fluent.ContentDialog(
-              title: Text('检测到新版本$remoteVersion'),
-              content: Text(res.data['body']),
-              actions: [
-                fluent.Button(
-                  onPressed: () {
-                    router.pop();
-                  },
-                  child: const Text('关闭'),
-                ),
-                fluent.FilledButton(
-                  child: const Text('前往更新'),
-                  onPressed: () {
-                    router.pop();
-                    launchUrl(
-                      Uri.parse(res.data['html_url']),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        );
       } else {
         if (!showSnackbar) {
           return;
         }
-
-        if (Platform.isAndroid) {
-          Get.rawSnackbar(
-            message: '当前已是最新版本',
-          );
-          return;
-        }
-
-        fluent.displayInfoBar(context, builder: (context, close) {
-          return const fluent.InfoBar(
-            title: Text('当前已是最新版本'),
-          );
-        });
+        showPlatformSnackbar(
+          context: context,
+          title: '检查更新',
+          content: "当前已是最新版本",
+        );
       }
     } catch (e) {
       if (!showSnackbar) {
         return;
       }
-      if (Platform.isAndroid) {
-        Get.rawSnackbar(
-          message: '检查更新失败,网络出现异常',
-        );
-        return;
-      }
-      fluent.displayInfoBar(context, builder: (context, close) {
-        return const fluent.InfoBar(
-          title: Text('检查更新失败,网络出现异常'),
-        );
-      });
+      showPlatformSnackbar(
+        context: context,
+        title: '检查更新',
+        content: "检查更新失败,网络出现异常",
+      );
     }
   }
 }
