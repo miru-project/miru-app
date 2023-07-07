@@ -7,6 +7,8 @@ import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 import 'package:path/path.dart' as path;
 
+final Dio _dio = Dio();
+
 class CacheNetWorkImage extends StatefulWidget {
   const CacheNetWorkImage(
     this.url, {
@@ -30,8 +32,6 @@ class _CacheNetWorkImageState extends State<CacheNetWorkImage> {
   bool isloading = true;
   bool isError = false;
   String fileName = '';
-
-  final Dio _dio = Dio();
 
   @override
   void initState() {

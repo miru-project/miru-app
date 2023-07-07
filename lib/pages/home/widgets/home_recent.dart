@@ -31,11 +31,13 @@ class _HomeRecentState extends State<HomeRecent> {
       children: [
         SizedBox(
           height: 200,
-          child: ListView(
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
             controller: horizontalController,
-            children:
-                widget.data.map((e) => HomeRecentCard(history: e)).toList(),
+            itemCount: widget.data.length,
+            itemBuilder: (context, index) {
+              return HomeRecentCard(history: widget.data[index]);
+            },
           ),
         ),
       ],
@@ -73,11 +75,13 @@ class _HomeRecentState extends State<HomeRecent> {
         const SizedBox(height: 16),
         SizedBox(
           height: 200,
-          child: ListView(
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
             controller: horizontalController,
-            children:
-                widget.data.map((e) => HomeRecentCard(history: e)).toList(),
+            itemCount: widget.data.length,
+            itemBuilder: (context, index) {
+              return HomeRecentCard(history: widget.data[index]);
+            },
           ),
         ),
       ],

@@ -51,7 +51,9 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
             if (Platform.isAndroid) {
               Get.to(
                 DetailPage(
-                    url: widget.history.url, package: widget.history.package),
+                  url: widget.history.url,
+                  package: widget.history.package,
+                ),
               );
               return;
             }
@@ -98,28 +100,32 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.history.title,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              Text(
-                                "看到 ${widget.history.episodeTitle}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.history.title,
+                                  style: const TextStyle(color: Colors.white),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "看到 ${widget.history.episodeTitle}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          const Spacer(),
-                          if (update.isNotEmpty)
+                          if (update.isNotEmpty) ...[
+                            const SizedBox(width: 8),
                             Text(
                               update,
                               style: const TextStyle(color: Colors.white),
                             ),
+                          ]
                         ],
                       ),
                     ),

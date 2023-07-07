@@ -37,7 +37,7 @@ class _HomeFavoritesState extends State<HomeFavorites> {
           builder: (context, constraints) {
             final crossAxisCount =
                 constraints.maxWidth ~/ (Platform.isAndroid ? 120 : 170);
-            return GridView(
+            return GridView.builder(
               // 取消滚动
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -47,15 +47,16 @@ class _HomeFavoritesState extends State<HomeFavorites> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
-              children: widget.data
-                  .map((e) => BangumiCard(
-                        key: ValueKey(e.cover),
-                        title: e.title,
-                        url: e.url,
-                        package: e.package,
-                        cover: e.cover,
-                      ))
-                  .toList(),
+              itemCount: widget.data.length,
+              itemBuilder: (context, index) {
+                return BangumiCard(
+                  key: ValueKey(widget.data[index].cover),
+                  title: widget.data[index].title,
+                  url: widget.data[index].url,
+                  package: widget.data[index].package,
+                  cover: widget.data[index].cover,
+                );
+              },
             );
           },
         )

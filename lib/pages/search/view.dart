@@ -32,152 +32,174 @@ class _SearchPageState extends State<SearchPage> {
         appBar: AppBar(
           title: const Text("搜索"),
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: (c.runtimeList.isEmpty)
-              ? SizedBox(
-                  height: 300,
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("未安装任何扩展"),
-                      const SizedBox(height: 8),
-                      FilledButton(
-                        child: const Text("扩展仓库"),
-                        onPressed: () {
-                          Get.find<MainController>().selectedTab.value = 2;
-                        },
-                      )
-                    ],
-                  ),
-                )
-              : Column(
+        body: (c.runtimeList.isEmpty)
+            ? SizedBox(
+                height: 300,
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextField(
-                      controller: TextEditingController(text: c.search.value),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        hintText: "请善用搜索哦!~",
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                      onChanged: (value) {
-                        if (value.isEmpty) {
-                          c.search.value = '';
-                        }
+                    const Text("未安装任何扩展"),
+                    const SizedBox(height: 8),
+                    FilledButton(
+                      child: const Text("扩展仓库"),
+                      onPressed: () {
+                        Get.find<MainController>().selectedTab.value = 2;
                       },
-                      onSubmitted: (value) {
-                        c.search(value);
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      height: 60,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
+                    )
+                  ],
+                ),
+              )
+            : NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverAppBar(
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                      flexibleSpace: Column(
                         children: [
-                          ChoiceChip(
-                            avatar: const Icon(Icons.extension),
-                            label: const Text('全部'),
-                            selected: c.selectIndex.value == (-1),
-                            onSelected: (value) {
-                              if (value) {
-                                c.selectIndex.value = -1;
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          for (var i = 0; i < c.runtimeList.length; i++) ...[
-                            ChoiceChip(
-                              avatar: CacheNetWorkImage(
-                                c.runtimeList[i].extension.icon ?? '',
-                                width: 20,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: TextField(
+                              controller:
+                                  TextEditingController(text: c.search.value),
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                ),
+                                hintText: "请善用搜索哦!~",
+                                prefixIcon: Icon(Icons.search),
                               ),
-                              label: Text(c.runtimeList[i].extension.name),
-                              selected: c.selectIndex.value == i,
-                              onSelected: (value) {
-                                if (value) {
-                                  c.selectIndex.value = i;
+                              onChanged: (value) {
+                                if (value.isEmpty) {
+                                  c.search.value = '';
                                 }
                               },
+                              onSubmitted: (value) {
+                                c.search(value);
+                              },
                             ),
-                            const SizedBox(width: 8),
-                          ]
+                          ),
+                          const SizedBox(width: 8),
+                          SizedBox(
+                            height: 60,
+                            child: ListView(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                ChoiceChip(
+                                  avatar: const Icon(Icons.extension),
+                                  label: const Text('全部'),
+                                  selected: c.selectIndex.value == (-1),
+                                  onSelected: (value) {
+                                    if (value) {
+                                      c.selectIndex.value = -1;
+                                    }
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                                for (var i = 0;
+                                    i < c.runtimeList.length;
+                                    i++) ...[
+                                  ChoiceChip(
+                                    avatar: CacheNetWorkImage(
+                                      c.runtimeList[i].extension.icon ?? '',
+                                      width: 20,
+                                    ),
+                                    label:
+                                        Text(c.runtimeList[i].extension.name),
+                                    selected: c.selectIndex.value == i,
+                                    onSelected: (value) {
+                                      if (value) {
+                                        c.selectIndex.value = i;
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                ]
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 8),
+                      expandedHeight: 135,
+                      collapsedHeight: 135,
+                    )
+                  ];
+                },
+                body: Column(
+                  children: [
                     if (c.selectIndex.value == -1)
-                      SearchAllExtSearch(
-                        kw: c.search.value,
-                        runtimeList: c.runtimeList,
-                        onClickMore: (index) {
-                          c.selectIndex.value = index;
-                        },
+                      Expanded(
+                        child: SearchAllExtSearch(
+                          kw: c.search.value,
+                          runtimeList: c.runtimeList,
+                          onClickMore: (index) {
+                            c.selectIndex.value = index;
+                          },
+                        ),
                       )
                     else
-                      FutureBuilder(
-                        key: ValueKey(c.cuurentRuntime.extension.package +
-                            c.search.value),
-                        future: c.search.value.isNotEmpty
-                            ? c.cuurentRuntime.search(c.search.value, 1)
-                            : c.cuurentRuntime.latest(1),
-                        builder: ((context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(
-                              child: Text("${snapshot.error}"),
-                            );
-                          }
+                      Expanded(
+                        child: FutureBuilder(
+                          key: ValueKey(c.cuurentRuntime.extension.package +
+                              c.search.value),
+                          future: c.search.value.isNotEmpty
+                              ? c.cuurentRuntime.search(c.search.value, 1)
+                              : c.cuurentRuntime.latest(1),
+                          builder: ((context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text("${snapshot.error}"),
+                              );
+                            }
 
-                          if (!snapshot.hasData) {
-                            return const SizedBox(
-                              height: 300,
-                              child: Center(
-                                child: ProgressRing(),
+                            if (!snapshot.hasData) {
+                              return const SizedBox(
+                                height: 300,
+                                child: Center(
+                                  child: ProgressRing(),
+                                ),
+                              );
+                            }
+                            final data = snapshot.data;
+
+                            if (data != null && data.isEmpty) {
+                              return const Center(
+                                child: Text("没有数据"),
+                              );
+                            }
+                            return LayoutBuilder(
+                              builder: (context, constraints) =>
+                                  GridView.builder(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: constraints.maxWidth ~/ 120,
+                                  childAspectRatio: 0.7,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
+                                itemCount: data!.length,
+                                itemBuilder: (context, index) => BangumiCard(
+                                  key: ValueKey(data[index].url),
+                                  title: data[index].title,
+                                  url: data[index].url,
+                                  package: c.cuurentRuntime.extension.package,
+                                  cover: data[index].cover,
+                                  update: data[index].update,
+                                ),
                               ),
                             );
-                          }
-                          final data = snapshot.data;
-
-                          if (data != null && data.isEmpty) {
-                            return const Center(
-                              child: Text("没有数据"),
-                            );
-                          }
-
-                          return LayoutBuilder(
-                            builder: (context, constraints) => GridView(
-                              // 取消滚动
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: constraints.maxWidth ~/ 120,
-                                childAspectRatio: 0.7,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                              ),
-                              children: data!
-                                  .map(
-                                    (e) => BangumiCard(
-                                      title: e.title,
-                                      url: e.url,
-                                      package:
-                                          c.cuurentRuntime.extension.package,
-                                      cover: e.cover,
-                                      update: e.update,
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          );
-                        }),
+                          }),
+                        ),
                       )
                   ],
                 ),
-        ),
+              ),
       );
     });
   }
@@ -203,104 +225,115 @@ class _SearchPageState extends State<SearchPage> {
         );
       }
 
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const Row(
-              children: [
-                Text(
-                  "搜索",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: fluent.Card(
-                  child: Row(
+      return Column(
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+              child: Column(
                 children: [
-                  Expanded(
-                    flex: 3,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
+                  const Row(
+                    children: [
+                      Text(
+                        "搜索",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: fluent.Card(
+                        child: Row(
                       children: [
-                        fluent.ToggleButton(
-                          checked: c.selectIndex.value == (-1),
-                          onChanged: (b) {
-                            if (b) {
-                              c.selectIndex.value = -1;
-                            }
-                          },
-                          child: const Row(
+                        Expanded(
+                          flex: 3,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
                             children: [
-                              Text("全部"),
+                              fluent.ToggleButton(
+                                checked: c.selectIndex.value == (-1),
+                                onChanged: (b) {
+                                  if (b) {
+                                    c.selectIndex.value = -1;
+                                  }
+                                },
+                                child: const Row(
+                                  children: [
+                                    Text("全部"),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              for (var i = 0;
+                                  i < c.runtimeList.length;
+                                  i++) ...[
+                                fluent.ToggleButton(
+                                  key: ValueKey(i),
+                                  checked: c.selectIndex.value == i,
+                                  onChanged: (b) {
+                                    if (b) {
+                                      c.selectIndex.value = i;
+                                    }
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        clipBehavior: Clip.antiAlias,
+                                        child: CacheNetWorkImage(
+                                          c.runtimeList[i].extension.icon ?? '',
+                                          width: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(c.runtimeList[i].extension.name),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ]
                             ],
                           ),
                         ),
                         const SizedBox(width: 8),
-                        for (var i = 0; i < c.runtimeList.length; i++) ...[
-                          fluent.ToggleButton(
-                            key: ValueKey(i),
-                            checked: c.selectIndex.value == i,
-                            onChanged: (b) {
-                              if (b) {
-                                c.selectIndex.value = i;
+                        Expanded(
+                          child: fluent.TextBox(
+                            controller:
+                                TextEditingController(text: c.search.value),
+                            placeholder: "请善用搜索哦!~",
+                            onChanged: (value) {
+                              if (value.isEmpty) {
+                                c.search.value = '';
                               }
                             },
-                            child: Row(
-                              children: [
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: CacheNetWorkImage(
-                                    c.runtimeList[i].extension.icon ?? '',
-                                    width: 20,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(c.runtimeList[i].extension.name),
-                              ],
-                            ),
+                            onSubmitted: (value) {
+                              c.search.value = value;
+                            },
                           ),
-                          const SizedBox(width: 8),
-                        ]
+                        )
                       ],
-                    ),
+                    )),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: fluent.TextBox(
-                      controller: TextEditingController(text: c.search.value),
-                      placeholder: "请善用搜索哦!~",
-                      onChanged: (value) {
-                        if (value.isEmpty) {
-                          c.search.value = '';
-                        }
-                      },
-                      onSubmitted: (value) {
-                        c.search.value = value;
-                      },
-                    ),
-                  )
                 ],
               )),
-            ),
-            const SizedBox(height: 16),
-            if (c.selectIndex.value == -1)
-              SearchAllExtSearch(
+          const SizedBox(height: 16),
+          if (c.selectIndex.value == -1)
+            Expanded(
+              child: SearchAllExtSearch(
                 kw: c.search.value,
                 runtimeList: c.runtimeList,
                 onClickMore: (index) {
                   c.selectIndex.value = index;
                 },
-              )
-            else
-              FutureBuilder(
+              ),
+            )
+          else
+            Expanded(
+              child: FutureBuilder(
                 key: ValueKey(
                     c.cuurentRuntime.extension.package + c.search.value),
                 future: c.search.value.isNotEmpty
@@ -330,33 +363,32 @@ class _SearchPageState extends State<SearchPage> {
                   }
 
                   return LayoutBuilder(
-                    builder: (context, constraints) => GridView(
-                      // 取消滚动
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
+                    builder: (context, constraints) => GridView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: constraints.maxWidth ~/ 170,
                         childAspectRatio: 0.6,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
-                      children: data!
-                          .map(
-                            (e) => BangumiCard(
-                              title: e.title,
-                              url: e.url,
-                              package: c.cuurentRuntime.extension.package,
-                              cover: e.cover,
-                              update: e.update,
-                            ),
-                          )
-                          .toList(),
+                      itemCount: data!.length,
+                      itemBuilder: (context, index) {
+                        final item = data[index];
+                        return BangumiCard(
+                          key: ValueKey(item.url),
+                          title: item.title,
+                          url: item.url,
+                          package: c.cuurentRuntime.extension.package,
+                          cover: item.cover,
+                          update: item.update,
+                        );
+                      },
                     ),
                   );
                 }),
-              )
-          ],
-        ),
+              ),
+            )
+        ],
       );
     });
   }

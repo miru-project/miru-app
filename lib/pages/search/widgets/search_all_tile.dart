@@ -74,23 +74,24 @@ class _SearchAllTileState extends State<SearchAllTile> {
                 return const Text("无结果");
               }
 
-              return ListView(
+              return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 controller: _controller,
-                children: [
-                  for (var item in data!)
-                    Container(
-                      width: 128,
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      child: BangumiCard(
-                        title: item.title,
-                        url: item.url,
-                        package: widget.runtime.extension.package,
-                        cover: item.cover,
-                        update: item.update,
-                      ),
+                itemCount: data!.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 128,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    child: BangumiCard(
+                      key: ValueKey(data[index].url),
+                      title: data[index].title,
+                      url: data[index].url,
+                      package: widget.runtime.extension.package,
+                      cover: data[index].cover,
+                      update: data[index].update,
                     ),
-                ],
+                  );
+                },
               );
             }),
           )),
@@ -130,7 +131,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
         ),
         const SizedBox(height: 8),
         SizedBox(
-          height: 300,
+          height: 280,
           child: Center(
               child: FutureBuilder(
             key: ValueKey(widget.kw),
@@ -152,23 +153,25 @@ class _SearchAllTileState extends State<SearchAllTile> {
                 return const Text("无结果");
               }
 
-              return ListView(
+              return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 controller: _controller,
-                children: [
-                  for (var item in data!)
-                    Container(
-                      width: 170,
-                      margin: const EdgeInsets.all(8),
-                      child: BangumiCard(
-                        title: item.title,
-                        url: item.url,
-                        package: widget.runtime.extension.package,
-                        cover: item.cover,
-                        update: item.update,
-                      ),
+                itemCount: data!.length,
+                padding: const EdgeInsets.all(5),
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 170,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    child: BangumiCard(
+                      key: ValueKey(data[index].url),
+                      title: data[index].title,
+                      url: data[index].url,
+                      package: widget.runtime.extension.package,
+                      cover: data[index].cover,
+                      update: data[index].update,
                     ),
-                ],
+                  );
+                },
               );
             }),
           )),

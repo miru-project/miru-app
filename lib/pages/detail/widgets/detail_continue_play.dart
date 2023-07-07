@@ -16,15 +16,31 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
   late DetailPageController c = Get.find<DetailPageController>();
 
   Widget _buildAndroid(BuildContext context) {
+    final noEpisodes = FilledButton.icon(
+      onPressed: () {},
+      icon: const Icon(Icons.play_arrow),
+      label: const Text("无剧集"),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.grey),
+        foregroundColor: MaterialStateProperty.all(Colors.white),
+        minimumSize: MaterialStateProperty.all(
+          const Size(double.infinity, 50),
+        ),
+      ),
+    );
+
     return Obx(() {
       final history = c.history.value;
-      final data = c.data.value!;
+      final data = c.data.value;
+      if (c.isLoading.value) {
+        return noEpisodes;
+      }
       if (c.history.value != null) {
         return FilledButton.icon(
           onPressed: () {
             c.goWatch(
               context,
-              data.episodes![history.episodeGroupId].urls,
+              data!.episodes![history.episodeGroupId].urls,
               history.episodeId,
               history.episodeGroupId,
             );
@@ -38,7 +54,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
           ),
         );
       }
-      if (data.episodes != null && data.episodes!.isNotEmpty) {
+      if (data!.episodes != null && data.episodes!.isNotEmpty) {
         return FilledButton.icon(
           onPressed: () {
             c.goWatch(
@@ -57,18 +73,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
           ),
         );
       }
-      return FilledButton.icon(
-        onPressed: () {},
-        icon: const Icon(Icons.play_arrow),
-        label: const Text("无剧集"),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.grey),
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-          minimumSize: MaterialStateProperty.all(
-            const Size(double.infinity, 50),
-          ),
-        ),
-      );
+      return noEpisodes;
     });
   }
 

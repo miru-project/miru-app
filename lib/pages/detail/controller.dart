@@ -21,6 +21,7 @@ class DetailPageController extends GetxController {
   final Rx<ExtensionDetail?> data = Rx(null);
   final Rx<History?> history = Rx(null);
   final RxString error = ''.obs;
+  final RxBool isLoading = true.obs;
 
   @override
   void onInit() {
@@ -42,6 +43,7 @@ class DetailPageController extends GetxController {
           history.value = history_;
         }
       }
+      isLoading.value = false;
     } catch (e) {
       error.value = e.toString();
     }
@@ -53,6 +55,9 @@ class DetailPageController extends GetxController {
   }
 
   toggleFavorite() async {
+    if (isLoading.value) {
+      return;
+    }
     await DatabaseUtils.toggleFavorite(
       package: package,
       url: url,

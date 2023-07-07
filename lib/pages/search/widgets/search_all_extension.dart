@@ -20,17 +20,18 @@ class SearchAllExtSearch extends StatefulWidget {
 class _SearchAllExtSearchState extends State<SearchAllExtSearch> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var i = 0; i < widget.runtimeList.length; i++)
-          SearchAllTile(
-            kw: widget.kw,
-            runtime: widget.runtimeList[i],
-            onClickMore: () {
-              widget.onClickMore(i);
-            },
-          ),
-      ],
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: widget.runtimeList.length,
+      itemBuilder: (context, index) {
+        return SearchAllTile(
+          kw: widget.kw,
+          runtime: widget.runtimeList[index],
+          onClickMore: () {
+            widget.onClickMore(index);
+          },
+        );
+      },
     );
   }
 }
