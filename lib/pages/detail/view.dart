@@ -58,11 +58,6 @@ class _DetailPageState extends State<DetailPage> {
             child: Text(c.error.value),
           );
         }
-        if (c.data.value == null) {
-          return const Center(
-            child: ProgressRing(),
-          );
-        }
         return DefaultTabController(
           length: 3,
           child: NestedScrollView(
@@ -76,7 +71,7 @@ class _DetailPageState extends State<DetailPage> {
                   snap: false,
                   primary: true,
                   title: DetailAppbarTitle(
-                    c.data.value!.title,
+                    c.isLoading.value ? '' : c.data.value!.title,
                     controller: c.scrollController,
                   ),
                   flexibleSpace: const DetailAppbarflexibleSpace(),
@@ -95,13 +90,13 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.all(8),
               child: TabBarView(
                 children: [
-                  c.data.value!.episodes != null
-                      ? const DetailEpisodes()
-                      : const SizedBox.shrink(),
+                  const DetailEpisodes(),
                   SingleChildScrollView(
                     child: Column(
                       children: [
-                        SelectableText(c.data.value!.desc!),
+                        SelectableText(
+                          c.isLoading.value ? '' : c.data.value!.desc ?? '',
+                        ),
                       ],
                     ),
                   ),
@@ -124,17 +119,17 @@ class _DetailPageState extends State<DetailPage> {
           child: Text('扩展 ${widget.package} 丢失'),
         );
       }
-      if (c.data.value == null) {
-        return const Center(
-          child: ProgressRing(),
-        );
-      }
       if (c.error.value.isNotEmpty) {
         return Center(
           child: Text(c.error.value),
         );
       }
 
+      if (c.data.value == null) {
+        return const Center(
+          child: ProgressRing(),
+        );
+      }
       return Stack(
         children: [
           Animate(
@@ -151,87 +146,84 @@ class _DetailPageState extends State<DetailPage> {
           ),
           Positioned.fill(child: LayoutBuilder(
             builder: (context, constraints) {
-              return Obx(
-                () => SingleChildScrollView(
-                  controller: c.scrollController,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: constraints.maxWidth > 1200 ? 150 : 20,
-                    vertical: 16,
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 300),
-                      SizedBox(
-                        height: 330,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 230,
-                              height: double.infinity,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: CacheNetWorkImage(
-                                c.data.value!.cover,
-                              ),
+              return SingleChildScrollView(
+                controller: c.scrollController,
+                padding: EdgeInsets.symmetric(
+                  horizontal: constraints.maxWidth > 1200 ? 150 : 20,
+                  vertical: 16,
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 300),
+                    SizedBox(
+                      height: 330,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 230,
+                            height: double.infinity,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            const SizedBox(width: 30),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                SelectableText(
-                                  c.data.value!.title,
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            child: CacheNetWorkImage(
+                              c.data.value!.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 30),
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SelectableText(
+                                c.data.value!.title,
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  constraints:
-                                      const BoxConstraints(maxHeight: 100),
-                                  child: SelectableText(c.data.value!.desc!),
-                                ),
-                                const SizedBox(height: 16),
-                                const Row(
-                                  children: [
-                                    // 收藏按钮
-                                    DetailFavoriteButton(),
-                                    SizedBox(width: 8),
-                                    // Button(
-                                    //   child: const Padding(
-                                    //     padding: EdgeInsets.only(
-                                    //         left: 10,
-                                    //         right: 10,
-                                    //         top: 5,
-                                    //         bottom: 5),
-                                    //     child: Row(
-                                    //       mainAxisSize: MainAxisSize.min,
-                                    //       children: [
-                                    //         Text("TMDB"),
-                                    //         SizedBox(width: 8),
-                                    //         Icon(FluentIcons.pop_expand)
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    //   onPressed: () {},
-                                    // ),
-                                  ],
-                                )
-                              ],
-                            )),
-                          ],
-                        ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                constraints:
+                                    const BoxConstraints(maxHeight: 100),
+                                child: SelectableText(c.data.value!.desc!),
+                              ),
+                              const SizedBox(height: 16),
+                              const Row(
+                                children: [
+                                  // 收藏按钮
+                                  DetailFavoriteButton(),
+                                  SizedBox(width: 8),
+                                  // Button(
+                                  //   child: const Padding(
+                                  //     padding: EdgeInsets.only(
+                                  //         left: 10,
+                                  //         right: 10,
+                                  //         top: 5,
+                                  //         bottom: 5),
+                                  //     child: Row(
+                                  //       mainAxisSize: MainAxisSize.min,
+                                  //       children: [
+                                  //         Text("TMDB"),
+                                  //         SizedBox(width: 8),
+                                  //         Icon(FluentIcons.pop_expand)
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: () {},
+                                  // ),
+                                ],
+                              )
+                            ],
+                          )),
+                        ],
                       ),
-                      const SizedBox(height: 30),
-                      if (c.data.value!.episodes != null)
-                        const DetailEpisodes(),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 30),
+                    if (c.data.value!.episodes != null) const DetailEpisodes(),
+                    const SizedBox(height: 16),
+                  ],
                 ),
               );
             },

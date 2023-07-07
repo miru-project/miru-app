@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/pages/detail/widgets/detail_continue_play.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
@@ -18,7 +17,6 @@ class DetailAppbarflexibleSpace extends StatefulWidget {
 
 class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
   final DetailPageController c = Get.find();
-  late ExtensionDetail data = c.data.value!;
 
   double _offset = 1;
 
@@ -44,94 +42,109 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: _scrollListener(),
-      child: Stack(
-        children: [
-          CacheNetWorkImage(
-            data.cover,
-            height: 400,
-            fit: BoxFit.cover,
-            width: double.infinity,
-          ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    // 主题背景色
-                    Theme.of(context).colorScheme.background.withOpacity(0.3),
-                    Theme.of(context).colorScheme.background,
-                    Theme.of(context).colorScheme.background,
-                  ],
+    return Obx(
+      () => Opacity(
+        opacity: _scrollListener(),
+        child: Stack(
+          children: [
+            SizedBox(
+              height: 400,
+              width: double.infinity,
+              child: c.isLoading.value
+                  ? const SizedBox.shrink()
+                  : CacheNetWorkImage(
+                      c.data.value!.cover,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+            ),
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      // 主题背景色
+                      Theme.of(context).colorScheme.background.withOpacity(0.3),
+                      Theme.of(context).colorScheme.background,
+                      Theme.of(context).colorScheme.background,
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          // flex 左边封面右边标题
-          Positioned(
-            left: 20,
-            bottom: 105,
-            right: 20,
-            child: Row(
-              children: [
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: SizedBox(
-                    height: 150,
-                    width: 100,
-                    child: CacheNetWorkImage(
-                      data.cover,
+            // flex 左边封面右边标题
+            Positioned(
+              left: 20,
+              bottom: 105,
+              right: 20,
+              child: Row(
+                children: [
+                  Hero(
+                    tag: c.url,
+                    child: Card(
+                      clipBehavior: Clip.antiAlias,
+                      child: SizedBox(
+                        height: 150,
+                        width: 100,
+                        child: c.isLoading.value
+                            ? const Center(child: CircularProgressIndicator())
+                            : CacheNetWorkImage(
+                                c.data.value!.cover,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
+                  Expanded(
                     child: Container(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        data.title,
-                        softWrap: true,
-                        style: Get.theme.textTheme.titleLarge,
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            c.isLoading.value ? "" : c.data.value!.title,
+                            softWrap: true,
+                            style: Get.theme.textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            c.isLoading.value ? "" : c.data.value!.desc ?? '',
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        (data.desc ?? ''),
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const Positioned(
+              top: null,
+              left: 20,
+              right: 20,
+              bottom: 40,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: DetailContinuePlay(),
                   ),
-                ))
-              ],
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: DetailFavoriteButton(),
+                  )
+                ],
+              ),
             ),
-          ),
-          const Positioned(
-            top: null,
-            left: 20,
-            right: 20,
-            bottom: 40,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: DetailContinuePlay(),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: DetailFavoriteButton(),
-                )
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

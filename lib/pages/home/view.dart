@@ -26,20 +26,43 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Obx(
-          () => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              HomeRecent(
-                // ignore: invalid_use_of_protected_member
-                data: c.resents.value,
-              ),
-              const SizedBox(height: 16),
-              HomeFavorites(
-                // ignore: invalid_use_of_protected_member
-                data: c.favorites.value,
-              ),
-            ],
-          ),
+          () {
+            if (c.resents.isEmpty && c.favorites.isEmpty) {
+              return const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 200),
+                  Image(
+                    image: AssetImage("assets/icon/logo.png"),
+                    width: 100,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "暂无收藏和观看记录",
+                  ),
+                ],
+              );
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (c.resents.isNotEmpty) ...[
+                  HomeRecent(
+                    // ignore: invalid_use_of_protected_member
+                    data: c.resents.value,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                if (c.favorites.isNotEmpty)
+                  HomeFavorites(
+                    // ignore: invalid_use_of_protected_member
+                    data: c.favorites.value,
+                  ),
+              ],
+            );
+          },
         ),
       ),
     );

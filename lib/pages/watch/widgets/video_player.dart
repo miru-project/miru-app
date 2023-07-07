@@ -44,12 +44,14 @@ class VideoPlayer extends StatefulWidget {
 }
 
 class _VideoPlayerState extends State<VideoPlayer> {
-  late final player = Player(
-    configuration: const PlayerConfiguration(
-      vo: 'gpt',
+  late final player = Player();
+  late final controller = VideoController(
+    player,
+    configuration: const VideoControllerConfiguration(
+      vo: 'mediacodec_embed',
+      hwdec: 'mediacodec',
     ),
   );
-  late final controller = VideoController(player);
   late final ScreenshotController screenshotController = ScreenshotController();
   late int playerIndex = widget.playerIndex;
   bool isPlaying = false;
@@ -171,6 +173,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       await WakelockPlus.enable();
       final m3u8Url =
           (await widget.runtime.watch(widget.playList[playerIndex].url)).url;
+      debugPrint(m3u8Url);
       player.open(Media(m3u8Url));
       player.streams.buffering.listen((event) {
         debugPrint(event.toString());
@@ -569,7 +572,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
                             child: isFullScreen
                                 ? _playerControlPanelCenter()
                                 : DragToMoveArea(
-                                    child: _playerControlPanelCenter()),
+                                    child: _playerControlPanelCenter(),
+                                  ),
                           ),
                           if (showControl || isLoading || !isPlaying)
                             _playerControlPanel()

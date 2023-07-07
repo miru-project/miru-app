@@ -28,86 +28,91 @@ class _BangumiCardState extends State<BangumiCard> {
   bool isHover = false;
 
   Widget _buildAndroid(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: CacheNetWorkImage(
-            widget.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ),
-        Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              width: 350,
-              height: 60,
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.8),
-                  ],
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  // 文字只显示一行
-                  SizedBox(
-                    height: 20,
-                    child: Text(
-                      widget.title,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  if (widget.update != null)
-                    Text(
-                      widget.update.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                      ),
-                    ),
-                ],
-              ),
-            )),
-        Positioned.fill(
-            child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Get.to(
-                  DetailPage(
-                    url: widget.url,
-                    package: widget.package,
-                  ),
-                );
-              },
+    return Hero(
+      tag: widget.url,
+      child: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: CacheNetWorkImage(
+              widget.cover,
+              width: double.infinity,
+              height: double.infinity,
             ),
           ),
-        )),
-      ],
+          Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                width: 350,
+                height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.8),
+                    ],
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+                    // 文字只显示一行
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        widget.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    if (widget.update != null)
+                      Text(
+                        widget.update.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                      ),
+                  ],
+                ),
+              )),
+          Positioned.fill(
+              child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => DetailPage(
+                        url: widget.url,
+                        package: widget.package,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          )),
+        ],
+      ),
     );
   }
 
@@ -136,7 +141,7 @@ class _BangumiCardState extends State<BangumiCard> {
                     path: '/detail',
                     queryParameters: {
                       "url": widget.url,
-                      "package": widget.package
+                      "package": widget.package,
                     },
                   ).toString(),
                 );
