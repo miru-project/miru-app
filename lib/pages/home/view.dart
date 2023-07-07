@@ -28,20 +28,22 @@ class _HomePageState extends State<HomePage> {
         child: Obx(
           () {
             if (c.resents.isEmpty && c.favorites.isEmpty) {
-              return const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 200),
-                  Image(
-                    image: AssetImage("assets/icon/logo.png"),
-                    width: 100,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    "暂无收藏和观看记录",
-                  ),
-                ],
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 200),
+                    Image(
+                      image: AssetImage("assets/icon/logo.png"),
+                      width: 100,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      "暂无收藏和观看记录",
+                    ),
+                  ],
+                ),
               );
             }
 
