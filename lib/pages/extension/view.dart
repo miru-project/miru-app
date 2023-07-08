@@ -9,6 +9,7 @@ import 'package:miru_app/pages/extension/controller.dart';
 import 'package:miru_app/pages/extension/widgets/extension_tile.dart';
 import 'package:miru_app/pages/extension_repo/view.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/messenger.dart';
@@ -36,15 +37,15 @@ class _ExtensionPageState extends State<ExtensionPage> {
     String url = '';
     showPlatformDialog(
       context: context,
-      title: "导入扩展",
+      title: 'extension.import.title'.i18n,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PlatformWidget(
             androidWidget: TextField(
-              decoration: const InputDecoration(
-                labelText: "扩展地址",
+              decoration: InputDecoration(
+                labelText: 'extension.import.url-label'.i18n,
                 hintText: "https://example.com/extension.js",
               ),
               onChanged: (value) {
@@ -52,19 +53,19 @@ class _ExtensionPageState extends State<ExtensionPage> {
               },
             ),
             desktopWidget: fluent.TextBox(
-              placeholder: "扩展地址",
+              placeholder: 'extension.import.url-label'.i18n,
               onChanged: (value) {
                 url = value;
               },
             ),
           ),
           const SizedBox(height: 16),
-          const Row(
+          Row(
             children: [
-              Icon(fluent.FluentIcons.error),
-              SizedBox(width: 8),
+              const Icon(fluent.FluentIcons.error),
+              const SizedBox(width: 8),
               Text(
-                "你可以通过链接导入扩展，\n或者点击下方的扩展目录，将扩展文件\n放入其中。",
+                "extension.import.tips".i18n,
                 softWrap: true,
               )
             ],
@@ -76,7 +77,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
           onPressed: () {
             RouterUtils.pop();
           },
-          child: const Text("取消"),
+          child: Text('common.cancel'.i18n),
         ),
         PlatformFilledButton(
           onPressed: () async {
@@ -89,22 +90,22 @@ class _ExtensionPageState extends State<ExtensionPage> {
               // ignore: use_build_context_synchronously
               showPlatformSnackbar(
                 context: context,
-                title: '扩展目录',
-                content: '已复制到剪贴板',
+                title: 'extension.import.extension-dir'.i18n,
+                content: 'common.copied'.i18n,
               );
               return;
             }
             final uri = Uri.directory(dir);
             await launchUrl(uri);
           },
-          child: const Text("扩展目录"),
+          child: Text('extension.import.extension-dir'.i18n),
         ),
         PlatformFilledButton(
           onPressed: () async {
             RouterUtils.pop();
             await ExtensionUtils.install(url, context);
           },
-          child: const Text("通过链接导入"),
+          child: Text('extension.import.import-by-url'.i18n),
         ),
       ],
     );
@@ -114,7 +115,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
   _loadErrorDialog() {
     showPlatformDialog(
       context: context,
-      title: "错误信息",
+      title: 'extension.error-dialog'.i18n,
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -146,7 +147,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
           onPressed: () {
             RouterUtils.pop();
           },
-          child: const Text("确定"),
+          child: Text('common.confirm'.i18n),
         ),
       ],
     );
@@ -158,11 +159,11 @@ class _ExtensionPageState extends State<ExtensionPage> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("扩展"),
-            bottom: const TabBar(
+            title: Text('common.extension'.i18n),
+            bottom: TabBar(
               tabs: [
-                Tab(text: "已安装"),
-                Tab(text: "仓库"),
+                Tab(text: 'extension.installed'.i18n),
+                Tab(text: 'common.repo'.i18n),
               ],
             ),
             actions: [
@@ -185,12 +186,12 @@ class _ExtensionPageState extends State<ExtensionPage> {
             ListView(
               children: [
                 if (c.extensions.isEmpty)
-                  const SizedBox(
+                  SizedBox(
                     height: 300,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("未安装任何扩展"),
+                        Text('common.no-extension'.i18n),
                       ],
                     ),
                   ),
@@ -213,9 +214,12 @@ class _ExtensionPageState extends State<ExtensionPage> {
           children: [
             Row(
               children: [
-                const Text(
-                  "扩展",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  'common.extension'.i18n,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const Spacer(),
                 // 错误按钮
@@ -241,10 +245,12 @@ class _ExtensionPageState extends State<ExtensionPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("未安装任何扩展"),
+                    Text('common.no-extension'.i18n),
                     const SizedBox(height: 8),
                     fluent.FilledButton(
-                      child: const Text("扩展仓库"),
+                      child: Text(
+                        'common.extension-repo'.i18n,
+                      ),
                       onPressed: () {
                         router.push('/extension_repo');
                       },

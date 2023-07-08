@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
 import 'package:miru_app/pages/extension_repo/widgets/extension_card.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 
@@ -31,14 +32,14 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
           child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text("发生错误了!"),
-          const Text(
-            "请检查仓库地址是否设置正确,或者网络是否能正常联通",
-            style: TextStyle(fontSize: 12),
+          Text('extension-repo.error'.i18n),
+          Text(
+            'extension-repo.error-tips'.i18n,
+            style: const TextStyle(fontSize: 12),
           ),
           const SizedBox(height: 8),
           FilledButton(
-              child: const Text("重试"),
+              child: Text('extension-repo.retry'.i18n),
               onPressed: () {
                 c.onRefresh();
               })
@@ -46,7 +47,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
       ));
     }
     if (c.extensions.isEmpty) {
-      return const Center(child: Text("仓库为空"));
+      return Center(child: Text('extension-repo.empty'.i18n));
     }
     return PlatformBuildWidget(
       androidBuilder: (context) => ListView(
@@ -54,7 +55,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
             .map((e) => ExtensionCard(
                   key: ValueKey(e['package']),
                   name: e['name'],
-                  icon: e['icon'] ?? 'https://github.com/miru-project.png',
+                  icon: e['icon'],
                   version: e['version'],
                   package: e['package'],
                 ))
@@ -70,7 +71,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
                 .map((e) => ExtensionCard(
                       key: ValueKey(e['package']),
                       name: e['name'],
-                      icon: e['icon'] ?? 'https://github.com/miru-project.png',
+                      icon: e['icon'],
                       version: e['version'],
                       package: e['package'],
                     ))
@@ -92,16 +93,19 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
             children: [
               Row(
                 children: [
-                  const Text(
-                    "仓库",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    'common.extension-repo'.i18n,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const Spacer(),
                   SizedBox(
                     width: 200,
                     child: fluent.TextBox(
                       controller: TextEditingController(text: c.search.value),
-                      placeholder: "搜索",
+                      placeholder: 'common.search'.i18n,
                       onChanged: (value) {
                         if (value.isEmpty) {
                           c.onRefresh();

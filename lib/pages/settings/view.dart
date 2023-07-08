@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
-import 'package:miru_app/pages/settings/widgets/setting_input_tile.dart';
-import 'package:miru_app/pages/settings/widgets/setting_switch_tile.dart';
-import 'package:miru_app/pages/settings/widgets/setting_tile.dart';
+import 'package:miru_app/pages/settings/widgets/settings_input_tile.dart';
+import 'package:miru_app/pages/settings/widgets/settings_radios_tile.dart';
+import 'package:miru_app/pages/settings/widgets/settings_switch_tile.dart';
+import 'package:miru_app/pages/settings/widgets/settings_tile.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/utils/package_info.dart';
 import 'package:miru_app/widgets/button.dart';
@@ -36,9 +39,9 @@ class _SettingsPageState extends State<SettingsPage> {
     return ListView(
       children: [
         if (!Platform.isAndroid) ...[
-          const Text(
-            "设置",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            'common.settings'.i18n,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
         ],
@@ -47,10 +50,10 @@ class _SettingsPageState extends State<SettingsPage> {
             androidWidget: Icon(Icons.link),
             desktopWidget: Icon(fluent.FluentIcons.repo, size: 24),
           ),
-          title: "扩展仓库地址",
+          title: 'settings.repo-url'.i18n,
           buildSubtitle: () {
             if (!Platform.isAndroid) {
-              return "获取扩展的仓库地址";
+              return 'settings.repo-url-subtitle'.i18n;
             }
             return MiruStorage.getSetting(SettingKey.miruRepoUrl);
           },
@@ -67,14 +70,14 @@ class _SettingsPageState extends State<SettingsPage> {
             desktopWidget:
                 Icon(fluent.FluentIcons.key_phrase_extraction, size: 24),
           ),
-          title: "TMDB API Key",
+          title: 'settings.tmdb-key'.i18n,
           buildSubtitle: () {
             if (!Platform.isAndroid) {
-              return "获取TMDB API Key";
+              return 'settings.tmdb-key-subtitle'.i18n;
             }
             final key = MiruStorage.getSetting(SettingKey.tmdbKay) as String;
             if (key.isEmpty) {
-              return "未设置";
+              return 'common.unset'.i18n;
             }
             // 替换为*号
             return key.replaceAll(RegExp(r"."), '*');
@@ -85,13 +88,19 @@ class _SettingsPageState extends State<SettingsPage> {
           text: MiruStorage.getSetting(SettingKey.tmdbKay),
         ),
         const SizedBox(height: 8),
-        SettingTile(
+        SettingsTile(
           icon: const PlatformWidget(
             androidWidget: Icon(Icons.update),
             desktopWidget: Icon(fluent.FluentIcons.update_restore, size: 24),
           ),
-          title: "更新软件",
-          buildSubtitle: () => "当前版本: ${packageInfo.version}",
+          title: 'settings.upgrade'.i18n,
+          buildSubtitle: () => FlutterI18n.translate(
+            context,
+            'settings.upgrade-subtitle',
+            translationParams: {
+              'version': packageInfo.version,
+            },
+          ),
           trailing: PlatformWidget(
             androidWidget: TextButton(
               onPressed: () {
@@ -100,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   showSnackbar: true,
                 );
               },
-              child: const Text("检查更新"),
+              child: Text('settings.upgrade-training'.i18n),
             ),
             desktopWidget: fluent.FilledButton(
               onPressed: () {
@@ -109,22 +118,42 @@ class _SettingsPageState extends State<SettingsPage> {
                   showSnackbar: true,
                 );
               },
-              child: const Text("检查更新"),
+              child: Text('settings.upgrade-training'.i18n),
             ),
           ),
         ),
         const SizedBox(height: 8),
-        SettingSwitchTile(
+        SettingsSwitchTile(
           icon: const PlatformWidget(
             androidWidget: Icon(Icons.autorenew_sharp),
             desktopWidget:
                 Icon(fluent.FluentIcons.auto_deploy_settings, size: 24),
           ),
-          title: "自动检查更新",
-          buildSubtitle: () => "启动时检查更新",
+          title: 'settings.auto-check-update'.i18n,
+          buildSubtitle: () => 'settings.auto-check-update-subtitle'.i18n,
           buildValue: () => MiruStorage.getSetting(SettingKey.autoCheckUpdate),
           onChanged: (value) {
             MiruStorage.setSetting(SettingKey.autoCheckUpdate, value);
+          },
+        ),
+        const SizedBox(height: 8),
+        SettingsRadiosTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.language),
+            desktopWidget: Icon(fluent.FluentIcons.locale_language, size: 24),
+          ),
+          title: 'settings.language'.i18n,
+          itemNameValue: {
+            'languages.en'.i18n: 'en',
+            'languages.zh'.i18n: 'zh',
+          },
+          buildSubtitle: () => 'settings.language-subtitle'.i18n,
+          applyValue: (value) {
+            MiruStorage.setSetting(SettingKey.language, value);
+            I18nUtils.changeLanguage(value);
+          },
+          buildGroupValue: () {
+            return MiruStorage.getSetting(SettingKey.language);
           },
         ),
         const SizedBox(height: 8),
@@ -132,10 +161,10 @@ class _SettingsPageState extends State<SettingsPage> {
           Obx(
             () {
               final value = c.extensionLogWindowId.value != -1;
-              return SettingSwitchTile(
+              return SettingsSwitchTile(
                 icon: const Icon(fluent.FluentIcons.bug),
-                title: "扩展日志窗口",
-                buildSubtitle: () => "用于调试扩展",
+                title: 'settings.extension-log'.i18n,
+                buildSubtitle: () => 'settings.extension-log-subtitle'.i18n,
                 buildValue: () => value,
                 onChanged: (value) {
                   c.toggleExtensionLogWindow(value);
@@ -144,17 +173,17 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
         const SizedBox(height: 8),
-        const ListTitle(title: "关于"),
+        ListTitle(title: 'settings.about'.i18n),
         const SizedBox(height: 8),
-        SettingTile(
+        SettingsTile(
           icon: const PlatformWidget(
             androidWidget: Icon(Icons.web),
             desktopWidget: Icon(fluent.FluentIcons.live_site, size: 24),
           ),
-          title: '官方网站',
+          title: 'settings.official-site'.i18n,
           buildSubtitle: () => 'https://miru.js.org',
           trailing: PlatformTextButton(
-            child: const Text('打开官网'),
+            child: Text('settings.official-site-training'.i18n),
             onPressed: () {
               launchUrl(
                 Uri.parse('https://miru.js.org'),
@@ -164,15 +193,15 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
         const SizedBox(height: 8),
-        SettingTile(
+        SettingsTile(
           icon: const PlatformWidget(
             androidWidget: Icon(Icons.code),
             desktopWidget: Icon(fluent.FluentIcons.code, size: 24),
           ),
-          title: '开源',
+          title: 'settings.source-code'.i18n,
           buildSubtitle: () => 'miru-project/miru-app',
           trailing: PlatformTextButton(
-            child: const Text('前往 Star'),
+            child: Text('settings.source-code-training'.i18n),
             onPressed: () {
               launchUrl(
                 Uri.parse('https://github.com/miru-project/miru-app'),
@@ -183,10 +212,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         if (Platform.isAndroid) ...[
           const SizedBox(height: 8),
-          SettingTile(
+          SettingsTile(
             icon: const Icon(Icons.library_books),
-            title: '许可',
-            buildSubtitle: () => '许可证',
+            title: 'settings.license'.i18n,
+            buildSubtitle: () => 'settings.license-subtitle'.i18n,
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               Get.to(LicensePage(
@@ -208,7 +237,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("设置"),
+        title: Text('common.settings'.i18n),
       ),
       body: _buildContent(),
     );

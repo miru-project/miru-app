@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/code_edit/view.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/messenger.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -22,17 +23,6 @@ class _ExtensionTileState extends State<ExtensionTile> {
   final fluent.FlyoutController moreFlyoutController =
       fluent.FlyoutController();
 
-  _extensionTypeToString(ExtensionType type) {
-    switch (type) {
-      case ExtensionType.bangumi:
-        return '影视';
-      case ExtensionType.fikushon:
-        return '小说';
-      case ExtensionType.manga:
-        return '漫画';
-    }
-  }
-
   Widget _buildAndroid(BuildContext context) {
     return ListTile(
       leading: SizedBox(
@@ -47,7 +37,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
       ),
       title: Text(widget.extension.name),
       subtitle: Text(
-        '${widget.extension.version}  ${_extensionTypeToString(widget.extension.type)} ',
+        '${widget.extension.version}  ${ExtensionUtils.typeToString(widget.extension.type)} ',
       ),
       onTap: () {
         showPlatformSnackbar(context: context, title: '😣', content: '还没写的（');
@@ -63,7 +53,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.code),
-                    title: const Text('编辑代码'),
+                    title: Text('extension.edit-code'.i18n),
                     onTap: () async {
                       Get.back();
                       Get.to(CodeEditPage(extension: widget.extension));
@@ -71,7 +61,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.delete),
-                    title: const Text('卸载'),
+                    title: Text('common.uninstall'.i18n),
                     onTap: () {
                       ExtensionUtils.uninstall(widget.extension.package);
                       Get.back();
@@ -120,12 +110,15 @@ class _ExtensionTileState extends State<ExtensionTile> {
           const Spacer(),
           Text(widget.extension.version),
           const Spacer(),
-          Text(_extensionTypeToString(widget.extension.type)),
+          Text(ExtensionUtils.typeToString(widget.extension.type)),
           const Spacer(),
           fluent.Button(
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-                child: Text("设置"),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 2,
+                ),
+                child: Text('common.settings'.i18n),
               ),
               onPressed: () {
                 fluent.displayInfoBar(context, builder: (builder, colse) {
@@ -149,7 +142,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
                       items: [
                         fluent.MenuFlyoutItem(
                           leading: const Icon(fluent.FluentIcons.code),
-                          text: const Text('编辑代码'),
+                          text: Text('extension.edit-code'.i18n),
                           onPressed: () async {
                             fluent.Flyout.of(context).close();
                             // final window =
@@ -168,7 +161,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
                         ),
                         fluent.MenuFlyoutItem(
                           leading: const Icon(fluent.FluentIcons.delete),
-                          text: const Text('卸载'),
+                          text: Text('common.uninstall'.i18n),
                           onPressed: () {
                             ExtensionUtils.uninstall(widget.extension.package);
                             fluent.Flyout.of(context).close();

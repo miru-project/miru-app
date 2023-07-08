@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:miru_app/models/history.dart';
 import 'package:miru_app/pages/home/widgets/home_resent_card.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class HomeRecent extends StatefulWidget {
@@ -51,9 +52,9 @@ class _HomeRecentState extends State<HomeRecent> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "继续观看",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              "home.continue-watching".i18n,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Row(
               children: [

@@ -10,6 +10,7 @@ import 'package:miru_app/pages/extension/controller.dart';
 import 'package:miru_app/pages/search/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/button.dart';
@@ -49,7 +50,7 @@ class ExtensionUtils {
           // 如果文件名和包名不一致，抛出异常
           final ext = ExtensionUtils.parseExtension(content);
           if (path.basenameWithoutExtension(extension.path) != ext.package) {
-            throw Exception("文件名和包名不一致");
+            throw Exception("Inconsistency between file name and package name");
           }
           exts[ext.package] = await ExtensionRuntime().initRuntime(ext);
         } catch (e) {
@@ -81,7 +82,7 @@ class ExtensionUtils {
     try {
       final res = await Dio().get<String>(url);
       if (res.data == null) {
-        throw Exception("似乎不是扩展");
+        throw Exception("Does not seem to be an extension");
       }
       final ext = ExtensionUtils.parseExtension(res.data!);
       final savePath = path.join(await getExtensionsDir, '${ext.package}.js');
@@ -90,11 +91,11 @@ class ExtensionUtils {
     } catch (e) {
       showPlatformDialog(
         context: context,
-        title: "安装错误",
+        title: 'extension-install-error'.i18n,
         content: Text(e.toString()),
         actions: [
           PlatformButton(
-            child: const Text("关闭"),
+            child: Text('common.close'.i18n),
             onPressed: () {
               RouterUtils.pop();
             },
@@ -102,6 +103,17 @@ class ExtensionUtils {
         ],
       );
       rethrow;
+    }
+  }
+
+  static String typeToString(ExtensionType type) {
+    switch (type) {
+      case ExtensionType.bangumi:
+        return 'extension-type.video'.i18n;
+      case ExtensionType.fikushon:
+        return 'extension-type.novel'.i18n;
+      case ExtensionType.manga:
+        return 'extension-type.comics'.i18n;
     }
   }
 

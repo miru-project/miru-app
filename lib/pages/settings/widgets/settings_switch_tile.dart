@@ -1,10 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
-import 'package:miru_app/pages/settings/widgets/setting_tile.dart';
+import 'package:miru_app/pages/settings/widgets/settings_tile.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
-class SettingSwitchTile extends fluent.StatefulWidget {
-  const SettingSwitchTile({
+class SettingsSwitchTile extends fluent.StatefulWidget {
+  const SettingsSwitchTile({
     Key? key,
     required this.icon,
     required this.title,
@@ -19,13 +19,13 @@ class SettingSwitchTile extends fluent.StatefulWidget {
   final Function(bool) onChanged;
 
   @override
-  fluent.State<SettingSwitchTile> createState() => _SettingSwitchTileState();
+  fluent.State<SettingsSwitchTile> createState() => _SettingsSwitchTileState();
 }
 
-class _SettingSwitchTileState extends fluent.State<SettingSwitchTile> {
+class _SettingsSwitchTileState extends fluent.State<SettingsSwitchTile> {
   @override
   Widget build(BuildContext context) {
-    return SettingTile(
+    return SettingsTile(
       icon: widget.icon,
       title: widget.title,
       buildSubtitle: widget.buildSubtitle,

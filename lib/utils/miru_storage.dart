@@ -25,6 +25,7 @@ class MiruStorage {
     await _initSetting(SettingKey.miruRepoUrl, "https://miru-repo.0n0.dev");
     await _initSetting(SettingKey.tmdbKay, "");
     await _initSetting(SettingKey.autoCheckUpdate, true);
+    await _initSetting(SettingKey.language, 'en');
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -46,4 +47,5 @@ class SettingKey {
   static String miruRepoUrl = "MiruRepoUrl";
   static String tmdbKay = 'TMDBKey';
   static String autoCheckUpdate = 'AutoCheckUpdate';
+  static String language = 'Language';
 }

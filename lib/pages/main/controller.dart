@@ -4,8 +4,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/package_info.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/button.dart';
@@ -34,7 +36,13 @@ class MainController extends GetxController {
           Get.to(
             Scaffold(
               appBar: AppBar(
-                title: Text('检测到新版本$remoteVersion'),
+                title: Text(FlutterI18n.translate(
+                  context,
+                  'upgrate.new-version',
+                  translationParams: {
+                    'version': remoteVersion,
+                  },
+                )),
               ),
               body: Padding(
                 padding: const EdgeInsets.all(16),
@@ -52,7 +60,7 @@ class MainController extends GetxController {
                             mode: LaunchMode.externalApplication,
                           );
                         },
-                        child: const Text('前往更新'),
+                        child: Text('upgrade.download'.i18n),
                       ),
                     )
                   ],
@@ -65,14 +73,20 @@ class MainController extends GetxController {
         }
         showPlatformDialog(
           context: context,
-          title: '检测到新版本$remoteVersion',
+          title: FlutterI18n.translate(
+            context,
+            'upgrate.new-version',
+            translationParams: {
+              'version': remoteVersion,
+            },
+          ),
           content: Markdown(data: res.data['body']),
           actions: [
             PlatformTextButton(
               onPressed: () {
                 RouterUtils.pop();
               },
-              child: const Text('关闭'),
+              child: Text('common.not-now'.i18n),
             ),
             PlatformFilledButton(
               onPressed: () {
@@ -82,7 +96,7 @@ class MainController extends GetxController {
                   mode: LaunchMode.externalApplication,
                 );
               },
-              child: const Text('前往更新'),
+              child: Text('upgrade.download'.i18n),
             )
           ],
         );
@@ -92,8 +106,8 @@ class MainController extends GetxController {
         }
         showPlatformSnackbar(
           context: context,
-          title: '检查更新',
-          content: "当前已是最新版本",
+          title: 'upgrade.check-update'.i18n,
+          content: "upgrade.no-update".i18n,
         );
       }
     } catch (e) {
@@ -102,8 +116,8 @@ class MainController extends GetxController {
       }
       showPlatformSnackbar(
         context: context,
-        title: '检查更新',
-        content: "检查更新失败,网络出现异常",
+        title: 'upgrade.check-update'.i18n,
+        content: 'upgrade.error'.i18n,
       );
     }
   }

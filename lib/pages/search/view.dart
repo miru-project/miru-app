@@ -5,6 +5,7 @@ import 'package:miru_app/main.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/search/controller.dart';
 import 'package:miru_app/pages/search/widgets/search_all_extension.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/bangumi_card.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -30,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("搜索"),
+          title: Text('common.search'.i18n),
         ),
         body: (c.runtimeList.isEmpty)
             ? SizedBox(
@@ -39,10 +40,10 @@ class _SearchPageState extends State<SearchPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("未安装任何扩展"),
+                    Text('common.no-extension'.i18n),
                     const SizedBox(height: 8),
                     FilledButton(
-                      child: const Text("扩展仓库"),
+                      child: Text("common.extension-repo".i18n),
                       onPressed: () {
                         Get.find<MainController>().selectedTab.value = 2;
                       },
@@ -62,13 +63,13 @@ class _SearchPageState extends State<SearchPage> {
                             child: TextField(
                               controller:
                                   TextEditingController(text: c.search.value),
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20)),
                                 ),
-                                hintText: "请善用搜索哦!~",
-                                prefixIcon: Icon(Icons.search),
+                                hintText: "search.hint-text".i18n,
+                                prefixIcon: const Icon(Icons.search),
                               ),
                               onChanged: (value) {
                                 if (value.isEmpty) {
@@ -90,7 +91,7 @@ class _SearchPageState extends State<SearchPage> {
                               children: [
                                 ChoiceChip(
                                   avatar: const Icon(Icons.extension),
-                                  label: const Text('全部'),
+                                  label: Text('search.all'.i18n),
                                   selected: c.selectIndex.value == (-1),
                                   onSelected: (value) {
                                     if (value) {
@@ -167,8 +168,8 @@ class _SearchPageState extends State<SearchPage> {
                             final data = snapshot.data;
 
                             if (data != null && data.isEmpty) {
-                              return const Center(
-                                child: Text("没有数据"),
+                              return Center(
+                                child: Text("common.no-result".i18n),
                               );
                             }
                             return LayoutBuilder(
@@ -212,10 +213,10 @@ class _SearchPageState extends State<SearchPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("未安装任何扩展"),
+              Text('common.no-extension'.i18n),
               const SizedBox(height: 8),
               fluent.FilledButton(
-                child: const Text("扩展仓库"),
+                child: Text("common.extension-repo".i18n),
                 onPressed: () {
                   router.push('/extension_repo');
                 },
@@ -259,9 +260,9 @@ class _SearchPageState extends State<SearchPage> {
                                     c.selectIndex.value = -1;
                                   }
                                 },
-                                child: const Row(
+                                child: Row(
                                   children: [
-                                    Text("全部"),
+                                    Text("search.all".i18n),
                                   ],
                                 ),
                               ),
@@ -304,7 +305,7 @@ class _SearchPageState extends State<SearchPage> {
                           child: fluent.TextBox(
                             controller:
                                 TextEditingController(text: c.search.value),
-                            placeholder: "请善用搜索哦!~",
+                            placeholder: "search.hint-text".i18n,
                             onChanged: (value) {
                               if (value.isEmpty) {
                                 c.search.value = '';
@@ -357,8 +358,8 @@ class _SearchPageState extends State<SearchPage> {
                   final data = snapshot.data;
 
                   if (data != null && data.isEmpty) {
-                    return const Center(
-                      child: Text("没有数据"),
+                    return Center(
+                      child: Text('common.no-result'.i18n),
                     );
                   }
 

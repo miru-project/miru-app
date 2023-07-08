@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_flexible_space.dart';
@@ -8,6 +9,7 @@ import 'package:miru_app/pages/detail/widgets/detail_background_color.dart';
 import 'package:miru_app/pages/detail/widgets/detail_episodes.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
@@ -47,7 +49,13 @@ class _DetailPageState extends State<DetailPage> {
     if (!ExtensionUtils.extensions.containsKey(widget.package)) {
       return Scaffold(
         body: Center(
-          child: Text('扩展 ${widget.package} 丢失'),
+          child: Text(FlutterI18n.translate(
+            context,
+            'common.extension-missing',
+            translationParams: {
+              'package': widget.package,
+            },
+          )),
         ),
       );
     }
@@ -75,11 +83,11 @@ class _DetailPageState extends State<DetailPage> {
                     controller: c.scrollController,
                   ),
                   flexibleSpace: const DetailAppbarflexibleSpace(),
-                  bottom: const TabBar(
+                  bottom: TabBar(
                     tabs: [
-                      Tab(text: "剧集"),
-                      Tab(text: "概览"),
-                      Tab(text: "演员"),
+                      Tab(text: 'detail.episodes'.i18n),
+                      Tab(text: 'detail.overview'.i18n),
+                      Tab(text: 'detail.cast'.i18n),
                     ],
                   ),
                   expandedHeight: 400,
@@ -116,7 +124,15 @@ class _DetailPageState extends State<DetailPage> {
     return Obx(() {
       if (!ExtensionUtils.extensions.containsKey(widget.package)) {
         return Center(
-          child: Text('扩展 ${widget.package} 丢失'),
+          child: Text(
+            FlutterI18n.translate(
+              context,
+              'common.extension-missing',
+              translationParams: {
+                'package': widget.package,
+              },
+            ),
+          ),
         );
       }
       if (c.error.value.isNotEmpty) {

@@ -1,7 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/detail/controller.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class DetailContinuePlay extends StatefulWidget {
@@ -19,7 +21,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
     final noEpisodes = FilledButton.icon(
       onPressed: () {},
       icon: const Icon(Icons.play_arrow),
-      label: const Text("无剧集"),
+      label: Text('detail.no-episodes'.i18n),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.grey),
         foregroundColor: MaterialStateProperty.all(Colors.white),
@@ -46,7 +48,15 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
             );
           },
           icon: const Icon(Icons.play_arrow),
-          label: Text("继续观看 ${history!.episodeTitle}"),
+          label: Text(
+            FlutterI18n.translate(
+              context,
+              'detail.continue-watching',
+              translationParams: {
+                'episode': history!.episodeTitle,
+              },
+            ),
+          ),
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(
               const Size(double.infinity, 50),
@@ -65,7 +75,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
             );
           },
           icon: const Icon(Icons.play_arrow),
-          label: const Text("立即观看"),
+          label: Text('detail.watch-now'.i18n),
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(
               const Size(double.infinity, 50),
@@ -95,7 +105,15 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
             children: [
               const Icon(fluent.FluentIcons.play),
               const SizedBox(width: 5),
-              Text("继续观看 ${history.episodeTitle}")
+              Text(
+                FlutterI18n.translate(
+                  context,
+                  'detail.continue-watching',
+                  translationParams: {
+                    'episode': history.episodeTitle,
+                  },
+                ),
+              )
             ],
           ),
         );

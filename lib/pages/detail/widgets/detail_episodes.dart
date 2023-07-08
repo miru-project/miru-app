@@ -1,10 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/pages/detail/widgets/detail_continue_play.dart';
 import 'package:miru_app/pages/detail/widgets/detail_tile.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class DetailEpisodes extends StatefulWidget {
@@ -55,7 +57,13 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
           Container(
             margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
             child: Text(
-              "共 ${episodes[selectEpGroup].urls.length} 集",
+              FlutterI18n.translate(
+                context,
+                'detail.total-episodes',
+                translationParams: {
+                  'total': episodes[selectEpGroup].urls.length.toString(),
+                },
+              ),
               style: const TextStyle(
                 fontSize: 18,
               ),
@@ -87,7 +95,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
 
   Widget _buildDesktopEpisodes(BuildContext context) {
     return DetailTile(
-        title: "剧集",
+        title: 'detail.episodes'.i18n,
         trailing: Row(
           children: [
             const DetailContinuePlay(),

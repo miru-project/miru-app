@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:miru_app/models/favorite.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/bangumi_card.dart';
 
 class HomeFavorites extends StatefulWidget {
@@ -20,11 +21,13 @@ class _HomeFavoritesState extends State<HomeFavorites> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("收藏",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(
+              "home.favorite".i18n,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             // IconButton(
             //     icon: const Icon(FluentIcons.filter),
             //     onPressed: () {

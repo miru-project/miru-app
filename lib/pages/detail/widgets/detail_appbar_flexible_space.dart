@@ -131,13 +131,14 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: DetailContinuePlay(),
                   ),
                   SizedBox(
                     width: 10,
                   ),
                   Expanded(
+                    flex: 3,
                     child: DetailFavoriteButton(),
                   )
                 ],

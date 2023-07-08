@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
-import 'package:miru_app/pages/settings/widgets/setting_tile.dart';
+import 'package:miru_app/pages/settings/widgets/settings_tile.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class SettingsIntpuTile extends fluent.StatefulWidget {
@@ -46,7 +47,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text("完成"),
+                  child: Text('common.confirm'.i18n),
                 ),
               ],
             );
@@ -57,7 +58,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return SettingTile(
+    return SettingsTile(
       icon: widget.icon,
       title: widget.title,
       buildSubtitle: widget.buildSubtitle,

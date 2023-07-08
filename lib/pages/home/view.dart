@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/pages/home/widgets/home_favorites.dart';
 import 'package:miru_app/pages/home/widgets/home_recent.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,19 +29,19 @@ class _HomePageState extends State<HomePage> {
         child: Obx(
           () {
             if (c.resents.isEmpty && c.favorites.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 200),
-                    Image(
+                    const SizedBox(height: 200),
+                    const Image(
                       image: AssetImage("assets/icon/logo.png"),
                       width: 100,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
-                      "暂无收藏和观看记录",
+                      "no record".i18n,
                     ),
                   ],
                 ),
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildAndroidHome(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("首页"),
+        title: Text("common.home".i18n),
       ),
       body: _buildContent(),
     );

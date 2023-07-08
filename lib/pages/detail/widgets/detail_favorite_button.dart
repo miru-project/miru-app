@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/detail/controller.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class DetailFavoriteButton extends StatefulWidget {
@@ -21,7 +22,9 @@ class _DetailFavoriteButtonState extends State<DetailFavoriteButton> {
         final isFavorite = c.isFavorite.value;
         return OutlinedButton.icon(
           icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-          label: Text(isFavorite ? "已收藏" : "收藏"),
+          label: Text(
+            isFavorite ? 'detail.favorited'.i18n : 'detail.favorite'.i18n,
+          ),
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(
               const Size(double.infinity, 50),
@@ -56,15 +59,15 @@ class _DetailFavoriteButtonState extends State<DetailFavoriteButton> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: isFavorite
-                ? const [
-                    Text("已收藏"),
-                    SizedBox(width: 8),
-                    Icon(fluent.FluentIcons.favorite_star_fill)
+                ? [
+                    Text('detail.favorited'.i18n),
+                    const SizedBox(width: 8),
+                    const Icon(fluent.FluentIcons.favorite_star_fill)
                   ]
-                : const [
-                    Text("收藏"),
-                    SizedBox(width: 8),
-                    Icon(fluent.FluentIcons.favorite_star)
+                : [
+                    Text('detail.favorite'.i18n),
+                    const SizedBox(width: 8),
+                    const Icon(fluent.FluentIcons.favorite_star)
                   ],
           ),
         ),

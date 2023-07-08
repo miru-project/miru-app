@@ -2,8 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
-class SettingTile extends StatefulWidget {
-  const SettingTile({
+class SettingsTile extends StatefulWidget {
+  const SettingsTile({
     Key? key,
     required this.icon,
     required this.title,
@@ -18,10 +18,10 @@ class SettingTile extends StatefulWidget {
   final Widget? trailing;
 
   @override
-  State<SettingTile> createState() => _SettingTileState();
+  State<SettingsTile> createState() => _SettingsTileState();
 }
 
-class _SettingTileState extends State<SettingTile> {
+class _SettingsTileState extends State<SettingsTile> {
   Widget _buildAndroid(BuildContext context) {
     return ListTile(
       leading: widget.icon,

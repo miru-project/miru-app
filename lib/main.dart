@@ -17,6 +17,7 @@ import 'package:miru_app/pages/main/view.dart';
 import 'package:miru_app/pages/search/view.dart';
 import 'package:miru_app/pages/settings/view.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/utils/package_info.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -83,6 +84,9 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
       home: const AndroidMainPage(),
+      localizationsDelegates: [
+        I18nUtils.flutterI18nDelegate,
+      ],
     );
   }
 
@@ -101,6 +105,9 @@ class MainApp extends StatelessWidget {
         visualDensity: VisualDensity.standard,
         fontFamily: "Microsoft Yahei",
       ),
+      localizationsDelegates: [
+        I18nUtils.flutterI18nDelegate,
+      ],
     );
   }
 

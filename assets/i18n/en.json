@@ -1,0 +1,111 @@
+{
+  "common": {
+    "home": "Home",
+    "search": "Search",
+    "extension": "Extensions",
+    "extension-repo": "Extension Repository",
+    "settings": "Settings",
+    "no-extension": "No installed extensions",
+    "no-result": "No relevant results",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "copied": "Copied to clipboard",
+    "uninstall": "Uninstall",
+    "install": "Install",
+    "repo": "Repository",
+    "unset": "Not set",
+    "extension-missing": "Extension {package} missing",
+    "error": "Error"
+  },
+
+  "home": {
+    "continue-watching": "Continue Watching",
+    "favorite": "Favorite",
+    "no-record": "No favorites or viewing records"
+  },
+
+  "search": {
+    "hint-text": "Please use search wisely!~",
+    "all": "All"
+  },
+
+  "extension": {
+    "import": {
+      "title": "Import Extension",
+      "url-label": "Extension URL",
+      "tips": "You can import extensions through a link,\nor click on the extension directory below\nand place the extension file there.",
+      "extension-dir": "Extension Directory",
+      "import-by-url": "Import by URL"
+    },
+    "error-dialog": "Error Message",
+    "installed": "Installed",
+    "edit-code": "Edit Code"
+  },
+
+  "extension-repo": {
+    "error": "An error occurred!",
+    "error-tips": "Please check your network connection\nor the repository address",
+    "retry": "Retry",
+    "empty": "Repository is empty",
+    "upgrade": "Update"
+  },
+
+  "settings": {
+    "repo-url": "Extension Repository URL",
+    "repo-url-subtitle": "Get the repository URL for extensions",
+    "tmdb-key": "TMDB API Key",
+    "tmdb-key-subtitle": "Get API Key for TMDB metadata",
+    "upgrade": "Update Software",
+    "upgrade-subtitle": "version: {version}",
+    "upgrade-training": "Check for Updates",
+    "auto-check-update": "Automatically Check for Updates",
+    "auto-check-update-subtitle": "Check for updates on each startup",
+    "language": "Language",
+    "language-subtitle": "Change the language of the software",
+    "extension-log": "Extension Log Window",
+    "extension-log-subtitle": "Used for debugging extensions",
+    "about": "About",
+    "official-site": "Official Website",
+    "official-site-training": "Visit the official website",
+    "source-code": "Open Source",
+    "source-code-training": "Go to Star",
+    "license": "License",
+    "license-subtitle": "License"
+  },
+
+  "detail": {
+    "favorite": "Favorite",
+    "favorited": "Favorited",
+    "episodes": "Episodes",
+    "no-episodes": "No episodes available",
+    "continue-watching": "Continue watching {episode}",
+    "watch-now": "Watch Now",
+    "total-episodes": "Total {total} episodes",
+    "overview": "Overview",
+    "cast": "Cast"
+  },
+
+  "video": {
+    "already-first": "Already on the first episode",
+    "already-last": "Already on the last episode",
+    "play-complete": "Playback complete"
+  },
+
+  "upgrade": {
+    "check-update": "Check for Updates",
+    "new-version": "New version {version} detected",
+    "download": "Go to Update",
+    "no-update": "Already up to date",
+    "not-now": "Not now",
+    "error": "Failed to check for updates, network error occurred"
+  },
+
+  "extension-install-error": "Failed to install extension",
+
+  "extension-type": {
+    "video": "Video",
+    "novel": "Novel",
+    "comics": "Comics"
+  }
+}

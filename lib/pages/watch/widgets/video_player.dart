@@ -12,6 +12,7 @@ import 'package:miru_app/models/history.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
@@ -45,10 +46,7 @@ class VideoPlayer extends StatefulWidget {
 
 class _VideoPlayerState extends State<VideoPlayer> {
   late final player = Player();
-  late final controller = VideoController(
-    player,
-    configuration: const VideoControllerConfiguration(),
-  );
+  late final controller = VideoController(player);
   late final ScreenshotController screenshotController = ScreenshotController();
   late int playerIndex = widget.playerIndex;
   bool isPlaying = false;
@@ -99,13 +97,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
     player.streams.completed.listen((event) {
       if (playerIndex == widget.playList.length - 1) {
         if (Platform.isAndroid) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("播放完毕"),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('video.play-complete'.i18n),
           ));
           return;
         }
         fluent.displayInfoBar(context, builder: ((context, close) {
-          return const fluent.InfoBar(title: Text("播放完毕"));
+          return fluent.InfoBar(title: Text('video.play-complete'.i18n));
         }));
         return;
       }
@@ -289,8 +287,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
               ),
               onPressed: () {
                 if (playerIndex == 0) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("当前是第一集"),
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('video.already-first'.i18n),
                   ));
                   return;
                 }
@@ -315,8 +313,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
               ),
               onPressed: () {
                 if (playerIndex == widget.playList.length - 1) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("当前最后一集"),
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('video.already-last'.i18n),
                   ));
                   return;
                 }
@@ -380,7 +378,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
             onPressed: () {
               if (playerIndex == 0) {
                 fluent.displayInfoBar(context, builder: ((context, close) {
-                  return const fluent.InfoBar(title: Text("当前是第一集"));
+                  return fluent.InfoBar(
+                      title: Text('video.already-first'.i18n));
                 }));
                 return;
               }
@@ -399,7 +398,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
             onPressed: () {
               if (playerIndex == widget.playList.length - 1) {
                 fluent.displayInfoBar(context, builder: ((context, close) {
-                  return const fluent.InfoBar(title: Text("当前是最后一集"));
+                  return fluent.InfoBar(title: Text('video.already-last'.i18n));
                 }));
                 return;
               }

@@ -8,6 +8,7 @@ import 'package:miru_app/pages/home/view.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/search/view.dart';
 import 'package:miru_app/pages/settings/view.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -89,7 +90,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
               fluent.PaneItemSeparator(),
               fluent.PaneItem(
                 icon: const Icon(fluent.FluentIcons.repo),
-                title: const Text('扩展仓库'),
+                title: Text('common.extension-repo'.i18n),
                 body: const ExtensionPage(),
                 onTap: () {
                   router.go('/extension_repo');
@@ -97,7 +98,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
               ),
               fluent.PaneItem(
                 icon: const Icon(fluent.FluentIcons.settings),
-                title: const Text('设置'),
+                title: Text('common.settings'.i18n),
                 body: const SettingsPage(),
                 onTap: () {
                   router.go('/settings');
@@ -107,7 +108,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
             items: [
               fluent.PaneItem(
                 icon: const Icon(fluent.FluentIcons.home),
-                title: const Text('首页'),
+                title: Text('common.home'.i18n),
                 body: const HomePage(),
                 onTap: () {
                   router.go('/');
@@ -115,7 +116,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
               ),
               fluent.PaneItem(
                 icon: const Icon(fluent.FluentIcons.search),
-                title: const Text('搜索'),
+                title: Text('common.search'.i18n),
                 body: const SearchPage(),
                 onTap: () {
                   router.go('/search');
@@ -123,7 +124,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
               ),
               fluent.PaneItem(
                 icon: const Icon(fluent.FluentIcons.add_in),
-                title: const Text('扩展'),
+                title: Text('common.extension'.i18n),
                 body: const ExtensionPage(),
                 onTap: () {
                   router.go('/extension');
@@ -165,26 +166,26 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
     return Obx(() => Scaffold(
           body: pages[c.selectedTab.value],
           bottomNavigationBar: NavigationBar(
-            destinations: const [
+            destinations: [
               NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
-                label: "首页",
+                icon: const Icon(Icons.home_outlined),
+                selectedIcon: const Icon(Icons.home),
+                label: "common.home".i18n,
               ),
               NavigationDestination(
-                icon: Icon(Icons.search_outlined),
-                label: "探索",
-                selectedIcon: Icon(Icons.search),
+                icon: const Icon(Icons.search_outlined),
+                label: "common.search".i18n,
+                selectedIcon: const Icon(Icons.search),
               ),
               NavigationDestination(
-                icon: Icon(Icons.apps_outlined),
-                label: "扩展",
-                selectedIcon: Icon(Icons.apps),
+                icon: const Icon(Icons.apps_outlined),
+                label: "common.extension".i18n,
+                selectedIcon: const Icon(Icons.apps),
               ),
               NavigationDestination(
-                icon: Icon(Icons.settings_outlined),
-                label: "设置",
-                selectedIcon: Icon(Icons.settings),
+                icon: const Icon(Icons.settings_outlined),
+                label: "common.settings".i18n,
+                selectedIcon: const Icon(Icons.settings),
               ),
             ],
             selectedIndex: c.selectedTab.value,

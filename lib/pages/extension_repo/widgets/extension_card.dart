@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -14,7 +15,7 @@ class ExtensionCard extends StatefulWidget {
     required this.icon,
     required this.package,
   }) : super(key: key);
-  final String icon;
+  final String? icon;
   final String name;
   final String version;
   final String package;
@@ -26,13 +27,14 @@ class ExtensionCard extends StatefulWidget {
 class _ExtensionCardState extends State<ExtensionCard> {
   bool isLoading = false;
   bool isInstall = false;
-  bool hasUpdate = false;
+  bool hasUpgrade = false;
+  late String icon = widget.icon ?? '';
 
   @override
   void initState() {
     setState(() {
       isInstall = ExtensionUtils.extensions.containsKey(widget.package);
-      hasUpdate = isInstall &&
+      hasUpgrade = isInstall &&
           ExtensionUtils.extensions[widget.package]!.extension.version !=
               widget.version;
     });
@@ -66,7 +68,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
         width: 35,
         height: 35,
         child: CacheNetWorkImage(
-          widget.icon,
+          icon,
           fit: BoxFit.contain,
           fallback: const Icon(Icons.extension),
         ),
@@ -85,9 +87,9 @@ class _ExtensionCardState extends State<ExtensionCard> {
               child: ProgressRing(),
             )
           else if (isInstall) ...[
-            if (hasUpdate)
+            if (hasUpgrade)
               FilledButton(
-                child: const Text("更新"),
+                child: Text('extension-repo.upgrade'.i18n),
                 onPressed: () async {
                   await _install();
                   setState(() {});
@@ -96,7 +98,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
             const SizedBox(width: 8),
             if (isInstall)
               TextButton(
-                child: const Text("卸载"),
+                child: Text('common.uninstall'.i18n),
                 onPressed: () async {
                   await ExtensionUtils.uninstall(widget.package);
                   setState(() {
@@ -109,7 +111,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
               onPressed: () async {
                 await _install();
               },
-              child: const Text("安装"),
+              child: Text('common.install'.i18n),
             )
         ],
       ),
@@ -125,7 +127,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
             SizedBox(
               height: 120,
               child: CacheNetWorkImage(
-                widget.icon,
+                icon,
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -140,7 +142,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: CacheNetWorkImage(
-                  widget.icon,
+                  icon,
                   width: 64,
                   height: 64,
                   fit: BoxFit.contain,
@@ -170,9 +172,9 @@ class _ExtensionCardState extends State<ExtensionCard> {
                       child: ProgressRing(),
                     )
                   else if (isInstall) ...[
-                    if (hasUpdate)
+                    if (hasUpgrade)
                       fluent.FilledButton(
-                        child: const Text("更新"),
+                        child: Text('extension-repo.upgrade'.i18n),
                         onPressed: () async {
                           await _install();
                           setState(() {});
@@ -181,7 +183,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
                     const SizedBox(width: 8),
                     if (isInstall)
                       fluent.FilledButton(
-                        child: const Text("卸载"),
+                        child: Text('common.uninstall'.i18n),
                         onPressed: () async {
                           await ExtensionUtils.uninstall(widget.package);
                           setState(() {
@@ -194,7 +196,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
                       onPressed: () async {
                         await _install();
                       },
-                      child: const Text("安装"),
+                      child: Text('common.install'.i18n),
                     )
                 ],
               ),

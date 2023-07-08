@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:miru_app/pages/search/widgets/search_all_tile_title.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/bangumi_card.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
@@ -71,7 +72,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
               final data = snapshot.data;
 
               if (snapshot.data != null && snapshot.data!.isEmpty) {
-                return const Text("无结果");
+                return Text('common.no_result'.i18n);
               }
 
               return ListView.builder(
@@ -150,7 +151,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
               final data = snapshot.data;
 
               if (snapshot.data != null && snapshot.data!.isEmpty) {
-                return const Text("无结果");
+                return Text("common.no_result".i18n);
               }
 
               return ListView.builder(
