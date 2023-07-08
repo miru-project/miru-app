@@ -47,10 +47,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   late final player = Player();
   late final controller = VideoController(
     player,
-    configuration: const VideoControllerConfiguration(
-      vo: 'mediacodec_embed',
-      hwdec: 'mediacodec',
-    ),
+    configuration: const VideoControllerConfiguration(),
   );
   late final ScreenshotController screenshotController = ScreenshotController();
   late int playerIndex = widget.playerIndex;
