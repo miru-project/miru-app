@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = miru_windows
+PRODUCT_NAME = Miru
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.miruWindows
+PRODUCT_BUNDLE_IDENTIFIER = miru.miaomint
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = AGPLv3 © 2023 Miru Project.

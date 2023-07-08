@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "miru_windows" "\0"
+            VALUE "FileDescription", "miru" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "miru_windows" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "miru_windows.exe" "\0"
-            VALUE "ProductName", "miru_windows" "\0"
+            VALUE "InternalName", "miru" "\0"
+            VALUE "LegalCopyright", "AGPLv3 © 2023 Miru Project." "\0"
+            VALUE "OriginalFilename", "miru.exe" "\0"
+            VALUE "ProductName", "miru" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
