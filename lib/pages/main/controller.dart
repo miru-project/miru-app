@@ -38,7 +38,7 @@ class MainController extends GetxController {
               appBar: AppBar(
                 title: Text(FlutterI18n.translate(
                   context,
-                  'upgrate.new-version',
+                  'upgrade.new-version',
                   translationParams: {
                     'version': remoteVersion,
                   },
@@ -75,18 +75,21 @@ class MainController extends GetxController {
           context: context,
           title: FlutterI18n.translate(
             context,
-            'upgrate.new-version',
+            'upgrade.new-version',
             translationParams: {
               'version': remoteVersion,
             },
           ),
-          content: Markdown(data: res.data['body']),
+          content: Markdown(
+            shrinkWrap: true,
+            data: res.data['body'],
+          ),
           actions: [
             PlatformTextButton(
               onPressed: () {
                 RouterUtils.pop();
               },
-              child: Text('common.not-now'.i18n),
+              child: Text('upgrade.not-now'.i18n),
             ),
             PlatformFilledButton(
               onPressed: () {
