@@ -72,7 +72,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
               final data = snapshot.data;
 
               if (snapshot.data != null && snapshot.data!.isEmpty) {
-                return Text('common.no_result'.i18n);
+                return Text('common.no-result'.i18n);
               }
 
               return ListView.builder(
@@ -151,7 +151,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
               final data = snapshot.data;
 
               if (snapshot.data != null && snapshot.data!.isEmpty) {
-                return Text("common.no_result".i18n);
+                return Text("common.no-result".i18n);
               }
 
               return ListView.builder(
