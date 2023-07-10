@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/utils/extension.dart';
@@ -30,14 +29,18 @@ class ExtensionRuntime {
         args[0],
       );
     });
-    runtime.onMessage('get', (dynamic args) async {
-      debugPrint(args[0]);
+    runtime.onMessage('request', (dynamic args) async {
       ExtensionUtils.addLog(
         extension,
         ExtensionLogLevel.info,
-        "GET: ${args[0]}",
+        "GET: ${args[0]} , ${args[1]}",
       );
-      return (await dio.get<String>(args[0])).data;
+      return (await dio.get<String>(args[0],
+              options: Options(
+                headers: args[1]['headers'] ?? {},
+                method: args[1]['method'] ?? 'get',
+              )))
+          .data;
     });
     // 初始化运行扩展
     await _initRunExtension(content);
@@ -57,7 +60,7 @@ class ExtensionRuntime {
               options.headers = options.headers || {};
               const miruUrl = options.headers["Miru-Url"] || "${extension.webSite}";
               options.method = options.method || "get";
-              const res = await sendMessage(options.method, JSON.stringify([miruUrl+url, options]));
+              const res = await sendMessage("request", JSON.stringify([miruUrl+url, options]));
               try {
                 return JSON.parse(res);
               } catch (e) {

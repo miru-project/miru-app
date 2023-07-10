@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:miru_app/main.dart';
 import 'package:miru_app/pages/detail/view.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
