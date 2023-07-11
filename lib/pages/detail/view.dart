@@ -40,14 +40,13 @@ class _DetailPageState extends State<DetailPage> {
         url: widget.url,
         heroTag: widget.heroTag,
       ),
-      tag: widget.package + widget.url,
     );
     super.initState();
   }
 
   @override
   void dispose() {
-    Get.delete<DetailPageController>(tag: widget.package + widget.url);
+    Get.delete<DetailPageController>();
     super.dispose();
   }
 
