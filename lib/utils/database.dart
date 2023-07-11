@@ -127,7 +127,7 @@ class DatabaseUtils {
   }
 
   // 添加扩展设置
-  static Future<Id> addExtensionSetting(
+  static Future<Id> registerExtensionSetting(
     ExtensionSetting extensionSetting,
   ) async {
     if (extensionSetting.type == ExtensionSettingType.radio &&
@@ -147,8 +147,8 @@ class DatabaseUtils {
     // 如果类型不同，重置值
     if (extSetting.type != extensionSetting.type) {
       extSetting.type = extensionSetting.type;
+      extSetting.value = extensionSetting.defaultValue;
     }
-    extSetting.value = extensionSetting.defaultValue;
     extSetting.defaultValue = extensionSetting.defaultValue;
     extSetting.description = extensionSetting.description;
     extSetting.options = extensionSetting.options;

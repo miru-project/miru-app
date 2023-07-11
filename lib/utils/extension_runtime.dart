@@ -52,6 +52,7 @@ class ExtensionRuntime {
     runtime.onMessage('registerSetting', (dynamic args) async {
       args[0]['package'] = extension.package;
 
+      // 处理下 options
       List<String>? options;
       if (args[0]['options'] != null) {
         options = [];
@@ -60,7 +61,7 @@ class ExtensionRuntime {
         }
       }
 
-      return DatabaseUtils.addExtensionSetting(
+      return DatabaseUtils.registerExtensionSetting(
         ExtensionSetting()
           ..package = extension.package
           ..title = args[0]['title']
@@ -75,7 +76,7 @@ class ExtensionRuntime {
     runtime.onMessage('getSetting', (dynamic args) async {
       final setting =
           await DatabaseUtils.getExtensionSetting(extension.package, args[0]);
-      return setting?.value;
+      return setting!.value ?? setting.defaultValue;
     });
 
     // 清理扩展设置

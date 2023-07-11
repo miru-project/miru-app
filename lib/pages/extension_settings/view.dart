@@ -62,7 +62,10 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
               value,
             );
             setting.value = value;
-            setState(() {});
+            if (Platform.isAndroid) {
+              // 如果是安卓，需要触发一下更新
+              setState(() {});
+            }
           },
           text: setting.value ?? setting.defaultValue,
           buildSubtitle: () {
