@@ -83,7 +83,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               child: Row(
                 children: [
                   Hero(
-                    tag: c.url,
+                    tag: c.heroTag ?? '',
                     child: Card(
                       clipBehavior: Clip.antiAlias,
                       child: SizedBox(

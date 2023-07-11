@@ -11,13 +11,16 @@ class DetailPageController extends GetxController {
   DetailPageController({
     required this.package,
     required this.url,
+    this.heroTag,
   });
+
+  final String package;
+  final String url;
+  final String? heroTag;
 
   ScrollController scrollController = ScrollController();
 
   final isFavorite = false.obs;
-  final String package;
-  final String url;
   final Rx<ExtensionDetail?> data = Rx(null);
   final Rx<History?> history = Rx(null);
   final RxString error = ''.obs;

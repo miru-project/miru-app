@@ -19,9 +19,11 @@ class DetailPage extends StatefulWidget {
     Key? key,
     required this.url,
     required this.package,
+    this.heroTag,
   }) : super(key: key);
   final String url;
   final String package;
+  final String? heroTag;
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -32,16 +34,20 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   void initState() {
-    c = Get.put(DetailPageController(
-      package: widget.package,
-      url: widget.url,
-    ));
+    c = Get.put(
+      DetailPageController(
+        package: widget.package,
+        url: widget.url,
+        heroTag: widget.heroTag,
+      ),
+      tag: widget.package + widget.url,
+    );
     super.initState();
   }
 
   @override
   void dispose() {
-    Get.delete<DetailPageController>();
+    Get.delete<DetailPageController>(tag: widget.package + widget.url);
     super.dispose();
   }
 
