@@ -76,7 +76,7 @@
     "source-code": "开源",
     "source-code-training": "前往 Star",
     "license": "许可",
-    "license-subtitle": "许可"
+    "license-subtitle": "许可证"
   },
 
   "detail": {
@@ -112,5 +112,16 @@
     "video": "影视",
     "novel": "小说",
     "comics": "漫画"
+  },
+
+  "extension-info": {
+    "author": "作者",
+    "description": "描述",
+    "version": "版本",
+    "language": "语言",
+    "original-site": "源站",
+    "other-infomation": "其他信息",
+    "license": "许可",
+    "title": "扩展详情"
   }
 }

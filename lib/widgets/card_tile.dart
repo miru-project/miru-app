@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-class DetailTile extends StatelessWidget {
-  const DetailTile({
+class CardTile extends StatelessWidget {
+  const CardTile({
     Key? key,
     required this.title,
     required this.child,
@@ -16,7 +16,7 @@ class DetailTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 13),
       decoration: BoxDecoration(
-        color: FluentTheme.of(context).acrylicBackgroundColor,
+        color: FluentTheme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.withOpacity(0.1), width: 1),
       ),

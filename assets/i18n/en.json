@@ -107,5 +107,16 @@
     "video": "Video",
     "novel": "Novel",
     "comics": "Comics"
+  },
+
+  "extension-info": {
+    "author": "Author",
+    "description": "Description",
+    "version": "Version",
+    "language": "Language",
+    "original-site": "Original Site",
+    "other-infomation": "Other Infomation",
+    "license": "License",
+    "title": "Extension Info"
   }
 }

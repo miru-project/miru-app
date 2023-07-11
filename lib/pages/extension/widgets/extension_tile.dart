@@ -1,12 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/main.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/code_edit/view.dart';
+import 'package:miru_app/pages/extension_settings/view.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
-import 'package:miru_app/widgets/messenger.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path;
@@ -40,7 +41,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
         '${widget.extension.version}  ${ExtensionUtils.typeToString(widget.extension.type)} ',
       ),
       onTap: () {
-        showPlatformSnackbar(context: context, title: '😣', content: '还没写的（');
+        Get.to(ExtensionSettingsPage(package: widget.extension.package));
       },
       trailing: IconButton(
         onPressed: () {
@@ -121,11 +122,10 @@ class _ExtensionTileState extends State<ExtensionTile> {
                 child: Text('common.settings'.i18n),
               ),
               onPressed: () {
-                fluent.displayInfoBar(context, builder: (builder, colse) {
-                  return const fluent.InfoBar(
-                    title: Text("还没做的"),
-                  );
-                });
+                router.push(Uri(
+                  path: '/extension_settings',
+                  queryParameters: {'package': widget.extension.package},
+                ).toString());
               }),
           const SizedBox(width: 16),
           fluent.FlyoutTarget(

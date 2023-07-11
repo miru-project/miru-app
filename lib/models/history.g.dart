@@ -32,19 +32,19 @@ const HistorySchema = CollectionSchema(
       name: r'episodeGroupId',
       type: IsarType.long,
     ),
-    r'package': PropertySchema(
+    r'episodeId': PropertySchema(
       id: 3,
-      name: r'package',
-      type: IsarType.string,
-    ),
-    r'progress': PropertySchema(
-      id: 4,
-      name: r'progress',
+      name: r'episodeId',
       type: IsarType.long,
     ),
-    r'progressTitle': PropertySchema(
+    r'episodeTitle': PropertySchema(
+      id: 4,
+      name: r'episodeTitle',
+      type: IsarType.string,
+    ),
+    r'package': PropertySchema(
       id: 5,
-      name: r'progressTitle',
+      name: r'package',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
@@ -104,8 +104,8 @@ int _historyEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.cover.length * 3;
-  bytesCount += 3 + object.package.length * 3;
   bytesCount += 3 + object.episodeTitle.length * 3;
+  bytesCount += 3 + object.package.length * 3;
   bytesCount += 3 + object.title.length * 3;
   bytesCount += 3 + object.type.name.length * 3;
   bytesCount += 3 + object.url.length * 3;
@@ -121,9 +121,9 @@ void _historySerialize(
   writer.writeString(offsets[0], object.cover);
   writer.writeDateTime(offsets[1], object.date);
   writer.writeLong(offsets[2], object.episodeGroupId);
-  writer.writeString(offsets[3], object.package);
-  writer.writeLong(offsets[4], object.episodeId);
-  writer.writeString(offsets[5], object.episodeTitle);
+  writer.writeLong(offsets[3], object.episodeId);
+  writer.writeString(offsets[4], object.episodeTitle);
+  writer.writeString(offsets[5], object.package);
   writer.writeString(offsets[6], object.title);
   writer.writeString(offsets[7], object.type.name);
   writer.writeString(offsets[8], object.url);
@@ -139,10 +139,10 @@ History _historyDeserialize(
   object.cover = reader.readString(offsets[0]);
   object.date = reader.readDateTime(offsets[1]);
   object.episodeGroupId = reader.readLong(offsets[2]);
+  object.episodeId = reader.readLong(offsets[3]);
+  object.episodeTitle = reader.readString(offsets[4]);
   object.id = id;
-  object.package = reader.readString(offsets[3]);
-  object.episodeId = reader.readLong(offsets[4]);
-  object.episodeTitle = reader.readString(offsets[5]);
+  object.package = reader.readString(offsets[5]);
   object.title = reader.readString(offsets[6]);
   object.type = _HistorytypeValueEnumMap[reader.readStringOrNull(offsets[7])] ??
       ExtensionType.manga;
@@ -164,9 +164,9 @@ P _historyDeserializeProp<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
-    case 4:
       return (reader.readLong(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
@@ -608,6 +608,190 @@ extension HistoryQueryFilter
     });
   }
 
+  QueryBuilder<History, History, QAfterFilterCondition> episodeIdEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'episodeId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'episodeId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'episodeId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'episodeId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'episodeTitle',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'episodeTitle',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'episodeTitle',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'episodeTitle',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'episodeTitle',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'episodeTitle',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'episodeTitle',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'episodeTitle',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> episodeTitleIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'episodeTitle',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition>
+      episodeTitleIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'episodeTitle',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<History, History, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -785,191 +969,6 @@ extension HistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'package',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'progress',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'progress',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'progress',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'progress',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'progressTitle',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition>
-      progressTitleGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'progressTitle',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'progressTitle',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'progressTitle',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'progressTitle',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'progressTitle',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'progressTitle',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'progressTitle',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition> progressTitleIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'progressTitle',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<History, History, QAfterFilterCondition>
-      progressTitleIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'progressTitle',
         value: '',
       ));
     });
@@ -1409,6 +1408,30 @@ extension HistoryQuerySortBy on QueryBuilder<History, History, QSortBy> {
     });
   }
 
+  QueryBuilder<History, History, QAfterSortBy> sortByEpisodeId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<History, History, QAfterSortBy> sortByEpisodeIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<History, History, QAfterSortBy> sortByEpisodeTitle() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeTitle', Sort.asc);
+    });
+  }
+
+  QueryBuilder<History, History, QAfterSortBy> sortByEpisodeTitleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeTitle', Sort.desc);
+    });
+  }
+
   QueryBuilder<History, History, QAfterSortBy> sortByPackage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'package', Sort.asc);
@@ -1418,30 +1441,6 @@ extension HistoryQuerySortBy on QueryBuilder<History, History, QSortBy> {
   QueryBuilder<History, History, QAfterSortBy> sortByPackageDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'package', Sort.desc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> sortByProgress() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progress', Sort.asc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> sortByProgressDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progress', Sort.desc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> sortByProgressTitle() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progressTitle', Sort.asc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> sortByProgressTitleDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progressTitle', Sort.desc);
     });
   }
 
@@ -1520,6 +1519,30 @@ extension HistoryQuerySortThenBy
     });
   }
 
+  QueryBuilder<History, History, QAfterSortBy> thenByEpisodeId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<History, History, QAfterSortBy> thenByEpisodeIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<History, History, QAfterSortBy> thenByEpisodeTitle() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeTitle', Sort.asc);
+    });
+  }
+
+  QueryBuilder<History, History, QAfterSortBy> thenByEpisodeTitleDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'episodeTitle', Sort.desc);
+    });
+  }
+
   QueryBuilder<History, History, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1541,30 +1564,6 @@ extension HistoryQuerySortThenBy
   QueryBuilder<History, History, QAfterSortBy> thenByPackageDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'package', Sort.desc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> thenByProgress() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progress', Sort.asc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> thenByProgressDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progress', Sort.desc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> thenByProgressTitle() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progressTitle', Sort.asc);
-    });
-  }
-
-  QueryBuilder<History, History, QAfterSortBy> thenByProgressTitleDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'progressTitle', Sort.desc);
     });
   }
 
@@ -1626,24 +1625,23 @@ extension HistoryQueryWhereDistinct
     });
   }
 
+  QueryBuilder<History, History, QDistinct> distinctByEpisodeId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'episodeId');
+    });
+  }
+
+  QueryBuilder<History, History, QDistinct> distinctByEpisodeTitle(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'episodeTitle', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<History, History, QDistinct> distinctByPackage(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'package', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<History, History, QDistinct> distinctByProgress() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'progress');
-    });
-  }
-
-  QueryBuilder<History, History, QDistinct> distinctByProgressTitle(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'progressTitle',
-          caseSensitive: caseSensitive);
     });
   }
 
@@ -1695,21 +1693,21 @@ extension HistoryQueryProperty
     });
   }
 
+  QueryBuilder<History, int, QQueryOperations> episodeIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'episodeId');
+    });
+  }
+
+  QueryBuilder<History, String, QQueryOperations> episodeTitleProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'episodeTitle');
+    });
+  }
+
   QueryBuilder<History, String, QQueryOperations> packageProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'package');
-    });
-  }
-
-  QueryBuilder<History, int, QQueryOperations> progressProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'progress');
-    });
-  }
-
-  QueryBuilder<History, String, QQueryOperations> progressTitleProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'progressTitle');
     });
   }
 

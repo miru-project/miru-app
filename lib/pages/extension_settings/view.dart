@@ -1,0 +1,400 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:get/get.dart';
+import 'package:miru_app/main.dart';
+import 'package:miru_app/models/extension_setting.dart';
+import 'package:miru_app/pages/code_edit/view.dart';
+import 'package:miru_app/pages/extension_settings/controller.dart';
+import 'package:miru_app/pages/extension_settings/widgets/info_card.dart';
+import 'package:miru_app/utils/database.dart';
+import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/widgets/cache_network_image.dart';
+import 'package:miru_app/widgets/card_tile.dart';
+import 'package:miru_app/widgets/platform_widget.dart';
+import 'package:miru_app/widgets/progress_ring.dart';
+import 'package:miru_app/widgets/settings_input_tile.dart';
+import 'package:miru_app/widgets/settings_radios_tile.dart';
+import 'package:miru_app/widgets/settings_switch_tile.dart';
+
+class ExtensionSettingsPage extends StatefulWidget {
+  const ExtensionSettingsPage({
+    Key? key,
+    required this.package,
+  }) : super(key: key);
+  final String package;
+
+  @override
+  State<ExtensionSettingsPage> createState() => _ExtensionSettingsPageState();
+}
+
+class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
+  late ExtensionSettingsPageController c;
+
+  @override
+  void initState() {
+    c = Get.put(
+      ExtensionSettingsPageController(widget.package),
+      tag: widget.package,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<ExtensionSettingsPageController>(tag: widget.package);
+    super.dispose();
+  }
+
+  List<Widget> settingsContent() {
+    final list = <Widget>[];
+
+    for (final setting in c.settings) {
+      if (setting.type == ExtensionSettingType.input) {
+        list.add(SettingsIntpuTile(
+          title: setting.title,
+          onChanged: (value) async {
+            await DatabaseUtils.putExtensionSetting(
+              setting.package,
+              setting.key,
+              value,
+            );
+            setting.value = value;
+            setState(() {});
+          },
+          text: setting.value ?? setting.defaultValue,
+          buildSubtitle: () {
+            if (Platform.isAndroid) {
+              return '${setting.value ?? setting.defaultValue}\n${setting.description ?? ''}';
+            }
+            return setting.description ?? '';
+          },
+        ));
+      }
+      if (setting.type == ExtensionSettingType.radio) {
+        final map = <String, String>{};
+        list.add(SettingsRadiosTile(
+          title: setting.title,
+          itemNameValue: () {
+            for (final item in setting.options!) {
+              final split = item.split(':');
+              map[split[0]] = split[1];
+            }
+            return map;
+          }(),
+          buildSubtitle: () => setting.description ?? '',
+          applyValue: (value) {
+            DatabaseUtils.putExtensionSetting(
+              setting.package,
+              setting.key,
+              value,
+            );
+            setting.value = value;
+            setState(() {});
+          },
+          buildGroupValue: () => setting.value ?? setting.defaultValue,
+          trailing: Text(
+            map.entries
+                .firstWhere((element) => element.value == setting.value)
+                .key,
+          ),
+        ));
+      }
+      if (setting.type == ExtensionSettingType.toggle) {
+        list.add(SettingsSwitchTile(
+          title: setting.title,
+          onChanged: (value) {
+            DatabaseUtils.putExtensionSetting(
+              setting.package,
+              setting.key,
+              value.toString(),
+            );
+            setting.value = value.toString();
+          },
+          buildSubtitle: () => setting.description ?? '',
+          buildValue: () {
+            return (setting.value ?? setting.defaultValue).toLowerCase() ==
+                'true';
+          },
+        ));
+      }
+      list.add(const SizedBox(height: 8));
+    }
+    return list;
+  }
+
+  Widget _buildAndroid(BuildContext context) {
+    return Obx(() {
+      if (c.runtime.value == null) {
+        return const Center(
+          child: ProgressRing(),
+        );
+      }
+      final extension = c.runtime.value!.extension;
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('extension-info.title'.i18n),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              Center(
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: CacheNetWorkImage(
+                    extension.icon ?? '',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                extension.name,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Text(
+                extension.package,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: GridView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 8,
+                  ),
+                  children: [
+                    InfoCard(
+                      icon: Icons.person,
+                      title: 'extension-info.author'.i18n,
+                      content: extension.author,
+                    ),
+                    InfoCard(
+                      icon: Icons.info,
+                      title: 'extension-info.version'.i18n,
+                      content: extension.version,
+                    ),
+                    InfoCard(
+                      icon: Icons.language,
+                      title: 'extension-info.language'.i18n,
+                      content: extension.lang,
+                    ),
+                    InfoCard(
+                      icon: Icons.description,
+                      title: 'extension-info.license'.i18n,
+                      content: extension.license,
+                    ),
+                    InfoCard(
+                      icon: Icons.link,
+                      title: 'extension-info.original-site'.i18n,
+                      content: extension.webSite,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          await ExtensionUtils.uninstall(extension.package);
+                          Get.back();
+                        },
+                        child: Text('common.uninstall'.i18n),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: () {
+                          Get.to(CodeEditPage(extension: extension));
+                        },
+                        child: Text('extension.edit-code'.i18n),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              if (c.settings.isNotEmpty) ...[
+                const Divider(),
+                ...settingsContent(),
+              ]
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _buildDesktop(BuildContext context) {
+    return Obx(() {
+      if (c.runtime.value == null) {
+        return const Center(
+          child: ProgressRing(),
+        );
+      }
+
+      final extension = c.runtime.value!.extension;
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 320,
+              child: fluent.Card(
+                borderRadius: BorderRadius.circular(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: CacheNetWorkImage(
+                        extension.icon ?? '',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SelectableText(
+                      extension.name,
+                      style:
+                          fluent.FluentTheme.of(context).typography.bodyLarge,
+                    ),
+                    Text(
+                      extension.package,
+                      style: fluent.FluentTheme.of(context).typography.body,
+                    ),
+                    const SizedBox(height: 16),
+                    fluent.FilledButton(
+                      onPressed: () async {
+                        await ExtensionUtils.uninstall(extension.package);
+                        router.pop();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 2),
+                        child: Text('common.uninstall'.i18n),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    fluent.Card(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                      child: Text(
+                        ExtensionUtils.typeToString(extension.type),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(left: 16),
+                child: Obx(
+                  () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (extension.description != null) ...[
+                        CardTile(
+                          title: 'extension-info.description'.i18n,
+                          child: SelectableText(
+                            extension.description!,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      CardTile(
+                        title: 'extension-info.other-infomation'.i18n,
+                        child: GridView(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 3,
+                          ),
+                          shrinkWrap: true,
+                          children: [
+                            InfoCard(
+                              icon: fluent.FluentIcons.contact,
+                              title: 'extension-info.author'.i18n,
+                              content: extension.author,
+                            ),
+                            InfoCard(
+                              icon: fluent.FluentIcons.code,
+                              title: 'extension-info.version'.i18n,
+                              content: extension.version,
+                            ),
+                            InfoCard(
+                              icon: fluent.FluentIcons.locale_language,
+                              title: 'extension-info.language'.i18n,
+                              content: extension.lang,
+                            ),
+                            InfoCard(
+                              icon: fluent.FluentIcons.page,
+                              title: 'extension-info.license'.i18n,
+                              content: extension.license,
+                            ),
+                            InfoCard(
+                              icon: fluent.FluentIcons.globe,
+                              title: 'extension-info.original-site'.i18n,
+                              content: extension.webSite,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      if (c.settings.isNotEmpty) ...[
+                        Text(
+                          'common.settings'.i18n,
+                          style: fluent.FluentTheme.of(context)
+                              .typography
+                              .subtitle,
+                        ),
+                        const SizedBox(height: 16),
+                        ...settingsContent(),
+                        const SizedBox(height: 16),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformBuildWidget(
+      androidBuilder: _buildAndroid,
+      desktopBuilder: _buildDesktop,
+    );
+  }
+}

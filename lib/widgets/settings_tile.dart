@@ -5,13 +5,13 @@ import 'package:miru_app/widgets/platform_widget.dart';
 class SettingsTile extends StatefulWidget {
   const SettingsTile({
     Key? key,
-    required this.icon,
+    this.icon,
     required this.title,
     this.trailing,
     this.buildSubtitle,
     this.onTap,
   }) : super(key: key);
-  final Widget icon;
+  final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;
   final Function()? onTap;
@@ -36,8 +36,10 @@ class _SettingsTileState extends State<SettingsTile> {
     return fluent.Card(
         child: Row(
       children: [
-        widget.icon,
-        const SizedBox(width: 16),
+        if (widget.icon != null) ...[
+          widget.icon!,
+          const SizedBox(width: 16),
+        ],
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

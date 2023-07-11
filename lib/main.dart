@@ -12,6 +12,7 @@ import 'package:miru_app/pages/detail/view.dart';
 import 'package:miru_app/pages/extension/view.dart';
 import 'package:miru_app/pages/extension_log/view.dart';
 import 'package:miru_app/pages/extension_repo/view.dart';
+import 'package:miru_app/pages/extension_settings/view.dart';
 import 'package:miru_app/pages/home/view.dart';
 import 'package:miru_app/pages/main/view.dart';
 import 'package:miru_app/pages/search/view.dart';
@@ -157,6 +158,14 @@ final router = GoRouter(
         GoRoute(
           path: '/extension',
           builder: (context, state) => _animation(const ExtensionPage()),
+        ),
+        GoRoute(
+          path: '/extension_settings',
+          builder: (context, state) => _animation(
+            ExtensionSettingsPage(
+              package: state.queryParameters['package']!,
+            ),
+          ),
         ),
         GoRoute(
           path: '/settings',

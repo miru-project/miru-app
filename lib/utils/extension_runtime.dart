@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:miru_app/models/extension.dart';
+import 'package:miru_app/models/extension_setting.dart';
+import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
 
 class ExtensionRuntime {
@@ -22,6 +25,7 @@ class ExtensionRuntime {
     runtime = getJavascriptRuntime();
 
     // 注册方法
+    // 日志
     runtime.onMessage('log', (dynamic args) {
       ExtensionUtils.addLog(
         extension,
@@ -29,6 +33,7 @@ class ExtensionRuntime {
         args[0],
       );
     });
+    // 请求
     runtime.onMessage('request', (dynamic args) async {
       ExtensionUtils.addLog(
         extension,
@@ -42,6 +47,44 @@ class ExtensionRuntime {
               )))
           .data;
     });
+
+    // 设置
+    runtime.onMessage('registerSetting', (dynamic args) async {
+      args[0]['package'] = extension.package;
+
+      List<String>? options;
+      if (args[0]['options'] != null) {
+        options = [];
+        for (final option in (args[0]['options'] as Map).entries) {
+          options.add('${option.key}:${option.value}');
+        }
+      }
+
+      return DatabaseUtils.addExtensionSetting(
+        ExtensionSetting()
+          ..package = extension.package
+          ..title = args[0]['title']
+          ..key = args[0]['key']
+          ..value = args[0]['value']
+          ..type = ExtensionSetting.stringToType(args[0]['type'])
+          ..description = args[0]['description']
+          ..defaultValue = args[0]['defaultValue']
+          ..options = options,
+      );
+    });
+    runtime.onMessage('getSetting', (dynamic args) async {
+      final setting =
+          await DatabaseUtils.getExtensionSetting(extension.package, args[0]);
+      return setting?.value;
+    });
+
+    // 清理扩展设置
+    runtime.onMessage('cleanSettings', (dynamic args) async {
+      debugPrint('cleanSettings: ${args[0]}');
+      return DatabaseUtils.cleanExtensionSettings(
+          extension.package, List<String>.from(args[0]));
+    });
+
     // 初始化运行扩展
     await _initRunExtension(content);
     return this;
@@ -52,9 +95,16 @@ class ExtensionRuntime {
           // 重写 console.log
           var window = global = globalThis;
           console.log = function (message) {
+            if (typeof message === "object") {
+              message = JSON.stringify(message);
+            }
             sendMessage("log", JSON.stringify([message.toString()]));
           };
           class Extension {
+            package = "${extension.package}";
+            name = "${extension.name}";
+            // 在 load 中注册的 keys
+            settingKeys = [];
             async request(url, options) {
               options = options || {};
               options.headers = options.headers || {};
@@ -83,13 +133,16 @@ class ExtensionRuntime {
               throw new Error("not implement");
             }
             async getSetting(key) {
-              return "";
+              return sendMessage("getSetting", JSON.stringify([key]));
             }
-            async registerSetting(settings) {}
-            load() {}
-            unload() {}
+            async registerSetting(settings) {
+              console.log(JSON.stringify([settings]));
+              this.settingKeys.push(settings.key)
+              return sendMessage("registerSetting", JSON.stringify([settings]));
+            }
+            async load() {}
           }
-           
+
           async function stringify(callback){
               const data = await callback();
              return typeof data === "object" ? JSON.stringify(data) : data;
@@ -102,6 +155,9 @@ class ExtensionRuntime {
     JsEvalResult jsResult = await runtime.evaluateAsync('''
       $ext
       var extenstion = new Ext();
+      extenstion.load().then(()=>{
+        sendMessage("cleanSettings", JSON.stringify([extenstion.settingKeys]));
+      });
     ''');
     await runtime.handlePromise(jsResult);
   }

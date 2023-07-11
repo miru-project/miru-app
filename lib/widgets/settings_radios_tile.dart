@@ -1,24 +1,26 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
-import 'package:miru_app/pages/settings/widgets/settings_tile.dart';
+import 'package:miru_app/widgets/settings_tile.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class SettingsRadiosTile<T> extends fluent.StatefulWidget {
   const SettingsRadiosTile({
     Key? key,
-    required this.icon,
+    this.icon,
     required this.title,
     this.buildSubtitle,
     required this.itemNameValue,
     required this.applyValue,
     required this.buildGroupValue,
+    this.trailing = const Icon(Icons.chevron_right),
   }) : super(key: key);
-  final Widget icon;
+  final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;
   final Function(T value) applyValue;
   final Map<String, T> itemNameValue;
   final T Function() buildGroupValue;
+  final Widget trailing;
 
   @override
   fluent.State<SettingsRadiosTile<T>> createState() =>
@@ -31,7 +33,7 @@ class _SettingsRadiosTileState<T> extends fluent.State<SettingsRadiosTile<T>> {
       icon: widget.icon,
       title: widget.title,
       buildSubtitle: widget.buildSubtitle,
-      trailing: const Icon(Icons.chevron_right),
+      trailing: widget.trailing,
       onTap: () {
         showDialog(
           context: context,
@@ -48,6 +50,7 @@ class _SettingsRadiosTileState<T> extends fluent.State<SettingsRadiosTile<T>> {
                     onChanged: (value) {
                       Navigator.pop(context);
                       widget.applyValue(value as T);
+                      setState(() {});
                     },
                   ),
               ],
@@ -74,6 +77,7 @@ class _SettingsRadiosTileState<T> extends fluent.State<SettingsRadiosTile<T>> {
         value: widget.buildGroupValue(),
         onChanged: (value) {
           widget.applyValue(value as T);
+          setState(() {});
         },
       ),
     );

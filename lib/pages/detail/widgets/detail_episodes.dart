@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/pages/detail/widgets/detail_continue_play.dart';
-import 'package:miru_app/pages/detail/widgets/detail_tile.dart';
+import 'package:miru_app/widgets/card_tile.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
@@ -94,7 +94,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
   }
 
   Widget _buildDesktopEpisodes(BuildContext context) {
-    return DetailTile(
+    return CardTile(
         title: 'detail.episodes'.i18n,
         trailing: Row(
           children: [

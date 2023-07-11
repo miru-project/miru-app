@@ -1,5 +1,6 @@
 import 'package:hive_flutter/adapters.dart';
 import 'package:isar/isar.dart';
+import 'package:miru_app/models/extension_setting.dart';
 import 'package:miru_app/models/favorite.dart';
 import 'package:miru_app/models/history.dart';
 import 'package:miru_app/utils/miru_directory.dart';
@@ -12,7 +13,7 @@ class MiruStorage {
     final path = await MiruDirectory.getDirectory;
     // 初始化数据库
     database = await Isar.open(
-      [FavoriteSchema, HistorySchema],
+      [FavoriteSchema, HistorySchema, ExtensionSettingSchema],
       directory: path,
     );
     // 初始化设置

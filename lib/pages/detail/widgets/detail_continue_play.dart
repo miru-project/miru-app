@@ -37,7 +37,8 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
       if (c.isLoading.value) {
         return noEpisodes;
       }
-      if (c.history.value != null) {
+      // 之前弄错了，所以需要判断标题是否为空
+      if (c.history.value != null && c.history.value!.episodeTitle.isNotEmpty) {
         return FilledButton.icon(
           onPressed: () {
             c.goWatch(
@@ -91,7 +92,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
     return Obx(() {
       final history = c.history.value;
       final data = c.data.value!;
-      if (history != null) {
+      if (history != null && c.history.value!.episodeTitle.isNotEmpty) {
         return fluent.FilledButton(
           onPressed: () {
             c.goWatch(

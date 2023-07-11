@@ -1,18 +1,18 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
-import 'package:miru_app/pages/settings/widgets/settings_tile.dart';
+import 'package:miru_app/widgets/settings_tile.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class SettingsSwitchTile extends fluent.StatefulWidget {
   const SettingsSwitchTile({
     Key? key,
-    required this.icon,
+    this.icon,
     required this.title,
     required this.buildValue,
     required this.onChanged,
     this.buildSubtitle,
   }) : super(key: key);
-  final Widget icon;
+  final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;
   final bool Function() buildValue;
