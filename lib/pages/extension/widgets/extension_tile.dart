@@ -82,52 +82,70 @@ class _ExtensionTileState extends State<ExtensionTile> {
     return fluent.Card(
       child: Row(
         children: [
-          // extension icon
-          Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: SizedBox(
-              width: 45,
-              height: 45,
-              child: CacheNetWorkImage(
-                widget.extension.icon ?? '',
-                key: ValueKey(widget.extension.icon),
-                fit: BoxFit.contain,
-                fallback: const Icon(fluent.FluentIcons.add_in),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(widget.extension.name, style: const TextStyle(fontSize: 17)),
-              Text(widget.extension.author,
-                  style: const TextStyle(fontSize: 12)),
-            ],
-          ),
-          const Spacer(),
-          Text(widget.extension.version),
-          const Spacer(),
-          Text(ExtensionUtils.typeToString(widget.extension.type)),
-          const Spacer(),
-          fluent.Button(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 2,
+          Expanded(
+            flex: 3,
+            child: Row(
+              children: [
+                // extension icon
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SizedBox(
+                    width: 45,
+                    height: 45,
+                    child: CacheNetWorkImage(
+                      widget.extension.icon ?? '',
+                      key: ValueKey(widget.extension.icon),
+                      fit: BoxFit.contain,
+                      fallback: const Icon(fluent.FluentIcons.add_in),
+                    ),
+                  ),
                 ),
-                child: Text('common.settings'.i18n),
-              ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.extension.name,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        widget.extension.author,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(child: Text(widget.extension.version)),
+          Expanded(
+            child: Text(ExtensionUtils.typeToString(widget.extension.type)),
+          ),
+          const Spacer(),
+          fluent.IconButton(
+              // child: Padding(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 20,
+              //     vertical: 2,
+              //   ),
+              //   child: Text('common.settings'.i18n),
+              // ),
+              icon: const Icon(fluent.FluentIcons.settings),
               onPressed: () {
                 router.push(Uri(
                   path: '/extension_settings',
                   queryParameters: {'package': widget.extension.package},
                 ).toString());
               }),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
           fluent.FlyoutTarget(
             controller: moreFlyoutController,
             child: fluent.IconButton(
