@@ -20,7 +20,6 @@ import 'package:window_manager/window_manager.dart';
 import 'package:screenshot/screenshot.dart';
 import 'playlist.dart' as p;
 import 'package:path/path.dart' as path;
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 class VideoPlayer extends StatefulWidget {
   const VideoPlayer({
@@ -70,31 +69,31 @@ class _VideoPlayerState extends State<VideoPlayer> {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     }
     _play();
-    player.streams.playing.listen((event) {
+    player.stream.playing.listen((event) {
       setState(() {
         isPlaying = event;
       });
     });
-    player.streams.duration.listen((event) {
+    player.stream.duration.listen((event) {
       setState(() {
         duration = event;
       });
     });
-    player.streams.position.listen((event) {
+    player.stream.position.listen((event) {
       if (!isSeeking) {
         setState(() {
           position = event;
         });
       }
     });
-    player.streams.error.listen((event) {
+    player.stream.error.listen((event) {
       if (event.toString().isNotEmpty) {
         setState(() {
           error = event.toString();
         });
       }
     });
-    player.streams.completed.listen((event) {
+    player.stream.completed.listen((event) {
       if (playerIndex == widget.playList.length - 1) {
         if (Platform.isAndroid) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -117,7 +116,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   void dispose() {
-    WakelockPlus.disable();
     if (Platform.isAndroid) {
       // 切换回竖屏
       SystemChrome.setPreferredOrientations(
@@ -165,12 +163,11 @@ class _VideoPlayerState extends State<VideoPlayer> {
   _play() async {
     isLoading = true;
     try {
-      await WakelockPlus.enable();
       final m3u8Url =
           (await widget.runtime.watch(widget.playList[playerIndex].url)).url;
       debugPrint(m3u8Url);
       player.open(Media(m3u8Url));
-      player.streams.buffering.listen((event) {
+      player.stream.buffering.listen((event) {
         debugPrint(event.toString());
         isLoading = event;
       });
@@ -542,6 +539,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                     child: Video(
                       key: ValueKey(playerIndex),
                       controller: controller,
+                      controls: (state) => const SizedBox.shrink(),
                     ),
                   ),
                   Positioned.fill(
