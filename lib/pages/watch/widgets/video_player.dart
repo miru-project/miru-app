@@ -537,7 +537,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
                   Screenshot(
                     controller: screenshotController,
                     child: Video(
-                      key: ValueKey(playerIndex),
                       controller: controller,
                       controls: (state) => const SizedBox.shrink(),
                     ),
