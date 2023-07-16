@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/widgets/settings_tile.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
-class SettingsSwitchTile extends fluent.StatefulWidget {
+class SettingsSwitchTile extends StatefulWidget {
   const SettingsSwitchTile({
     Key? key,
     this.icon,
@@ -19,10 +19,10 @@ class SettingsSwitchTile extends fluent.StatefulWidget {
   final Function(bool) onChanged;
 
   @override
-  fluent.State<SettingsSwitchTile> createState() => _SettingsSwitchTileState();
+  State<SettingsSwitchTile> createState() => _SettingsSwitchTileState();
 }
 
-class _SettingsSwitchTileState extends fluent.State<SettingsSwitchTile> {
+class _SettingsSwitchTileState extends State<SettingsSwitchTile> {
   @override
   Widget build(BuildContext context) {
     return SettingsTile(

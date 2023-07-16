@@ -71,10 +71,13 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
               );
             }(),
             title: _title(),
-            actions: const SizedBox(
+            actions: SizedBox(
               width: 138,
               height: 50,
-              child: WindowCaption(),
+              child: WindowCaption(
+                backgroundColor: Colors.transparent,
+                brightness: fluent.FluentTheme.of(context).brightness,
+              ),
             ),
             automaticallyImplyLeading: false,
           ),
@@ -85,7 +88,6 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
             size: const fluent.NavigationPaneSize(openMaxWidth: 200),
             selected: c.selectedTab.value,
             onChanged: c.changeTab,
-            displayMode: fluent.PaneDisplayMode.open,
             footerItems: [
               fluent.PaneItemSeparator(),
               fluent.PaneItem(

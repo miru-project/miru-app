@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/widgets/settings_tile.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
-class SettingsRadiosTile<T> extends fluent.StatefulWidget {
+class SettingsRadiosTile<T> extends StatefulWidget {
   const SettingsRadiosTile({
     Key? key,
     this.icon,
@@ -23,11 +23,10 @@ class SettingsRadiosTile<T> extends fluent.StatefulWidget {
   final Widget trailing;
 
   @override
-  fluent.State<SettingsRadiosTile<T>> createState() =>
-      _SettingsRadiosTileState<T>();
+  State<SettingsRadiosTile<T>> createState() => _SettingsRadiosTileState<T>();
 }
 
-class _SettingsRadiosTileState<T> extends fluent.State<SettingsRadiosTile<T>> {
+class _SettingsRadiosTileState<T> extends State<SettingsRadiosTile<T>> {
   Widget _buildAndroid(BuildContext context) {
     return SettingsTile(
       icon: widget.icon,

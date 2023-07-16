@@ -25,7 +25,7 @@ class BangumiCard extends StatefulWidget {
 }
 
 class _BangumiCardState extends State<BangumiCard> {
-  bool isHover = false;
+  bool _isHover = false;
 
   Widget _buildAndroid(BuildContext context) {
     return Hero(
@@ -118,12 +118,12 @@ class _BangumiCardState extends State<BangumiCard> {
       cursor: SystemMouseCursors.click,
       onHover: (event) {
         setState(() {
-          isHover = true;
+          _isHover = true;
         });
       },
       onExit: (event) {
         setState(() {
-          isHover = false;
+          _isHover = false;
         });
       },
       child: Column(
@@ -144,7 +144,7 @@ class _BangumiCardState extends State<BangumiCard> {
                 );
               },
               child: AnimatedScale(
-                scale: isHover ? 1.03 : 1,
+                scale: _isHover ? 1.03 : 1,
                 duration: const Duration(milliseconds: 80),
                 child: Container(
                   decoration: const BoxDecoration(

@@ -53,15 +53,13 @@ class _HomePageState extends State<HomePage> {
               children: [
                 if (c.resents.isNotEmpty) ...[
                   HomeRecent(
-                    // ignore: invalid_use_of_protected_member
-                    data: c.resents.value,
+                    data: c.resents,
                   ),
                   const SizedBox(height: 16),
                 ],
                 if (c.favorites.isNotEmpty)
                   HomeFavorites(
-                    // ignore: invalid_use_of_protected_member
-                    data: c.favorites.value,
+                    data: c.favorites,
                   ),
               ],
             );

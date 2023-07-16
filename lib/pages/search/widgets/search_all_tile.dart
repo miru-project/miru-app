@@ -42,11 +42,10 @@ class _SearchAllTileState extends State<SearchAllTile> {
           children: [
             Text(
               widget.runtime.extension.name,
-              style: const TextStyle(fontSize: 16),
             ),
             const Spacer(),
             IconButton(
-              icon: const Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.chevron_right),
               onPressed: widget.onClickMore,
             ),
           ],

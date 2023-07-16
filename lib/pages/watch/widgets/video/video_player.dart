@@ -18,7 +18,7 @@ import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:screenshot/screenshot.dart';
-import 'playlist.dart' as p;
+import '../playlist.dart' as p;
 import 'package:path/path.dart' as path;
 
 class VideoPlayer extends StatefulWidget {
@@ -118,8 +118,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
   void dispose() {
     if (Platform.isAndroid) {
       // 切换回竖屏
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.edgeToEdge,
       );
