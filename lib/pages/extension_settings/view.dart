@@ -255,140 +255,142 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
       final extension = c.runtime.value!.extension;
       return Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 320,
-              child: fluent.Card(
-                borderRadius: BorderRadius.circular(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: CacheNetWorkImage(
-                        extension.icon ?? '',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SelectableText(
-                      extension.name,
-                      style:
-                          fluent.FluentTheme.of(context).typography.bodyLarge,
-                    ),
-                    Text(
-                      extension.package,
-                      style: fluent.FluentTheme.of(context).typography.body,
-                    ),
-                    const SizedBox(height: 16),
-                    fluent.FilledButton(
-                      onPressed: () async {
-                        await ExtensionUtils.uninstall(extension.package);
-                        router.pop();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 2),
-                        child: Text('common.uninstall'.i18n),
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    fluent.Card(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 4,
-                      ),
-                      borderRadius: BorderRadius.circular(100),
-                      child: Text(
-                        ExtensionUtils.typeToString(extension.type),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(left: 16),
-                child: Obx(
-                  () => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (extension.description != null) ...[
-                        CardTile(
-                          title: 'extension-info.description'.i18n,
-                          child: SelectableText(
-                            extension.description!,
+        child: LayoutBuilder(builder: ((context, constraints) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (constraints.maxWidth > 800)
+                SizedBox(
+                  width: 320,
+                  child: fluent.Card(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: CacheNetWorkImage(
+                            extension.icon ?? '',
+                            fit: BoxFit.contain,
                           ),
                         ),
                         const SizedBox(height: 16),
-                      ],
-                      CardTile(
-                        title: 'extension-info.other-infomation'.i18n,
-                        child: GridView(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 3,
-                          ),
-                          shrinkWrap: true,
-                          children: [
-                            InfoCard(
-                              icon: fluent.FluentIcons.contact,
-                              title: 'extension-info.author'.i18n,
-                              content: extension.author,
-                            ),
-                            InfoCard(
-                              icon: fluent.FluentIcons.code,
-                              title: 'extension-info.version'.i18n,
-                              content: extension.version,
-                            ),
-                            InfoCard(
-                              icon: fluent.FluentIcons.locale_language,
-                              title: 'extension-info.language'.i18n,
-                              content: extension.lang,
-                            ),
-                            InfoCard(
-                              icon: fluent.FluentIcons.page,
-                              title: 'extension-info.license'.i18n,
-                              content: extension.license,
-                            ),
-                            InfoCard(
-                              icon: fluent.FluentIcons.globe,
-                              title: 'extension-info.original-site'.i18n,
-                              content: extension.webSite,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      if (c.settings.isNotEmpty) ...[
-                        Text(
-                          'common.settings'.i18n,
+                        SelectableText(
+                          extension.name,
                           style: fluent.FluentTheme.of(context)
                               .typography
-                              .subtitle,
+                              .bodyLarge,
+                        ),
+                        Text(
+                          extension.package,
+                          style: fluent.FluentTheme.of(context).typography.body,
                         ),
                         const SizedBox(height: 16),
-                        ...settingsContent(),
-                        const SizedBox(height: 16),
+                        fluent.FilledButton(
+                          onPressed: () async {
+                            await ExtensionUtils.uninstall(extension.package);
+                            router.pop();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 2),
+                            child: Text('common.uninstall'.i18n),
+                          ),
+                        ),
+                        const SizedBox(height: 50),
+                        fluent.Card(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          borderRadius: BorderRadius.circular(100),
+                          child: Text(
+                            ExtensionUtils.typeToString(extension.type),
+                          ),
+                        ),
                       ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (extension.description != null) ...[
+                          CardTile(
+                            title: 'extension-info.description'.i18n,
+                            child: SelectableText(
+                              extension.description!,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                        CardTile(
+                          title: 'extension-info.other-infomation'.i18n,
+                          child: GridView(
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 300,
+                              childAspectRatio: 3,
+                            ),
+                            shrinkWrap: true,
+                            children: [
+                              InfoCard(
+                                icon: fluent.FluentIcons.contact,
+                                title: 'extension-info.author'.i18n,
+                                content: extension.author,
+                              ),
+                              InfoCard(
+                                icon: fluent.FluentIcons.code,
+                                title: 'extension-info.version'.i18n,
+                                content: extension.version,
+                              ),
+                              InfoCard(
+                                icon: fluent.FluentIcons.locale_language,
+                                title: 'extension-info.language'.i18n,
+                                content: extension.lang,
+                              ),
+                              InfoCard(
+                                icon: fluent.FluentIcons.page,
+                                title: 'extension-info.license'.i18n,
+                                content: extension.license,
+                              ),
+                              InfoCard(
+                                icon: fluent.FluentIcons.globe,
+                                title: 'extension-info.original-site'.i18n,
+                                content: extension.webSite,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        if (c.settings.isNotEmpty) ...[
+                          Text(
+                            'common.settings'.i18n,
+                            style: fluent.FluentTheme.of(context)
+                                .typography
+                                .subtitle,
+                          ),
+                          const SizedBox(height: 16),
+                          ...settingsContent(),
+                          const SizedBox(height: 16),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        })),
       );
     });
   }
