@@ -126,20 +126,20 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget _buildDesktopDetail(BuildContext context) {
-    return Obx(() {
-      if (!ExtensionUtils.extensions.containsKey(widget.package)) {
-        return Center(
-          child: Text(
-            FlutterI18n.translate(
-              context,
-              'common.extension-missing',
-              translationParams: {
-                'package': widget.package,
-              },
-            ),
+    if (!ExtensionUtils.extensions.containsKey(widget.package)) {
+      return Center(
+        child: Text(
+          FlutterI18n.translate(
+            context,
+            'common.extension-missing',
+            translationParams: {
+              'package': widget.package,
+            },
           ),
-        );
-      }
+        ),
+      );
+    }
+    return Obx(() {
       if (c.error.value.isNotEmpty) {
         return Center(
           child: Text(c.error.value),
