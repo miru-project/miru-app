@@ -38,7 +38,6 @@ class _DetailBackgroundColorState extends State<DetailBackgroundColor> {
                   scrollOffset / 255,
                 ),
             FluentTheme.of(context).micaBackgroundColor,
-            FluentTheme.of(context).micaBackgroundColor,
           ],
         ),
       ),

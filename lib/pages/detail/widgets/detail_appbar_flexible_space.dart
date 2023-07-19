@@ -68,7 +68,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                     colors: [
                       // 主题背景色
                       Theme.of(context).colorScheme.background.withOpacity(0.3),
-                      Theme.of(context).colorScheme.background,
+                      Theme.of(context).colorScheme.background.withOpacity(0.9),
                       Theme.of(context).colorScheme.background,
                     ],
                   ),
