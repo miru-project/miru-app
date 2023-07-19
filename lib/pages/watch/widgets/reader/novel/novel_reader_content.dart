@@ -76,28 +76,6 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                         )
                       : const SizedBox();
                 }
-                if (index == watchData.content.length + 2) {
-                  return Row(
-                    children: [
-                      PlatformIconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () {
-                          if (_c.index.value > 0) {
-                            _c.index.value--;
-                          }
-                        },
-                      ),
-                      PlatformIconButton(
-                        icon: const Icon(Icons.arrow_forward),
-                        onPressed: () {
-                          if (_c.index.value < _c.playList.length - 1) {
-                            _c.index.value++;
-                          }
-                        },
-                      ),
-                    ],
-                  );
-                }
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: SelectableText.rich(
@@ -119,7 +97,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                   ),
                 );
               },
-              itemCount: watchData.content.length + 3,
+              itemCount: watchData.content.length + 2,
             ),
           );
 
