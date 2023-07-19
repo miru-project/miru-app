@@ -28,16 +28,19 @@ Miru App
 
 - [x] Windows 支持
 - [x] Android 支持
-- [x] Linux 支持
+- [x] ~~Linux 支持~~
 - [ ] 字幕
 - [ ] BT 种子播放
-- [ ] 漫画支持
-- [ ] 小说支持
+- [x] 漫画支持
+- [x] 小说支持
 - [x] 影视支持
 - [ ] TMDB 元数据
 - [ ] 数据同步
 - [x] i18n 国际化
 - [x] 扩展设置
+- [ ] 漫画小说视频设置
+- [ ] 漫画小说历史记录
+- [ ] 影视播放记录
 
 ## 截图
 
@@ -45,9 +48,13 @@ Miru App
 
 ![Miru](assets/screenshot/miru-app.jpg.png)
 
-### windows/linux
+### Windows
 
 ![Miru](assets/screenshot/miru-desktop.jpg.png)
+
+## 关于 Linux
+
+目前 Linux 因为依赖问题导致无法启动 quickjs 所以暂时不支持了
 
 ## 交流
 

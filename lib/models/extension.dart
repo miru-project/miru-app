@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:miru_app/widgets/bangumi_card.dart';
+import 'package:miru_app/widgets/extension_item_card.dart';
 
 part 'extension.g.dart';
 
@@ -67,7 +67,7 @@ class ExtensionListItem {
 
   Map<String, dynamic> toJson() => _$ExtensionListItemToJson(this);
 
-  map(BangumiCard Function(dynamic e) param0) {}
+  map(ExtensionItemCard Function(dynamic e) param0) {}
 }
 
 @JsonSerializable()
@@ -133,6 +133,36 @@ class ExtensionBangumiWatch {
       _$ExtensionBangumiWatchFromJson(json);
 
   Map<String, dynamic> toJson() => _$ExtensionBangumiWatchToJson(this);
+}
+
+@JsonSerializable()
+class ExtensionMangaWatch {
+  final List<String> urls;
+  ExtensionMangaWatch({
+    required this.urls,
+  });
+
+  factory ExtensionMangaWatch.fromJson(Map<String, dynamic> json) =>
+      _$ExtensionMangaWatchFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExtensionMangaWatchToJson(this);
+}
+
+@JsonSerializable()
+class ExtensionFikushonWatch {
+  final List<String> content;
+  final String title;
+  final String? subtitle;
+  ExtensionFikushonWatch({
+    required this.content,
+    required this.title,
+    this.subtitle,
+  });
+
+  factory ExtensionFikushonWatch.fromJson(Map<String, dynamic> json) =>
+      _$ExtensionFikushonWatchFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExtensionFikushonWatchToJson(this);
 }
 
 @JsonSerializable()

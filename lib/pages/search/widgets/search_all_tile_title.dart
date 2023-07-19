@@ -12,7 +12,7 @@ class SearchAllTileTitle extends StatefulWidget {
 }
 
 class _SearchAllTileTitleState extends State<SearchAllTileTitle> {
-  bool hoverTitle = false;
+  bool _hoverTitle = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +20,12 @@ class _SearchAllTileTitleState extends State<SearchAllTileTitle> {
       cursor: SystemMouseCursors.click,
       onHover: (event) {
         setState(() {
-          hoverTitle = true;
+          _hoverTitle = true;
         });
       },
       onExit: (event) {
         setState(() {
-          hoverTitle = false;
+          _hoverTitle = false;
         });
       },
       child: GestureDetector(
@@ -34,11 +34,11 @@ class _SearchAllTileTitleState extends State<SearchAllTileTitle> {
         },
         child: AnimatedContainer(
           padding: EdgeInsets.symmetric(
-              horizontal: hoverTitle ? 20 : 10, vertical: 10),
+              horizontal: _hoverTitle ? 20 : 10, vertical: 10),
           duration: const Duration(milliseconds: 100),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: hoverTitle
+            color: _hoverTitle
                 ? const Color.fromARGB(19, 27, 26, 25)
                 : Colors.transparent,
           ),

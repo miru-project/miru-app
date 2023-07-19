@@ -21,7 +21,10 @@
     "repo": "仓库",
     "unset": "未设置",
     "extension-missing": "扩展 {package} 丢失",
-    "error": "错误"
+    "error": "错误",
+    "retry": "重试",
+    "next": "下一个",
+    "previous": "上一个"
   },
 
   "home": {
@@ -51,7 +54,6 @@
   "extension-repo": {
     "error": "发生错误了!",
     "error-tips": "请检查网络连接或者仓库地址是否正确",
-    "retry": "重试",
     "empty": "仓库为空",
     "upgrade": "更新"
   },
@@ -111,7 +113,7 @@
   "extension-type": {
     "video": "影视",
     "novel": "小说",
-    "comics": "漫画"
+    "comic": "漫画"
   },
 
   "extension-info": {

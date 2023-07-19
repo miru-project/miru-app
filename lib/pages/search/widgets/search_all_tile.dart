@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/pages/search/widgets/search_all_tile_title.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
-import 'package:miru_app/widgets/bangumi_card.dart';
+import 'package:miru_app/widgets/extension_item_card.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 
@@ -81,8 +81,8 @@ class _SearchAllTileState extends State<SearchAllTile> {
                 itemBuilder: (context, index) {
                   return Container(
                     width: 128,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    child: BangumiCard(
+                    margin: const EdgeInsets.symmetric(horizontal: 6),
+                    child: ExtensionItemCard(
                       key: ValueKey(data[index].url),
                       title: data[index].title,
                       url: data[index].url,
@@ -161,8 +161,8 @@ class _SearchAllTileState extends State<SearchAllTile> {
                 itemBuilder: (context, index) {
                   return Container(
                     width: 170,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    child: BangumiCard(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ExtensionItemCard(
                       key: ValueKey(data[index].url),
                       title: data[index].title,
                       url: data[index].url,

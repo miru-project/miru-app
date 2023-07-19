@@ -79,3 +79,29 @@ class PlatformTextButton extends StatelessWidget {
     );
   }
 }
+
+class PlatformIconButton extends StatelessWidget {
+  const PlatformIconButton({
+    Key? key,
+    required this.icon,
+    this.onPressed,
+  }) : super(key: key);
+  final Widget icon;
+  final VoidCallback? onPressed;
+
+  Widget _builaAndroidButton(BuildContext context) {
+    return IconButton(onPressed: onPressed, icon: icon);
+  }
+
+  Widget _builaDesktopButton(BuildContext context) {
+    return fluent.IconButton(onPressed: onPressed, icon: icon);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformBuildWidget(
+      androidBuilder: _builaAndroidButton,
+      desktopBuilder: _builaDesktopButton,
+    );
+  }
+}

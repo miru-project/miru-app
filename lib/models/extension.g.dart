@@ -124,6 +124,34 @@ const _$ExtensionWatchBangumiTypeEnumMap = {
   ExtensionWatchBangumiType.mp4: 'mp4',
 };
 
+ExtensionMangaWatch _$ExtensionMangaWatchFromJson(Map<String, dynamic> json) =>
+    ExtensionMangaWatch(
+      urls: (json['urls'] as List<dynamic>).map((e) => e as String).toList(),
+    );
+
+Map<String, dynamic> _$ExtensionMangaWatchToJson(
+        ExtensionMangaWatch instance) =>
+    <String, dynamic>{
+      'urls': instance.urls,
+    };
+
+ExtensionFikushonWatch _$ExtensionFikushonWatchFromJson(
+        Map<String, dynamic> json) =>
+    ExtensionFikushonWatch(
+      content:
+          (json['content'] as List<dynamic>).map((e) => e as String).toList(),
+      title: json['title'] as String,
+      subtitle: json['subtitle'] as String?,
+    );
+
+Map<String, dynamic> _$ExtensionFikushonWatchToJson(
+        ExtensionFikushonWatch instance) =>
+    <String, dynamic>{
+      'content': instance.content,
+      'title': instance.title,
+      'subtitle': instance.subtitle,
+    };
+
 ExtensionLog _$ExtensionLogFromJson(Map<String, dynamic> json) => ExtensionLog(
       extension: Extension.fromJson(json['extension'] as Map<String, dynamic>),
       content: json['content'] as String,

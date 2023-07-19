@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_js/flutter_js.dart';
-import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/models/extension_setting.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
 
@@ -81,7 +79,7 @@ class ExtensionRuntime {
 
     // 清理扩展设置
     runtime.onMessage('cleanSettings', (dynamic args) async {
-      debugPrint('cleanSettings: ${args[0]}');
+      // debugPrint('cleanSettings: ${args[0]}');
       return DatabaseUtils.cleanExtensionSettings(
           extension.package, List<String>.from(args[0]));
     });
@@ -176,7 +174,7 @@ class ExtensionRuntime {
     }
   }
 
-  Future<List<ExtensionListItem>> latest(page) async {
+  Future<List<ExtensionListItem>> latest(int page) async {
     return _runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync('stringify(()=>extenstion.latest($page))'),
@@ -187,7 +185,7 @@ class ExtensionRuntime {
     });
   }
 
-  Future<List<ExtensionListItem>> search(kw, page) async {
+  Future<List<ExtensionListItem>> search(String kw, int page) async {
     return _runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime
@@ -199,7 +197,7 @@ class ExtensionRuntime {
     });
   }
 
-  Future<ExtensionDetail> detail(url) async {
+  Future<ExtensionDetail> detail(String url) async {
     return _runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync('stringify(()=>extenstion.detail("$url"))'),
@@ -208,12 +206,21 @@ class ExtensionRuntime {
     });
   }
 
-  Future<ExtensionBangumiWatch> watch(url) async {
+  Future<Object?> watch(String url) async {
     return _runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync('stringify(()=>extenstion.watch("$url"))'),
       );
-      return ExtensionBangumiWatch.fromJson(jsonDecode(jsResult.stringResult));
+      final data = jsonDecode(jsResult.stringResult);
+
+      switch (extension.type) {
+        case ExtensionType.bangumi:
+          return ExtensionBangumiWatch.fromJson(data);
+        case ExtensionType.manga:
+          return ExtensionMangaWatch.fromJson(data);
+        default:
+          return ExtensionFikushonWatch.fromJson(data);
+      }
     });
   }
 

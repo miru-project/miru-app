@@ -67,7 +67,7 @@ class ExtensionUtils {
     }
     // 重载搜索页面
     if (Get.isRegistered<SearchPageController>()) {
-      Get.find<SearchPageController>().onRefresh();
+      Get.find<SearchPageController>().getRuntime();
     }
   }
 
@@ -113,7 +113,7 @@ class ExtensionUtils {
       case ExtensionType.fikushon:
         return 'extension-type.novel'.i18n;
       case ExtensionType.manga:
-        return 'extension-type.comics'.i18n;
+        return 'extension-type.comic'.i18n;
     }
   }
 

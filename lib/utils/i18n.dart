@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/main.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
 final _context =

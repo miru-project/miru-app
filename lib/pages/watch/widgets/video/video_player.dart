@@ -6,10 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:miru_app/main.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/models/history.dart';
 import 'package:miru_app/pages/home/controller.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
@@ -44,21 +44,22 @@ class VideoPlayer extends StatefulWidget {
 }
 
 class _VideoPlayerState extends State<VideoPlayer> {
-  late final player = Player();
-  late final controller = VideoController(player);
-  late final ScreenshotController screenshotController = ScreenshotController();
-  late int playerIndex = widget.playerIndex;
-  bool isPlaying = false;
-  bool isLoading = true;
-  bool isFullScreen = false;
-  bool showControl = false;
-  bool showPlayList = false;
-  bool openSidebar = false;
+  late final _player = Player();
+  late final _controller = VideoController(_player);
+  late final ScreenshotController _screenshotController =
+      ScreenshotController();
+  late int _playerIndex = widget.playerIndex;
+  bool _isPlaying = false;
+  bool _isLoading = true;
+  bool _isFullScreen = false;
+  bool _showControl = false;
+  bool _showPlayList = false;
+  bool _openSidebar = false;
   // 是否是进度条拖动
-  bool isSeeking = false;
-  Duration duration = Duration.zero;
-  Duration position = Duration.zero;
-  String error = '';
+  bool _isSeeking = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+  String _error = '';
 
   @override
   void initState() {
@@ -69,32 +70,32 @@ class _VideoPlayerState extends State<VideoPlayer> {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     }
     _play();
-    player.stream.playing.listen((event) {
+    _player.stream.playing.listen((event) {
       setState(() {
-        isPlaying = event;
+        _isPlaying = event;
       });
     });
-    player.stream.duration.listen((event) {
+    _player.stream.duration.listen((event) {
       setState(() {
-        duration = event;
+        _duration = event;
       });
     });
-    player.stream.position.listen((event) {
-      if (!isSeeking) {
+    _player.stream.position.listen((event) {
+      if (!_isSeeking) {
         setState(() {
-          position = event;
+          _position = event;
         });
       }
     });
-    player.stream.error.listen((event) {
+    _player.stream.error.listen((event) {
       if (event.toString().isNotEmpty) {
         setState(() {
-          error = event.toString();
+          _error = event.toString();
         });
       }
     });
-    player.stream.completed.listen((event) {
-      if (playerIndex == widget.playList.length - 1) {
+    _player.stream.completed.listen((event) {
+      if (_playerIndex == widget.playList.length - 1) {
         if (Platform.isAndroid) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('video.play-complete'.i18n),
@@ -106,8 +107,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
         }));
         return;
       }
-      if (!isLoading) {
-        _togglePlayIndex(index: playerIndex + 1);
+      if (!_isLoading) {
+        _togglePlayIndex(index: _playerIndex + 1);
       }
     });
 
@@ -126,25 +127,25 @@ class _VideoPlayerState extends State<VideoPlayer> {
         SystemUiMode.edgeToEdge,
       );
     }
-    player.dispose();
+    _player.dispose();
     super.dispose();
   }
 
   _addHistory() async {
-    if (position.inSeconds < 1) {
+    if (_position.inSeconds < 1) {
       return;
     }
     final tempDir = await MiruDirectory.getCacheDirectory;
     final coverDir = path.join(tempDir, 'history_cover');
     Directory(coverDir).createSync(recursive: true);
-    final epName = widget.playList[playerIndex].name;
+    final epName = widget.playList[_playerIndex].name;
     final filename = '${widget.title}_$epName';
     final file = File(path.join(coverDir, filename));
     if (file.existsSync()) {
       file.deleteSync(recursive: true);
     }
 
-    final coverPath = await screenshotController.captureAndSave(
+    final coverPath = await _screenshotController.captureAndSave(
       coverDir,
       fileName: filename,
     );
@@ -155,7 +156,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         ..episodeGroupId = widget.episodeGroupId
         ..package = widget.runtime.extension.package
         ..type = widget.runtime.extension.type
-        ..episodeId = playerIndex
+        ..episodeId = _playerIndex
         ..episodeTitle = epName
         ..title = widget.title,
     );
@@ -163,19 +164,20 @@ class _VideoPlayerState extends State<VideoPlayer> {
   }
 
   _play() async {
-    isLoading = true;
+    _isLoading = true;
     try {
+      final playUrl = widget.playList[_playerIndex].url;
       final m3u8Url =
-          (await widget.runtime.watch(widget.playList[playerIndex].url)).url;
+          (await widget.runtime.watch(playUrl) as ExtensionBangumiWatch).url;
       debugPrint(m3u8Url);
-      player.open(Media(m3u8Url));
-      player.stream.buffering.listen((event) {
+      _player.open(Media(m3u8Url));
+      _player.stream.buffering.listen((event) {
         debugPrint(event.toString());
-        isLoading = event;
+        _isLoading = event;
       });
     } catch (e) {
       debugPrint(e.toString());
-      error = e.toString();
+      _error = e.toString();
     } finally {
       if (mounted) {
         setState(() {});
@@ -185,7 +187,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   _togglePlayIndex({int index = 0}) async {
     setState(() {
-      playerIndex = index;
+      _playerIndex = index;
     });
     _play();
   }
@@ -209,7 +211,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
             ),
             const SizedBox(width: 8),
             Text(
-              "${widget.title} - ${widget.playList[playerIndex].name}",
+              "${widget.title} - ${widget.playList[_playerIndex].name}",
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.white,
@@ -235,7 +237,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "${widget.title} - ${widget.playList[playerIndex].name}",
+                    "${widget.title} - ${widget.playList[_playerIndex].name}",
                     style: const TextStyle(fontSize: 18),
                   ),
                 ),
@@ -285,24 +287,24 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 color: Colors.white,
               ),
               onPressed: () {
-                if (playerIndex == 0) {
+                if (_playerIndex == 0) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('video.already-first'.i18n),
                   ));
                   return;
                 }
-                _togglePlayIndex(index: playerIndex - 1);
+                _togglePlayIndex(index: _playerIndex - 1);
               },
             ),
 
             // 暂停播放按钮
             IconButton(
               icon: Icon(
-                isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                _isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
                 color: Colors.white,
               ),
               onPressed: () {
-                player.playOrPause();
+                _player.playOrPause();
               },
             ),
             IconButton(
@@ -311,34 +313,34 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 color: Colors.white,
               ),
               onPressed: () {
-                if (playerIndex == widget.playList.length - 1) {
+                if (_playerIndex == widget.playList.length - 1) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('video.already-last'.i18n),
                   ));
                   return;
                 }
-                _togglePlayIndex(index: playerIndex + 1);
+                _togglePlayIndex(index: _playerIndex + 1);
               },
             ),
             Expanded(
               child: Slider(
-                label: position.toString().split('.')[0],
-                value: position.inMicroseconds.toDouble(),
-                max: duration.inMicroseconds.toDouble(),
+                label: _position.toString().split('.')[0],
+                value: _position.inMicroseconds.toDouble(),
+                max: _duration.inMicroseconds.toDouble(),
                 onChangeEnd: (value) {
-                  player.seek(position);
+                  _player.seek(_position);
                   setState(() {
-                    isSeeking = false;
+                    _isSeeking = false;
                   });
                 },
                 onChangeStart: (value) {
                   setState(() {
-                    isSeeking = true;
+                    _isSeeking = true;
                   });
                 },
                 onChanged: (double value) {
                   setState(() {
-                    position = Duration(microseconds: value.toInt());
+                    _position = Duration(microseconds: value.toInt());
                   });
                 },
               ),
@@ -346,7 +348,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
             const SizedBox(width: 8),
             // 进度指示器
             Text(
-              '${position.toString().split('.')[0]} / ${duration.toString().split('.')[0]}',
+              '${_position.toString().split('.')[0]} / ${_duration.toString().split('.')[0]}',
               style: const TextStyle(
                 fontSize: 12,
                 color: Colors.white,
@@ -356,10 +358,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  if (openSidebar) {
-                    showPlayList = false;
+                  if (_openSidebar) {
+                    _showPlayList = false;
                   }
-                  openSidebar = !openSidebar;
+                  _openSidebar = !_openSidebar;
                 });
               },
               icon: const Icon(
@@ -375,88 +377,89 @@ class _VideoPlayerState extends State<VideoPlayer> {
           fluent.IconButton(
             icon: const Icon(fluent.FluentIcons.previous),
             onPressed: () {
-              if (playerIndex == 0) {
+              if (_playerIndex == 0) {
                 fluent.displayInfoBar(context, builder: ((context, close) {
                   return fluent.InfoBar(
                       title: Text('video.already-first'.i18n));
                 }));
                 return;
               }
-              _togglePlayIndex(index: playerIndex - 1);
+              _togglePlayIndex(index: _playerIndex - 1);
             },
           ),
           fluent.IconButton(
-            icon: Icon(
-                isPlaying ? fluent.FluentIcons.pause : fluent.FluentIcons.play),
+            icon: Icon(_isPlaying
+                ? fluent.FluentIcons.pause
+                : fluent.FluentIcons.play),
             onPressed: () {
-              player.playOrPause();
+              _player.playOrPause();
             },
           ),
           fluent.IconButton(
             icon: const Icon(fluent.FluentIcons.next),
             onPressed: () {
-              if (playerIndex == widget.playList.length - 1) {
+              if (_playerIndex == widget.playList.length - 1) {
                 fluent.displayInfoBar(context, builder: ((context, close) {
                   return fluent.InfoBar(title: Text('video.already-last'.i18n));
                 }));
                 return;
               }
-              _togglePlayIndex(index: playerIndex + 1);
+              _togglePlayIndex(index: _playerIndex + 1);
             },
           ),
           const SizedBox(width: 8),
           Text(
-            position.toString().split('.')[0],
+            _position.toString().split('.')[0],
             style: const TextStyle(fontSize: 12),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: fluent.Slider(
-              label: position.toString().split('.')[0],
-              value: position.inMicroseconds.toDouble(),
-              max: duration.inMicroseconds.toDouble(),
+              label: _position.toString().split('.')[0],
+              value: _position.inMicroseconds.toDouble(),
+              max: _duration.inMicroseconds.toDouble(),
               onChangeEnd: (value) {
-                player.seek(position);
+                _player.seek(_position);
                 setState(() {
-                  isSeeking = false;
+                  _isSeeking = false;
                 });
               },
               onChangeStart: (value) {
                 setState(() {
-                  isSeeking = true;
+                  _isSeeking = true;
                 });
               },
               onChanged: (double value) {
                 setState(() {
-                  position = Duration(microseconds: value.toInt());
+                  _position = Duration(microseconds: value.toInt());
                 });
               },
             ),
           ),
           const SizedBox(width: 8),
           Text(
-            duration.toString().split('.')[0],
+            _duration.toString().split('.')[0],
             style: const TextStyle(fontSize: 12),
           ),
           const SizedBox(width: 8),
           fluent.IconButton(
-              icon: Icon(isFullScreen
+              icon: Icon(_isFullScreen
                   ? fluent.FluentIcons.back_to_window
                   : fluent.FluentIcons.full_screen),
               onPressed: () async {
-                await WindowManager.instance.setFullScreen(!isFullScreen);
+                await WindowManager.instance.setFullScreen(!_isFullScreen);
                 setState(() {
-                  isFullScreen = !isFullScreen;
+                  _isFullScreen = !_isFullScreen;
                 });
               }),
           fluent.IconButton(
               icon: const Icon(fluent.FluentIcons.bulleted_list),
               onPressed: () {
                 setState(() {
-                  if (openSidebar) {
-                    showPlayList = false;
+                  if (_openSidebar) {
+                    _showPlayList = false;
                   }
-                  openSidebar = !openSidebar;
+                  _openSidebar = !_openSidebar;
                 });
               }),
           fluent.IconButton(
@@ -493,17 +496,17 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
 // 中间控制面板
   _playerControlPanelCenter() {
-    if (error.isNotEmpty) {
+    if (_error.isNotEmpty) {
       return SizedBox.expand(
         child: Center(
           child: Text(
-            error,
+            _error,
             style: const TextStyle(color: Colors.white),
           ),
         ),
       );
     }
-    if (isLoading) {
+    if (_isLoading) {
       return const Center(
         child: ProgressRing(),
       );
@@ -524,36 +527,36 @@ class _VideoPlayerState extends State<VideoPlayer> {
           children: [
             AnimatedContainer(
               width:
-                  openSidebar ? container.maxWidth - 300 : container.maxWidth,
+                  _openSidebar ? container.maxWidth - 300 : container.maxWidth,
               duration: const Duration(milliseconds: 120),
               curve: Curves.ease,
               onEnd: () {
                 setState(() {
-                  if (openSidebar) {
-                    showPlayList = true;
+                  if (_openSidebar) {
+                    _showPlayList = true;
                   }
                 });
               },
               child: Stack(
                 children: [
                   Screenshot(
-                    controller: screenshotController,
+                    controller: _screenshotController,
                     child: Video(
-                      controller: controller,
+                      controller: _controller,
                       controls: (state) => const SizedBox.shrink(),
                     ),
                   ),
                   Positioned.fill(
                     child: MouseRegion(
                       onHover: (event) {
-                        if (!showControl) {
+                        if (!_showControl) {
                           setState(() {
-                            showControl = true;
+                            _showControl = true;
                           });
                           Future.delayed(const Duration(seconds: 3), () {
                             if (mounted) {
                               setState(() {
-                                showControl = false;
+                                _showControl = false;
                               });
                             }
                           });
@@ -561,16 +564,16 @@ class _VideoPlayerState extends State<VideoPlayer> {
                       },
                       child: Column(
                         children: [
-                          if (showControl || isLoading || !isPlaying)
+                          if (_showControl || _isLoading || !_isPlaying)
                             _playerControlPanelHeader(),
                           Expanded(
-                            child: isFullScreen
+                            child: _isFullScreen
                                 ? _playerControlPanelCenter()
                                 : DragToMoveArea(
                                     child: _playerControlPanelCenter(),
                                   ),
                           ),
-                          if (showControl || isLoading || !isPlaying)
+                          if (_showControl || _isLoading || !_isPlaying)
                             _playerControlPanel()
                         ],
                       ),
@@ -581,10 +584,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
             ),
 
             // 播放列表
-            if (showPlayList)
+            if (_showPlayList)
               Expanded(
                 child: p.PlayList(
-                  selectIndex: playerIndex,
+                  selectIndex: _playerIndex,
                   list: widget.playList.map((e) => e.name).toList(),
                   title: widget.title,
                   onChange: (value) {

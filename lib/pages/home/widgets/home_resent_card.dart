@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/main.dart';
 import 'package:miru_app/models/history.dart';
 import 'package:miru_app/pages/detail/view.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 

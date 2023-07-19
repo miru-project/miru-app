@@ -16,7 +16,10 @@
     "repo": "Repository",
     "unset": "Not set",
     "extension-missing": "Extension {package} missing",
-    "error": "Error"
+    "error": "Error",
+    "retry": "Retry",
+    "next": "Next",
+    "previous": "Previous"
   },
 
   "home": {
@@ -46,7 +49,6 @@
   "extension-repo": {
     "error": "An error occurred!",
     "error-tips": "Please check your network connection\nor the repository address",
-    "retry": "Retry",
     "empty": "Repository is empty",
     "upgrade": "Update"
   },
@@ -106,7 +108,7 @@
   "extension-type": {
     "video": "Video",
     "novel": "Novel",
-    "comics": "Comics"
+    "comic": "Comic"
   },
 
   "extension-info": {

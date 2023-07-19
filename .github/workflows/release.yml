@@ -50,41 +50,41 @@ jobs:
           artifacts: "build/app/outputs/flutter-apk/app-*.apk"
           allowUpdates: true
 
-  build-and-release-linux:
-    runs-on: ubuntu-latest
+  # build-and-release-linux:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.10.3
-          channel: stable
-      - name: Install dependencies
-        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev mpv
-      - name: Install project dependencies
-        run: flutter pub get
-      - name: Generate intermediates
-        run: flutter pub run build_runner build --delete-conflicting-outputs
-      - name: Enable linux build
-        run: flutter config --enable-linux-desktop
-      - name: Build artifacts
-        run: flutter build linux --release
-      - name: Archive Release
-        uses: thedoctor0/zip-release@master
-        with:
-          type: "zip"
-          filename: Miru-${{github.ref_name}}-linux.zip
-          directory: build/linux/x64/release/bundle
-      # 发布安装包
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          path: "build/linux/x64/release/bundle/Miru-${{github.ref_name}}-linux.zip"
-      - name: Release Packages
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/linux/x64/release/bundle/Miru-${{github.ref_name}}-linux.zip"
-          allowUpdates: true
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         flutter-version: 3.10.3
+  #         channel: stable
+  #     - name: Install dependencies
+  #       run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev mpv
+  #     - name: Install project dependencies
+  #       run: flutter pub get
+  #     - name: Generate intermediates
+  #       run: flutter pub run build_runner build --delete-conflicting-outputs
+  #     - name: Enable linux build
+  #       run: flutter config --enable-linux-desktop
+  #     - name: Build artifacts
+  #       run: flutter build linux --release
+  #     - name: Archive Release
+  #       uses: thedoctor0/zip-release@master
+  #       with:
+  #         type: "zip"
+  #         filename: Miru-${{github.ref_name}}-linux.zip
+  #         directory: build/linux/x64/release/bundle
+  #     # 发布安装包
+  #     - name: Upload Artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         path: "build/linux/x64/release/bundle/Miru-${{github.ref_name}}-linux.zip"
+  #     - name: Release Packages
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         artifacts: "build/linux/x64/release/bundle/Miru-${{github.ref_name}}-linux.zip"
+  #         allowUpdates: true
 
   build-and-release-windows:
     runs-on: windows-latest
@@ -97,10 +97,6 @@ jobs:
           channel: stable
       - name: Install project dependencies
         run: flutter pub get
-      - name: Generate intermediates
-        run: flutter pub run build_runner build --delete-conflicting-outputs
-      - name: Enable windows build
-        run: flutter config --enable-windows-desktop
       - name: Build artifacts
         run: flutter build windows --release
       - name: Archive Release

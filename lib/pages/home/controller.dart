@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/models/favorite.dart';
 import 'package:miru_app/models/history.dart';
 import 'package:miru_app/utils/database.dart';
@@ -18,10 +17,10 @@ class HomePageController extends GetxController {
     resents.clear();
     favorites.clear();
     resents.addAll(
-      await DatabaseUtils.getHistorysByType(ExtensionType.bangumi),
+      await DatabaseUtils.getHistorysByType(),
     );
     favorites.addAll(
-      await DatabaseUtils.getFavoritesByType(ExtensionType.bangumi),
+      await DatabaseUtils.getFavoritesByType(),
     );
   }
 }

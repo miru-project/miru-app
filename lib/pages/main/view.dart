@@ -2,12 +2,12 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:miru_app/main.dart';
 import 'package:miru_app/pages/extension/view.dart';
 import 'package:miru_app/pages/home/view.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/search/view.dart';
 import 'package:miru_app/pages/settings/view.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:window_manager/window_manager.dart';
@@ -88,6 +88,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
             size: const fluent.NavigationPaneSize(openMaxWidth: 200),
             selected: c.selectedTab.value,
             onChanged: c.changeTab,
+            displayMode: fluent.PaneDisplayMode.compact,
             footerItems: [
               fluent.PaneItemSeparator(),
               fluent.PaneItem(

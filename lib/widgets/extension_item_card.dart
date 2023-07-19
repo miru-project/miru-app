@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/main.dart';
 import 'package:miru_app/pages/detail/view.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
-class BangumiCard extends StatefulWidget {
-  const BangumiCard({
+class ExtensionItemCard extends StatefulWidget {
+  const ExtensionItemCard({
     Key? key,
     required this.title,
     required this.url,
@@ -21,10 +21,10 @@ class BangumiCard extends StatefulWidget {
   final String package;
 
   @override
-  State<BangumiCard> createState() => _BangumiCardState();
+  State<ExtensionItemCard> createState() => _ExtensionItemCardState();
 }
 
-class _BangumiCardState extends State<BangumiCard> {
+class _ExtensionItemCardState extends State<ExtensionItemCard> {
   bool _isHover = false;
 
   Widget _buildAndroid(BuildContext context) {

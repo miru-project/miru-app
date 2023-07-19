@@ -180,18 +180,20 @@ class _DetailPageState extends State<DetailPage> {
                       height: 330,
                       child: Row(
                         children: [
-                          Container(
-                            width: 230,
-                            height: double.infinity,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+                          if (constraints.maxWidth > 600) ...[
+                            Container(
+                              width: 230,
+                              height: double.infinity,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: CacheNetWorkImage(
+                                c.data.value!.cover,
+                              ),
                             ),
-                            child: CacheNetWorkImage(
-                              c.data.value!.cover,
-                            ),
-                          ),
-                          const SizedBox(width: 30),
+                            const SizedBox(width: 30),
+                          ],
                           Expanded(
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,8 +208,9 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                               const SizedBox(height: 8),
                               Container(
-                                constraints:
-                                    const BoxConstraints(maxHeight: 100),
+                                constraints: const BoxConstraints(
+                                  maxHeight: 100,
+                                ),
                                 child: SelectableText(c.data.value!.desc!),
                               ),
                               const SizedBox(height: 16),

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:miru_app/models/favorite.dart';
 import 'package:miru_app/utils/i18n.dart';
-import 'package:miru_app/widgets/bangumi_card.dart';
+import 'package:miru_app/widgets/extension_item_card.dart';
 
 class HomeFavorites extends StatefulWidget {
   const HomeFavorites({
@@ -39,20 +39,21 @@ class _HomeFavoritesState extends State<HomeFavorites> {
         LayoutBuilder(
           builder: (context, constraints) {
             final crossAxisCount =
-                constraints.maxWidth ~/ (Platform.isAndroid ? 120 : 170);
+                constraints.maxWidth ~/ (Platform.isAndroid ? 120 : 160);
+            final childAspectRatio = Platform.isAndroid ? 0.7 : 0.6;
             return GridView.builder(
               // 取消滚动
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
-                childAspectRatio: 0.7,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
+                childAspectRatio: childAspectRatio,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
               ),
               itemCount: widget.data.length,
               itemBuilder: (context, index) {
-                return BangumiCard(
+                return ExtensionItemCard(
                   key: ValueKey(widget.data[index].cover),
                   title: widget.data[index].title,
                   url: widget.data[index].url,

@@ -39,7 +39,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
           ),
           const SizedBox(height: 8),
           FilledButton(
-              child: Text('extension-repo.retry'.i18n),
+              child: Text('common.retry'.i18n),
               onPressed: () {
                 c.onRefresh();
               })

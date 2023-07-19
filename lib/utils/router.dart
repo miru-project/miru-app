@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:miru_app/main.dart';
+import 'package:miru_app/router/router.dart';
 
 class RouterUtils {
   static pop() {

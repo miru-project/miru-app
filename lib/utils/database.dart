@@ -58,13 +58,20 @@ class DatabaseUtils {
         null;
   }
 
-  static Future<List<Favorite>> getFavoritesByType(ExtensionType type) async {
+  static Future<List<Favorite>> getFavoritesByType(
+      {ExtensionType? type}) async {
+    if (type == null) {
+      return db.favorites.where().sortByDateDesc().findAll();
+    }
     return db.favorites.filter().typeEqualTo(type).sortByDateDesc().findAll();
   }
 
   // 历史记录
 
-  static Future<List<History>> getHistorysByType(ExtensionType type) async {
+  static Future<List<History>> getHistorysByType({ExtensionType? type}) async {
+    if (type == null) {
+      return db.historys.where().sortByDateDesc().findAll();
+    }
     return db.historys.filter().typeEqualTo(type).sortByDateDesc().findAll();
   }
 
