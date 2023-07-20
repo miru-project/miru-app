@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_flexible_space.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_title.dart';
@@ -66,6 +67,13 @@ class _DetailPageState extends State<DetailPage> {
     }
     return Scaffold(
       body: Obx(() {
+        late String episodesString;
+        if (c.type.value == ExtensionType.bangumi) {
+          episodesString = 'video.episodes'.i18n;
+        } else {
+          episodesString = 'reader.chapters'.i18n;
+        }
+
         if (c.error.value.isNotEmpty) {
           return Center(
             child: Text(c.error.value),
@@ -90,7 +98,7 @@ class _DetailPageState extends State<DetailPage> {
                   flexibleSpace: const DetailAppbarflexibleSpace(),
                   bottom: TabBar(
                     tabs: [
-                      Tab(text: 'detail.episodes'.i18n),
+                      Tab(text: episodesString),
                       Tab(text: 'detail.overview'.i18n),
                       Tab(text: 'detail.cast'.i18n),
                     ],

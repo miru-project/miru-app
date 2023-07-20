@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -18,20 +19,30 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
   late DetailPageController c = Get.find<DetailPageController>();
 
   Widget _buildAndroid(BuildContext context) {
-    final noEpisodes = FilledButton.icon(
-      onPressed: () {},
-      icon: const Icon(Icons.play_arrow),
-      label: Text('detail.no-episodes'.i18n),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.grey),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-        minimumSize: MaterialStateProperty.all(
-          const Size(double.infinity, 50),
-        ),
-      ),
-    );
-
     return Obx(() {
+      late String noEpisodesString;
+      late String watchNowString;
+      if (c.type.value == ExtensionType.bangumi) {
+        noEpisodesString = 'video.no-episodes'.i18n;
+        watchNowString = 'video.watch-now'.i18n;
+      } else {
+        noEpisodesString = 'reader.no-chapters'.i18n;
+        watchNowString = 'reader.read-now'.i18n;
+      }
+
+      final noEpisodes = FilledButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.play_arrow),
+        label: Text(noEpisodesString),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.grey),
+          foregroundColor: MaterialStateProperty.all(Colors.white),
+          minimumSize: MaterialStateProperty.all(
+            const Size(double.infinity, 50),
+          ),
+        ),
+      );
+
       final history = c.history.value;
       final data = c.data.value;
       if (c.isLoading.value) {
@@ -76,7 +87,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
             );
           },
           icon: const Icon(Icons.play_arrow),
-          label: Text('detail.watch-now'.i18n),
+          label: Text(watchNowString),
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(
               const Size(double.infinity, 50),

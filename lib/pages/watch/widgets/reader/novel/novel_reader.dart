@@ -55,7 +55,7 @@ class _NovelReaderState extends State<NovelReader> {
     return ReadView<ExtensionFikushonWatch>(
       widget.title,
       content: NovelReaderContent(widget.title),
-      buildSettings: (context) => Card(),
+      buildSettings: (context) => const Card(),
     );
     // return Obx(
     //   () => Stack(

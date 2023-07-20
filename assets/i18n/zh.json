@@ -84,19 +84,25 @@
   "detail": {
     "favorite": "收藏",
     "favorited": "已收藏",
-    "episodes": "剧集",
-    "no-episodes": "暂无剧集",
-    "continue-watching": "继续观看 {episode}",
-    "watch-now": "立即观看",
-    "total-episodes": "共 {total} 集",
+    "continue-watching": "继续 {episode}",
+    "total-episodes": "共 {total}",
     "overview": "概览",
     "cast": "演员"
   },
 
   "video": {
+    "episodes": "剧集",
+    "watch-now": "立即观看",
+    "no-episodes": "暂无剧集",
     "already-first": "当前已经是第一集",
     "already-last": "当前已经是最后一集",
     "play-complete": "播放完成"
+  },
+
+  "reader": {
+    "chapters": "章节",
+    "read-now": "立即阅读",
+    "no-chapters": "暂无章节"
   },
 
   "upgrade": {

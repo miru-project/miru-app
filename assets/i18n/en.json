@@ -79,19 +79,25 @@
   "detail": {
     "favorite": "Favorite",
     "favorited": "Favorited",
-    "episodes": "Episodes",
-    "no-episodes": "No episodes",
     "continue-watching": "Continue {episode}",
-    "watch-now": "Watch Now",
-    "total-episodes": "Total {total} episodes",
+    "total-episodes": "Total {total}",
     "overview": "Overview",
     "cast": "Cast"
   },
 
   "video": {
+    "episodes": "Episodes",
+    "watch-now": "Watch Now",
+    "no-episodes": "No episodes",
     "already-first": "Already on the first episode",
     "already-last": "Already on the last episode",
     "play-complete": "Playback complete"
+  },
+
+  "reader": {
+    "chapters": "Chapters",
+    "read-now": "Read Now",
+    "no-chapters": "No chapters"
   },
 
   "upgrade": {

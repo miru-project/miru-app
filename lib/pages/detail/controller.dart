@@ -26,6 +26,7 @@ class DetailPageController extends GetxController {
   final RxString error = ''.obs;
   final RxBool isLoading = true.obs;
   final RxInt selectEpGroup = 0.obs;
+  final Rx<ExtensionType> type = ExtensionType.bangumi.obs;
 
   @override
   void onInit() {
@@ -36,6 +37,8 @@ class DetailPageController extends GetxController {
   onRefresh() async {
     await refreshFavorite();
     try {
+      final runtime = ExtensionUtils.extensions[package];
+      type.value = runtime!.extension.type;
       data.value = await ExtensionUtils.extensions[package]?.detail(url);
       // 获取历史记录
       final history_ = await DatabaseUtils.getHistoryByPackageAndUrl(
