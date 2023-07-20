@@ -25,6 +25,7 @@ class DetailPageController extends GetxController {
   final Rx<History?> history = Rx(null);
   final RxString error = ''.obs;
   final RxBool isLoading = true.obs;
+  final RxInt selectEpGroup = 0.obs;
 
   @override
   void onInit() {
@@ -42,8 +43,10 @@ class DetailPageController extends GetxController {
         url,
       );
       if (history_ != null) {
+        // 并且剧集的数量大于历史记录的剧集列表数量 防止历史记录超出剧集列表数量
         if (history_.episodeGroupId < data.value!.episodes!.length) {
           history.value = history_;
+          selectEpGroup.value = history_.episodeGroupId;
         }
       }
       isLoading.value = false;

@@ -22,7 +22,6 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
   late DetailPageController c = Get.find<DetailPageController>();
   List<fluent.ComboBoxItem<int>>? comboBoxItems;
   List<DropdownMenuItem<int>>? dropdownItems;
-  late int selectEpGroup = 0;
   late List<ExtensionEpisodeGroup> episodes = [];
 
   Widget _buildAndroidEpisodes(BuildContext context) {
@@ -44,11 +43,11 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
               style: TextStyle(color: Theme.of(context).colorScheme.primary),
               isExpanded: true,
               underline: const SizedBox(),
-              value: selectEpGroup,
+              value: c.selectEpGroup.value,
               items: dropdownItems,
               onChanged: (value) {
                 setState(() {
-                  selectEpGroup = value!;
+                  c.selectEpGroup.value = value!;
                 });
               },
             ),
@@ -61,7 +60,8 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                 context,
                 'detail.total-episodes',
                 translationParams: {
-                  'total': episodes[selectEpGroup].urls.length.toString(),
+                  'total':
+                      episodes[c.selectEpGroup.value].urls.length.toString(),
                 },
               ),
               style: const TextStyle(
@@ -72,17 +72,18 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(0),
-            itemCount:
-                episodes.isEmpty ? 0 : episodes[selectEpGroup].urls.length,
+            itemCount: episodes.isEmpty
+                ? 0
+                : episodes[c.selectEpGroup.value].urls.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(episodes[selectEpGroup].urls[index].name),
+                title: Text(episodes[c.selectEpGroup.value].urls[index].name),
                 onTap: () {
                   c.goWatch(
                     context,
-                    episodes[selectEpGroup].urls,
+                    episodes[c.selectEpGroup.value].urls,
                     index,
-                    selectEpGroup,
+                    c.selectEpGroup.value,
                   );
                 },
               );
@@ -102,10 +103,10 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
             const SizedBox(width: 8),
             fluent.ComboBox<int>(
               items: comboBoxItems,
-              value: selectEpGroup,
+              value: c.selectEpGroup.value,
               onChanged: (value) {
                 setState(() {
-                  selectEpGroup = value!;
+                  c.selectEpGroup.value = value!;
                 });
               },
             )
@@ -118,8 +119,9 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
             ),
             child: GridView.builder(
               shrinkWrap: true,
-              itemCount:
-                  episodes.isEmpty ? 0 : episodes[selectEpGroup].urls.length,
+              itemCount: episodes.isEmpty
+                  ? 0
+                  : episodes[c.selectEpGroup.value].urls.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: constraints.maxWidth ~/ 180,
                 crossAxisSpacing: 8,
@@ -129,29 +131,30 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
               itemBuilder: (context, index) {
                 return fluent.Button(
                   child: Center(
-                      child: Text(episodes[selectEpGroup].urls[index].name)),
+                      child: Text(
+                          episodes[c.selectEpGroup.value].urls[index].name)),
                   onPressed: () async {
                     c.goWatch(
                       context,
-                      episodes[selectEpGroup].urls,
+                      episodes[c.selectEpGroup.value].urls,
                       index,
-                      selectEpGroup,
+                      c.selectEpGroup.value,
                     );
                   },
                 );
               },
               // children: [
-              //   for (var i = 0; i < episodes[selectEpGroup].urls.length; i++) ...[
+              //   for (var i = 0; i < episodes[c.selectEpGroup.value].urls.length; i++) ...[
               //     Container(
               //       margin: const EdgeInsets.only(right: 8, bottom: 8),
               //       child: fluent.Button(
-              //         child: Text(episodes[selectEpGroup].urls[i].name),
+              //         child: Text(episodes[c.selectEpGroup.value].urls[i].name),
               //         onPressed: () async {
               //           c.goWatch(
               //             context,
-              //             episodes[selectEpGroup].urls,
+              //             episodes[c.selectEpGroup.value].urls,
               //             i,
-              //             selectEpGroup,
+              //             c.selectEpGroup.value,
               //           );
               //         },
               //       ),
@@ -181,10 +184,6 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
             child: Text(episodes[i].title),
           )
       ];
-      debugPrint("episodes: ${dropdownItems!.length}");
-      if (c.history.value != null) {
-        selectEpGroup = c.history.value!.episodeGroupId;
-      }
       return PlatformBuildWidget(
         androidBuilder: _buildAndroidEpisodes,
         desktopBuilder: _buildDesktopEpisodes,
