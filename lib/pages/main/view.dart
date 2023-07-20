@@ -191,6 +191,7 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
                 selectedIcon: const Icon(Icons.settings),
               ),
             ],
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             selectedIndex: c.selectedTab.value,
             onDestinationSelected: c.changeTab,
           ),

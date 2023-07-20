@@ -23,32 +23,33 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildContent() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Obx(
-          () {
-            if (c.resents.isEmpty && c.favorites.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 200),
-                    const Image(
-                      image: AssetImage("assets/icon/logo.png"),
-                      width: 100,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      "home.no-record".i18n,
-                    ),
-                  ],
+    return Obx(
+      () {
+        if (c.resents.isEmpty && c.favorites.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "（＞人＜；）",
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              );
-            }
+                const SizedBox(height: 20),
+                Text(
+                  "home.no-record".i18n,
+                ),
+              ],
+            ),
+          );
+        }
 
-            return Column(
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (c.resents.isNotEmpty) ...[
@@ -62,10 +63,10 @@ class _HomePageState extends State<HomePage> {
                     data: c.favorites,
                   ),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 
