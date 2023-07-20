@@ -138,7 +138,9 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
                   style: fluent.FluentTheme.of(context).typography.subtitle,
                 ),
               ),
-              Expanded(
+              const Spacer(),
+              SizedBox(
+                width: 300,
                 child: fluent.TextBox(
                   controller: TextEditingController(
                     text: _keyWord,

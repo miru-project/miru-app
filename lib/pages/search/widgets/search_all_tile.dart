@@ -161,7 +161,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
                 itemBuilder: (context, index) {
                   return Container(
                     width: 170,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.only(right: 8),
                     child: ExtensionItemCard(
                       key: ValueKey(data[index].url),
                       title: data[index].title,
