@@ -153,12 +153,14 @@ class _SearchPageState extends State<SearchPage> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Row(
+                Row(
                   children: [
                     Text(
-                      "搜索",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      'common.search'.i18n,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
