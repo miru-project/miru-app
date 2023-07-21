@@ -21,5 +21,9 @@ class History {
   late String title;
   // 进度标题
   late String episodeTitle;
+  // 当前剧集/章节进度
+  late String progress;
+  // 当前章节/剧集总进度
+  late String totalProgress;
   DateTime date = DateTime.now();
 }

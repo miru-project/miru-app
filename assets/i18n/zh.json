@@ -94,9 +94,8 @@
     "episodes": "剧集",
     "watch-now": "立即观看",
     "no-episodes": "暂无剧集",
-    "already-first": "当前已经是第一集",
-    "already-last": "当前已经是最后一集",
-    "play-complete": "播放完成"
+    "play-complete": "播放完成",
+    "resume-last-playback": "恢复上次播放位置"
   },
 
   "reader": {

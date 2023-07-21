@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/index.dart';
-import 'package:miru_app/pages/watch/widgets/reader/controller.dart';
+import 'package:miru_app/pages/watch/reader_controller.dart';
 import 'package:miru_app/pages/watch/widgets/reader/novel/novel_reader_content.dart';
 import 'package:miru_app/pages/watch/widgets/reader/view.dart';
 import 'package:miru_app/utils/extension_runtime.dart';

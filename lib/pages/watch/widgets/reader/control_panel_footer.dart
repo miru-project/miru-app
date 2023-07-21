@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/pages/watch/widgets/reader/controller.dart';
+import 'package:miru_app/pages/watch/reader_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/button.dart';
 

@@ -97,7 +97,9 @@ class DatabaseUtils {
         ..title = history.title
         ..episodeGroupId = history.episodeGroupId
         ..episodeId = history.episodeId
-        ..episodeTitle = history.episodeTitle;
+        ..episodeTitle = history.episodeTitle
+        ..progress = history.progress
+        ..totalProgress = history.totalProgress;
       return db.writeTxn(() => db.historys.put(hst));
     }
 

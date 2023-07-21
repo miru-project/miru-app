@@ -24,13 +24,12 @@ class ReaderController<T> extends GetxController {
   late Rx<T?> watchData = Rx(null);
   final error = ''.obs;
   final isShowControlPanel = false.obs;
-  final index = 0.obs;
+  late final index = playIndex.obs;
   get cuurentPlayUrl => playList[index.value].url;
   Timer? _timer;
 
   @override
   void onInit() {
-    index.value = playIndex;
     getContent();
     ever(index, (callback) => getContent());
     super.onInit();

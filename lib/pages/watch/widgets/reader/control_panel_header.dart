@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/watch/widgets/playlist.dart';
-import 'package:miru_app/pages/watch/widgets/reader/controller.dart';
+import 'package:miru_app/pages/watch/reader_controller.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/platform_widget.dart';

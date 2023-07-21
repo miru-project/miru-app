@@ -89,9 +89,8 @@
     "episodes": "Episodes",
     "watch-now": "Watch Now",
     "no-episodes": "No episodes",
-    "already-first": "Already on the first episode",
-    "already-last": "Already on the last episode",
-    "play-complete": "Playback complete"
+    "play-complete": "Playback complete",
+    "resume-last-playback": "Resume last playback"
   },
 
   "reader": {

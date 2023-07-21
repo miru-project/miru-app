@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/watch/widgets/reader/control_panel_footer.dart';
 import 'package:miru_app/pages/watch/widgets/reader/control_panel_header.dart';
-import 'package:miru_app/pages/watch/widgets/reader/controller.dart';
+import 'package:miru_app/pages/watch/reader_controller.dart';
 
 class ReadView<T> extends StatelessWidget {
   const ReadView(
