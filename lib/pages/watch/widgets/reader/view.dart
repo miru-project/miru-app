@@ -1,10 +1,10 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/watch/widgets/reader/control_panel_footer.dart';
 import 'package:miru_app/pages/watch/widgets/reader/control_panel_header.dart';
 import 'package:miru_app/pages/watch/reader_controller.dart';
 
-class ReadView<T> extends StatelessWidget {
+class ReadView<T extends ReaderController> extends StatelessWidget {
   const ReadView(
     this.tag, {
     Key? key,
@@ -17,7 +17,7 @@ class ReadView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = Get.find<ReaderController<T>>(tag: tag);
+    final c = Get.find<T>(tag: tag);
     return Obx(
       () => Stack(
         children: [

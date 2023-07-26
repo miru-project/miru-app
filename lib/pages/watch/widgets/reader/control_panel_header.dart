@@ -9,7 +9,7 @@ import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
-class ControlPanelHeader<T> extends StatefulWidget {
+class ControlPanelHeader<T extends ReaderController> extends StatefulWidget {
   const ControlPanelHeader(
     this.tag, {
     Key? key,
@@ -22,8 +22,9 @@ class ControlPanelHeader<T> extends StatefulWidget {
   State<ControlPanelHeader> createState() => _ControlPanelHeaderState<T>();
 }
 
-class _ControlPanelHeaderState<T> extends State<ControlPanelHeader> {
-  late final _c = Get.find<ReaderController<T>>(tag: widget.tag);
+class _ControlPanelHeaderState<T extends ReaderController>
+    extends State<ControlPanelHeader> {
+  late final _c = Get.find<T>(tag: widget.tag);
   final fluent.FlyoutController _playListFlayoutcontroller =
       fluent.FlyoutController();
   final fluent.FlyoutController _settingFlayoutcontroller =
@@ -39,7 +40,10 @@ class _ControlPanelHeaderState<T> extends State<ControlPanelHeader> {
           actions: [
             IconButton(
               onPressed: () {
-                // Get.to(widget.buildSettings(context));
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => widget.buildSettings(context),
+                );
               },
               icon: const Icon(Icons.settings),
             ),

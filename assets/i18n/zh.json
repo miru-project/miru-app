@@ -105,6 +105,17 @@
     "no-chapters": "暂无章节"
   },
 
+  "comic-settings": {
+    "read-mode": "漫画阅读模式",
+    "standard": "标准",
+    "right-to-left": "从右到左",
+    "web-tonn": "条漫"
+  },
+
+  "novel-settings": {
+    "font-size": "字体大小"
+  },
+
   "upgrade": {
     "check-update": "检查更新",
     "new-version": "检测到新版本 {version}",

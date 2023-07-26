@@ -1,9 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:isar/isar.dart';
-import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/models/extension_setting.dart';
-import 'package:miru_app/models/favorite.dart';
-import 'package:miru_app/models/history.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
@@ -200,5 +197,26 @@ class DatabaseUtils {
     }
 
     return db.writeTxn(() => db.extensionSettings.deleteAll(ids));
+  }
+
+  // 获取漫画阅读模式
+  static Future<MangaReadMode> getMnagaReaderType(String url) {
+    return db.mangaSettings.filter().urlEqualTo(url).findFirst().then(
+          (value) => value?.readMode ?? MangaReadMode.standard,
+        );
+  }
+
+  // 设置漫画阅读模式
+  static Future<Id> setMangaReaderType(
+    String url,
+    MangaReadMode readMode,
+  ) {
+    return db.writeTxn(
+      () => db.mangaSettings.putByUrl(
+        MangaSetting()
+          ..url = url
+          ..readMode = readMode,
+      ),
+    );
   }
 }

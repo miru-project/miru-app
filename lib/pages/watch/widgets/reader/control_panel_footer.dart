@@ -7,13 +7,13 @@ import 'package:miru_app/pages/watch/reader_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/button.dart';
 
-class ControlPanelFooter<T> extends StatelessWidget {
+class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
   const ControlPanelFooter(this.tag, {Key? key}) : super(key: key);
   final String tag;
 
   @override
   Widget build(BuildContext context) {
-    final c = Get.find<ReaderController<T>>(tag: tag);
+    final c = Get.find<T>(tag: tag);
     return Container(
       height: 80,
       padding: const EdgeInsets.symmetric(horizontal: 20),

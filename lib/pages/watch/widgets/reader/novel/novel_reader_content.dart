@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/pages/watch/reader_controller.dart';
+import 'package:miru_app/pages/watch/widgets/reader/novel/controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -17,8 +16,7 @@ class NovelReaderContent extends StatefulWidget {
 }
 
 class _NovelReaderContentState extends State<NovelReaderContent> {
-  late final _c =
-      Get.find<ReaderController<ExtensionFikushonWatch>>(tag: widget.tag);
+  late final _c = Get.find<NovelController>(tag: widget.tag);
 
   _buildContent() {
     return LayoutBuilder(
@@ -51,10 +49,14 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
           final listviewPadding =
               maxWidth > 800 ? ((maxWidth - 800) / 2) : 16.0;
 
+          final fontSize = _c.fontSize.value;
+
           return Center(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(
-                  horizontal: listviewPadding, vertical: 16),
+                horizontal: listviewPadding,
+                vertical: 16,
+              ),
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(
@@ -84,8 +86,8 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                         const WidgetSpan(child: SizedBox(width: 40.0)),
                         TextSpan(
                           text: watchData.content[index - 2],
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style: TextStyle(
+                            fontSize: fontSize,
                             fontWeight: FontWeight.w400,
                             height: 2,
                             textBaseline: TextBaseline.ideographic,

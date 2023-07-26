@@ -1,8 +1,6 @@
 import 'package:hive_flutter/adapters.dart';
 import 'package:isar/isar.dart';
-import 'package:miru_app/models/extension_setting.dart';
-import 'package:miru_app/models/favorite.dart';
-import 'package:miru_app/models/history.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 
 class MiruStorage {
@@ -13,7 +11,12 @@ class MiruStorage {
     final path = await MiruDirectory.getDirectory;
     // 初始化数据库
     database = await Isar.open(
-      [FavoriteSchema, HistorySchema, ExtensionSettingSchema],
+      [
+        FavoriteSchema,
+        HistorySchema,
+        ExtensionSettingSchema,
+        MangaSettingSchema,
+      ],
       directory: path,
     );
     // 初始化设置
@@ -27,6 +30,7 @@ class MiruStorage {
     await _initSetting(SettingKey.tmdbKay, "");
     await _initSetting(SettingKey.autoCheckUpdate, true);
     await _initSetting(SettingKey.language, 'en');
+    await _initSetting(SettingKey.novelFontSize, 18.0);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -49,4 +53,5 @@ class SettingKey {
   static String tmdbKay = 'TMDBKey';
   static String autoCheckUpdate = 'AutoCheckUpdate';
   static String language = 'Language';
+  static String novelFontSize = 'NovelFontSize';
 }

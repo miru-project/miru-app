@@ -55,14 +55,14 @@ class _HorizontalListState extends State<HorizontalList> {
           widget.contentBuilder!(_controller)
         else
           SizedBox(
-            height: 186,
+            height: 170,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               controller: _controller,
               itemCount: widget.itemCount,
               itemBuilder: ((context, index) {
                 return Container(
-                  width: 128,
+                  width: 110,
                   margin: const EdgeInsets.only(right: 16),
                   child: widget.itemBuilder!(context, index),
                 );

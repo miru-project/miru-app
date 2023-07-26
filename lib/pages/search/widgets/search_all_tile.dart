@@ -52,14 +52,14 @@ class _SearchAllTileState extends State<SearchAllTile> {
               }
 
               return SizedBox(
-                height: Platform.isAndroid ? 186 : 280,
+                height: Platform.isAndroid ? 170 : 280,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: controller,
                   itemCount: data!.length,
                   itemBuilder: ((context, index) {
                     return Container(
-                      width: Platform.isAndroid ? 128 : 170,
+                      width: Platform.isAndroid ? 110 : 170,
                       margin: const EdgeInsets.only(right: 16),
                       child: ExtensionItemCard(
                         key: ValueKey(data[index].url),

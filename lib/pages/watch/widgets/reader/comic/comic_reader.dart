@@ -2,7 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/watch/widgets/reader/comic/comic_reader_content.dart';
-import 'package:miru_app/pages/watch/reader_controller.dart';
+import 'package:miru_app/pages/watch/widgets/reader/comic/comic_reader_settings.dart';
+import 'package:miru_app/pages/watch/widgets/reader/comic/controller.dart';
 import 'package:miru_app/pages/watch/widgets/reader/view.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:window_manager/window_manager.dart';
@@ -32,8 +33,8 @@ class ComicReader extends StatefulWidget {
 class _ComicReaderState extends State<ComicReader> {
   @override
   void initState() {
-    Get.put<ReaderController<ExtensionMangaWatch>>(
-      ReaderController(
+    Get.put(
+      ComicController(
         title: widget.title,
         playList: widget.playList,
         detailUrl: widget.detailUrl,
@@ -48,18 +49,18 @@ class _ComicReaderState extends State<ComicReader> {
 
   @override
   void dispose() {
-    Get.delete<ReaderController<ExtensionMangaWatch>>(tag: widget.title);
+    Get.delete<ComicController>(tag: widget.title);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ReadView<ExtensionMangaWatch>(
+    return ReadView<ComicController>(
       widget.title,
       content: DragToMoveArea(
         child: ComicReaderContent(widget.title),
       ),
-      buildSettings: (context) => const SizedBox(),
+      buildSettings: (context) => ComicReaderSettings(widget.title),
     );
   }
 }

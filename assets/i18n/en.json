@@ -94,6 +94,17 @@
     "resume-last-playback": "Resume last playback"
   },
 
+  "comic-settings": {
+    "read-mode": "Read mode",
+    "standard": "Standard",
+    "right-to-left": "Right to left",
+    "web-tonn": "Web Tonn"
+  },
+
+  "novel-settings": {
+    "font-size": "Font size"
+  },
+
   "reader": {
     "chapters": "Chapters",
     "read-now": "Read Now",
