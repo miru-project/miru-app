@@ -1,10 +1,10 @@
-import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:miru_app/pages/search/widgets/search_all_tile_title.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/extension_item_card.dart';
-import 'package:miru_app/widgets/platform_widget.dart';
+import 'package:miru_app/widgets/horizontal_list.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 
 class SearchAllTile extends StatefulWidget {
@@ -24,42 +24,19 @@ class SearchAllTile extends StatefulWidget {
 }
 
 class _SearchAllTileState extends State<SearchAllTile> {
-  final ScrollController _controller = ScrollController();
-  bool hoverTitle = false;
-
-  _horzontalMove(bool left) {
-    _controller.animateTo(
-      _controller.offset + (left ? -500 : 500),
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.ease,
-    );
-  }
-
-  Widget _buildAndroid(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              widget.runtime.extension.name,
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.chevron_right),
-              onPressed: widget.onClickMore,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 186,
-          child: Center(
-              child: FutureBuilder(
-            key: ValueKey(widget.kw),
-            future: widget.kw.isNotEmpty
-                ? widget.runtime.search(widget.kw, 1)
-                : widget.runtime.latest(1),
-            builder: ((context, snapshot) {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: FutureBuilder(
+        key: ValueKey(widget.kw),
+        future: widget.kw.isNotEmpty
+            ? widget.runtime.search(widget.kw, 1)
+            : widget.runtime.latest(1),
+        builder: ((context, snapshot) {
+          return HorizontalList(
+            onClickMore: widget.onClickMore,
+            title: widget.runtime.extension.name,
+            contentBuilder: (controller) {
               if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
               }
@@ -74,118 +51,32 @@ class _SearchAllTileState extends State<SearchAllTile> {
                 return Text('common.no-result'.i18n);
               }
 
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: _controller,
-                itemCount: data!.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: 128,
-                    margin: const EdgeInsets.symmetric(horizontal: 6),
-                    child: ExtensionItemCard(
-                      key: ValueKey(data[index].url),
-                      title: data[index].title,
-                      url: data[index].url,
-                      package: widget.runtime.extension.package,
-                      cover: data[index].cover,
-                      update: data[index].update,
-                    ),
-                  );
-                },
+              return SizedBox(
+                height: Platform.isAndroid ? 186 : 280,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: controller,
+                  itemCount: data!.length,
+                  itemBuilder: ((context, index) {
+                    return Container(
+                      width: Platform.isAndroid ? 128 : 170,
+                      margin: const EdgeInsets.only(right: 16),
+                      child: ExtensionItemCard(
+                        key: ValueKey(data[index].url),
+                        title: data[index].title,
+                        url: data[index].url,
+                        package: widget.runtime.extension.package,
+                        cover: data[index].cover,
+                        update: data[index].update,
+                      ),
+                    );
+                  }),
+                ),
               );
-            }),
-          )),
-        ),
-        const SizedBox(height: 16)
-      ],
-    );
-  }
-
-  Widget _buildDesktop(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            SearchAllTileTitle(
-              widget.runtime.extension.name,
-              onClick: widget.onClickMore,
-            ),
-            const Spacer(),
-            Row(
-              children: [
-                fluent.IconButton(
-                    icon: const Icon(fluent.FluentIcons.chevron_left),
-                    onPressed: () {
-                      _horzontalMove(true);
-                    }),
-                const SizedBox(width: 8),
-                fluent.IconButton(
-                  icon: const Icon(fluent.FluentIcons.chevron_right),
-                  onPressed: () {
-                    _horzontalMove(false);
-                  },
-                )
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 280,
-          child: Center(
-              child: FutureBuilder(
-            key: ValueKey(widget.kw),
-            future: widget.kw.isNotEmpty
-                ? widget.runtime.search(widget.kw, 1)
-                : widget.runtime.latest(1),
-            builder: ((context, snapshot) {
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
-
-              if (!snapshot.hasData) {
-                return const ProgressRing();
-              }
-
-              final data = snapshot.data;
-
-              if (snapshot.data != null && snapshot.data!.isEmpty) {
-                return Text("common.no-result".i18n);
-              }
-
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: _controller,
-                itemCount: data!.length,
-                padding: const EdgeInsets.all(5),
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: 170,
-                    margin: const EdgeInsets.only(right: 8),
-                    child: ExtensionItemCard(
-                      key: ValueKey(data[index].url),
-                      title: data[index].title,
-                      url: data[index].url,
-                      package: widget.runtime.extension.package,
-                      cover: data[index].cover,
-                      update: data[index].update,
-                    ),
-                  );
-                },
-              );
-            }),
-          )),
-        ),
-        const SizedBox(height: 16)
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
-      desktopBuilder: _buildDesktop,
+            },
+          );
+        }),
+      ),
     );
   }
 }

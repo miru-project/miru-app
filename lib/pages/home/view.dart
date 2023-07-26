@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/pages/home/widgets/home_favorites.dart';
 import 'package:miru_app/pages/home/widgets/home_recent.dart';
@@ -58,10 +59,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 16),
                 ],
-                if (c.favorites.isNotEmpty)
+                if (c.favorites.isNotEmpty) ...[
                   HomeFavorites(
-                    data: c.favorites,
+                    type: ExtensionType.bangumi,
+                    data: c.favorites[ExtensionType.bangumi]!,
                   ),
+                  HomeFavorites(
+                    type: ExtensionType.manga,
+                    data: c.favorites[ExtensionType.manga]!,
+                  ),
+                  HomeFavorites(
+                    type: ExtensionType.fikushon,
+                    data: c.favorites[ExtensionType.fikushon]!,
+                  ),
+                ]
               ],
             ),
           ),

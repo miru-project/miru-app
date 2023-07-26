@@ -143,20 +143,19 @@ class _ExtensionItemCardState extends State<ExtensionItemCard> {
                   ).toString(),
                 );
               },
-              child: AnimatedScale(
-                scale: _isHover ? 1.03 : 1,
-                duration: const Duration(milliseconds: 80),
-                child: Container(
+              child: Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: CacheNetWorkImage(
-                    widget.cover,
-                    width: double.infinity,
-                  ),
-                ),
-              ),
+                  child: AnimatedScale(
+                    scale: _isHover ? 1.05 : 1,
+                    duration: const Duration(milliseconds: 80),
+                    child: CacheNetWorkImage(
+                      widget.cover,
+                      width: double.infinity,
+                    ),
+                  )),
             ),
           ),
           const SizedBox(height: 8),

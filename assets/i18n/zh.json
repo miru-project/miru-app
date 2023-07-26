@@ -24,7 +24,8 @@
     "error": "错误",
     "retry": "重试",
     "next": "下一个",
-    "previous": "上一个"
+    "previous": "上一个",
+    "show-all": "显示全部"
   },
 
   "home": {

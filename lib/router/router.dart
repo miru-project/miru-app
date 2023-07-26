@@ -1,10 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/pages/detail/view.dart';
 import 'package:miru_app/pages/extension/view.dart';
 import 'package:miru_app/pages/extension_repo/view.dart';
 import 'package:miru_app/pages/extension_settings/view.dart';
+import 'package:miru_app/pages/home/pages/favorites_page.dart';
 import 'package:miru_app/pages/home/view.dart';
 import 'package:miru_app/pages/main/view.dart';
 import 'package:miru_app/pages/search/pages/search_extension.dart';
@@ -30,6 +32,16 @@ final router = GoRouter(
         GoRoute(
           path: '/',
           builder: (context, state) => _animation(const HomePage()),
+        ),
+        GoRoute(
+          path: '/favorites',
+          builder: (context, state) => _animation(
+            FavoritesPage(
+              type: ExtensionType.values[int.parse(
+                state.queryParameters['type']!,
+              )],
+            ),
+          ),
         ),
         GoRoute(
           path: '/search',

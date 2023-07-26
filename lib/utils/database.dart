@@ -58,12 +58,22 @@ class DatabaseUtils {
         null;
   }
 
-  static Future<List<Favorite>> getFavoritesByType(
-      {ExtensionType? type}) async {
+  static Future<List<Favorite>> getFavoritesByType({
+    ExtensionType? type,
+    int? limit,
+  }) async {
     if (type == null) {
-      return db.favorites.where().sortByDateDesc().findAll();
+      final query = db.favorites.where().sortByDateDesc();
+      if (limit != null) {
+        return query.limit(limit).findAll();
+      }
+      return query.findAll();
     }
-    return db.favorites.filter().typeEqualTo(type).sortByDateDesc().findAll();
+    final query = db.favorites.filter().typeEqualTo(type).sortByDateDesc();
+    if (limit != null) {
+      return query.limit(limit).findAll();
+    }
+    return query.findAll();
   }
 
   // 历史记录

@@ -19,7 +19,8 @@
     "error": "Error",
     "retry": "Retry",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "show-all": "Show all"
   },
 
   "home": {
