@@ -68,7 +68,7 @@ class VideoPlayerController extends GetxController {
     });
     // 自动切换下一集
     player.stream.completed.listen((event) {
-      if (index.value == playList.length - 1) {
+      if (index.value == playList.length - 1 && event) {
         addMessage(Message(Text('video.play-complete'.i18n)));
         return;
       }

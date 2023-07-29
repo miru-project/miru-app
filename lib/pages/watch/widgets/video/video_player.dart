@@ -92,7 +92,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
                         ),
                         constraints: BoxConstraints(
                           maxHeight: 200,
-                          minWidth: 300,
                           maxWidth: maxWidth,
                         ),
                         child: _c.cuurentMessageWidget.value,
@@ -121,7 +120,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-        androidBuilder: (context) => Scaffold(body: _buildContent()),
-        desktopBuilder: ((context) => _buildContent()));
+      androidBuilder: (context) => Scaffold(body: _buildContent()),
+      desktopBuilder: ((context) => _buildContent()),
+    );
   }
 }

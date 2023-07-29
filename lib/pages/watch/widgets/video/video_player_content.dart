@@ -114,6 +114,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
   Widget _buildAndroid(BuildContext context) {
     return MaterialVideoControlsTheme(
       normal: MaterialVideoControlsThemeData(
+        volumeGesture: true,
+        brightnessGesture: true,
         topButtonBar: [
           Obx(
             () => Text(
