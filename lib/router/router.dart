@@ -38,7 +38,7 @@ final router = GoRouter(
           builder: (context, state) => _animation(
             FavoritesPage(
               type: ExtensionType.values[int.parse(
-                state.queryParameters['type']!,
+                state.uri.queryParameters['type']!,
               )],
             ),
           ),
@@ -51,8 +51,8 @@ final router = GoRouter(
           path: '/search_extension',
           builder: (context, state) => _animation(
             SearchExtensionPage(
-              package: state.queryParameters['package']!,
-              keyWord: state.queryParameters['keyWord'],
+              package: state.uri.queryParameters['package']!,
+              keyWord: state.uri.queryParameters['keyWord'],
             ),
           ),
         ),
@@ -64,7 +64,7 @@ final router = GoRouter(
           path: '/extension_settings',
           builder: (context, state) => _animation(
             ExtensionSettingsPage(
-              package: state.queryParameters['package']!,
+              package: state.uri.queryParameters['package']!,
             ),
           ),
         ),
@@ -80,8 +80,8 @@ final router = GoRouter(
           path: '/detail',
           builder: (context, state) => _animation(
             DetailPage(
-              url: state.queryParameters['url']!,
-              package: state.queryParameters['package']!,
+              url: state.uri.queryParameters['url']!,
+              package: state.uri.queryParameters['package']!,
             ),
           ),
         ),

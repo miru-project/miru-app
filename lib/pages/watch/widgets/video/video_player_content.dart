@@ -4,7 +4,6 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/pages/watch/video_controller.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:window_manager/window_manager.dart';
 
 class VideoPlayerConten extends StatefulWidget {
@@ -99,14 +98,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
         ],
       ),
       fullscreen: const MaterialDesktopVideoControlsThemeData(),
-      child: Screenshot(
-        controller: _c.screenshotController,
-        child: Obx(
-          () => Video(
-            controller: _c.videoController,
-            controls: _c.hideControlPanel.value ? null : AdaptiveVideoControls,
-          ),
-        ),
+      child: Video(
+        controller: _c.videoController,
       ),
     );
   }
@@ -174,14 +167,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
         seekBarMargin: const EdgeInsets.only(bottom: 60, left: 16, right: 16),
       ),
       fullscreen: const MaterialVideoControlsThemeData(),
-      child: Screenshot(
-        controller: _c.screenshotController,
-        child: Obx(
-          () => Video(
-            controller: _c.videoController,
-            controls: _c.hideControlPanel.value ? null : AdaptiveVideoControls,
-          ),
-        ),
+      child: Video(
+        controller: _c.videoController,
       ),
     );
   }

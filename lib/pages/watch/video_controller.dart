@@ -12,7 +12,6 @@ import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_directory.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
 
@@ -35,12 +34,10 @@ class VideoPlayerController extends GetxController {
 
   final player = Player();
   late final VideoController videoController = VideoController(player);
-  final ScreenshotController screenshotController = ScreenshotController();
   final showPlayList = false.obs;
   final isOpenSidebar = false.obs;
   final isFullScreen = false.obs;
   late final index = playIndex.obs;
-  final hideControlPanel = false.obs;
 
   // 是否已经自动跳转到上次播放进度
   bool _isAutoSeekPosition = false;
@@ -123,10 +120,10 @@ class VideoPlayerController extends GetxController {
   }
 
   addHistory() async {
-    hideControlPanel.value = true;
-    if (player.state.position.inSeconds < 1) {
+    if (player.state.duration.inSeconds == 0) {
       return;
     }
+
     final tempDir = await MiruDirectory.getCacheDirectory;
     final coverDir = path.join(tempDir, 'history_cover');
     Directory(coverDir).createSync(recursive: true);
@@ -137,23 +134,26 @@ class VideoPlayerController extends GetxController {
       file.deleteSync(recursive: true);
     }
 
-    final captureData = await screenshotController.capture();
-    file.writeAsBytes(captureData!).then((value) async {
-      debugPrint("save..");
-      await DatabaseUtils.putHistory(
-        History()
-          ..url = detailUrl
-          ..cover = value.path
-          ..episodeGroupId = episodeGroupId
-          ..package = runtime.extension.package
-          ..type = runtime.extension.type
-          ..episodeId = index.value
-          ..episodeTitle = epName
-          ..title = title
-          ..progress = player.state.position.inSeconds.toString()
-          ..totalProgress = player.state.duration.inSeconds.toString(),
+    player.screenshot().then((value) {
+      file.writeAsBytes(value!).then(
+        (value) async {
+          debugPrint("save..");
+          await DatabaseUtils.putHistory(
+            History()
+              ..url = detailUrl
+              ..cover = value.path
+              ..episodeGroupId = episodeGroupId
+              ..package = runtime.extension.package
+              ..type = runtime.extension.type
+              ..episodeId = index.value
+              ..episodeTitle = epName
+              ..title = title
+              ..progress = player.state.position.inSeconds.toString()
+              ..totalProgress = player.state.duration.inSeconds.toString(),
+          );
+          await Get.find<HomePageController>().onRefresh();
+        },
       );
-      await Get.find<HomePageController>().onRefresh();
     });
   }
 
