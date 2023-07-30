@@ -98,6 +98,7 @@ class DetailPageController extends GetxController {
               ),
             ),
             child: WatchPage(
+              cover: data.value!.cover,
               playList: urls,
               package: package,
               playerIndex: index,

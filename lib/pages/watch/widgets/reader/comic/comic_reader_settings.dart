@@ -44,11 +44,11 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                   label: Text('comic-settings.web-tonn'.i18n),
                 ),
               ],
-              selected: <MangaReadMode>{_c.readerType.value},
+              selected: <MangaReadMode>{_c.readType.value},
               onSelectionChanged: (value) {
                 if (value.isNotEmpty) {
                   setState(() {
-                    _c.readerType.value = value.first;
+                    _c.readType.value = value.first;
                   });
                 }
               },
@@ -74,11 +74,11 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 fluent.ToggleButton(
-                  checked: _c.readerType.value == MangaReadMode.standard,
+                  checked: _c.readType.value == MangaReadMode.standard,
                   onChanged: (value) {
                     if (value) {
                       setState(() {
-                        _c.readerType.value = MangaReadMode.standard;
+                        _c.readType.value = MangaReadMode.standard;
                       });
                     }
                   },
@@ -86,11 +86,11 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                 ),
                 const SizedBox(width: 8),
                 fluent.ToggleButton(
-                  checked: _c.readerType.value == MangaReadMode.rightToLeft,
+                  checked: _c.readType.value == MangaReadMode.rightToLeft,
                   onChanged: (value) {
                     if (value) {
                       setState(() {
-                        _c.readerType.value = MangaReadMode.rightToLeft;
+                        _c.readType.value = MangaReadMode.rightToLeft;
                       });
                     }
                   },
@@ -98,11 +98,11 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                 ),
                 const SizedBox(width: 8),
                 fluent.ToggleButton(
-                  checked: _c.readerType.value == MangaReadMode.webTonn,
+                  checked: _c.readType.value == MangaReadMode.webTonn,
                   onChanged: (value) {
                     if (value) {
                       setState(() {
-                        _c.readerType.value = MangaReadMode.webTonn;
+                        _c.readType.value = MangaReadMode.webTonn;
                       });
                     }
                   },

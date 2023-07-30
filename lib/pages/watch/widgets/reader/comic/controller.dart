@@ -13,19 +13,24 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     required super.playIndex,
     required super.episodeGroupId,
     required super.runtime,
+    required super.cover,
   });
 
-  final readerType = MangaReadMode.standard.obs;
+  final readType = MangaReadMode.standard.obs;
   // 当前页码
   final currentPage = 0.obs;
 
   final pageController = PageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
+  final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
+
+  // 是否已经恢复上次阅读
+  final isRecover = false.obs;
 
   @override
   void onInit() {
-    initSettings();
+    _initSetting();
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -33,12 +38,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       currentPage.value = pos.index;
     });
-    ever(readerType, (callback) {
-      if (pageController.value.hasClients) {
-        pageController.value.jumpToPage(currentPage.value);
-      } else {
-        pageController.value = PageController(initialPage: currentPage.value);
-      }
+    ever(readType, (callback) {
+      _jumpPage(currentPage.value);
       // 保存设置
       DatabaseUtils.setMangaReaderType(
         super.detailUrl,
@@ -47,16 +48,48 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     });
     // 如果切换章节，重置当前页码
     ever(super.index, (callback) => currentPage.value = 0);
+    ever(super.watchData, (callback) async {
+      if (isRecover.value || callback == null) {
+        return;
+      }
+      isRecover.value = true;
+      // 获取上次阅读的页码
+      final history = await DatabaseUtils.getHistoryByPackageAndUrl(
+        super.runtime.extension.package,
+        super.detailUrl,
+      );
+      if (history == null) {
+        return;
+      }
+      currentPage.value = int.parse(history.progress);
+      _jumpPage(currentPage.value);
+    });
     super.onInit();
   }
 
-  initSettings() async {
-    readerType.value = await DatabaseUtils.getMnagaReaderType(super.detailUrl);
+  _initSetting() async {
+    readType.value = await DatabaseUtils.getMnagaReaderType(super.detailUrl);
+  }
+
+  _jumpPage(int page) {
+    if (readType.value == MangaReadMode.webTonn) {
+      if (itemScrollController.isAttached) {
+        itemScrollController.jumpTo(
+          index: page,
+        );
+      }
+      return;
+    }
+    if (pageController.value.hasClients) {
+      pageController.value.jumpToPage(page);
+      return;
+    }
+    pageController.value = PageController(initialPage: page);
   }
 
   // 下一页
   void nextPage() {
-    if (readerType.value != MangaReadMode.webTonn) {
+    if (readType.value != MangaReadMode.webTonn) {
       pageController.value.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
@@ -72,7 +105,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
 
   // 上一页
   void previousPage() {
-    if (readerType.value != MangaReadMode.webTonn) {
+    if (readType.value != MangaReadMode.webTonn) {
       pageController.value.previousPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
@@ -84,5 +117,19 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         offset: -200.0,
       );
     }
+  }
+
+  @override
+  void onClose() {
+    if (super.watchData.value != null) {
+      // 获取所有页数量
+      final pages = super.watchData.value!.urls.length;
+      super.addHistory(
+        currentPage.value.toString(),
+        pages.toString(),
+      );
+    }
+    pageController.value.dispose();
+    super.onClose();
   }
 }

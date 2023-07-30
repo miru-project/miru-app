@@ -74,7 +74,6 @@ class DatabaseUtils {
   }
 
   // 历史记录
-
   static Future<List<History>> getHistorysByType({ExtensionType? type}) async {
     if (type == null) {
       return db.historys.where().sortByDateDesc().findAll();

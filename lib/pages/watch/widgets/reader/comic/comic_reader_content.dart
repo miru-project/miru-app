@@ -36,25 +36,25 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
       onKey: (event) {
         // 上下
         if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-          if (_c.readerType.value == MangaReadMode.webTonn) {
+          if (_c.readType.value == MangaReadMode.webTonn) {
             return _c.previousPage();
           }
         }
         if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-          if (_c.readerType.value == MangaReadMode.webTonn) {
+          if (_c.readType.value == MangaReadMode.webTonn) {
             return _c.nextPage();
           }
         }
 
         if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-          if (_c.readerType.value == MangaReadMode.rightToLeft) {
+          if (_c.readType.value == MangaReadMode.rightToLeft) {
             return _c.nextPage();
           }
           _c.previousPage();
         }
 
         if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-          if (_c.readerType.value == MangaReadMode.rightToLeft) {
+          if (_c.readType.value == MangaReadMode.rightToLeft) {
             return _c.previousPage();
           }
           _c.nextPage();
@@ -87,7 +87,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
 
             final images = _c.watchData.value!.urls;
-            final readerType = _c.readerType.value;
+            final readerType = _c.readType.value;
             final cuurentPage = _c.currentPage.value;
 
             if (readerType == MangaReadMode.webTonn) {
@@ -96,6 +96,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                   horizontal: viewPadding,
                 ),
                 initialScrollIndex: cuurentPage,
+                itemScrollController: _c.itemScrollController,
                 itemPositionsListener: _c.itemPositionsListener,
                 scrollOffsetController: _c.scrollOffsetController,
                 itemBuilder: (context, index) {

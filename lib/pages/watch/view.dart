@@ -18,6 +18,7 @@ class WatchPage extends StatelessWidget {
     required this.playerIndex,
     required this.episodeGroupId,
     required this.detailUrl,
+    required this.cover,
   }) : super(key: key);
   final List<ExtensionEpisode> playList;
   final int playerIndex;
@@ -25,6 +26,7 @@ class WatchPage extends StatelessWidget {
   final String package;
   final String detailUrl;
   final int episodeGroupId;
+  final String cover;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,7 @@ class WatchPage extends StatelessWidget {
           playerIndex: playerIndex,
           episodeGroupId: episodeGroupId,
           runtime: runtime,
+          cover: cover,
         );
       default:
         return NovelReader(
@@ -77,6 +80,7 @@ class WatchPage extends StatelessWidget {
           playerIndex: playerIndex,
           title: title,
           detailUrl: detailUrl,
+          cover: cover,
         );
     }
   }

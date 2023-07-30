@@ -6,6 +6,7 @@ import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class NovelReaderContent extends StatefulWidget {
   const NovelReaderContent(this.tag, {Key? key}) : super(key: key);
@@ -52,7 +53,9 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
           final fontSize = _c.fontSize.value;
 
           return Center(
-            child: ListView.builder(
+            child: ScrollablePositionedList.builder(
+              itemPositionsListener: _c.itemPositionsListener,
+              initialScrollIndex: _c.positions.value,
               padding: EdgeInsets.symmetric(
                 horizontal: listviewPadding,
                 vertical: 16,
