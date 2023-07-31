@@ -38,6 +38,10 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       fontSize,
       (callback) => MiruStorage.setSetting(SettingKey.novelFontSize, callback),
     );
+
+    // 切换章节时重置页码
+    ever(index, (callback) => positions.value = 0);
+
     ever(super.watchData, (callback) async {
       if (isRecover.value || callback == null) {
         return;
@@ -48,7 +52,10 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
         super.runtime.extension.package,
         super.detailUrl,
       );
-      if (history == null) {
+      if (history == null ||
+          history.progress.isEmpty ||
+          episodeGroupId != history.episodeGroupId ||
+          history.episodeId != index.value) {
         return;
       }
       positions.value = int.parse(history.progress);
