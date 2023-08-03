@@ -108,6 +108,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                   title: widget.title,
                   onChange: (value) {
                     _c.index.value = value;
+                    _c.showPlayList.value = false;
                   },
                 ),
               )
