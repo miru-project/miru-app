@@ -1,8 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class PlayList extends StatelessWidget {
+class PlayList extends fluent.StatelessWidget {
   const PlayList({
     Key? key,
     required this.title,
@@ -19,8 +20,9 @@ class PlayList extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       color: Theme.of(context).colorScheme.background,
-      child: ListView.builder(
+      child: ScrollablePositionedList.builder(
         itemCount: list.length,
+        initialScrollIndex: selectIndex,
         itemBuilder: (context, index) {
           final contact = list[index];
           return PlaylistAndroidTile(
@@ -39,8 +41,9 @@ class PlayList extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       color: fluent.FluentTheme.of(context).micaBackgroundColor,
-      child: ListView.builder(
+      child: ScrollablePositionedList.builder(
         itemCount: list.length,
+        initialScrollIndex: selectIndex,
         itemBuilder: (context, index) {
           final contact = list[index];
           return fluent.ListTile.selectable(
