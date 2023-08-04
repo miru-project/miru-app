@@ -26,12 +26,17 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
   late ExtensionRuntime? _runtime;
   String _update = "";
 
-  PaletteGenerator? _paletteGenerator;
+  // 主要颜色
+  Color? primaryColor;
 
   @override
   void initState() {
     _getUpdate();
-    _genColor();
+
+    if (widget.history.type != ExtensionType.bangumi) {
+      _genColor();
+    }
+
     super.initState();
   }
 
@@ -50,10 +55,12 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
     if (widget.history.type == ExtensionType.bangumi) {
       return;
     }
-    _paletteGenerator = await PaletteGenerator.fromImageProvider(
+    final paletteGenerator = await PaletteGenerator.fromImageProvider(
       CachedNetworkImageProvider(widget.history.cover),
       maximumColorCount: 2,
     );
+
+    primaryColor = paletteGenerator.colors.firstOrNull;
 
     if (mounted) {
       setState(() {});
@@ -140,9 +147,9 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
         image: DecorationImage(
           image: CachedNetworkImageProvider(widget.history.cover),
           fit: BoxFit.cover,
-          colorFilter: _paletteGenerator != null
+          colorFilter: primaryColor != null
               ? ColorFilter.mode(
-                  _paletteGenerator!.colors.first.withOpacity(0.9),
+                  primaryColor!.withOpacity(0.9),
                   BlendMode.srcOver,
                 )
               : null,
