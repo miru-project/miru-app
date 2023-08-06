@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
@@ -17,6 +18,7 @@ import 'package:miru_app/utils/package_info.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/list_title.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -84,6 +86,10 @@ class _SettingsPageState extends State<SettingsPage> {
           },
           onChanged: (value) {
             MiruStorage.setSetting(SettingKey.tmdbKay, value);
+            TmdbApi.tmdb = TMDB(
+              ApiKeys(value, ''),
+              defaultLanguage: MiruStorage.getSetting(SettingKey.language),
+            );
           },
           text: MiruStorage.getSetting(SettingKey.tmdbKay),
         ),

@@ -44,7 +44,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
       );
 
       final history = c.history.value;
-      final data = c.data.value;
+      final data = c.detail;
       if (c.isLoading.value) {
         return noEpisodes;
       }
@@ -102,7 +102,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
   Widget _buildDesktop(BuildContext context) {
     return Obx(() {
       final history = c.history.value;
-      final data = c.data.value!;
+      final data = c.detail!;
       if (history != null && c.history.value!.episodeTitle.isNotEmpty) {
         return fluent.FilledButton(
           onPressed: () {

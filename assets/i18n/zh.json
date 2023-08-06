@@ -88,7 +88,9 @@
     "continue-watching": "继续 {episode}",
     "total-episodes": "共 {total}",
     "overview": "概览",
-    "cast": "演员"
+    "cast": "演员",
+    "additional-info": "附加信息",
+    "get-lastest-data-error": "获取最新数据失败"
   },
 
   "video": {
@@ -142,5 +144,15 @@
     "other-infomation": "其他信息",
     "license": "许可",
     "title": "扩展详情"
+  },
+
+  "tmdb": {
+    "backdrops": "剧照",
+    "status": "状态",
+    "original-title": "原始标题",
+    "release-date": "发布日期",
+    "genres": "类型",
+    "runtime": "时长",
+    "languages": "语言"
   }
 }

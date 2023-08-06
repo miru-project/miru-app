@@ -1,7 +1,7 @@
 name: miru_app
 description: A new Flutter project.
 publish_to: "none"
-version: 1.5.2+17
+version: 1.6.0+18
 
 environment:
   sdk: ">=3.0.3 <4.0.0"
@@ -41,6 +41,7 @@ dependencies:
   path_provider: ^2.0.15
   screenshot: ^2.1.0
   scrollable_positioned_list: ^0.3.8
+  tmdb_api: ^2.1.5
   url_launcher: ^6.1.11
   window_manager: ^0.3.4
 

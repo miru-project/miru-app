@@ -83,7 +83,9 @@
     "continue-watching": "Continue {episode}",
     "total-episodes": "Total {total}",
     "overview": "Overview",
-    "cast": "Cast"
+    "cast": "Cast",
+    "additional-info": "Additional Info",
+    "get-lastest-data-error": "Failed to get latest data"
   },
 
   "video": {
@@ -137,5 +139,15 @@
     "other-infomation": "Other Infomation",
     "license": "License",
     "title": "Extension Info"
+  },
+
+  "tmdb": {
+    "backdrops": "Backdrops",
+    "status": "Status",
+    "original-title": "Original Title",
+    "release-date": "Release Date",
+    "genres": "Genres",
+    "runtime": "Runtime",
+    "languages": "Languages"
   }
 }

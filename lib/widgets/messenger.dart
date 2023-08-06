@@ -9,11 +9,12 @@ showPlatformSnackbar({
   required String title,
   required String content,
   dynamic action,
+  fluent.InfoBarSeverity severity = fluent.InfoBarSeverity.info,
 }) {
   if (Platform.isAndroid) {
     return material.ScaffoldMessenger.of(context).showSnackBar(
       material.SnackBar(
-        content: Text(title + content),
+        content: Text("$title $content"),
         action: action,
       ),
     );
@@ -23,6 +24,7 @@ showPlatformSnackbar({
       title: Text(title),
       content: Text(content),
       action: action,
+      severity: severity,
     );
   });
 }

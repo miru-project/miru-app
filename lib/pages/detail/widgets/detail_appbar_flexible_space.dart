@@ -53,7 +53,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               child: c.isLoading.value
                   ? const SizedBox.shrink()
                   : CacheNetWorkImage(
-                      c.data.value!.cover,
+                      c.backgorund,
                       height: double.infinity,
                       fit: BoxFit.cover,
                       width: double.infinity,

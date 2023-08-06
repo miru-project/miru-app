@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/pages/detail/view.dart';
@@ -15,6 +18,13 @@ import 'package:miru_app/pages/settings/view.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
+BuildContext get cuurentContext {
+  if (Platform.isAndroid) {
+    return Get.context!;
+  }
+  return _shellNavigatorKey.currentContext!;
+}
 
 final router = GoRouter(
   navigatorKey: rootNavigatorKey,

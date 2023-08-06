@@ -149,24 +149,6 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                   },
                 );
               },
-              // children: [
-              //   for (var i = 0; i < episodes[c.selectEpGroup.value].urls.length; i++) ...[
-              //     Container(
-              //       margin: const EdgeInsets.only(right: 8, bottom: 8),
-              //       child: fluent.Button(
-              //         child: Text(episodes[c.selectEpGroup.value].urls[i].name),
-              //         onPressed: () async {
-              //           c.goWatch(
-              //             context,
-              //             episodes[c.selectEpGroup.value].urls,
-              //             i,
-              //             c.selectEpGroup.value,
-              //           );
-              //         },
-              //       ),
-              //     ),
-              //   ]
-              // ],
             ),
           );
         }));
@@ -175,7 +157,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      episodes = c.isLoading.value ? [] : c.data.value!.episodes ?? [];
+      episodes = c.isLoading.value ? [] : c.detail!.episodes ?? [];
       dropdownItems = [
         for (var i = 0; i < episodes.length; i++)
           DropdownMenuItem<int>(

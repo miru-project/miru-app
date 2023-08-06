@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:isar/isar.dart';
 import 'package:miru_app/models/index.dart';
+import 'package:miru_app/models/tmdb.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
@@ -215,6 +218,65 @@ class DatabaseUtils {
         MangaSetting()
           ..url = url
           ..readMode = readMode,
+      ),
+    );
+  }
+
+  // 存储 MiruDetail
+  static Future<Id> putMiruDetail(
+    String package,
+    String url,
+    ExtensionDetail extensionDetail, {
+    int? tmdbID,
+  }) {
+    return db.writeTxn(
+      () => db.miruDetails.putByIndex(
+        r'package&url',
+        MiruDetail()
+          ..data = jsonEncode(extensionDetail.toJson())
+          ..package = package
+          ..tmdbID = tmdbID
+          ..url = url,
+      ),
+    );
+  }
+
+  // 获取 MiruDetail
+  static Future<MiruDetail?> getMiruDetail(
+    String package,
+    String url,
+  ) async {
+    return await db.miruDetails
+        .filter()
+        .packageEqualTo(package)
+        .and()
+        .urlEqualTo(url)
+        .findFirst();
+  }
+
+  // 更新 TMDB 数据
+  static Future<Id> putTMDBDetail(
+    int tmdbID,
+    TMDBDetail tmdbDetail,
+  ) {
+    return db.writeTxn(
+      () => db.tMDBs.putByTmdbID(
+        TMDB()
+          ..data = jsonEncode(tmdbDetail.toJson())
+          ..tmdbID = tmdbID,
+      ),
+    );
+  }
+
+  // 获取 TMDB 数据
+  static Future<TMDBDetail?> getTMDBDetail(int tmdbID) async {
+    final tmdb = await db.tMDBs.filter().tmdbIDEqualTo(tmdbID).findFirst();
+    if (tmdb == null) {
+      return null;
+    }
+    return TMDBDetail.fromJson(
+      Map<String, dynamic>.from(
+        jsonDecode(tmdb.data),
       ),
     );
   }
