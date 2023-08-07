@@ -55,7 +55,9 @@ class TmdbApi {
                 character: e["character"],
               ))),
       releaseDate: data["release_date"] ?? data["first_air_date"],
-      runtime: data["runtime"] ?? data["episode_run_time"][0],
+      runtime: data["runtime"] ??
+          List.from(data["episode_run_time"]).firstOrNull ??
+          0,
       originalTitle: data["original_title"] ?? data["original_name"],
     );
   }

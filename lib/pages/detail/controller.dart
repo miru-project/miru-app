@@ -4,8 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
-import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/models/history.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/models/tmdb.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/pages/watch/view.dart';
@@ -36,10 +35,11 @@ class DetailPageController extends GetxController {
   final RxInt selectEpGroup = 0.obs;
   final Rx<ExtensionType> type = ExtensionType.bangumi.obs;
   final Rx<TMDBDetail?> tmdb = Rx(null);
-  final RxInt tmdbId = (-1).obs;
 
   ExtensionDetail? get detail => data.value;
+  set detail(ExtensionDetail? value) => data.value = value;
   TMDBDetail? get tmdbDetail => tmdb.value;
+  set tmdbDetail(TMDBDetail? value) => tmdb.value = value;
   String get backgorund {
     String bg = '';
     if (tmdbDetail != null && tmdbDetail!.backdrop != null) {
@@ -50,6 +50,9 @@ class DetailPageController extends GetxController {
     return bg;
   }
 
+  int _tmdbID = -1;
+  MiruDetail? _miruDetail;
+
   @override
   void onInit() {
     onRefresh();
@@ -57,57 +60,40 @@ class DetailPageController extends GetxController {
   }
 
   onRefresh() async {
+    // 获取收藏状态
     await refreshFavorite();
     try {
-      // 获取详情信息
+      // 获取扩展类型
       final runtime = ExtensionUtils.extensions[package];
       type.value = runtime!.extension.type;
-      // 从数据库获取详情信息
-      final miruDetail = await DatabaseUtils.getMiruDetail(package, url);
-
-      // 如果有数据则直接使用
-      if (miruDetail != null) {
-        data.value = ExtensionDetail.fromJson(
-          Map<String, dynamic>.from(
-            jsonDecode(miruDetail.data),
-          ),
-        );
-        tmdbId.value = miruDetail.tmdbID ?? -1;
-        getRemoteDetail();
-        // 如果没有数据则从远程获取
-      } else {
-        await getRemoteDetail();
-      }
-
-      // 获取 TMDB 数据
-      getTMDBData();
-
-      // 获取历史记录
-      final history_ = await DatabaseUtils.getHistoryByPackageAndUrl(
-        package,
-        url,
-      );
-      if (history_ != null) {
-        // 并且剧集的数量大于历史记录的剧集列表数量 防止历史记录超出剧集列表数量
-        if (history_.episodeGroupId < data.value!.episodes!.length) {
-          history.value = history_;
-          selectEpGroup.value = history_.episodeGroupId;
-        }
-      }
+      _miruDetail = await DatabaseUtils.getMiruDetail(package, url);
+      _tmdbID = _miruDetail?.tmdbID ?? -1;
+      await getDetail();
+      await getTMDBDetail();
+      await getHistory();
       isLoading.value = false;
     } catch (e) {
       error.value = e.toString();
     }
   }
 
-  getRemoteDetail() async {
-    try {
-      data.value = await ExtensionUtils.extensions[package]?.detail(url);
-      await DatabaseUtils.putMiruDetail(
-        package,
-        url,
-        data.value!,
+  getDetail() async {
+    if (_miruDetail != null) {
+      detail = ExtensionDetail.fromJson(
+        Map<String, dynamic>.from(
+          jsonDecode(_miruDetail!.data),
+        ),
       );
+      getRemoteDeatil();
+    } else {
+      await getRemoteDeatil();
+    }
+  }
+
+  getRemoteDeatil() async {
+    try {
+      detail = await ExtensionUtils.extensions[package]?.detail(url);
+      await DatabaseUtils.putMiruDetail(package, url, detail!, tmdbID: _tmdbID);
     } catch (e) {
       // 弹出错误信息
       showPlatformSnackbar(
@@ -119,22 +105,40 @@ class DetailPageController extends GetxController {
     }
   }
 
-  getTMDBData() async {
-    DatabaseUtils.getTMDBDetail(tmdbId.value).then(
-      (value) => tmdb.value = value,
-    );
-    tmdb.value = await TmdbApi.getDetail(data.value!.title);
+  getTMDBDetail() async {
+    tmdbDetail = await DatabaseUtils.getTMDBDetail(_tmdbID);
+    getRemoteTMDBDetail();
+  }
+
+  getRemoteTMDBDetail() async {
+    tmdbDetail = await TmdbApi.getDetail(detail!.title);
+    _tmdbID = tmdbDetail!.id;
     DatabaseUtils.putTMDBDetail(
-      tmdb.value!.id,
-      tmdb.value!,
+      tmdbDetail!.id,
+      tmdbDetail!,
     );
     // 更新 id
-    DatabaseUtils.putMiruDetail(
+    await DatabaseUtils.putMiruDetail(
       package,
       url,
-      data.value!,
-      tmdbID: tmdb.value!.id,
+      detail!,
+      tmdbID: tmdbDetail!.id,
     );
+  }
+
+  getHistory() async {
+    // 获取历史记录
+    final history_ = await DatabaseUtils.getHistoryByPackageAndUrl(
+      package,
+      url,
+    );
+    if (history_ != null) {
+      // 并且剧集的数量大于历史记录的剧集列表数量 防止历史记录超出剧集列表数量
+      if (history_.episodeGroupId < detail!.episodes!.length) {
+        history.value = history_;
+        selectEpGroup.value = history_.episodeGroupId;
+      }
+    }
   }
 
   refreshFavorite() async {
@@ -149,8 +153,8 @@ class DetailPageController extends GetxController {
     await DatabaseUtils.toggleFavorite(
       package: package,
       url: url,
-      cover: data.value!.cover,
-      name: data.value!.title,
+      cover: detail!.cover,
+      name: detail!.title,
     );
     await refreshFavorite();
     Get.find<HomePageController>().onRefresh();
@@ -177,11 +181,11 @@ class DetailPageController extends GetxController {
               ),
             ),
             child: WatchPage(
-              cover: data.value!.cover,
+              cover: detail!.cover,
               playList: urls,
               package: package,
               playerIndex: index,
-              title: data.value!.title,
+              title: detail!.title,
               episodeGroupId: selectEpGroup,
               detailUrl: url,
             ),

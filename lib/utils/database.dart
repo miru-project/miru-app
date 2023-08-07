@@ -274,10 +274,14 @@ class DatabaseUtils {
     if (tmdb == null) {
       return null;
     }
-    return TMDBDetail.fromJson(
-      Map<String, dynamic>.from(
-        jsonDecode(tmdb.data),
-      ),
-    );
+    try {
+      return TMDBDetail.fromJson(
+        Map<String, dynamic>.from(
+          jsonDecode(tmdb.data),
+        ),
+      );
+    } catch (e) {
+      return null;
+    }
   }
 }
