@@ -52,6 +52,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
       await ExtensionUtils.install(url, context);
       isLoading = false;
       isInstall = true;
+      hasUpgrade = false;
     } catch (e) {
       debugPrint(e.toString());
       isLoading = false;
