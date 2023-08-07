@@ -10,6 +10,20 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  generate-changelog:
+    # needs: ["build-and-release-android", "build-and-release-windows"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
   # This workflow contains a single job called "build"
   build-and-release-android:
     # The type of runner that the job will run on
@@ -49,6 +63,7 @@ jobs:
         with:
           artifacts: "build/app/outputs/flutter-apk/app-*.apk"
           allowUpdates: true
+          omitBody: true
 
   # build-and-release-linux:
   #   runs-on: ubuntu-latest
@@ -117,21 +132,4 @@ jobs:
         with:
           artifacts: "build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip,Output/*.exe"
           allowUpdates: true
-
-  generate-changelog:
-    needs:
-      [
-        "build-and-release-android",
-        "build-and-release-windows",
-      ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-      - run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          omitBody: true
