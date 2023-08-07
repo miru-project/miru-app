@@ -97,7 +97,7 @@ class _DetailPageState extends State<DetailPage> {
                   snap: false,
                   primary: true,
                   title: DetailAppbarTitle(
-                    c.isLoading.value ? '' : c.detail!.title,
+                    c.detail?.title ?? '',
                     controller: c.scrollController,
                   ),
                   flexibleSpace: const DetailAppbarflexibleSpace(),
@@ -188,7 +188,7 @@ class _DetailPageState extends State<DetailPage> {
         );
       }
 
-      if (c.detail == null) {
+      if (c.isLoading.value) {
         return const Center(
           child: ProgressRing(),
         );
@@ -255,7 +255,7 @@ class _DetailPageState extends State<DetailPage> {
                                 constraints: const BoxConstraints(
                                   maxHeight: 100,
                                 ),
-                                child: SelectableText(c.detail!.desc!),
+                                child: SelectableText(c.detail!.desc ?? ''),
                               ),
                               const SizedBox(height: 16),
                               Row(
