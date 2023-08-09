@@ -102,6 +102,7 @@ class DetailPageController extends GetxController {
         content: e.toString().split('\n')[0],
         severity: fluent.InfoBarSeverity.error,
       );
+      rethrow;
     }
   }
 
