@@ -21,37 +21,43 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
   late final _c = Get.find<VideoPlayerController>(tag: widget.tag);
 
   Widget _buildDesktop(BuildContext context) {
+    final topButtonBar = Row(
+      children: [
+        Expanded(
+          child: Obx(
+            () => Text(
+              "${_c.title} - ${_c.playList[_c.index.value].name}",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ),
+        MaterialDesktopCustomButton(
+          icon: const Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.white,
+          ),
+          onPressed: () async {
+            await WindowManager.instance.setFullScreen(false);
+            await _c.addHistory();
+            RouterUtils.pop();
+          },
+        ),
+      ],
+    );
     return MaterialDesktopVideoControlsTheme(
       normal: MaterialDesktopVideoControlsThemeData(
         toggleFullscreenOnDoublePress: false,
         topButtonBar: [
-          Expanded(
-            child: DragToMoveArea(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Obx(
-                      () => Text(
-                        "${_c.title} - ${_c.playList[_c.index.value].name}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
+          Obx(
+            () => Expanded(
+              child: _c.isFullScreen.value
+                  ? topButtonBar
+                  : DragToMoveArea(
+                      child: topButtonBar,
                     ),
-                  ),
-                  MaterialDesktopCustomButton(
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      await _c.addHistory();
-                      RouterUtils.pop();
-                    },
-                  ),
-                ],
-              ),
             ),
           )
         ],
