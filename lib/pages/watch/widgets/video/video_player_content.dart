@@ -29,16 +29,17 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
             child: DragToMoveArea(
               child: Row(
                 children: [
-                  Obx(
-                    () => Text(
-                      "${_c.title} - ${_c.playList[_c.index.value].name}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+                  Expanded(
+                    child: Obx(
+                      () => Text(
+                        "${_c.title} - ${_c.playList[_c.index.value].name}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ),
-                  const Spacer(),
                   MaterialDesktopCustomButton(
                     icon: const Icon(
                       Icons.keyboard_arrow_down,
