@@ -66,7 +66,7 @@ class VideoPlayerController extends GetxController {
     // 自动切换下一集
     player.stream.completed.listen((event) {
       if (index.value == playList.length - 1 && event) {
-        addMessage(Message(Text('video.play-complete'.i18n)));
+        sendMessage(Message(Text('video.play-complete'.i18n)));
         return;
       }
       if (!player.state.buffering) {
@@ -90,8 +90,13 @@ class VideoPlayerController extends GetxController {
           history.episodeGroupId == episodeGroupId) {
         _isAutoSeekPosition = true;
         player.seek(Duration(seconds: int.parse(history.progress)));
-        addMessage(Message(Text('video.resume-last-playback'.i18n)));
+        sendMessage(Message(Text('video.resume-last-playback'.i18n)));
       }
+    });
+
+    // 错误监听
+    player.stream.error.listen((event) {
+      sendMessage(Message(Text(event)));
     });
 
     super.onInit();
@@ -105,7 +110,7 @@ class VideoPlayerController extends GetxController {
       player.open(Media(m3u8Url));
     } catch (e) {
       debugPrint(e.toString());
-      addMessage(
+      sendMessage(
         Message(
           Text(e.toString()),
           time: const Duration(seconds: 5),
@@ -157,7 +162,7 @@ class VideoPlayerController extends GetxController {
     });
   }
 
-  addMessage(Message message) {
+  sendMessage(Message message) {
     messageQueue.add(message);
 
     if (messageQueue.length == 1) {
