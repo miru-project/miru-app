@@ -110,6 +110,10 @@ ExtensionBangumiWatch _$ExtensionBangumiWatchFromJson(
     ExtensionBangumiWatch(
       type: $enumDecode(_$ExtensionWatchBangumiTypeEnumMap, json['type']),
       url: json['url'] as String,
+      subtitles: (json['subtitles'] as List<dynamic>?)
+          ?.map((e) =>
+              ExtensionBangumiWatchSubtitle.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ExtensionBangumiWatchToJson(
@@ -117,12 +121,29 @@ Map<String, dynamic> _$ExtensionBangumiWatchToJson(
     <String, dynamic>{
       'type': _$ExtensionWatchBangumiTypeEnumMap[instance.type]!,
       'url': instance.url,
+      'subtitles': instance.subtitles,
     };
 
 const _$ExtensionWatchBangumiTypeEnumMap = {
   ExtensionWatchBangumiType.hls: 'hls',
   ExtensionWatchBangumiType.mp4: 'mp4',
 };
+
+ExtensionBangumiWatchSubtitle _$ExtensionBangumiWatchSubtitleFromJson(
+        Map<String, dynamic> json) =>
+    ExtensionBangumiWatchSubtitle(
+      title: json['title'] as String,
+      url: json['url'] as String,
+      language: json['language'] as String?,
+    );
+
+Map<String, dynamic> _$ExtensionBangumiWatchSubtitleToJson(
+        ExtensionBangumiWatchSubtitle instance) =>
+    <String, dynamic>{
+      'language': instance.language,
+      'title': instance.title,
+      'url': instance.url,
+    };
 
 ExtensionMangaWatch _$ExtensionMangaWatchFromJson(Map<String, dynamic> json) =>
     ExtensionMangaWatch(

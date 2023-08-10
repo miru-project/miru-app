@@ -125,14 +125,33 @@ class ExtensionBangumiWatch {
   ExtensionBangumiWatch({
     required this.type,
     required this.url,
+    this.subtitles,
   });
   final ExtensionWatchBangumiType type;
   final String url;
+  final List<ExtensionBangumiWatchSubtitle>? subtitles;
 
   factory ExtensionBangumiWatch.fromJson(Map<String, dynamic> json) =>
       _$ExtensionBangumiWatchFromJson(json);
 
   Map<String, dynamic> toJson() => _$ExtensionBangumiWatchToJson(this);
+}
+
+@JsonSerializable()
+class ExtensionBangumiWatchSubtitle {
+  final String? language;
+  final String title;
+  final String url;
+  ExtensionBangumiWatchSubtitle({
+    required this.title,
+    required this.url,
+    this.language,
+  });
+
+  factory ExtensionBangumiWatchSubtitle.fromJson(Map<String, dynamic> json) =>
+      _$ExtensionBangumiWatchSubtitleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExtensionBangumiWatchSubtitleToJson(this);
 }
 
 @JsonSerializable()

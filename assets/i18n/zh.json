@@ -98,7 +98,11 @@
     "watch-now": "立即观看",
     "no-episodes": "暂无剧集",
     "play-complete": "播放完成",
-    "resume-last-playback": "恢复上次播放位置"
+    "resume-last-playback": "恢复上次播放位置",
+    "subtitle-none": "不使用字幕",
+    "subtitle": "字幕",
+    "subtitle-change": "切换字幕 {title}",
+    "subtitle-file": "选择字幕文件"
   },
 
   "reader": {

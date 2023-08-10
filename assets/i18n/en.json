@@ -93,7 +93,10 @@
     "watch-now": "Watch Now",
     "no-episodes": "No episodes",
     "play-complete": "Playback complete",
-    "resume-last-playback": "Resume last playback"
+    "resume-last-playback": "Resume last playback",
+    "subtitle": "Subtitle",
+    "subtitle-change": "Change Subtitle {title}",
+    "subtitle-file": "Subtitle File"
   },
 
   "comic-settings": {

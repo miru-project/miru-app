@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/pages/watch/video_controller.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
@@ -88,6 +89,52 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
           const MaterialDesktopVolumeButton(),
           const MaterialDesktopPositionIndicator(),
           const Spacer(),
+          PopupMenuButton(
+            icon: const Icon(
+              Icons.subtitles,
+              color: Colors.white,
+            ),
+            itemBuilder: (context) {
+              return [
+                // 是否显示字幕
+                PopupMenuItem(
+                  child: Obx(
+                    () => CheckboxListTile(
+                      value: _c.selectedSubtitle.value == -1,
+                      onChanged: (value) {
+                        _c.selectedSubtitle.value = -1;
+                      },
+                      title: Text('video.subtitle-none'.i18n),
+                    ),
+                  ),
+                ),
+                // 选择文件
+                PopupMenuItem(
+                  child: Obx(
+                    () => CheckboxListTile(
+                      value: _c.selectedSubtitle.value == -2,
+                      onChanged: (value) {
+                        _c.selectedSubtitle.value = -2;
+                      },
+                      title: Text("video.subtitle-file".i18n),
+                    ),
+                  ),
+                ),
+                for (int i = 0; i < _c.subtitles.length; i++)
+                  PopupMenuItem(
+                    child: Obx(
+                      () => CheckboxListTile(
+                        value: _c.selectedSubtitle.value == i,
+                        onChanged: (value) {
+                          _c.selectedSubtitle.value = i;
+                        },
+                        title: Text(_c.subtitles[i].title),
+                      ),
+                    ),
+                  ),
+              ];
+            },
+          ),
           MaterialDesktopCustomButton(
             onPressed: () {
               _c.showPlayList.value = !_c.showPlayList.value;
@@ -164,6 +211,51 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
           }),
           const MaterialPositionIndicator(),
           const Spacer(),
+          PopupMenuButton(
+            icon: const Icon(
+              Icons.subtitles,
+              color: Colors.white,
+            ),
+            itemBuilder: (context) {
+              return [
+                // 是否显示字幕
+                PopupMenuItem(
+                  value: -1,
+                  child: Obx(
+                    () => CheckboxListTile(
+                      value: _c.selectedSubtitle.value == -1,
+                      onChanged: (value) {
+                        _c.selectedSubtitle.value = -1;
+                      },
+                      title: Text('video.subtitle-none'.i18n),
+                    ),
+                  ),
+                ), // 选择文件
+                PopupMenuItem(
+                  child: CheckboxListTile(
+                    value: _c.selectedSubtitle.value == -2,
+                    onChanged: (value) {
+                      _c.selectedSubtitle.value = -2;
+                    },
+                    title: Text("video.subtitle-file".i18n),
+                  ),
+                ),
+                for (int i = 0; i < _c.subtitles.length; i++)
+                  PopupMenuItem(
+                    value: i,
+                    child: Obx(
+                      () => CheckboxListTile(
+                        value: _c.selectedSubtitle.value == i,
+                        onChanged: (value) {
+                          _c.selectedSubtitle.value = i;
+                        },
+                        title: Text(_c.subtitles[i].title),
+                      ),
+                    ),
+                  ),
+              ];
+            },
+          ),
           MaterialCustomButton(
             onPressed: () {
               _c.showPlayList.value = !_c.showPlayList.value;

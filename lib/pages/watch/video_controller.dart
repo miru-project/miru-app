@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/pages/home/controller.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
@@ -38,6 +41,9 @@ class VideoPlayerController extends GetxController {
   final isOpenSidebar = false.obs;
   final isFullScreen = false.obs;
   late final index = playIndex.obs;
+  final List<ExtensionBangumiWatchSubtitle> subtitles =
+      <ExtensionBangumiWatchSubtitle>[].obs;
+  final selectedSubtitle = 0.obs;
 
   // 是否已经自动跳转到上次播放进度
   bool _isAutoSeekPosition = false;
@@ -55,14 +61,69 @@ class VideoPlayerController extends GetxController {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     }
     play();
+
+    // 切换剧集
     ever(index, (callback) {
       play();
     });
+
+    // 显示剧集列表
     ever(showPlayList, (callback) {
       if (!showPlayList.value) {
         isOpenSidebar.value = false;
       }
     });
+
+    // 切换字幕
+    ever(selectedSubtitle, (callback) {
+      if (callback == -1) {
+        player.setSubtitleTrack(SubtitleTrack.no());
+        return;
+      }
+      if (callback == -2) {
+        // 选择文件 srt 或者 vtt
+        FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['srt', 'vtt'],
+        ).then((value) {
+          if (value == null) {
+            selectedSubtitle.value = -1;
+            return;
+          }
+
+          // 读取文件
+          final data = File(value.files.first.path!).readAsStringSync();
+          player.setSubtitleTrack(SubtitleTrack.data(data));
+          sendMessage(
+            Message(
+              Text(
+                FlutterI18n.translate(
+                  cuurentContext,
+                  "video.subtitle-change",
+                  translationParams: {"title": value.files.first.name},
+                ),
+              ),
+            ),
+          );
+        });
+        return;
+      }
+      player.setSubtitleTrack(
+        SubtitleTrack.uri(subtitles[callback].url),
+      );
+      sendMessage(
+        Message(
+          Text(
+            FlutterI18n.translate(
+              cuurentContext,
+              "video.subtitle-change",
+              translationParams: {"title": subtitles[callback].title},
+            ),
+          ),
+        ),
+      );
+    });
+
     // 自动切换下一集
     player.stream.completed.listen((event) {
       if (index.value == playList.length - 1 && event) {
@@ -84,6 +145,7 @@ class VideoPlayerController extends GetxController {
         runtime.extension.package,
         detailUrl,
       );
+
       if (history != null &&
           history.progress.isNotEmpty &&
           history.episodeId == index.value &&
@@ -104,10 +166,12 @@ class VideoPlayerController extends GetxController {
 
   play() async {
     try {
+      subtitles.clear();
+      selectedSubtitle.value = -1;
       final playUrl = playList[index.value].url;
-      final m3u8Url =
-          (await runtime.watch(playUrl) as ExtensionBangumiWatch).url;
-      player.open(Media(m3u8Url));
+      final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
+      player.open(Media(watchData.url));
+      subtitles.addAll(watchData.subtitles ?? []);
     } catch (e) {
       debugPrint(e.toString());
       sendMessage(
@@ -203,6 +267,5 @@ class VideoPlayerController extends GetxController {
 class Message {
   final Widget child;
   final Duration time;
-
   Message(this.child, {this.time = const Duration(seconds: 3)});
 }
