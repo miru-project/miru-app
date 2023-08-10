@@ -6,17 +6,22 @@
 Miru App
 </h1>
 
+<p align="center">免费、开源的 支持视频、漫画、小说扩展源的多功能应用，支持 Android、Windows、Web.</p>
+
 <h1 align="center">
 
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/miru-project/miru-app)](https://github.com/miru-project/miru-app/releases/latest)
 [![License](https://img.shields.io/github/license/miru-project/miru-app)](https://github.com/miru-project/miru-app/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/miru-project/miru-app)](https://github.com/miru-project/miru-app/stargazers)
 [![GitHub all releases](https://img.shields.io/github/downloads/miru-project/miru-app/total)](https://github.com/miru-project/miru-app/releases/latest)
 
 </h1>
 
+![screenshot](assets/screenshot/screenshot.webp)
+
 ## 特性
 
-- 支持 `windows`,`android`,`linux`
+- 支持 `windows`,`android`
 - 友好的扩展编写支持、调试日志
 - 扩展使用 JavaScript 语言，开发简单
 - 支持自定义扩展仓库
@@ -42,16 +47,6 @@ Miru App
 - [ ] BT 种子播放
 - [ ] 数据同步
 - [ ] 自动搜寻字幕
-
-## 截图
-
-### Android
-
-![Miru](assets/screenshot/miru-app.jpg.png)
-
-### Windows
-
-![Miru](assets/screenshot/miru-desktop.jpg.png)
 
 ## 关于 Linux
 
