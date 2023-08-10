@@ -124,7 +124,8 @@ class _SearchPageState extends State<SearchPage> {
         },
         body: Obx(
           () {
-            final list = c.runtimeList;
+            // ignore: invalid_use_of_protected_member
+            final list = c.searchResultList.value;
             return SearchAllExtSearch(
               key: ValueKey(
                 c.search.value + c.cuurentExtensionType.value.toString(),
@@ -132,9 +133,8 @@ class _SearchPageState extends State<SearchPage> {
               kw: c.search.value,
               runtimeList: list,
               onClickMore: (index) {
-                final package = list[index].extension.package;
                 Get.to(SearchExtensionPage(
-                  package: package,
+                  package: c.getPackgeByIndex(index),
                   keyWord: c.search.value,
                 ));
               },
@@ -251,14 +251,13 @@ class _SearchPageState extends State<SearchPage> {
                 c.search.value + c.cuurentExtensionType.value.toString(),
               ),
               kw: c.search.value,
-              runtimeList: c.runtimeList,
+              // ignore: invalid_use_of_protected_member
+              runtimeList: c.searchResultList.value,
               onClickMore: (index) {
-                final package = c.runtimeList[index].extension.package;
-
                 router.push(Uri(
                   path: "/search_extension",
                   queryParameters: {
-                    "package": package,
+                    "package": c.getPackgeByIndex(index),
                     "keyWord": c.search.value,
                   },
                 ).toString());

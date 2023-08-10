@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/main/controller.dart';
+import 'package:miru_app/pages/search/controller.dart';
 import 'package:miru_app/pages/search/widgets/search_all_tile.dart';
 import 'package:miru_app/router/router.dart';
-import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/button.dart';
 
@@ -17,7 +17,7 @@ class SearchAllExtSearch extends StatefulWidget {
     required this.onClickMore,
   }) : super(key: key);
   final String kw;
-  final List<ExtensionRuntime> runtimeList;
+  final List<SearchResult> runtimeList;
   final Function(int) onClickMore;
 
   @override
@@ -55,7 +55,7 @@ class _SearchAllExtSearchState extends State<SearchAllExtSearch> {
       itemBuilder: (context, index) {
         return SearchAllTile(
           kw: widget.kw,
-          runtime: widget.runtimeList[index],
+          searchResult: widget.runtimeList[index],
           onClickMore: () {
             widget.onClickMore(index);
           },
