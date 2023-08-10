@@ -26,7 +26,8 @@ class _HomePageState extends State<HomePage> {
   Widget _buildContent() {
     return Obx(
       () {
-        if (c.resents.isEmpty && c.favorites.isEmpty) {
+        if (c.resents.isEmpty &&
+            c.favorites.values.every((element) => element.isEmpty)) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
