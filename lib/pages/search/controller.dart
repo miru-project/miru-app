@@ -32,7 +32,6 @@ class SearchPageController extends GetxController {
 
   Future<void> getResult(String key) async {
     final futures = <Future>[];
-
     for (var i = 0; i < searchResultList.length; i++) {
       final element = searchResultList[i];
       Future<List<ExtensionListItem>> resultFuture;
@@ -49,7 +48,7 @@ class SearchPageController extends GetxController {
         }
         element.result = result;
         if (result.isNotEmpty) {
-          searchResultList.removeAt(i);
+          searchResultList.remove(element);
           searchResultList.insert(0, element);
         }
       }).catchError((e) {
