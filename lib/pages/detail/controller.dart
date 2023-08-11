@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/index.dart';
-import 'package:miru_app/models/tmdb.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/pages/watch/view.dart';
 import 'package:miru_app/router/router.dart';

@@ -8,11 +8,16 @@ class SearchPageController extends GetxController {
   final search = ''.obs;
   final searchResultList = <SearchResult>[].obs;
   String _randomKey = "";
+  int get finishCount =>
+      searchResultList.where((element) => element.completed).length;
 
   @override
   void onInit() {
     getRuntime();
-    ever(search, (callback) => getRuntime());
+    ever(search, (callback) {
+      _randomKey = DateTime.now().millisecondsSinceEpoch.toString();
+      getResult(_randomKey);
+    });
     super.onInit();
   }
 
@@ -34,26 +39,33 @@ class SearchPageController extends GetxController {
     final futures = <Future>[];
     for (var i = 0; i < searchResultList.length; i++) {
       final element = searchResultList[i];
+      element.completed = false;
+      element.result = null;
+      element.error = null;
       Future<List<ExtensionListItem>> resultFuture;
 
-      if (search.value == "") {
+      if (search.value.isEmpty) {
         resultFuture = element.runitme.latest(1);
       } else {
         resultFuture = element.runitme.search(search.value, 1);
       }
 
-      futures.add(resultFuture.then((result) {
-        if (_randomKey != key) {
-          return;
-        }
-        element.result = result;
-        if (result.isNotEmpty) {
-          searchResultList.remove(element);
-          searchResultList.insert(0, element);
-        }
-      }).catchError((e) {
-        element.error = e.toString();
-      }));
+      futures.add(
+        resultFuture.then((result) {
+          if (_randomKey != key) {
+            return;
+          }
+          element.result = result;
+          if (result.isNotEmpty) {
+            searchResultList.remove(element);
+            searchResultList.insert(0, element);
+          }
+        }).catchError((e) {
+          element.error = e.toString();
+        }).whenComplete(() {
+          element.completed = true;
+        }),
+      );
     }
 
     await Future.wait(futures);
@@ -68,9 +80,11 @@ class SearchResult {
   final ExtensionRuntime runitme;
   List<ExtensionListItem>? result;
   String? error;
+  bool completed;
   SearchResult({
     required this.runitme,
     this.error,
     this.result,
+    this.completed = false,
   });
 }

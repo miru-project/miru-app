@@ -31,6 +31,7 @@ class _SearchPageState extends State<SearchPage> {
         title: Text('common.search'.i18n),
       ),
       body: NestedScrollView(
+        physics: const ClampingScrollPhysics(),
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             Obx(
@@ -59,7 +60,7 @@ class _SearchPageState extends State<SearchPage> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(height: 8),
                     SizedBox(
                       height: 60,
                       child: ListView(
@@ -113,11 +114,18 @@ class _SearchPageState extends State<SearchPage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    // 进度
+                    if (c.finishCount != c.searchResultList.length)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: LinearProgressIndicator(
+                          value: (c.finishCount / c.searchResultList.length),
+                        ),
+                      ),
                   ],
                 ),
-                expandedHeight: 135,
-                collapsedHeight: 135,
+                expandedHeight: 140,
+                collapsedHeight: 140,
               ),
             )
           ];
@@ -149,6 +157,16 @@ class _SearchPageState extends State<SearchPage> {
     return Obx(
       () => Column(
         children: [
+          if (c.finishCount != c.searchResultList.length)
+            SizedBox(
+              height: 4,
+              width: double.infinity,
+              child: fluent.ProgressBar(
+                value: (c.finishCount / c.searchResultList.length) * 100,
+              ),
+            )
+          else
+            const SizedBox(height: 4),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -164,7 +182,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   height: 30,

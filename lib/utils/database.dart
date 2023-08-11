@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:isar/isar.dart';
 import 'package:miru_app/models/index.dart';
-import 'package:miru_app/models/tmdb.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 

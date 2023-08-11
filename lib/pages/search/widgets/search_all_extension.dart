@@ -50,6 +50,7 @@ class _SearchAllExtSearchState extends State<SearchAllExtSearch> {
       );
     }
     return ListView.builder(
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: widget.runtimeList.length,
       itemBuilder: (context, index) {
