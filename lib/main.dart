@@ -12,7 +12,7 @@ import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
-import 'package:miru_app/utils/package_info.dart';
+import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -38,7 +38,7 @@ void main(List<String> args) async {
   // 主窗口
   await MiruStorage.ensureInitialized();
   await ExtensionUtils.ensureInitialized();
-  await PackageInfoUtil.ensureInitialized();
+  await ApplicationUtils.ensureInitialized();
   MediaKit.ensureInitialized();
 
   if (!Platform.isAndroid) {

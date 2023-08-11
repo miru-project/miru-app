@@ -8,6 +8,7 @@ import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/search/view.dart';
 import 'package:miru_app/pages/settings/view.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:window_manager/window_manager.dart';
@@ -35,7 +36,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
   void initState() {
     c = Get.put(MainController());
     if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
-      c.checkUpdate(context);
+      ApplicationUtils.checkUpdate(context);
     }
     super.initState();
   }
@@ -159,7 +160,7 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
   void initState() {
     c = Get.put(MainController());
     if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
-      c.checkUpdate(context);
+      ApplicationUtils.checkUpdate(context);
     }
     super.initState();
   }

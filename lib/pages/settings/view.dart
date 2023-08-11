@@ -14,7 +14,7 @@ import 'package:miru_app/widgets/settings_switch_tile.dart';
 import 'package:miru_app/widgets/settings_tile.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
-import 'package:miru_app/utils/package_info.dart';
+import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/list_title.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -110,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
           trailing: PlatformWidget(
             androidWidget: TextButton(
               onPressed: () {
-                Get.find<MainController>().checkUpdate(
+                ApplicationUtils.checkUpdate(
                   context,
                   showSnackbar: true,
                 );
@@ -119,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             desktopWidget: fluent.FilledButton(
               onPressed: () {
-                Get.find<MainController>().checkUpdate(
+                ApplicationUtils.checkUpdate(
                   context,
                   showSnackbar: true,
                 );
