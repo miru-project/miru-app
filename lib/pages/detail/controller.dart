@@ -10,6 +10,7 @@ import 'package:miru_app/pages/watch/view.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/messenger.dart';
 
@@ -26,19 +27,23 @@ class DetailPageController extends GetxController {
 
   ScrollController scrollController = ScrollController();
 
-  final isFavorite = false.obs;
+  final RxBool isFavorite = false.obs;
   final Rx<ExtensionDetail?> data = Rx(null);
   final Rx<History?> history = Rx(null);
   final RxString error = ''.obs;
   final RxBool isLoading = true.obs;
   final RxInt selectEpGroup = 0.obs;
-  final Rx<ExtensionType> type = ExtensionType.bangumi.obs;
   final Rx<TMDBDetail?> tmdb = Rx(null);
+  final Rx<ExtensionRuntime?> runtime = Rx(null);
+  ExtensionType get type =>
+      runtime.value?.extension.type ?? ExtensionType.bangumi;
+  Extension? get extension => runtime.value?.extension;
 
   ExtensionDetail? get detail => data.value;
   set detail(ExtensionDetail? value) => data.value = value;
   TMDBDetail? get tmdbDetail => tmdb.value;
   set tmdbDetail(TMDBDetail? value) => tmdb.value = value;
+
   String get backgorund {
     String bg = '';
     if (tmdbDetail != null && tmdbDetail!.backdrop != null) {
@@ -63,8 +68,7 @@ class DetailPageController extends GetxController {
     await refreshFavorite();
     try {
       // 获取扩展类型
-      final runtime = ExtensionUtils.extensions[package];
-      type.value = runtime!.extension.type;
+      runtime.value = ExtensionUtils.extensions[package];
       _miruDetail = await DatabaseUtils.getMiruDetail(package, url);
       _tmdbID = _miruDetail?.tmdbID ?? -1;
       await getDetail();

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
 import 'package:miru_app/pages/extension_repo/widgets/extension_card.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 
@@ -33,16 +34,18 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('extension-repo.error'.i18n),
+          const SizedBox(height: 8),
           Text(
             'extension-repo.error-tips'.i18n,
             style: const TextStyle(fontSize: 12),
           ),
-          const SizedBox(height: 8),
-          FilledButton(
-              child: Text('common.retry'.i18n),
-              onPressed: () {
-                c.onRefresh();
-              })
+          const SizedBox(height: 13),
+          PlatformFilledButton(
+            child: Text('common.retry'.i18n),
+            onPressed: () {
+              c.onRefresh();
+            },
+          )
         ],
       ));
     }

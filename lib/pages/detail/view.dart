@@ -10,6 +10,7 @@ import 'package:miru_app/pages/detail/widgets/detail_appbar_flexible_space.dart'
 import 'package:miru_app/pages/detail/widgets/detail_appbar_title.dart';
 import 'package:miru_app/pages/detail/widgets/detail_background_color.dart';
 import 'package:miru_app/pages/detail/widgets/detail_episodes.dart';
+import 'package:miru_app/pages/detail/widgets/detail_extension_tile.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
 import 'package:miru_app/pages/detail/widgets/detail_overview.dart';
 import 'package:miru_app/utils/extension.dart';
@@ -73,7 +74,7 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       body: Obx(() {
         late String episodesString;
-        if (c.type.value == ExtensionType.bangumi) {
+        if (c.type == ExtensionType.bangumi) {
           episodesString = 'video.episodes'.i18n;
         } else {
           episodesString = 'reader.chapters'.i18n;
@@ -105,7 +106,7 @@ class _DetailPageState extends State<DetailPage> {
                     tabs: [
                       Tab(text: episodesString),
                       Tab(text: 'detail.overview'.i18n),
-                      if (c.type.value == ExtensionType.bangumi)
+                      if (c.type == ExtensionType.bangumi)
                         Tab(text: 'detail.cast'.i18n),
                     ],
                   ),
@@ -250,14 +251,9 @@ class _DetailPageState extends State<DetailPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Container(
-                                constraints: const BoxConstraints(
-                                  maxHeight: 100,
-                                ),
-                                child: SelectableText(c.detail!.desc ?? ''),
-                              ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 20),
+                              const DetailExtensionTile(),
+                              const SizedBox(height: 20),
                               Row(
                                 children: [
                                   // 收藏按钮
@@ -304,121 +300,130 @@ class _DetailPageState extends State<DetailPage> {
                             c.tmdbDetail!.images.isEmpty) {
                           return const SizedBox();
                         }
-                        return CardTile(
-                          title: 'tmdb.backdrops'.i18n,
-                          child: SizedBox(
-                            height: 300,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                final image = c.tmdbDetail!.images[index];
-                                final url = TmdbApi.getImageUrl(image);
-                                if (url == null) {
-                                  return const SizedBox();
-                                }
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(right: 8),
-                                  child: CacheNetWorkImage(
-                                    url,
-                                    height: 200,
-                                  ),
-                                );
-                              },
-                              itemCount: c.tmdbDetail!.images.length,
+                        return fluent.Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: CardTile(
+                            title: 'tmdb.backdrops'.i18n,
+                            child: SizedBox(
+                              height: 300,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  final image = c.tmdbDetail!.images[index];
+                                  final url = TmdbApi.getImageUrl(image);
+                                  if (url == null) {
+                                    return const SizedBox();
+                                  }
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: CacheNetWorkImage(
+                                      url,
+                                      height: 200,
+                                    ),
+                                  );
+                                },
+                                itemCount: c.tmdbDetail!.images.length,
+                              ),
                             ),
                           ),
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
                     Obx(
                       () {
                         if (c.tmdbDetail == null ||
                             c.tmdbDetail!.casts.isEmpty) {
                           return const SizedBox();
                         }
-                        return CardTile(
-                          title: 'detail.cast'.i18n,
-                          child: SizedBox(
-                            height: 150,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                final cast = c.tmdbDetail!.casts[index];
-                                String? url;
-                                if (cast.profilePath != null) {
-                                  url = TmdbApi.getImageUrl(cast.profilePath!);
-                                }
-                                return MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      launchUrl(
-                                        Uri.parse(
-                                          "https://www.themoviedb.org/person/${cast.id}}",
+                        return fluent.Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: CardTile(
+                            title: 'detail.cast'.i18n,
+                            child: SizedBox(
+                              height: 150,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  final cast = c.tmdbDetail!.casts[index];
+                                  String? url;
+                                  if (cast.profilePath != null) {
+                                    url =
+                                        TmdbApi.getImageUrl(cast.profilePath!);
+                                  }
+                                  return MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        launchUrl(
+                                          Uri.parse(
+                                            "https://www.themoviedb.org/person/${cast.id}}",
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 16),
+                                        width: 170,
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              clipBehavior: Clip.antiAlias,
+                                              child: CacheNetWorkImage(
+                                                url ?? '',
+                                                width: 100,
+                                                height: 100,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              cast.name,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              cast.character,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.only(right: 16),
-                                      width: 170,
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: CacheNetWorkImage(
-                                              url ?? '',
-                                              width: 100,
-                                              height: 100,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            cast.name,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            cast.character,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
-                              itemCount: c.tmdbDetail!.casts.length,
+                                  );
+                                },
+                                itemCount: c.tmdbDetail!.casts.length,
+                              ),
                             ),
                           ),
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
                     Obx(
                       () {
-                        if (c.tmdbDetail == null ||
-                            c.tmdbDetail!.overview == null) {
+                        if (c.detail?.desc == null) {
                           return const SizedBox();
                         }
-                        return CardTile(
-                          title: "detail.overview".i18n,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: SelectableText(c.tmdbDetail!.overview ?? ''),
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: CardTile(
+                            title: "detail.overview".i18n,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: SelectableText(
+                                c.tmdbDetail?.overview ?? c.detail?.desc ?? '',
+                              ),
+                            ),
                           ),
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
                     Obx(
                       () {
                         if (c.tmdbDetail == null) {

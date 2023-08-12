@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/pages/detail/widgets/detail_continue_play.dart';
+import 'package:miru_app/pages/detail/widgets/detail_extension_tile.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 
@@ -75,7 +76,6 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                 ),
               ),
             ),
-            // flex 左边封面右边标题
             Positioned(
               left: 20,
               bottom: 105,
@@ -110,12 +110,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                             style: Get.theme.textTheme.titleLarge,
                           ),
                           const SizedBox(height: 10),
-                          Text(
-                            c.isLoading.value ? "" : c.data.value!.desc ?? '',
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
+                          const DetailExtensionTile(),
                         ],
                       ),
                     ),

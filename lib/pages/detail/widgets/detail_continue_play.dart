@@ -22,7 +22,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
     return Obx(() {
       late String noEpisodesString;
       late String watchNowString;
-      if (c.type.value == ExtensionType.bangumi) {
+      if (c.type == ExtensionType.bangumi) {
         noEpisodesString = 'video.no-episodes'.i18n;
         watchNowString = 'video.watch-now'.i18n;
       } else {
