@@ -22,9 +22,10 @@ class DetailOverView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Obx(() {
-              if (c.tmdbDetail == null || c.tmdbDetail!.images.isEmpty) {
+              if (c.tmdbDetail == null || c.tmdbDetail!.backdrop == null) {
                 return const SizedBox();
               }
+              final images = [c.tmdbDetail!.backdrop!, ...c.tmdbDetail!.images];
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -41,7 +42,7 @@ class DetailOverView extends StatelessWidget {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        final image = c.tmdbDetail!.images[index];
+                        final image = images[index];
                         final url = TmdbApi.getImageUrl(image);
                         if (url == null) {
                           return const SizedBox();
@@ -58,7 +59,7 @@ class DetailOverView extends StatelessWidget {
                           ),
                         );
                       },
-                      itemCount: c.tmdbDetail!.images.length,
+                      itemCount: images.length,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -68,6 +69,9 @@ class DetailOverView extends StatelessWidget {
             Obx(
               () => SelectableText(
                 c.tmdbDetail?.overview ?? c.detail?.desc ?? '',
+                style: const TextStyle(
+                  height: 2,
+                ),
               ),
             ),
             const SizedBox(height: 20),

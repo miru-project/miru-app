@@ -108,7 +108,6 @@ class DetailPageController extends GetxController {
         );
         showPlatformSnackbar(
           context: cuurentContext,
-          title: '',
           content: content,
           severity: fluent.InfoBarSeverity.error,
         );
@@ -186,7 +185,6 @@ class DetailPageController extends GetxController {
     } catch (e) {
       showPlatformSnackbar(
         context: cuurentContext,
-        title: '',
         content: e.toString().split('\n')[0],
         severity: fluent.InfoBarSeverity.error,
       );
@@ -205,7 +203,6 @@ class DetailPageController extends GetxController {
     if (runtime.value == null) {
       showPlatformSnackbar(
         context: cuurentContext,
-        title: '',
         content: FlutterI18n.translate(
           cuurentContext,
           'common.extension-missing',

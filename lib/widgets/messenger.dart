@@ -6,8 +6,8 @@ import 'package:flutter/widgets.dart';
 
 showPlatformSnackbar({
   required BuildContext context,
-  required String title,
   required String content,
+  String title = '',
   dynamic action,
   fluent.InfoBarSeverity severity = fluent.InfoBarSeverity.info,
 }) {

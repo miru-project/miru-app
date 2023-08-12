@@ -272,9 +272,13 @@ class _DetailPageState extends State<DetailPage> {
                     Obx(
                       () {
                         if (c.tmdbDetail == null ||
-                            c.tmdbDetail!.images.isEmpty) {
+                            c.tmdbDetail!.backdrop == null) {
                           return const SizedBox();
                         }
+                        final images = [
+                          c.tmdbDetail!.backdrop!,
+                          ...c.tmdbDetail!.images
+                        ];
                         return fluent.Padding(
                           padding: const EdgeInsets.only(bottom: 16),
                           child: CardTile(
@@ -284,7 +288,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
-                                  final image = c.tmdbDetail!.images[index];
+                                  final image = images[index];
                                   final url = TmdbApi.getImageUrl(image);
                                   if (url == null) {
                                     return const SizedBox();
@@ -301,7 +305,7 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                   );
                                 },
-                                itemCount: c.tmdbDetail!.images.length,
+                                itemCount: images.length,
                               ),
                             ),
                           ),
