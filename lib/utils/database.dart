@@ -15,23 +15,23 @@ class DatabaseUtils {
     required String cover,
     required String name,
   }) async {
-    final ext = ExtensionUtils.extensions[package];
-    if (ext == null) {
-      throw Exception('extension not found');
-    }
-    final extension = ext.extension;
     return db.writeTxn(() async {
       if (await isFavorite(
-        package: extension.package,
+        package: package,
         url: url,
       )) {
         return db.favorites
             .filter()
-            .packageEqualTo(extension.package)
+            .packageEqualTo(package)
             .and()
             .urlEqualTo(url)
             .deleteAll();
       } else {
+        final runtime = ExtensionUtils.runtimes[package];
+        if (runtime == null) {
+          throw Exception('extension not found');
+        }
+        final extension = runtime.extension;
         return db.favorites.put(
           Favorite()
             ..cover = cover

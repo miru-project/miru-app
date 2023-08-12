@@ -8,7 +8,7 @@ class TmdbApi {
     defaultLanguage: MiruStorage.getSetting(SettingKey.language),
   );
 
-  static Future<tmdb_model.TMDBDetail> getDetail(String keyword,
+  static Future<tmdb_model.TMDBDetail?> getDetail(String keyword,
       {int page = 1}) async {
     final result = await tmdb.v3.search.queryMulti(
       keyword,
@@ -17,7 +17,7 @@ class TmdbApi {
     // print(result);
     final results = result["results"] as List;
     if (results.isEmpty) {
-      throw Exception("No results");
+      return null;
     }
     late Map data;
     final mediaType = results[0]["media_type"];

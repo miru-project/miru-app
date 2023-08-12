@@ -41,7 +41,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
   }
 
   _getUpdate() async {
-    _runtime = ExtensionUtils.extensions[widget.history.package];
+    _runtime = ExtensionUtils.runtimes[widget.history.package];
     if (_runtime == null) {
       return;
     }

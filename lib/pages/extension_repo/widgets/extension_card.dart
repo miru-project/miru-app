@@ -33,9 +33,9 @@ class _ExtensionCardState extends State<ExtensionCard> {
   @override
   void initState() {
     setState(() {
-      isInstall = ExtensionUtils.extensions.containsKey(widget.package);
+      isInstall = ExtensionUtils.runtimes.containsKey(widget.package);
       hasUpgrade = isInstall &&
-          ExtensionUtils.extensions[widget.package]!.extension.version !=
+          ExtensionUtils.runtimes[widget.package]!.extension.version !=
               widget.version;
     });
     super.initState();

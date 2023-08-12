@@ -19,7 +19,7 @@ class ExtensionSettingsPageController extends GetxController {
   }
 
   onRefresh() async {
-    runtime.value = ExtensionUtils.extensions[package];
+    runtime.value = ExtensionUtils.runtimes[package];
     settings.clear();
     settings.addAll(await DatabaseUtils.getExtensionSettings(package));
   }

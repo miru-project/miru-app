@@ -24,7 +24,7 @@ class SearchPageController extends GetxController {
   getRuntime({ExtensionType? type}) {
     _randomKey = DateTime.now().millisecondsSinceEpoch.toString();
     cuurentExtensionType.value = type;
-    final exts = ExtensionUtils.extensions.values.toList();
+    final exts = ExtensionUtils.runtimes.values.toList();
     if (type != null) {
       exts.removeWhere((element) => element.extension.type != type);
     }

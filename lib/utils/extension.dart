@@ -18,7 +18,7 @@ import 'package:miru_app/widgets/messenger.dart';
 import 'package:path/path.dart' as path;
 
 class ExtensionUtils {
-  static late Map<String, ExtensionRuntime> extensions;
+  static late Map<String, ExtensionRuntime> runtimes;
   static late Map<String, String> extensionErrorMap;
 
   static Future<String> get getExtensionsDir async =>
@@ -59,7 +59,7 @@ class ExtensionUtils {
       }
     }
 
-    extensions = exts;
+    runtimes = exts;
     extensionErrorMap = extErrorMap;
     // 重载扩展页面
     if (Get.isRegistered<ExtensionPageController>()) {

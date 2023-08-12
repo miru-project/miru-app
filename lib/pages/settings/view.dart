@@ -6,7 +6,6 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
-import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
 import 'package:miru_app/widgets/settings_input_tile.dart';
 import 'package:miru_app/widgets/settings_radios_tile.dart';

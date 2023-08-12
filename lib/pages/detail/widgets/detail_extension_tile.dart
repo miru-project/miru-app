@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/utils/extension.dart';
@@ -12,7 +13,13 @@ class DetailExtensionTile extends StatelessWidget {
     final c = Get.find<DetailPageController>();
     return Obx(() {
       if (c.extension == null) {
-        return const SizedBox.shrink();
+        return Text(FlutterI18n.translate(
+          context,
+          'common.extension-missing',
+          translationParams: {
+            'package': c.package,
+          },
+        ));
       }
       return Row(
         children: [

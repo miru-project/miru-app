@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/index.dart';
@@ -49,7 +50,7 @@ class DetailPageController extends GetxController {
     if (tmdbDetail != null && tmdbDetail!.backdrop != null) {
       bg = TmdbApi.getImageUrl(tmdbDetail!.backdrop!) ?? '';
     } else {
-      bg = detail!.cover;
+      bg = detail?.cover ?? '';
     }
     return bg;
   }
@@ -64,11 +65,9 @@ class DetailPageController extends GetxController {
   }
 
   onRefresh() async {
-    // 获取收藏状态
+    runtime.value = ExtensionUtils.runtimes[package];
     await refreshFavorite();
     try {
-      // 获取扩展类型
-      runtime.value = ExtensionUtils.extensions[package];
       _miruDetail = await DatabaseUtils.getMiruDetail(package, url);
       _tmdbID = _miruDetail?.tmdbID ?? -1;
       await getDetail();
@@ -95,27 +94,50 @@ class DetailPageController extends GetxController {
 
   getRemoteDeatil() async {
     try {
-      detail = await ExtensionUtils.extensions[package]?.detail(url);
+      detail = await runtime.value!.detail(url);
       await DatabaseUtils.putMiruDetail(package, url, detail!, tmdbID: _tmdbID);
     } catch (e) {
       // 弹出错误信息
-      showPlatformSnackbar(
-        context: cuurentContext,
-        title: 'detail.get-lastest-data-error'.i18n,
-        content: e.toString().split('\n')[0],
-        severity: fluent.InfoBarSeverity.error,
-      );
+      if (runtime.value == null) {
+        final content = FlutterI18n.translate(
+          cuurentContext,
+          'common.extension-missing',
+          translationParams: {
+            'package': package,
+          },
+        );
+        showPlatformSnackbar(
+          context: cuurentContext,
+          title: '',
+          content: content,
+          severity: fluent.InfoBarSeverity.error,
+        );
+        throw content;
+      } else {
+        showPlatformSnackbar(
+          context: cuurentContext,
+          title: 'detail.get-lastest-data-error'.i18n,
+          content: e.toString().split('\n')[0],
+          severity: fluent.InfoBarSeverity.error,
+        );
+      }
       rethrow;
     }
   }
 
   getTMDBDetail() async {
     tmdbDetail = await DatabaseUtils.getTMDBDetail(_tmdbID);
+    if (detail == null) {
+      return;
+    }
     getRemoteTMDBDetail();
   }
 
   getRemoteTMDBDetail() async {
     tmdbDetail = await TmdbApi.getDetail(detail!.title);
+    if (tmdbDetail == null) {
+      return;
+    }
     _tmdbID = tmdbDetail!.id;
     DatabaseUtils.putTMDBDetail(
       tmdbDetail!.id,
@@ -151,15 +173,25 @@ class DetailPageController extends GetxController {
   }
 
   toggleFavorite() async {
-    if (isLoading.value) {
+    if (detail == null) {
       return;
     }
-    await DatabaseUtils.toggleFavorite(
-      package: package,
-      url: url,
-      cover: detail!.cover,
-      name: detail!.title,
-    );
+    try {
+      await DatabaseUtils.toggleFavorite(
+        package: package,
+        url: url,
+        cover: detail!.cover,
+        name: detail!.title,
+      );
+    } catch (e) {
+      showPlatformSnackbar(
+        context: cuurentContext,
+        title: '',
+        content: e.toString().split('\n')[0],
+        severity: fluent.InfoBarSeverity.error,
+      );
+      rethrow;
+    }
     await refreshFavorite();
     Get.find<HomePageController>().onRefresh();
   }
@@ -170,6 +202,22 @@ class DetailPageController extends GetxController {
     int index,
     int selectEpGroup,
   ) {
+    if (runtime.value == null) {
+      showPlatformSnackbar(
+        context: cuurentContext,
+        title: '',
+        content: FlutterI18n.translate(
+          cuurentContext,
+          'common.extension-missing',
+          translationParams: {
+            'package': package,
+          },
+        ),
+        severity: fluent.InfoBarSeverity.error,
+      );
+      return;
+    }
+
     Navigator.of(context, rootNavigator: true).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 600),

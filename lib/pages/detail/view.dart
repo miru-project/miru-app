@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/extension.dart';
@@ -13,7 +12,6 @@ import 'package:miru_app/pages/detail/widgets/detail_episodes.dart';
 import 'package:miru_app/pages/detail/widgets/detail_extension_tile.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
 import 'package:miru_app/pages/detail/widgets/detail_overview.dart';
-import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/card_tile.dart';
@@ -58,19 +56,6 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget _buildAndroidDetail(BuildContext context) {
-    if (!ExtensionUtils.extensions.containsKey(widget.package)) {
-      return Scaffold(
-        body: Center(
-          child: Text(FlutterI18n.translate(
-            context,
-            'common.extension-missing',
-            translationParams: {
-              'package': widget.package,
-            },
-          )),
-        ),
-      );
-    }
     return Scaffold(
       body: Obx(() {
         late String episodesString;
@@ -169,19 +154,6 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget _buildDesktopDetail(BuildContext context) {
-    if (!ExtensionUtils.extensions.containsKey(widget.package)) {
-      return Center(
-        child: Text(
-          FlutterI18n.translate(
-            context,
-            'common.extension-missing',
-            translationParams: {
-              'package': widget.package,
-            },
-          ),
-        ),
-      );
-    }
     return Obx(() {
       if (c.error.value.isNotEmpty) {
         return Center(
@@ -226,15 +198,18 @@ class _DetailPageState extends State<DetailPage> {
                       child: Row(
                         children: [
                           if (constraints.maxWidth > 600) ...[
-                            Container(
-                              width: 230,
-                              height: double.infinity,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: CacheNetWorkImage(
-                                c.detail!.cover,
+                            Hero(
+                              tag: c.heroTag ?? '',
+                              child: Container(
+                                width: 230,
+                                height: double.infinity,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: CacheNetWorkImage(
+                                  c.detail?.cover ?? '',
+                                ),
                               ),
                             ),
                             const SizedBox(width: 30),
@@ -245,7 +220,7 @@ class _DetailPageState extends State<DetailPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               SelectableText(
-                                c.detail!.title,
+                                c.detail?.title ?? '',
                                 style: const TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -292,7 +267,7 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    if (c.detail!.episodes != null) const DetailEpisodes(),
+                    if (c.detail?.episodes != null) const DetailEpisodes(),
                     const SizedBox(height: 16),
                     Obx(
                       () {
@@ -418,6 +393,9 @@ class _DetailPageState extends State<DetailPage> {
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: SelectableText(
                                 c.tmdbDetail?.overview ?? c.detail?.desc ?? '',
+                                style: const TextStyle(
+                                  height: 2,
+                                ),
                               ),
                             ),
                           ),

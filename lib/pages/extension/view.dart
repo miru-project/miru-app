@@ -85,9 +85,10 @@ class _ExtensionPageState extends State<ExtensionPage> {
             // 定位目录
             final dir = await ExtensionUtils.getExtensionsDir;
             if (Platform.isAndroid) {
-              // 复制 dir
               Clipboard.setData(ClipboardData(text: dir));
-              // ignore: use_build_context_synchronously
+              if (!mounted) {
+                return;
+              }
               showPlatformSnackbar(
                 context: context,
                 title: 'extension.import.extension-dir'.i18n,
@@ -185,7 +186,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
           body: TabBarView(children: [
             ListView(
               children: [
-                if (c.extensions.isEmpty)
+                if (c.runtimes.isEmpty)
                   SizedBox(
                     height: 300,
                     child: Column(
@@ -195,7 +196,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
                       ],
                     ),
                   ),
-                for (final ext in c.extensions.values)
+                for (final ext in c.runtimes.values)
                   ExtensionTile(ext.extension),
               ],
             ),
@@ -240,7 +241,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
               ],
             ),
             const SizedBox(height: 16),
-            if (c.extensions.isEmpty)
+            if (c.runtimes.isEmpty)
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -261,7 +262,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
             Expanded(
               child: ListView(
                 children: [
-                  for (final ext in c.extensions.values)
+                  for (final ext in c.runtimes.values)
                     Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ExtensionTile(ext.extension),

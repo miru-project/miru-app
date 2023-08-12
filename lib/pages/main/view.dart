@@ -58,85 +58,85 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => fluent.NavigationView(
-          appBar: fluent.NavigationAppBar(
-            leading: () {
-              return fluent.IconButton(
-                icon: const Icon(fluent.FluentIcons.back, size: 12.0),
-                onPressed: () {
-                  if (router.canPop()) {
-                    context.pop();
-                    setState(() {});
-                  }
-                },
-              );
-            }(),
-            title: _title(),
-            actions: SizedBox(
-              width: 138,
-              height: 50,
-              child: WindowCaption(
-                backgroundColor: Colors.transparent,
-                brightness: fluent.FluentTheme.of(context).brightness,
-              ),
-            ),
-            automaticallyImplyLeading: false,
+    return fluent.NavigationView(
+      appBar: fluent.NavigationAppBar(
+        leading: () {
+          return fluent.IconButton(
+            icon: const Icon(fluent.FluentIcons.back, size: 12.0),
+            onPressed: () {
+              if (router.canPop()) {
+                context.pop();
+                setState(() {});
+              }
+            },
+          );
+        }(),
+        title: _title(),
+        actions: SizedBox(
+          width: 138,
+          height: 50,
+          child: WindowCaption(
+            backgroundColor: Colors.transparent,
+            brightness: fluent.FluentTheme.of(context).brightness,
           ),
-          paneBodyBuilder: (item, body) {
-            return widget.child;
-          },
-          pane: fluent.NavigationPane(
-            size: const fluent.NavigationPaneSize(openMaxWidth: 200),
-            selected: c.selectedTab.value,
-            onChanged: c.changeTab,
-            displayMode: fluent.PaneDisplayMode.compact,
-            footerItems: [
-              fluent.PaneItemSeparator(),
-              fluent.PaneItem(
-                icon: const Icon(fluent.FluentIcons.repo),
-                title: Text('common.extension-repo'.i18n),
-                body: const ExtensionPage(),
-                onTap: () {
-                  router.go('/extension_repo');
-                },
-              ),
-              fluent.PaneItem(
-                icon: const Icon(fluent.FluentIcons.settings),
-                title: Text('common.settings'.i18n),
-                body: const SettingsPage(),
-                onTap: () {
-                  router.go('/settings');
-                },
-              ),
-            ],
-            items: [
-              fluent.PaneItem(
-                icon: const Icon(fluent.FluentIcons.home),
-                title: Text('common.home'.i18n),
-                body: const HomePage(),
-                onTap: () {
-                  router.go('/');
-                },
-              ),
-              fluent.PaneItem(
-                icon: const Icon(fluent.FluentIcons.search),
-                title: Text('common.search'.i18n),
-                body: const SearchPage(),
-                onTap: () {
-                  router.go('/search');
-                },
-              ),
-              fluent.PaneItem(
-                icon: const Icon(fluent.FluentIcons.add_in),
-                title: Text('common.extension'.i18n),
-                body: const ExtensionPage(),
-                onTap: () {
-                  router.go('/extension');
-                },
-              ),
-            ],
+        ),
+        automaticallyImplyLeading: false,
+      ),
+      paneBodyBuilder: (item, body) {
+        return widget.child;
+      },
+      pane: fluent.NavigationPane(
+        size: const fluent.NavigationPaneSize(openMaxWidth: 200),
+        selected: c.selectedTab.value,
+        onChanged: c.changeTab,
+        displayMode: fluent.PaneDisplayMode.compact,
+        footerItems: [
+          fluent.PaneItemSeparator(),
+          fluent.PaneItem(
+            icon: const Icon(fluent.FluentIcons.repo),
+            title: Text('common.extension-repo'.i18n),
+            body: const ExtensionPage(),
+            onTap: () {
+              router.go('/extension_repo');
+            },
           ),
-        ));
+          fluent.PaneItem(
+            icon: const Icon(fluent.FluentIcons.settings),
+            title: Text('common.settings'.i18n),
+            body: const SettingsPage(),
+            onTap: () {
+              router.go('/settings');
+            },
+          ),
+        ],
+        items: [
+          fluent.PaneItem(
+            icon: const Icon(fluent.FluentIcons.home),
+            title: Text('common.home'.i18n),
+            body: const HomePage(),
+            onTap: () {
+              router.go('/');
+            },
+          ),
+          fluent.PaneItem(
+            icon: const Icon(fluent.FluentIcons.search),
+            title: Text('common.search'.i18n),
+            body: const SearchPage(),
+            onTap: () {
+              router.go('/search');
+            },
+          ),
+          fluent.PaneItem(
+            icon: const Icon(fluent.FluentIcons.add_in),
+            title: Text('common.extension'.i18n),
+            body: const ExtensionPage(),
+            onTap: () {
+              router.go('/extension');
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
 

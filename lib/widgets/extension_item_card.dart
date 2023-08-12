@@ -80,7 +80,8 @@ class _ExtensionItemCardState extends State<ExtensionItemCard> {
                     ),
                     if (widget.update != null)
                       Text(
-                        widget.update.toString(),
+                        widget.update!,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,

@@ -224,7 +224,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final runtime = ExtensionUtils.extensions[widget.package];
+    final runtime = ExtensionUtils.runtimes[widget.package];
     final extensionMissing = Text(
       FlutterI18n.translate(
         context,
