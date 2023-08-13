@@ -1,16 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/miru_directory.dart';
 
 class ExtensionRuntime {
   late JavascriptRuntime runtime;
   late Extension extension;
-  static final dio = Dio();
+  late PersistCookieJar _cookieJar;
+  final _dio = Dio();
 
   initRuntime(Extension ext) async {
     extension = ext;
@@ -21,6 +25,15 @@ class ExtensionRuntime {
 
     // 初始化runtime
     runtime = getJavascriptRuntime();
+
+    // 添加 cookie manager
+    final appDocDir = await MiruDirectory.getDirectory;
+    _cookieJar = PersistCookieJar(
+      ignoreExpires: true,
+      storage: FileStorage("$appDocDir/.cookies/"),
+    );
+    final cookieManager = CookieManager(_cookieJar);
+    _dio.interceptors.add(cookieManager);
 
     // 注册方法
     // 日志
@@ -38,7 +51,7 @@ class ExtensionRuntime {
         ExtensionLogLevel.info,
         "GET: ${args[0]} , ${args[1]}",
       );
-      return (await dio.get<String>(args[0],
+      return (await _dio.get<String>(args[0],
               options: Options(
                 headers: args[1]['headers'] ?? {},
                 method: args[1]['method'] ?? 'get',
@@ -116,20 +129,23 @@ class ExtensionRuntime {
                 return res;
               }
             }
-            latest(page) {
-              throw new Error("not implement");
+            popular(page){
+              throw new Error("not implement popular");
             }
-            search(kw, page) {
-              throw new Error("not implement");
+            latest(page) {
+              throw new Error("not implement latest");
+            }
+            search(kw, page, screening) {
+              throw new Error("not implement search");
             }
             detail(url) {
-              throw new Error("not implement");
+              throw new Error("not implement detail");
             }
             watch(url) {
-              throw new Error("not implement");
+              throw new Error("not implement watch");
             }
             checkUpdate(url) {
-              throw new Error("not implement");
+              throw new Error("not implement checkUpdate");
             }
             async getSetting(key) {
               return sendMessage("getSetting", JSON.stringify([key]));
@@ -160,6 +176,30 @@ class ExtensionRuntime {
     ''');
     await runtime.handlePromise(jsResult);
   }
+
+  // 清理 cookie
+  cleanCookie() async {
+    await _cookieJar.delete(Uri.parse(extension.webSite));
+  }
+
+  /// 添加 cookie
+  /// key=value; key=value
+  setCookie(String cookies) async {
+    final cookieList = cookies.split(';');
+    for (final cookie in cookieList) {
+      await _cookieJar.saveFromResponse(
+        Uri.parse(extension.webSite),
+        [Cookie.fromSetCookieValue(cookie)],
+      );
+    }
+  }
+
+  // 列出所有的 cookie
+  // Future<String> listCookie() async {
+  //   final cookies =
+  //       await _cookieJar.loadForRequest(Uri.parse(extension.webSite));
+  //   return cookies.map((e) => e.toString()).join(';');
+  // }
 
   Future<T> _runExtension<T>(Future<T> Function() fun) async {
     try {

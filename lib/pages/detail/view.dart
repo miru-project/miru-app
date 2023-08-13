@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
+import 'package:miru_app/pages/detail/pages/webview.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_flexible_space.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_title.dart';
 import 'package:miru_app/pages/detail/widgets/detail_background_color.dart';
@@ -95,6 +96,19 @@ class _DetailPageState extends State<DetailPage> {
                         Tab(text: 'detail.cast'.i18n),
                     ],
                   ),
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        Get.to(
+                          WebViewPage(
+                            extensionRuntime: c.runtime.value!,
+                            url: c.url,
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.public),
+                    )
+                  ],
                   expandedHeight: 400,
                 ),
               ];

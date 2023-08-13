@@ -10,6 +10,7 @@ dependencies:
   cached_network_image: ^3.2.3
   desktop_multi_window: ^0.2.0
   dio: ^5.3.2
+  dio_cookie_manager: ^3.1.0+1
   easy_refresh: ^3.3.2+1
   fluent_ui: ^4.7.2
   flutter:
@@ -45,7 +46,10 @@ dependencies:
   tmdb_api: ^2.1.5
   url_launcher: ^6.1.11
   window_manager: ^0.3.4
-  
+  cookie_jar: ^4.0.8
+  flutter_inappwebview: ^5.7.2+3
+  desktop_webview_window: ^0.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

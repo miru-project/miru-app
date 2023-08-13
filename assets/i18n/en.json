@@ -145,6 +145,13 @@
     "title": "Extension Info"
   },
 
+  "cookie-clean": {
+    "title": "Cookie Clean",
+    "subtitle": "You may need to log in again after the cleanup",
+    "success": "Clean success",
+    "clean": "Clean"
+  },
+
   "tmdb": {
     "backdrops": "Backdrops",
     "status": "Status",

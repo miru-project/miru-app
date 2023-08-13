@@ -15,7 +15,7 @@ enum ExtensionSettingType {
 class ExtensionSetting {
   Id id = Isar.autoIncrement;
 
-  @Index(composite: [CompositeIndex('key')], unique: true)
+  @Index(name: 'package&key', composite: [CompositeIndex('key')], unique: true)
   late String package;
   // 标题
   late String title;

@@ -6,7 +6,7 @@ part 'history.g.dart';
 @collection
 class History {
   Id id = Isar.autoIncrement;
-  @Index(composite: [CompositeIndex('url')])
+  @Index(name: 'package&url', composite: [CompositeIndex('url')])
   late String package;
   late String url;
   // 截图，保存封面地址

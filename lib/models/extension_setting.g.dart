@@ -65,9 +65,9 @@ const ExtensionSettingSchema = CollectionSchema(
   deserializeProp: _extensionSettingDeserializeProp,
   idName: r'id',
   indexes: {
-    r'package_key': IndexSchema(
-      id: -372028747178333220,
-      name: r'package_key',
+    r'package&key': IndexSchema(
+      id: -4628059207407517539,
+      name: r'package&key',
       unique: true,
       replace: false,
       properties: [
@@ -223,19 +223,19 @@ void _extensionSettingAttach(
 
 extension ExtensionSettingByIndex on IsarCollection<ExtensionSetting> {
   Future<ExtensionSetting?> getByPackageKey(String package, String key) {
-    return getByIndex(r'package_key', [package, key]);
+    return getByIndex(r'package&key', [package, key]);
   }
 
   ExtensionSetting? getByPackageKeySync(String package, String key) {
-    return getByIndexSync(r'package_key', [package, key]);
+    return getByIndexSync(r'package&key', [package, key]);
   }
 
   Future<bool> deleteByPackageKey(String package, String key) {
-    return deleteByIndex(r'package_key', [package, key]);
+    return deleteByIndex(r'package&key', [package, key]);
   }
 
   bool deleteByPackageKeySync(String package, String key) {
-    return deleteByIndexSync(r'package_key', [package, key]);
+    return deleteByIndexSync(r'package&key', [package, key]);
   }
 
   Future<List<ExtensionSetting?>> getAllByPackageKey(
@@ -248,7 +248,7 @@ extension ExtensionSettingByIndex on IsarCollection<ExtensionSetting> {
       values.add([packageValues[i], keyValues[i]]);
     }
 
-    return getAllByIndex(r'package_key', values);
+    return getAllByIndex(r'package&key', values);
   }
 
   List<ExtensionSetting?> getAllByPackageKeySync(
@@ -261,7 +261,7 @@ extension ExtensionSettingByIndex on IsarCollection<ExtensionSetting> {
       values.add([packageValues[i], keyValues[i]]);
     }
 
-    return getAllByIndexSync(r'package_key', values);
+    return getAllByIndexSync(r'package&key', values);
   }
 
   Future<int> deleteAllByPackageKey(
@@ -274,7 +274,7 @@ extension ExtensionSettingByIndex on IsarCollection<ExtensionSetting> {
       values.add([packageValues[i], keyValues[i]]);
     }
 
-    return deleteAllByIndex(r'package_key', values);
+    return deleteAllByIndex(r'package&key', values);
   }
 
   int deleteAllByPackageKeySync(
@@ -287,24 +287,24 @@ extension ExtensionSettingByIndex on IsarCollection<ExtensionSetting> {
       values.add([packageValues[i], keyValues[i]]);
     }
 
-    return deleteAllByIndexSync(r'package_key', values);
+    return deleteAllByIndexSync(r'package&key', values);
   }
 
   Future<Id> putByPackageKey(ExtensionSetting object) {
-    return putByIndex(r'package_key', object);
+    return putByIndex(r'package&key', object);
   }
 
   Id putByPackageKeySync(ExtensionSetting object, {bool saveLinks = true}) {
-    return putByIndexSync(r'package_key', object, saveLinks: saveLinks);
+    return putByIndexSync(r'package&key', object, saveLinks: saveLinks);
   }
 
   Future<List<Id>> putAllByPackageKey(List<ExtensionSetting> objects) {
-    return putAllByIndex(r'package_key', objects);
+    return putAllByIndex(r'package&key', objects);
   }
 
   List<Id> putAllByPackageKeySync(List<ExtensionSetting> objects,
       {bool saveLinks = true}) {
-    return putAllByIndexSync(r'package_key', objects, saveLinks: saveLinks);
+    return putAllByIndexSync(r'package&key', objects, saveLinks: saveLinks);
   }
 }
 
@@ -390,7 +390,7 @@ extension ExtensionSettingQueryWhere
       packageEqualToAnyKey(String package) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'package_key',
+        indexName: r'package&key',
         value: [package],
       ));
     });
@@ -402,13 +402,13 @@ extension ExtensionSettingQueryWhere
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [],
               upper: [package],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [package],
               includeLower: false,
               upper: [],
@@ -416,13 +416,13 @@ extension ExtensionSettingQueryWhere
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [package],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [],
               upper: [package],
               includeUpper: false,
@@ -435,7 +435,7 @@ extension ExtensionSettingQueryWhere
       packageKeyEqualTo(String package, String key) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'package_key',
+        indexName: r'package&key',
         value: [package, key],
       ));
     });
@@ -447,13 +447,13 @@ extension ExtensionSettingQueryWhere
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [package],
               upper: [package, key],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [package, key],
               includeLower: false,
               upper: [package],
@@ -461,13 +461,13 @@ extension ExtensionSettingQueryWhere
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [package, key],
               includeLower: false,
               upper: [package],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_key',
+              indexName: r'package&key',
               lower: [package],
               upper: [package, key],
               includeUpper: false,

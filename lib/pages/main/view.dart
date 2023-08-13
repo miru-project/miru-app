@@ -72,12 +72,20 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
           );
         }(),
         title: _title(),
-        actions: SizedBox(
-          width: 138,
-          height: 50,
-          child: WindowCaption(
-            backgroundColor: Colors.transparent,
-            brightness: fluent.FluentTheme.of(context).brightness,
+        actions: Obx(
+          () => Row(
+            children: [
+              const Spacer(),
+              ...c.actions,
+              SizedBox(
+                width: 138,
+                height: 50,
+                child: WindowCaption(
+                  backgroundColor: Colors.transparent,
+                  brightness: fluent.FluentTheme.of(context).brightness,
+                ),
+              )
+            ],
           ),
         ),
         automaticallyImplyLeading: false,

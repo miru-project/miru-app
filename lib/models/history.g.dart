@@ -80,9 +80,9 @@ const HistorySchema = CollectionSchema(
   deserializeProp: _historyDeserializeProp,
   idName: r'id',
   indexes: {
-    r'package_url': IndexSchema(
-      id: 3896244813367136588,
-      name: r'package_url',
+    r'package&url': IndexSchema(
+      id: 1543775085104464922,
+      name: r'package&url',
       unique: false,
       replace: false,
       properties: [
@@ -302,7 +302,7 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
       String package) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'package_url',
+        indexName: r'package&url',
         value: [package],
       ));
     });
@@ -314,13 +314,13 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [],
               upper: [package],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [package],
               includeLower: false,
               upper: [],
@@ -328,13 +328,13 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [package],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [],
               upper: [package],
               includeUpper: false,
@@ -347,7 +347,7 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
       String package, String url) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'package_url',
+        indexName: r'package&url',
         value: [package, url],
       ));
     });
@@ -359,13 +359,13 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [package],
               upper: [package, url],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [package, url],
               includeLower: false,
               upper: [package],
@@ -373,13 +373,13 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [package, url],
               includeLower: false,
               upper: [package],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'package_url',
+              indexName: r'package&url',
               lower: [package],
               upper: [package, url],
               includeUpper: false,

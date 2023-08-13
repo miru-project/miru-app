@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/pages/home/controller.dart';
+import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/watch/view.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/database.dart';
@@ -61,6 +63,28 @@ class DetailPageController extends GetxController {
   @override
   void onInit() {
     onRefresh();
+    Get.find<MainController>().setAcitons([
+      fluent.IconButton(
+        icon: const Icon(fluent.FluentIcons.pop_expand),
+        onPressed: () async {
+          final webview = await WebviewWindow.create(
+              configuration: CreateConfiguration(
+            title: detail!.title,
+          ));
+          webview
+            ..addOnUrlRequestCallback((url) async {
+              if (Uri.parse(url).host != Uri.parse(extension!.webSite).host) {
+                return;
+              }
+              final cookies = await webview.evaluateJavaScript(
+                'document.cookie',
+              );
+              runtime.value?.setCookie(cookies!.split("\"")[1]);
+            })
+            ..launch(extension!.webSite + url);
+        },
+      )
+    ]);
     super.onInit();
   }
 
@@ -247,6 +271,7 @@ class DetailPageController extends GetxController {
   @override
   void onClose() {
     scrollController.dispose();
+    Get.find<MainController>().setAcitons([]);
     super.onClose();
   }
 }

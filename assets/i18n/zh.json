@@ -151,6 +151,13 @@
     "title": "扩展详情"
   },
 
+  "cookie-clean": {
+    "title": "清除 Cookie",
+    "subtitle": "清理后可能需要重新登录",
+    "success": "清除成功",
+    "clean": "清除"
+  },
+
   "tmdb": {
     "backdrops": "剧照",
     "status": "状态",

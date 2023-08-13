@@ -13,11 +13,13 @@ import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/card_tile.dart';
+import 'package:miru_app/widgets/messenger.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress_ring.dart';
 import 'package:miru_app/widgets/settings_input_tile.dart';
 import 'package:miru_app/widgets/settings_radios_tile.dart';
 import 'package:miru_app/widgets/settings_switch_tile.dart';
+import 'package:miru_app/widgets/settings_tile.dart';
 
 class ExtensionSettingsPage extends StatefulWidget {
   const ExtensionSettingsPage({
@@ -233,10 +235,22 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                   ],
                 ),
               ),
-              if (c.settings.isNotEmpty) ...[
-                const Divider(),
-                ...settingsContent(),
-              ]
+              const Divider(),
+              SettingsTile(
+                title: 'cookie-clean.title'.i18n,
+                buildSubtitle: () => 'cookie-clean.subtitle'.i18n,
+                trailing: TextButton(
+                  child: Text('cookie-clean.clean'.i18n),
+                  onPressed: () {
+                    c.runtime.value!.cleanCookie();
+                    showPlatformSnackbar(
+                      context: context,
+                      content: 'cookie-clean.success'.i18n,
+                    );
+                  },
+                ),
+              ),
+              ...settingsContent(),
             ],
           ),
         ),
@@ -372,17 +386,31 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        if (c.settings.isNotEmpty) ...[
-                          Text(
-                            'common.settings'.i18n,
-                            style: fluent.FluentTheme.of(context)
-                                .typography
-                                .subtitle,
+                        Text(
+                          'common.settings'.i18n,
+                          style: fluent.FluentTheme.of(context)
+                              .typography
+                              .subtitle,
+                        ),
+                        const SizedBox(height: 16),
+                        SettingsTile(
+                          title: 'cookie-clean.title'.i18n,
+                          buildSubtitle: () => 'cookie-clean.subtitle'.i18n,
+                          trailing: fluent.FilledButton(
+                            child: Text('cookie-clean.clean'.i18n),
+                            onPressed: () {
+                              c.runtime.value!.cleanCookie();
+                              showPlatformSnackbar(
+                                context: context,
+                                content: 'cookie-clean.success'.i18n,
+                                severity: fluent.InfoBarSeverity.success,
+                              );
+                            },
                           ),
-                          const SizedBox(height: 16),
-                          ...settingsContent(),
-                          const SizedBox(height: 16),
-                        ],
+                        ),
+                        const SizedBox(height: 8),
+                        ...settingsContent(),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),

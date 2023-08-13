@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_multi_window
+  desktop_webview_window
   flutter_js
   isar_flutter_libs
   media_kit_libs_linux

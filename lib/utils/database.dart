@@ -97,21 +97,21 @@ class DatabaseUtils {
 
   static Future<Id> putHistory(History history) async {
     // 判断是否存在，存在则更新
-    final hst = await getHistoryByPackageAndUrl(history.package, history.url);
-    if (hst != null) {
-      hst
-        ..date = DateTime.now()
-        ..cover = history.cover
-        ..title = history.title
-        ..episodeGroupId = history.episodeGroupId
-        ..episodeId = history.episodeId
-        ..episodeTitle = history.episodeTitle
-        ..progress = history.progress
-        ..totalProgress = history.totalProgress;
-      return db.writeTxn(() => db.historys.put(hst));
-    }
+    // final hst = await getHistoryByPackageAndUrl(history.package, history.url);
+    // if (hst != null) {
+    //   hst
+    //     ..date = DateTime.now()
+    //     ..cover = history.cover
+    //     ..title = history.title
+    //     ..episodeGroupId = history.episodeGroupId
+    //     ..episodeId = history.episodeId
+    //     ..episodeTitle = history.episodeTitle
+    //     ..progress = history.progress
+    //     ..totalProgress = history.totalProgress;
+    //   return db.writeTxn(() => db.historys.put(hst));
+    // }
 
-    return db.writeTxn(() => db.historys.put(history));
+    return db.writeTxn(() => db.historys.putByIndex(r'package&url', history));
   }
 
   // 扩展设置
@@ -152,25 +152,28 @@ class DatabaseUtils {
       throw Exception('options is null');
     }
 
-    final extSetting = await getExtensionSetting(
-        extensionSetting.package, extensionSetting.key);
-    // 如果不存在相同设置，则添加
-    if (extSetting == null) {
-      return db.writeTxn(() => db.extensionSettings.put(extensionSetting));
-    }
+    // final extSetting = await getExtensionSetting(
+    //     extensionSetting.package, extensionSetting.key);
+    // // 如果不存在相同设置，则添加
+    // if (extSetting == null) {
+    //   return db.writeTxn(() => db.extensionSettings.put(extensionSetting));
+    // }
 
-    extSetting.defaultValue = extensionSetting.defaultValue;
+    // extSetting.defaultValue = extensionSetting.defaultValue;
 
-    // 如果类型不同，重置值
-    if (extSetting.type != extensionSetting.type) {
-      extSetting.type = extensionSetting.type;
-      extSetting.value = extensionSetting.defaultValue;
-    }
-    extSetting.defaultValue = extensionSetting.defaultValue;
-    extSetting.description = extensionSetting.description;
-    extSetting.options = extensionSetting.options;
-    extSetting.title = extensionSetting.title;
-    return db.writeTxn(() => db.extensionSettings.put(extSetting));
+    // // 如果类型不同，重置值
+    // if (extSetting.type != extensionSetting.type) {
+    //   extSetting.type = extensionSetting.type;
+    //   extSetting.value = extensionSetting.defaultValue;
+    // }
+    // extSetting.defaultValue = extensionSetting.defaultValue;
+    // extSetting.description = extensionSetting.description;
+    // extSetting.options = extensionSetting.options;
+    // extSetting.title = extensionSetting.title;
+
+    return db.writeTxn(
+      () => db.extensionSettings.putByIndex(r'package&key', extensionSetting),
+    );
   }
 
   // 删除扩展设置
