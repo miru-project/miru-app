@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -31,6 +34,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
   final List<ExtensionListItem> _data = [];
   int _page = 1;
   bool _isLoding = true;
+  final EasyRefreshController _easyRefreshController = EasyRefreshController();
 
   Future<void> _onRefresh() async {
     setState(() {
@@ -75,7 +79,11 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
 
   _onSearch(String keyWord) {
     _keyWord = keyWord;
-    _onRefresh();
+    if (Platform.isAndroid) {
+      _easyRefreshController.callRefresh();
+    } else {
+      _onRefresh();
+    }
   }
 
   Widget _buildAndroid(BuildContext context) {
@@ -117,6 +125,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
       body: InfiniteScroller(
         onRefresh: _onRefresh,
         onLoad: _onLoad,
+        easyRefreshController: _easyRefreshController,
         child: LayoutBuilder(
           builder: (context, constraints) => GridView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 16),

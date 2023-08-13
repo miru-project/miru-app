@@ -12,6 +12,7 @@ class InfiniteScroller extends StatefulWidget {
     required this.onLoad,
     this.refreshOnStart = true,
     this.enableInfiniteScroll = true,
+    this.easyRefreshController,
   }) : super(key: key);
 
   final Widget child;
@@ -19,6 +20,7 @@ class InfiniteScroller extends StatefulWidget {
   final Future<void> Function() onLoad;
   final bool refreshOnStart;
   final bool enableInfiniteScroll;
+  final EasyRefreshController? easyRefreshController;
 
   @override
   State<InfiniteScroller> createState() => _InfiniteScrollerState();
@@ -36,7 +38,7 @@ class _InfiniteScrollerState extends State<InfiniteScroller> {
   }
 
   _onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 1));
     widget.onRefresh();
   }
 
@@ -57,6 +59,7 @@ class _InfiniteScrollerState extends State<InfiniteScroller> {
 
   Widget _buildAndroid(BuildContext context) {
     return EasyRefresh(
+      controller: widget.easyRefreshController,
       onRefresh: widget.onRefresh,
       header: const ClassicHeader(
         processedDuration: Duration.zero,
