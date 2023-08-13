@@ -28,105 +28,99 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildAndroidSearch(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('common.search'.i18n),
+        title: TextField(
+          decoration: InputDecoration(
+            hintText: 'search.hint-text'.i18n,
+            border: InputBorder.none,
+          ),
+          controller: TextEditingController(
+            text: c.search.value,
+          ),
+          onChanged: (value) {
+            if (value.isEmpty) {
+              c.search.value = '';
+            }
+          },
+          onSubmitted: (value) {
+            c.search.value = value;
+          },
+        ),
+        flexibleSpace: Obx(
+          () => Column(
+            children: [
+              if (c.finishCount != c.searchResultList.length)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: LinearProgressIndicator(
+                    value: (c.finishCount / c.searchResultList.length),
+                    minHeight: 2,
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
       body: NestedScrollView(
-        physics: const ClampingScrollPhysics(),
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
-            Obx(
-              () => SliverAppBar(
-                backgroundColor: Theme.of(context).colorScheme.background,
-                flexibleSpace: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: TextField(
-                        controller: TextEditingController(text: c.search.value),
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          hintText: "search.hint-text".i18n,
-                          prefixIcon: const Icon(Icons.search),
-                        ),
-                        onChanged: (value) {
-                          if (value.isEmpty) {
-                            c.search.value = '';
+            SliverAppBar(
+              flexibleSpace: Obx(
+                () => SizedBox(
+                  height: 60,
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      ChoiceChip(
+                        label: Text('search.all'.i18n),
+                        selected: c.cuurentExtensionType.value == null,
+                        onSelected: (value) {
+                          if (value) {
+                            c.getRuntime();
                           }
                         },
-                        onSubmitted: (value) {
-                          c.search(value);
+                      ),
+                      const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: Text('extension-type.video'.i18n),
+                        selected: c.cuurentExtensionType.value ==
+                            ExtensionType.bangumi,
+                        onSelected: (value) {
+                          if (value) {
+                            c.getRuntime(type: ExtensionType.bangumi);
+                          }
                         },
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 60,
-                      child: ListView(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ChoiceChip(
-                            label: Text('search.all'.i18n),
-                            selected: c.cuurentExtensionType.value == null,
-                            onSelected: (value) {
-                              if (value) {
-                                c.getRuntime();
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          ChoiceChip(
-                            label: Text('extension-type.video'.i18n),
-                            selected: c.cuurentExtensionType.value ==
-                                ExtensionType.bangumi,
-                            onSelected: (value) {
-                              if (value) {
-                                c.getRuntime(type: ExtensionType.bangumi);
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          ChoiceChip(
-                            label: Text('extension-type.comic'.i18n),
-                            selected: c.cuurentExtensionType.value ==
-                                ExtensionType.manga,
-                            onSelected: (value) {
-                              if (value) {
-                                c.getRuntime(type: ExtensionType.manga);
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          ChoiceChip(
-                            label: Text('extension-type.novel'.i18n),
-                            selected: c.cuurentExtensionType.value ==
-                                ExtensionType.fikushon,
-                            onSelected: (value) {
-                              if (value) {
-                                c.getRuntime(
-                                  type: ExtensionType.fikushon,
-                                );
-                              }
-                            },
-                          ),
-                        ],
+                      const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: Text('extension-type.comic'.i18n),
+                        selected:
+                            c.cuurentExtensionType.value == ExtensionType.manga,
+                        onSelected: (value) {
+                          if (value) {
+                            c.getRuntime(type: ExtensionType.manga);
+                          }
+                        },
                       ),
-                    ),
-                    // 进度
-                    if (c.finishCount != c.searchResultList.length)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: LinearProgressIndicator(
-                          value: (c.finishCount / c.searchResultList.length),
-                        ),
+                      const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: Text('extension-type.novel'.i18n),
+                        selected: c.cuurentExtensionType.value ==
+                            ExtensionType.fikushon,
+                        onSelected: (value) {
+                          if (value) {
+                            c.getRuntime(
+                              type: ExtensionType.fikushon,
+                            );
+                          }
+                        },
                       ),
-                  ],
+                    ],
+                  ),
                 ),
-                expandedHeight: 140,
-                collapsedHeight: 140,
               ),
+              floating: true,
+              snap: true,
             )
           ];
         },
