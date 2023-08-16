@@ -325,10 +325,10 @@ packages:
     dependency: transitive
     description:
       name: file
-      sha256: "5fc22d7c25582e38ad9a8515372cd9a93834027aacf1801cf01164dac0ffa08c"
+      sha256: "1b92bec4fc2a72f59a8e15af5f52cd441e4a7860b49499d69dfa817af20e925d"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "6.1.4"
   file_picker:
     dependency: "direct main"
     description:
@@ -681,42 +681,42 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit
-      sha256: f19151ff1a1724ed8675f066b40e74af6d155fc859cb74487daeae2cbeff53e0
+      sha256: "339a8e1b75ec957c439e6e0f5eb7a0bbf5900280e4048592364bbae832d28b49"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.3+1"
+    version: "1.1.4"
   media_kit_libs_android_video:
     dependency: "direct main"
     description:
       name: media_kit_libs_android_video
-      sha256: "0a533497d0a982c7146af7dbe226856ef13b05f6d87a6405b1d09d8b40aa2685"
+      sha256: "142d389bf3efcf8469594a9c7a06a92fc25843fc6c0c3247f76cdcf70b3b29de"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.1"
+    version: "1.3.2"
   media_kit_libs_linux:
     dependency: "direct main"
     description:
       name: media_kit_libs_linux
-      sha256: "838b9e8041d376873cc938872c75812989d0feb247ad93afd8dbc92bf052680a"
+      sha256: "570bf18ebbd1221caec082657468be05d180510385d3515ec38e0be44fdcc859"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   media_kit_libs_macos_video:
     dependency: "direct main"
     description:
       name: media_kit_libs_macos_video
-      sha256: "6bdf6e2a4ac88af5385b4ca20d0288439a76364fa42e5cf80e2cc63c3b358298"
+      sha256: c06e831f3c22a45296d375788d9bc07871b448f8e9ec98d77b11e5e118a83fb2
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.3"
   media_kit_libs_windows_video:
     dependency: "direct main"
     description:
       name: media_kit_libs_windows_video
-      sha256: "31c6c75ab08627df9fce7ce2431e5ac5e5990ac40faef75b07c48d1d7907a37f"
+      sha256: f33aabd8414470d99e2c91dd98d605e6a5f1c4b8082dd933c10951bc961b9124
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.7"
   media_kit_native_event_loop:
     dependency: "direct main"
     description:
@@ -729,10 +729,10 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit_video
-      sha256: e286992beee857fee78ce79ed21fd38addb5af0469e10a322d82cf074beb6214
+      sha256: d9948ebc1986b24ca9c0541e04c5839a50186433861a266a7d1d6b8d2740d438
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.3"
+    version: "1.1.4"
   meta:
     dependency: transitive
     description:
@@ -889,10 +889,10 @@ packages:
     dependency: transitive
     description:
       name: platform
-      sha256: "4a451831508d7d6ca779f7ac6e212b4023dd5a7d08a27a63da33756410e32b76"
+      sha256: "57c07bf82207aee366dfaa3867b3164e4f03a238a461a11b0e8a3a510d51203d"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   plugin_platform_interface:
     dependency: transitive
     description:
