@@ -15,6 +15,7 @@ import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/widgets/messenger.dart';
 
 class DetailPageController extends GetxController {
@@ -68,9 +69,11 @@ class DetailPageController extends GetxController {
         icon: const Icon(fluent.FluentIcons.pop_expand),
         onPressed: () async {
           final webview = await WebviewWindow.create(
-              configuration: CreateConfiguration(
-            title: detail!.title,
-          ));
+            configuration: CreateConfiguration(
+              userDataFolderWindows: await MiruDirectory.getDirectory,
+              title: detail!.title,
+            ),
+          );
           webview
             ..addOnUrlRequestCallback((url) async {
               if (Uri.parse(url).host != Uri.parse(extension!.webSite).host) {
