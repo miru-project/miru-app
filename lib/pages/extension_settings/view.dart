@@ -11,6 +11,7 @@ import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/card_tile.dart';
 import 'package:miru_app/widgets/messenger.dart';
@@ -138,103 +139,101 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
         );
       }
       final extension = c.runtime.value!.extension;
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('extension-info.title'.i18n),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              Center(
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: CacheNetWorkImage(
-                    extension.icon ?? '',
-                    fit: BoxFit.contain,
-                  ),
+
+      final content = SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 30),
+            Center(
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CacheNetWorkImage(
+                  extension.icon ?? '',
+                  fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                extension.name,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              Text(
-                extension.package,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GridView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 8,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              extension.name,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Text(
+              extension.package,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: GridView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 3,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 8,
+                ),
+                children: [
+                  InfoCard(
+                    icon: Icons.person,
+                    title: 'extension-info.author'.i18n,
+                    content: extension.author,
                   ),
-                  children: [
-                    InfoCard(
-                      icon: Icons.person,
-                      title: 'extension-info.author'.i18n,
-                      content: extension.author,
-                    ),
-                    InfoCard(
-                      icon: Icons.info,
-                      title: 'extension-info.version'.i18n,
-                      content: extension.version,
-                    ),
-                    InfoCard(
-                      icon: Icons.language,
-                      title: 'extension-info.language'.i18n,
-                      content: extension.lang,
-                    ),
-                    InfoCard(
-                      icon: Icons.description,
-                      title: 'extension-info.license'.i18n,
-                      content: extension.license,
-                    ),
-                    InfoCard(
-                      icon: Icons.link,
-                      title: 'extension-info.original-site'.i18n,
-                      content: extension.webSite,
-                    ),
-                  ],
-                ),
+                  InfoCard(
+                    icon: Icons.info,
+                    title: 'extension-info.version'.i18n,
+                    content: extension.version,
+                  ),
+                  InfoCard(
+                    icon: Icons.language,
+                    title: 'extension-info.language'.i18n,
+                    content: extension.lang,
+                  ),
+                  InfoCard(
+                    icon: Icons.description,
+                    title: 'extension-info.license'.i18n,
+                    content: extension.license,
+                  ),
+                  InfoCard(
+                    icon: Icons.link,
+                    title: 'extension-info.original-site'.i18n,
+                    content: extension.webSite,
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () async {
-                          await ExtensionUtils.uninstall(extension.package);
-                          Get.back();
-                        },
-                        child: Text('common.uninstall'.i18n),
-                      ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        await ExtensionUtils.uninstall(extension.package);
+                        Get.back();
+                      },
+                      child: Text('common.uninstall'.i18n),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: () {
-                          Get.to(CodeEditPage(extension: extension));
-                        },
-                        child: Text('extension.edit-code'.i18n),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {
+                        Get.to(CodeEditPage(extension: extension));
+                      },
+                      child: Text('extension.edit-code'.i18n),
+                    ),
+                  )
+                ],
               ),
+            ),
+            if (!LayoutUtils.isTablet) ...[
               const Divider(),
               SettingsTile(
                 title: 'cookie-clean.title'.i18n,
@@ -251,9 +250,46 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                 ),
               ),
               ...settingsContent(),
-            ],
-          ),
+            ]
+          ],
         ),
+      );
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('extension-info.title'.i18n),
+        ),
+        body: LayoutUtils.isTablet
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: content),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SettingsTile(
+                            title: 'cookie-clean.title'.i18n,
+                            buildSubtitle: () => 'cookie-clean.subtitle'.i18n,
+                            trailing: TextButton(
+                              child: Text('cookie-clean.clean'.i18n),
+                              onPressed: () {
+                                c.runtime.value!.cleanCookie();
+                                showPlatformSnackbar(
+                                  context: context,
+                                  content: 'cookie-clean.success'.i18n,
+                                );
+                              },
+                            ),
+                          ),
+                          ...settingsContent(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : content,
       );
     });
   }

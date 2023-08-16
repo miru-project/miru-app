@@ -14,6 +14,7 @@ import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
@@ -251,14 +252,18 @@ class VideoPlayerController extends GetxController {
   @override
   void onClose() {
     if (Platform.isAndroid) {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.edgeToEdge,
+      );
+      // 如果是平板则不改变
+      if (LayoutUtils.isTablet) {
+        return;
+      }
       // 切换回竖屏
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.edgeToEdge,
-      );
     }
     super.onClose();
   }

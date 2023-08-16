@@ -14,6 +14,7 @@ import 'package:miru_app/pages/detail/widgets/detail_extension_tile.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
 import 'package:miru_app/pages/detail/widgets/detail_overview.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/card_tile.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -71,8 +72,14 @@ class _DetailPageState extends State<DetailPage> {
             child: Text(c.error.value),
           );
         }
-        return DefaultTabController(
-          length: 3,
+        final tabs = [
+          if (!LayoutUtils.isTablet) Tab(text: episodesString),
+          Tab(text: 'detail.overview'.i18n),
+          if (c.type == ExtensionType.bangumi) Tab(text: 'detail.cast'.i18n),
+        ];
+
+        final content = DefaultTabController(
+          length: tabs.length,
           child: NestedScrollView(
             controller: c.scrollController,
             headerSliverBuilder:
@@ -89,12 +96,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   flexibleSpace: const DetailAppbarflexibleSpace(),
                   bottom: TabBar(
-                    tabs: [
-                      Tab(text: episodesString),
-                      Tab(text: 'detail.overview'.i18n),
-                      if (c.type == ExtensionType.bangumi)
-                        Tab(text: 'detail.cast'.i18n),
-                    ],
+                    tabs: tabs,
                   ),
                   actions: [
                     IconButton(
@@ -117,52 +119,64 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.all(8),
               child: TabBarView(
                 children: [
-                  const DetailEpisodes(),
+                  if (!LayoutUtils.isTablet) const DetailEpisodes(),
                   const DetailOverView(),
-                  Obx(() {
-                    if (c.tmdbDetail == null || c.tmdbDetail!.casts.isEmpty) {
-                      return const SizedBox();
-                    }
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(0),
-                      itemBuilder: (context, index) {
-                        final cast = c.tmdbDetail!.casts[index];
-                        late String url = '';
-                        if (cast.profilePath != null) {
-                          url = TmdbApi.getImageUrl(cast.profilePath!) ?? '';
-                        }
+                  if (c.type == ExtensionType.bangumi)
+                    Obx(() {
+                      if (c.tmdbDetail == null || c.tmdbDetail!.casts.isEmpty) {
+                        return const SizedBox();
+                      }
+                      return ListView.builder(
+                        padding: const EdgeInsets.all(0),
+                        itemBuilder: (context, index) {
+                          final cast = c.tmdbDetail!.casts[index];
+                          late String url = '';
+                          if (cast.profilePath != null) {
+                            url = TmdbApi.getImageUrl(cast.profilePath!) ?? '';
+                          }
 
-                        return ListTile(
-                          leading: Container(
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: CacheNetWorkImage(
-                              url,
-                              width: 50,
-                              height: 50,
-                            ),
-                          ),
-                          title: Text(cast.name),
-                          subtitle: Text(cast.character),
-                          onTap: () {
-                            launchUrl(
-                              Uri.parse(
-                                "https://www.themoviedb.org/person/${cast.id}",
+                          return ListTile(
+                            leading: Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
                               ),
-                            );
-                          },
-                        );
-                      },
-                      itemCount: c.tmdbDetail!.casts.length,
-                    );
-                  }),
+                              clipBehavior: Clip.antiAlias,
+                              child: CacheNetWorkImage(
+                                url,
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                            title: Text(cast.name),
+                            subtitle: Text(cast.character),
+                            onTap: () {
+                              launchUrl(
+                                Uri.parse(
+                                  "https://www.themoviedb.org/person/${cast.id}",
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        itemCount: c.tmdbDetail!.casts.length,
+                      );
+                    }),
                 ],
               ),
             ),
           ),
         );
+        if (LayoutUtils.isTablet) {
+          return Row(
+            children: [
+              Expanded(child: content),
+              const Expanded(
+                child: SafeArea(child: DetailEpisodes()),
+              ),
+            ],
+          );
+        }
+        return content;
       }),
     );
   }

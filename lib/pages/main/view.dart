@@ -10,6 +10,7 @@ import 'package:miru_app/pages/settings/view.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -157,6 +158,7 @@ class AndroidMainPage extends fluent.StatefulWidget {
 
 class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
   late MainController c;
+
   final pages = const [
     HomePage(),
     SearchPage(),
@@ -175,35 +177,58 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Scaffold(
-          body: pages[c.selectedTab.value],
-          bottomNavigationBar: NavigationBar(
-            destinations: [
-              NavigationDestination(
-                icon: const Icon(Icons.home_outlined),
-                selectedIcon: const Icon(Icons.home),
-                label: "common.home".i18n,
+    List<_Destination> destinations = <_Destination>[
+      _Destination(Icons.home_outlined, Icons.home, 'common.home'.i18n),
+      _Destination(Icons.search_outlined, Icons.search, 'common.search'.i18n),
+      _Destination(Icons.apps_outlined, Icons.apps, 'common.extension'.i18n),
+      _Destination(
+          Icons.settings_outlined, Icons.settings, 'common.settings'.i18n),
+    ];
+    return Obx(
+      () => Scaffold(
+        body: LayoutUtils.isTablet
+            ? Row(
+                children: [
+                  NavigationRail(
+                    groupAlignment: 0,
+                    labelType: NavigationRailLabelType.all,
+                    destinations: destinations
+                        .map((e) => NavigationRailDestination(
+                              icon: Icon(e.icon),
+                              selectedIcon: Icon(e.selectedIcon),
+                              label: Text(e.label),
+                            ))
+                        .toList(),
+                    selectedIndex: c.selectedTab.value,
+                    onDestinationSelected: c.changeTab,
+                  ),
+                  Expanded(child: pages[c.selectedTab.value])
+                ],
+              )
+            : pages[c.selectedTab.value],
+        bottomNavigationBar: LayoutUtils.isTablet
+            ? null
+            : NavigationBar(
+                destinations: destinations
+                    .map((e) => NavigationDestination(
+                          icon: Icon(e.icon),
+                          selectedIcon: Icon(e.selectedIcon),
+                          label: e.label,
+                        ))
+                    .toList(),
+                labelBehavior:
+                    NavigationDestinationLabelBehavior.onlyShowSelected,
+                selectedIndex: c.selectedTab.value,
+                onDestinationSelected: c.changeTab,
               ),
-              NavigationDestination(
-                icon: const Icon(Icons.search_outlined),
-                label: "common.search".i18n,
-                selectedIcon: const Icon(Icons.search),
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.apps_outlined),
-                label: "common.extension".i18n,
-                selectedIcon: const Icon(Icons.apps),
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.settings_outlined),
-                label: "common.settings".i18n,
-                selectedIcon: const Icon(Icons.settings),
-              ),
-            ],
-            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            selectedIndex: c.selectedTab.value,
-            onDestinationSelected: c.changeTab,
-          ),
-        ));
+      ),
+    );
   }
+}
+
+class _Destination {
+  const _Destination(this.icon, this.selectedIcon, this.label);
+  final IconData selectedIcon;
+  final IconData icon;
+  final String label;
 }
