@@ -28,29 +28,65 @@ Miru App
 - 官方扩展仓库提供视频源，无需编写任何扩展即可使用
 - 支持在线观看多种视频、漫画、小说源，实现多平台的统一
 - 统一系统 UI 的设计语言
+- 自动获取 TMDB 元数据信息
 
 ## Todo
 
-- [x] Windows 支持
-- [x] Android 支持
-- [x] ~~Linux 支持~~
-- [x] 漫画支持
-- [x] 小说支持
-- [x] 影视支持
-- [x] i18n 国际化
-- [x] 扩展设置
-- [x] 影视播放进度
-- [x] 漫画小说设置
-- [x] 漫画小说历史记录
-- [x] TMDB 元数据
-- [x] 字幕支持
 - [ ] BT 种子播放
+- [ ] 更好的调试工具
 - [ ] 数据同步
 - [ ] 自动搜寻字幕
+
+## 安装
+
+你可以通过 [Release](https://github.com/miru-project/miru-app/releases/latest) 页面下载最新版本的安装包，或者通过下面的方法自行构建 
+
+## 构建
+
+### 安装 Flutter
+
+参考 [Flutter 官方文档](https://flutter.dev/docs/get-started/install)
+
+### 安装依赖
+
+```bash
+flutter pub get
+```
+
+### 运行
+
+```bash
+flutter run
+```
+
+### 打包
+
+Android
+
+```bash
+flutter build apk
+```
+
+Windows
+
+```bash
+flutter build windows
+```
 
 ## 关于 Linux
 
 目前 Linux 因为依赖问题导致无法启动 quickjs 所以暂时不支持了
+
+
+## 贡献
+
+欢迎任何形式的贡献，包括但不限于：
+
+- 提出建议
+- Bug 反馈
+- 代码贡献
+- 文档编写
+
 
 ## 交流
 
