@@ -1,0 +1,164 @@
+{
+  "common": {
+    "home": "Главная",
+    "search": "Поиск",
+    "extension": "Расширения",
+    "extension-repo": "Репозиторий расширений",
+    "settings": "Настройки",
+    "no-extension": "Нет установленных расширений",
+    "no-result": "Нет релевантных результатов",
+    "no-more-data": "Нет больше данных",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "close": "Закрыть",
+    "copied": "Скопировано в буфер обмена",
+    "uninstall": "Удалить",
+    "install": "Установить",
+    "repo": "Репозиторий",
+    "unset": "Не задано",
+    "extension-missing": "Расширение {package} отсутствует",
+    "error": "Ошибка",
+    "retry": "Повторить попытку",
+    "next": "Следующее",
+    "previous": "Предыдущее",
+    "show-all": "Показать всё"
+  },
+
+  "home": {
+    "continue-watching": "Продолжить",
+    "favorite": "Избранное",
+    "no-record": "Нет избранного или просмотра записей"
+  },
+
+  "search": {
+    "hint-text": "Пожалуйста, используйте поиск с умом!~",
+    "all": "Все"
+  },
+
+  "extension": {
+    "import": {
+      "title": "Импорт расширения",
+      "url-label": "URL расширения",
+      "tips": "Вы можете импортировать расширения по ссылке\nили щёлкнуть каталог расширения ниже\nи поместить туда файл расширения.",
+      "extension-dir": "Каталог расширений",
+      "import-by-url": "Импорт по URL"
+    },
+    "error-dialog": "Сообщение об ошибке",
+    "installed": "Установлено",
+    "edit-code": "Изменить код"
+  },
+
+  "extension-repo": {
+    "error": "Произошла ошибка!",
+    "error-tips": "Пожалуйста, проверьте подключение к сети\n адрес репозитория",
+    "empty": "Репозиторий пуст",
+    "upgrade": "Обновление"
+  },
+
+  "settings": {
+    "repo-url": "URL репозитория расширений",
+    "repo-url-subtitle": "Получить URL репозитория для расширений",
+    "tmdb-key": "Ключ API TMDB",
+    "tmdb-key-subtitle": "Получить ключ API для метаданных TMDB",
+    "upgrade": "Обновление ПО",
+    "upgrade-subtitle": "версия: {version}",
+    "upgrade-training": "Проверить наличие обновлений",
+    "auto-check-update": "Автоматически проверять наличие обновлений",
+    "auto-check-update-subtitle": "Проверять наличие обновлений при каждом запуске",
+    "language": "Язык",
+    "language-subtitle": "Изменить язык приложения",
+    "extension-log": "Окно журнала расширений",
+    "extension-log-subtitle": "Используется для отладки расширений",
+    "about": "О приложении",
+    "official-site": "Официальный веб-сайт",
+    "official-site-training": "Посетите официальный сайт",
+    "source-code": "Открытый исходный код",
+    "source-code-training": "Поставьте звезду",
+    "license": "Лицензия",
+    "license-subtitle": "Лицензия"
+  },
+
+  "detail": {
+    "favorite": "Избранное",
+    "favorited": "В избранных",
+    "continue-watching": "Продолжить {episode}",
+    "total-episodes": "Всего {total}",
+    "overview": "Обзор",
+    "cast": "В ролях",
+    "additional-info": "Дополнительная информация",
+    "get-lastest-data-error": "Не удалось получить последние данные"
+  },
+
+  "video": {
+    "episodes": "Эпизоды",
+    "watch-now": "Начать просмотр",
+    "no-episodes": "Нет эпизодов",
+    "play-complete": "Воспроизведение завершено",
+    "resume-last-playback": "Возобновить последнее воспроизведение",
+    "subtitle": "Субтитры",
+    "subtitle-change": "Изменить субтитры {title}",
+    "subtitle-file": "Файл субтитров"
+  },
+
+  "comic-settings": {
+    "read-mode": "Режим чтения",
+    "standard": "Стандарт",
+    "right-to-left": "Справа налево",
+    "web-tonn": "Манхва"
+  },
+
+  "novel-settings": {
+    "font-size": "Размер текста"
+  },
+
+  "reader": {
+    "chapters": "Главы",
+    "read-now": "Начать чтение",
+    "no-chapters": "Нет глав"
+  },
+
+  "upgrade": {
+    "check-update": "Проверить наличие обновлений",
+    "new-version": "Новая версия {version} найдена",
+    "download": "Скачать обновление",
+    "no-update": "Используется последняя версия",
+    "not-now": "Не сейчас",
+    "error": "Не удалось проверить наличие обновлений, произошла сетевая ошибка"
+  },
+
+  "extension-install-error": "Не удалось установить расширение",
+
+  "extension-type": {
+    "video": "Видео",
+    "novel": "Новелла",
+    "comic": "Комикс"
+  },
+
+  "extension-info": {
+    "author": "Автор",
+    "description": "Описание",
+    "version": "Версия",
+    "language": "Язык",
+    "original-site": "Оригинальный сайт",
+    "other-infomation": "Остальная информация",
+    "license": "Лицензия",
+    "title": "Информация о расширении"
+  },
+
+  "cookie-clean": {
+    "title": "Очистка файлов cookie",
+    "subtitle": "Возможно, вам придётся снова войти в систему после очистки",
+    "success": "Очистка завершена",
+    "clean": "Чисто"
+  },
+
+  "tmdb": {
+    "backdrops": "Фоны",
+    "status": "Состояние",
+    "original-title": "Оригинальное название",
+    "release-date": "Дата выпуска",
+    "genres": "Жанры",
+    "runtime": "Время выполнения",
+    "languages": "Языки"
+  }
+}
