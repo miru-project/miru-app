@@ -5,7 +5,7 @@
 ## うぬふかぬぎんぐ
 - [かなーちゃるいじちゅうぐくぐ](README.md)
 - [えいぐ](README-en.md)
-- [んかいふらぐ](README-ryu.md)
+- [んかいふらぐ](README-ja.md)
 
 <h1 align="center">
 Miru App
