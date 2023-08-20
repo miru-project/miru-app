@@ -37,21 +37,22 @@ class VideoPlayerController extends GetxController {
   });
 
   final player = Player();
-  late final VideoController videoController = VideoController(player);
+  late final videoController = VideoController(player);
   final showPlayList = false.obs;
   final isOpenSidebar = false.obs;
   final isFullScreen = false.obs;
   late final index = playIndex.obs;
-  final List<ExtensionBangumiWatchSubtitle> subtitles =
-      <ExtensionBangumiWatchSubtitle>[].obs;
+  final subtitles = <ExtensionBangumiWatchSubtitle>[].obs;
   final selectedSubtitle = 0.obs;
 
   // 是否已经自动跳转到上次播放进度
   bool _isAutoSeekPosition = false;
 
-  List<Message> messageQueue = <Message>[];
+  final messageQueue = <Message>[];
 
   final Rx<Widget?> cuurentMessageWidget = Rx(null);
+
+  final speed = 1.0.obs;
 
   @override
   void onInit() {
@@ -66,6 +67,11 @@ class VideoPlayerController extends GetxController {
     // 切换剧集
     ever(index, (callback) {
       play();
+    });
+
+    // 切换倍速
+    ever(speed, (callback) {
+      player.setRate(callback);
     });
 
     // 显示剧集列表
