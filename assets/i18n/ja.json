@@ -64,7 +64,7 @@
     "upgrade-subtitle": "バージョン： {version}",
     "upgrade-training": "チェック",
     "auto-check-update": "自動的に更新をチェックする",
-    "auto-check-update-subtitle": "起動時にアップデートを確認します",
+    "auto-check-update-subtitle": "起動時に更新を確認します",
     "language": "言語",
     "theme": "テーマ",
     "theme-subtitle": "ソフトウェアのテーマを変更します",
@@ -129,7 +129,7 @@
     "download": "更新に移動",
     "no-update": "既に最新バージョンです",
     "not-now": "今はしない",
-    "error": "アップデートの確認に失敗しました。ネットワークエラーが発生しました"
+    "error": "更新の確認に失敗しました。ネットワークエラーが発生しました"
   },
 
   "extension-install-error": "拡張機能のインストールに失敗しました",
