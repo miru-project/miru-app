@@ -45,7 +45,7 @@
     },
     "error-dialog": "Сообщение об ошибке",
     "installed": "Установлено",
-    "edit-code": "Изменить код"
+    "edit-code": "Редактировать код"
   },
 
   "extension-repo": {
@@ -96,7 +96,7 @@
     "play-complete": "Воспроизведение завершено",
     "resume-last-playback": "Возобновить последнее воспроизведение",
     "subtitle": "Субтитры",
-    "subtitle-change": "Изменить субтитры {title}",
+    "subtitle-change": "Редактировать субтитры {title}",
     "subtitle-file": "Файл субтитров"
   },
 
