@@ -107,64 +107,64 @@
   },
 
   "comic-settings": {
-    "read-mode": "Read mode",
-    "standard": "Standard",
-    "right-to-left": "Right to left",
-    "web-tonn": "Web Tonn"
+    "read-mode": "読書モード",
+    "standard": "標準",
+    "right-to-left": "右から左",
+    "web-tonn": "ウェブトゥーン"
   },
 
   "novel-settings": {
-    "font-size": "Font size"
+    "font-size": "フォントのサイズ"
   },
 
   "reader": {
-    "chapters": "Chapters",
-    "read-now": "Read Now",
-    "no-chapters": "No chapters"
+    "chapters": "チャプター",
+    "read-now": "今すぐ読む",
+    "no-chapters": "チャプターがありません"
   },
 
   "upgrade": {
-    "check-update": "Check for Updates",
-    "new-version": "New version {version} detected",
-    "download": "Go to Update",
-    "no-update": "Already up to date",
-    "not-now": "Not now",
-    "error": "Failed to check for updates, network error occurred"
+    "check-update": "更新を確認",
+    "new-version": "新しいバージョン {version} が見つかりました",
+    "download": "更新に移動",
+    "no-update": "既に最新バージョンです",
+    "not-now": "今はしない",
+    "error": "アップデートの確認に失敗しました。ネットワークエラーが発生しました"
   },
 
-  "extension-install-error": "Failed to install extension",
+  "extension-install-error": "拡張機能のインストールに失敗しました",
 
   "extension-type": {
-    "video": "Video",
-    "novel": "Novel",
-    "comic": "Comic"
+    "video": "ビデオ",
+    "novel": "小説",
+    "comic": "漫画"
   },
 
   "extension-info": {
-    "author": "Author",
-    "description": "Description",
-    "version": "Version",
-    "language": "Language",
-    "original-site": "Original Site",
-    "other-infomation": "Other Infomation",
-    "license": "License",
-    "title": "Extension Info"
+    "author": "作者",
+    "description": "説明",
+    "version": "バージョン",
+    "language": "言語",
+    "original-site": "元のサイト",
+    "other-infomation": "その他の情報",
+    "license": "ライセンス",
+    "title": "拡張機能の情報"
   },
 
   "cookie-clean": {
-    "title": "Cookie Clean",
-    "subtitle": "You may need to log in again after the cleanup",
-    "success": "Clean success",
-    "clean": "Clean"
+    "title": "クッキーをクリーン",
+    "subtitle": "クリーンアップ後に再ログインが必要になる場合があります",
+    "success": "クリーンに成功しました",
+    "clean": "クリーン"
   },
 
   "tmdb": {
-    "backdrops": "Backdrops",
-    "status": "Status",
-    "original-title": "Original Title",
-    "release-date": "Release Date",
-    "genres": "Genres",
-    "runtime": "Runtime",
-    "languages": "Languages"
+    "backdrops": "背景",
+    "status": "ステータス",
+    "original-title": "原題",
+    "release-date": "発売日",
+    "genres": "ジャンル",
+    "runtime": "実行時間",
+    "languages": "言語"
   }
 }
