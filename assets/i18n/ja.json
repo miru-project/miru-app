@@ -63,7 +63,7 @@
     "upgrade": "ソフトウェアを更新",
     "upgrade-subtitle": "バージョン： {version}",
     "upgrade-training": "チェック",
-    "auto-check-update": "更新を自動的にチェックする",
+    "auto-check-update": "自動的に更新をチェックする",
     "auto-check-update-subtitle": "起動時にアップデートを確認します",
     "language": "言語",
     "theme": "テーマ",
