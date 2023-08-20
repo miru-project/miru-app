@@ -56,27 +56,27 @@
   },
 
   "settings": {
-    "repo-url": "かくちょうきのうリポジトリのURL",
-    "repo-url-subtitle": "かくちょうきのうリポジトリのURLをしゅとくする",
+    "repo-url": "かくはべるちぬーリポジトリぬURL",
+    "repo-url-subtitle": "かくはべるちぬーリポジトリぬURLしーゅとぅくしーん",
     "tmdb-key": "TMDB APIキー",
-    "tmdb-key-subtitle": "TMDBメタデータのAPIキーをしゅとくする",
-    "upgrade": "ソフトウェアをこうしん",
+    "tmdb-key-subtitle": "TMDBメタデータぬAPIキーしーゅとぅくしーん",
+    "upgrade": "ソフトウェアこうしん",
     "upgrade-subtitle": "バージョン： {version}",
     "upgrade-training": "チェック",
-    "auto-check-update": "じどうてきにこうしんをチェックする",
-    "auto-check-update-subtitle": "きどうじにこうしんをかくにんします",
-    "language": "げんご",
+    "auto-check-update": "じちゃーてぃきんかいこうしんチェックすん",
+    "auto-check-update-subtitle": "きどぅうじんかいこうしんかくにんさびーん",
+    "language": "ぎんぐ",
     "theme": "テーマ",
-    "theme-subtitle": "ソフトウェアのテーマをへんこうします",
+    "theme-subtitle": "ソフトウェアぬテーマへいるかんさびーん",
     "theme-system": "システム",
     "theme-light": "ライト",
     "theme-dark": "ダーク",
-    "language-subtitle": "ソフトウェアのげんごをへんこうします",
-    "extension-log": "かくちょうきのうログウィンドウ",
-    "extension-log-subtitle": "かくちょうきのうのデバッグにしようします",
+    "language-subtitle": "ソフトウェアぬぎんぐへいるかんさびーん",
+    "extension-log": "かくはべるちぬーログウィンドウ",
+    "extension-log-subtitle": "かくはべるちぬーぬデバッグなしようさびーん",
     "about": "しょうさい",
     "official-site": "こうしきウェブサイト",
-    "official-site-training": "ほうもんする",
+    "official-site-training": "ほうむんすん",
     "source-code": "オープンソース",
     "source-code-training": "スター",
     "license": "ライセンス",
@@ -84,87 +84,87 @@
   },
 
   "detail": {
-    "favorite": "おきにいり",
-    "favorited": "おきにいり",
-    "continue-watching": "{episode} をつづける",
+    "favorite": "うきーがいー",
+    "favorited": "うきーがいー",
+    "continue-watching": "{episode} ちづきーん",
     "total-episodes": "ごうけい {total}",
     "overview": "がいよう",
     "cast": "キャスト",
-    "additional-info": "ついかじょうほう",
-    "get-lastest-data-error": "さいしんデータのしゅとくにしっぱいしました"
+    "additional-info": "ちいかじょうほう",
+    "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん"
   },
 
   "video": {
     "episodes": "エピソード",
-    "watch-now": "いますぐしちょうする",
-    "no-episodes": "エピソードがありません",
+    "watch-now": "なまちゃーきしちょうすん",
+    "no-episodes": "エピソードぬあいびらん",
     "play-complete": "しちょうかんりょう",
-    "resume-last-playback": "ぜんかいのさいせいをさいかいする",
-    "subtitle-none": "じまくなし",
-    "subtitle": "じまく",
-    "subtitle-change": "じまくをへんこう {title}",
-    "subtitle-file": "じまくファイル"
+    "resume-last-playback": "じんかいぬさいゆいさいかいすん",
+    "subtitle-none": "じまちゅんなし",
+    "subtitle": "じまちゅん",
+    "subtitle-change": "じまちゅんへいるかん {title}",
+    "subtitle-file": "じまちゅるファイル"
   },
 
   "comic-settings": {
-    "read-mode": "どくしょモード",
+    "read-mode": "どぅくさモード",
     "standard": "ひょうじゅん",
-    "right-to-left": "みぎからひだり",
+    "right-to-left": "みぎからふぃだり",
     "web-tonn": "ウェブトゥーン"
   },
 
   "novel-settings": {
-    "font-size": "フォントのサイズ"
+    "font-size": "フォントぬサイズ"
   },
 
   "reader": {
     "chapters": "チャプター",
-    "read-now": "いますぐよむ",
-    "no-chapters": "チャプターがありません"
+    "read-now": "なまちゃーきゆむん",
+    "no-chapters": "チャプターぬあいびらん"
   },
 
   "upgrade": {
-    "check-update": "こうしんをかくにん",
-    "new-version": "あたらしいバージョン {version} がみつかりました",
-    "download": "こうしんにいどう",
-    "no-update": "すでにさいしんバージョンです",
-    "not-now": "いまはしない",
-    "error": "こうしんのかくにんにしっぱいしました。ネットワークエラーがはっせいしました"
+    "check-update": "こうしんかくにん",
+    "new-version": "みーさるバージョン {version} がみちかやびたん",
+    "download": "こうしんんかいうぅいちゃー",
+    "no-update": "しでぃにさいしんバージョンやいびーん",
+    "not-now": "なまーさん",
+    "error": "こうしんぬかくにんんかいしっぺーさびたん。ネットワークエラーぬはっせいさびたん"
   },
 
-  "extension-install-error": "かくちょうきのうのインストールにしっぱいしました",
+  "extension-install-error": "かくはべるちぬーぬインストールんかいしっぺーさびたん",
 
   "extension-type": {
     "video": "ビデオ",
-    "novel": "しょうせつ",
+    "novel": "しょうしち",
     "comic": "まんが"
   },
 
   "extension-info": {
     "author": "さくしゃ",
-    "description": "せつめい",
+    "description": "しちめい",
     "version": "バージョン",
-    "language": "げんご",
-    "original-site": "もとのサイト",
-    "other-infomation": "そのほかのじょうほう",
+    "language": "ぎんぐ",
+    "original-site": "むとぅぬサイト",
+    "other-infomation": "うぬふかぬじょうほう",
     "license": "ライセンス",
-    "title": "かくちょうきのうのじょうほう"
+    "title": "かくはべるちぬーぬじょうほう"
   },
 
   "cookie-clean": {
-    "title": "クッキーをクリーン",
-    "subtitle": "クリーンアップごにさいログインがひつようになるばあいがあります",
-    "success": "クリーンにせいこうしました",
+    "title": "クッキークリーン",
+    "subtitle": "クリーンアップぐにさいログインぬふぃちようないーあいぬあいびーん",
+    "success": "クリーンんかいせいこうさびたん",
     "clean": "クリーン"
   },
 
   "tmdb": {
     "backdrops": "はいけい",
     "status": "ステータス",
-    "original-title": "げんだい",
-    "release-date": "はつばいび",
+    "original-title": "ぎんだい",
+    "release-date": "ーちんぺーいび",
     "genres": "ジャンル",
-    "runtime": "じっこうじかん",
-    "languages": "げんご"
+    "runtime": "じっこうじがん",
+    "languages": "ぎんぐ"
   }
 }
