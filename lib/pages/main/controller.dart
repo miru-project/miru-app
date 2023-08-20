@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class MainController extends GetxController {
@@ -11,8 +12,9 @@ class MainController extends GetxController {
   List<Widget> actions = <Widget>[].obs;
 
   setAcitons(List<Widget> list) async {
-    await Future.delayed(const Duration(milliseconds: 1));
-    actions.clear();
-    actions.addAll(list);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      actions.clear();
+      actions.addAll(list);
+    });
   }
 }

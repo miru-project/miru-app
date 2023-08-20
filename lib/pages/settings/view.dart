@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
+import 'package:miru_app/controller.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
 import 'package:miru_app/widgets/settings_input_tile.dart';
@@ -160,6 +161,26 @@ class _SettingsPageState extends State<SettingsPage> {
           },
           buildGroupValue: () {
             return MiruStorage.getSetting(SettingKey.language);
+          },
+        ),
+        const SizedBox(height: 8),
+        SettingsRadiosTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.color_lens),
+            desktopWidget: Icon(fluent.FluentIcons.color, size: 24),
+          ),
+          title: 'settings.theme'.i18n,
+          itemNameValue: {
+            'settings.theme-system'.i18n: 'system',
+            'settings.theme-light'.i18n: 'light',
+            'settings.theme-dark'.i18n: 'dark',
+          },
+          buildSubtitle: () => 'settings.theme-subtitle'.i18n,
+          applyValue: (value) {
+            Get.find<ApplicationController>().changeTheme(value);
+          },
+          buildGroupValue: () {
+            return Get.find<ApplicationController>().themeText.value;
           },
         ),
         const SizedBox(height: 8),

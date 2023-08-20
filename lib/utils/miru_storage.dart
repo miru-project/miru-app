@@ -33,6 +33,7 @@ class MiruStorage {
     await _initSetting(SettingKey.autoCheckUpdate, true);
     await _initSetting(SettingKey.language, 'en');
     await _initSetting(SettingKey.novelFontSize, 18.0);
+    await _initSetting(SettingKey.theme, 'system');
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -51,6 +52,7 @@ class MiruStorage {
 }
 
 class SettingKey {
+  static String theme = "Theme";
   static String miruRepoUrl = "MiruRepoUrl";
   static String tmdbKay = 'TMDBKey';
   static String autoCheckUpdate = 'AutoCheckUpdate';

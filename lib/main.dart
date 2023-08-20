@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:miru_app/controller.dart';
 import 'package:miru_app/pages/extension_log/view.dart';
 import 'package:miru_app/pages/main/view.dart';
 import 'package:miru_app/router/router.dart';
@@ -73,14 +74,27 @@ void main(List<String> args) async {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends fluent.StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  fluent.State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends fluent.State<MainApp> {
+  late ApplicationController c;
+
+  @override
+  void initState() {
+    c = Get.put(ApplicationController());
+    super.initState();
+  }
 
   Widget _buildMobileMain(BuildContext context) {
     return GetMaterialApp(
       title: "Miru",
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
+      themeMode: c.theme,
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
       home: const AndroidMainPage(),
@@ -95,7 +109,7 @@ class MainApp extends StatelessWidget {
       title: 'Miru',
       debugShowCheckedModeBanner: false,
       routerConfig: router,
-      themeMode: ThemeMode.system,
+      themeMode: c.theme,
       darkTheme: fluent.FluentThemeData(
         brightness: Brightness.dark,
         visualDensity: VisualDensity.standard,

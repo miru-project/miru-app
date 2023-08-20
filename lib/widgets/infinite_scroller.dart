@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 
@@ -32,14 +33,11 @@ class _InfiniteScrollerState extends State<InfiniteScroller> {
   @override
   void initState() {
     if (!Platform.isAndroid && widget.refreshOnStart) {
-      _onRefresh();
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        widget.onRefresh();
+      });
     }
     super.initState();
-  }
-
-  _onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 1));
-    widget.onRefresh();
   }
 
   void _onScroll(ScrollMetrics metrics) {
