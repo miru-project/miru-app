@@ -64,9 +64,11 @@ class _ExtensionPageState extends State<ExtensionPage> {
             children: [
               const Icon(fluent.FluentIcons.error),
               const SizedBox(width: 8),
-              Text(
-                "extension.import.tips".i18n,
-                softWrap: true,
+              Expanded(
+                child: Text(
+                  "extension.import.tips".i18n,
+                  softWrap: true,
+                ),
               )
             ],
           ),

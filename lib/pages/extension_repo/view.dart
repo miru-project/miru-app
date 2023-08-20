@@ -35,9 +35,12 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
         children: [
           Text('extension-repo.error'.i18n),
           const SizedBox(height: 8),
-          Text(
-            'extension-repo.error-tips'.i18n,
-            style: const TextStyle(fontSize: 12),
+          fluent.Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'extension-repo.error-tips'.i18n,
+              style: const TextStyle(fontSize: 12),
+            ),
           ),
           const SizedBox(height: 13),
           PlatformFilledButton(

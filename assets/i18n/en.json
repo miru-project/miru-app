@@ -39,7 +39,7 @@
     "import": {
       "title": "Import Extension",
       "url-label": "Extension URL",
-      "tips": "You can import extensions through a link,\nor click on the extension directory below\nand place the extension file there.",
+      "tips": "You can import extensions through a link,or click on the extension directory below and place the extension file there.",
       "extension-dir": "Extension Directory",
       "import-by-url": "Import by URL"
     },
@@ -50,7 +50,7 @@
 
   "extension-repo": {
     "error": "An error occurred!",
-    "error-tips": "Please check your network connection\nor the repository address",
+    "error-tips": "Please check your network connection or the repository address",
     "empty": "Repository is empty",
     "upgrade": "Update"
   },
