@@ -20,6 +20,7 @@ class VideoPlayerConten extends StatefulWidget {
 
 class _VideoPlayerContenState extends State<VideoPlayerConten> {
   late final _c = Get.find<VideoPlayerController>(tag: widget.tag);
+  final speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
   Widget _buildDesktop(BuildContext context) {
     final topButtonBar = Row(
@@ -91,51 +92,80 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
           const Spacer(),
           Theme(
             data: Theme.of(context),
-            child: PopupMenuButton(
-              icon: const Icon(
-                Icons.subtitles,
-                color: Colors.white,
-              ),
-              itemBuilder: (context) {
-                return [
-                  // 是否显示字幕
-                  PopupMenuItem(
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: PopupMenuButton(
                     child: Obx(
-                      () => CheckboxListTile(
-                        value: _c.selectedSubtitle.value == -1,
-                        onChanged: (value) {
-                          _c.selectedSubtitle.value = -1;
-                        },
-                        title: Text('video.subtitle-none'.i18n),
+                      () => Text(
+                        'x${_c.speed.value}',
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
+                    itemBuilder: (context) {
+                      return [
+                        for (final speed in speeds)
+                          PopupMenuItem(
+                            child: Text(
+                              'x$speed',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            onTap: () {
+                              _c.speed.value = speed;
+                            },
+                          ),
+                      ];
+                    },
                   ),
-                  // 选择文件
-                  PopupMenuItem(
-                    child: Obx(
-                      () => CheckboxListTile(
-                        value: _c.selectedSubtitle.value == -2,
-                        onChanged: (value) {
-                          _c.selectedSubtitle.value = -2;
-                        },
-                        title: Text("video.subtitle-file".i18n),
-                      ),
-                    ),
+                ),
+                PopupMenuButton(
+                  icon: const Icon(
+                    Icons.subtitles,
+                    color: Colors.white,
                   ),
-                  for (int i = 0; i < _c.subtitles.length; i++)
-                    PopupMenuItem(
-                      child: Obx(
-                        () => CheckboxListTile(
-                          value: _c.selectedSubtitle.value == i,
-                          onChanged: (value) {
-                            _c.selectedSubtitle.value = i;
-                          },
-                          title: Text(_c.subtitles[i].title),
+                  itemBuilder: (context) {
+                    return [
+                      // 是否显示字幕
+                      PopupMenuItem(
+                        child: Obx(
+                          () => CheckboxListTile(
+                            value: _c.selectedSubtitle.value == -1,
+                            onChanged: (value) {
+                              _c.selectedSubtitle.value = -1;
+                            },
+                            title: Text('video.subtitle-none'.i18n),
+                          ),
                         ),
                       ),
-                    ),
-                ];
-              },
+                      // 选择文件
+                      PopupMenuItem(
+                        child: Obx(
+                          () => CheckboxListTile(
+                            value: _c.selectedSubtitle.value == -2,
+                            onChanged: (value) {
+                              _c.selectedSubtitle.value = -2;
+                            },
+                            title: Text("video.subtitle-file".i18n),
+                          ),
+                        ),
+                      ),
+                      for (int i = 0; i < _c.subtitles.length; i++)
+                        PopupMenuItem(
+                          child: Obx(
+                            () => CheckboxListTile(
+                              value: _c.selectedSubtitle.value == i,
+                              onChanged: (value) {
+                                _c.selectedSubtitle.value = i;
+                              },
+                              title: Text(_c.subtitles[i].title),
+                            ),
+                          ),
+                        ),
+                    ];
+                  },
+                )
+              ],
             ),
           ),
           MaterialDesktopCustomButton(
@@ -216,50 +246,79 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
           const Spacer(),
           Theme(
             data: Theme.of(context),
-            child: PopupMenuButton(
-              icon: const Icon(
-                Icons.subtitles,
-                color: Colors.white,
-              ),
-              itemBuilder: (context) {
-                return [
-                  // 是否显示字幕
-                  PopupMenuItem(
-                    value: -1,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: PopupMenuButton(
                     child: Obx(
-                      () => CheckboxListTile(
-                        value: _c.selectedSubtitle.value == -1,
-                        onChanged: (value) {
-                          _c.selectedSubtitle.value = -1;
-                        },
-                        title: Text('video.subtitle-none'.i18n),
+                      () => Text(
+                        'x${_c.speed.value}',
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
-                  ), // 选择文件
-                  PopupMenuItem(
-                    child: CheckboxListTile(
-                      value: _c.selectedSubtitle.value == -2,
-                      onChanged: (value) {
-                        _c.selectedSubtitle.value = -2;
-                      },
-                      title: Text("video.subtitle-file".i18n),
-                    ),
+                    itemBuilder: (context) {
+                      return [
+                        for (final speed in speeds)
+                          PopupMenuItem(
+                            child: Text(
+                              'x$speed',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            onTap: () {
+                              _c.speed.value = speed;
+                            },
+                          ),
+                      ];
+                    },
                   ),
-                  for (int i = 0; i < _c.subtitles.length; i++)
-                    PopupMenuItem(
-                      value: i,
-                      child: Obx(
-                        () => CheckboxListTile(
-                          value: _c.selectedSubtitle.value == i,
+                ),
+                PopupMenuButton(
+                  icon: const Icon(
+                    Icons.subtitles,
+                    color: Colors.white,
+                  ),
+                  itemBuilder: (context) {
+                    return [
+                      // 是否显示字幕
+                      PopupMenuItem(
+                        value: -1,
+                        child: Obx(
+                          () => CheckboxListTile(
+                            value: _c.selectedSubtitle.value == -1,
+                            onChanged: (value) {
+                              _c.selectedSubtitle.value = -1;
+                            },
+                            title: Text('video.subtitle-none'.i18n),
+                          ),
+                        ),
+                      ), // 选择文件
+                      PopupMenuItem(
+                        child: CheckboxListTile(
+                          value: _c.selectedSubtitle.value == -2,
                           onChanged: (value) {
-                            _c.selectedSubtitle.value = i;
+                            _c.selectedSubtitle.value = -2;
                           },
-                          title: Text(_c.subtitles[i].title),
+                          title: Text("video.subtitle-file".i18n),
                         ),
                       ),
-                    ),
-                ];
-              },
+                      for (int i = 0; i < _c.subtitles.length; i++)
+                        PopupMenuItem(
+                          value: i,
+                          child: Obx(
+                            () => CheckboxListTile(
+                              value: _c.selectedSubtitle.value == i,
+                              onChanged: (value) {
+                                _c.selectedSubtitle.value = i;
+                              },
+                              title: Text(_c.subtitles[i].title),
+                            ),
+                          ),
+                        ),
+                    ];
+                  },
+                ),
+              ],
             ),
           ),
           MaterialCustomButton(
