@@ -1,0 +1,170 @@
+{
+  "common": {
+    "home": "ホーム",
+    "search": "きんさく",
+    "extension": "かくはべるちぬー",
+    "extension-repo": "かくはべるちぬーリポジトリ",
+    "settings": "しってい",
+    "no-extension": "かくはべるちぬーやしがインストールさりやびらん",
+    "no-result": "やしがいとうするきっかぬみちかやびらんたん",
+    "no-more-data": "くりいじょうぬデーターあいびらん",
+    "cancel": "キャンセル",
+    "confirm": "かくにん",
+    "close": "くーいん",
+    "copied": "クリップボードんかいコピーさりやびたん",
+    "uninstall": "アンインストール",
+    "install": "インストール",
+    "repo": "リポジトリ",
+    "unset": "んーじしってい",
+    "extension-missing": "かくはべるちぬー {package} やしがあいびらん",
+    "error": "エラー",
+    "retry": "リトライ",
+    "next": "ちぎ",
+    "previous": "まい",
+    "show-all": "まじりひょうじ"
+  },
+
+  "home": {
+    "continue-watching": "ちづきーん",
+    "favorite": "うきーがいー",
+    "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん"
+  },
+
+  "search": {
+    "hint-text": "きんさくちかてぃくぃみそーれー～！",
+    "all": "まじり"
+  },
+
+  "extension": {
+    "import": {
+      "title": "かくはべるちぬーインポート",
+      "url-label": "かくはべるちぬーぬURL",
+      "tips": "リンクちうじてぃかくはべるちぬーインポートすしん、\nいかぬかくはべるちぬーディレクトリクリックし\nうまんかいかちゅるはべるちぬーファイルはいちすしんなやびーん。",
+      "extension-dir": "かくはべるちぬーディレクトリ",
+      "import-by-url": "URLっしインポート"
+    },
+    "error-dialog": "エラーメッセージ",
+    "installed": "インストールじみ",
+    "edit-code": "コードへんしゅう"
+  },
+
+  "extension-repo": {
+    "error": "エラーぬはっせいさびたん！",
+    "error-tips": "ネットワークしちずいちゅんかくにんすが\nリポジトリぬアドレスかくにんしみそーれー",
+    "empty": "リポジトリぬからやいびーん",
+    "upgrade": "こうしん"
+  },
+
+  "settings": {
+    "repo-url": "かくはべるちぬーリポジトリぬURL",
+    "repo-url-subtitle": "かくはべるちぬーリポジトリぬURLしーゅとぅくしーん",
+    "tmdb-key": "TMDB APIキー",
+    "tmdb-key-subtitle": "TMDBメタデータぬAPIキーしーゅとぅくしーん",
+    "upgrade": "ソフトウェアこうしん",
+    "upgrade-subtitle": "バージョン： {version}",
+    "upgrade-training": "チェック",
+    "auto-check-update": "じちゃーてぃきんかいこうしんチェックすん",
+    "auto-check-update-subtitle": "きどぅうじんかいこうしんかくにんさびーん",
+    "language": "ぎんぐ",
+    "theme": "テーマ",
+    "theme-subtitle": "ソフトウェアぬテーマへいるかんさびーん",
+    "theme-system": "システム",
+    "theme-light": "ライト",
+    "theme-dark": "ダーク",
+    "language-subtitle": "ソフトウェアぬぎんぐへいるかんさびーん",
+    "extension-log": "かくはべるちぬーログウィンドウ",
+    "extension-log-subtitle": "かくはべるちぬーぬデバッグなしようさびーん",
+    "about": "しょうさい",
+    "official-site": "こうしきウェブサイト",
+    "official-site-training": "ほうむんすん",
+    "source-code": "オープンソース",
+    "source-code-training": "スター",
+    "license": "ライセンス",
+    "license-subtitle": "ライセンス"
+  },
+
+  "detail": {
+    "favorite": "うきーがいー",
+    "favorited": "うきーがいー",
+    "continue-watching": "{episode} ちづきーん",
+    "total-episodes": "ごうけい {total}",
+    "overview": "がいよう",
+    "cast": "キャスト",
+    "additional-info": "ちいかじょうほう",
+    "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん"
+  },
+
+  "video": {
+    "episodes": "エピソード",
+    "watch-now": "なまちゃーきしちょうすん",
+    "no-episodes": "エピソードぬあいびらん",
+    "play-complete": "しちょうかんりょう",
+    "resume-last-playback": "じんかいぬさいゆいさいかいすん",
+    "subtitle-none": "じまちゅんなし",
+    "subtitle": "じまちゅん",
+    "subtitle-change": "じまちゅんへいるかん {title}",
+    "subtitle-file": "じまちゅるファイル"
+  },
+
+  "comic-settings": {
+    "read-mode": "どぅくさモード",
+    "standard": "ひょうじゅん",
+    "right-to-left": "みぎからふぃだり",
+    "web-tonn": "ウェブトゥーン"
+  },
+
+  "novel-settings": {
+    "font-size": "フォントぬサイズ"
+  },
+
+  "reader": {
+    "chapters": "チャプター",
+    "read-now": "なまちゃーきゆむん",
+    "no-chapters": "チャプターぬあいびらん"
+  },
+
+  "upgrade": {
+    "check-update": "こうしんかくにん",
+    "new-version": "みーさるバージョン {version} がみちかやびたん",
+    "download": "こうしんんかいうぅいちゃー",
+    "no-update": "しでぃにさいしんバージョンやいびーん",
+    "not-now": "なまーさん",
+    "error": "こうしんぬかくにんんかいしっぺーさびたん。ネットワークエラーぬはっせいさびたん"
+  },
+
+  "extension-install-error": "かくはべるちぬーぬインストールんかいしっぺーさびたん",
+
+  "extension-type": {
+    "video": "ビデオ",
+    "novel": "しょうしち",
+    "comic": "まんが"
+  },
+
+  "extension-info": {
+    "author": "さくしゃ",
+    "description": "しちめい",
+    "version": "バージョン",
+    "language": "ぎんぐ",
+    "original-site": "むとぅぬサイト",
+    "other-infomation": "うぬふかぬじょうほう",
+    "license": "ライセンス",
+    "title": "かくはべるちぬーぬじょうほう"
+  },
+
+  "cookie-clean": {
+    "title": "クッキークリーン",
+    "subtitle": "クリーンアップぐにさいログインぬふぃちようないーあいぬあいびーん",
+    "success": "クリーンんかいせいこうさびたん",
+    "clean": "クリーン"
+  },
+
+  "tmdb": {
+    "backdrops": "はいけい",
+    "status": "ステータス",
+    "original-title": "ぎんだい",
+    "release-date": "ーちんぺーいび",
+    "genres": "ジャンル",
+    "runtime": "じっこうじがん",
+    "languages": "ぎんぐ"
+  }
+}

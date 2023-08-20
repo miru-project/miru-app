@@ -1,0 +1,170 @@
+{
+  "common": {
+    "home": "ホーム",
+    "search": "検索",
+    "extension": "拡張機能",
+    "extension-repo": "拡張機能リポジトリ",
+    "settings": "設定",
+    "no-extension": "拡張機能がインストールされていません",
+    "no-result": "該当する結果が見つかりませんでした",
+    "no-more-data": "これ以上のデータはありません",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "close": "閉じる",
+    "copied": "クリップボードにコピーされました",
+    "uninstall": "アンインストール",
+    "install": "インストール",
+    "repo": "リポジトリ",
+    "unset": "未設定",
+    "extension-missing": "拡張機能 {package} がありません",
+    "error": "エラー",
+    "retry": "リトライ",
+    "next": "次",
+    "previous": "前",
+    "show-all": "全て表示"
+  },
+
+  "home": {
+    "continue-watching": "続ける",
+    "favorite": "お気に入り",
+    "no-record": "お気に入りや閲覧記録はありません"
+  },
+
+  "search": {
+    "hint-text": "検索を使ってください～！",
+    "all": "全て"
+  },
+
+  "extension": {
+    "import": {
+      "title": "拡張機能をインポート",
+      "url-label": "拡張機能のURL",
+      "tips": "リンクを通じて拡張機能をインポートすることも、\n以下の拡張機能ディレクトリをクリックして\nそこに拡張機能ファイルを配置することもできます。",
+      "extension-dir": "拡張機能ディレクトリ",
+      "import-by-url": "URLでインポート"
+    },
+    "error-dialog": "エラーメッセージ",
+    "installed": "インストール済み",
+    "edit-code": "コードを編集"
+  },
+
+  "extension-repo": {
+    "error": "エラーが発生しました！",
+    "error-tips": "ネットワーク接続を確認するか\nリポジトリのアドレスを確認してください",
+    "empty": "リポジトリが空です",
+    "upgrade": "更新"
+  },
+
+  "settings": {
+    "repo-url": "拡張機能リポジトリのURL",
+    "repo-url-subtitle": "拡張機能リポジトリのURLを取得する",
+    "tmdb-key": "TMDB APIキー",
+    "tmdb-key-subtitle": "TMDBメタデータのAPIキーを取得する",
+    "upgrade": "ソフトウェアを更新",
+    "upgrade-subtitle": "バージョン： {version}",
+    "upgrade-training": "チェック",
+    "auto-check-update": "自動的に更新をチェックする",
+    "auto-check-update-subtitle": "起動時に更新を確認します",
+    "language": "言語",
+    "theme": "テーマ",
+    "theme-subtitle": "ソフトウェアのテーマを変更します",
+    "theme-system": "システム",
+    "theme-light": "ライト",
+    "theme-dark": "ダーク",
+    "language-subtitle": "ソフトウェアの言語を変更します",
+    "extension-log": "拡張機能ログウィンドウ",
+    "extension-log-subtitle": "拡張機能のデバッグに使用します",
+    "about": "詳細",
+    "official-site": "公式ウェブサイト",
+    "official-site-training": "訪問する",
+    "source-code": "オープンソース",
+    "source-code-training": "スター",
+    "license": "ライセンス",
+    "license-subtitle": "ライセンス"
+  },
+
+  "detail": {
+    "favorite": "お気に入り",
+    "favorited": "お気に入り",
+    "continue-watching": "{episode} を続ける",
+    "total-episodes": "合計 {total}",
+    "overview": "概要",
+    "cast": "キャスト",
+    "additional-info": "追加情報",
+    "get-lastest-data-error": "最新データの取得に失敗しました"
+  },
+
+  "video": {
+    "episodes": "エピソード",
+    "watch-now": "今すぐ視聴する",
+    "no-episodes": "エピソードがありません",
+    "play-complete": "視聴完了",
+    "resume-last-playback": "前回の再生を再開する",
+    "subtitle-none": "字幕なし",
+    "subtitle": "字幕",
+    "subtitle-change": "字幕を変更 {title}",
+    "subtitle-file": "字幕ファイル"
+  },
+
+  "comic-settings": {
+    "read-mode": "読書モード",
+    "standard": "標準",
+    "right-to-left": "右から左",
+    "web-tonn": "ウェブトゥーン"
+  },
+
+  "novel-settings": {
+    "font-size": "フォントのサイズ"
+  },
+
+  "reader": {
+    "chapters": "チャプター",
+    "read-now": "今すぐ読む",
+    "no-chapters": "チャプターがありません"
+  },
+
+  "upgrade": {
+    "check-update": "更新を確認",
+    "new-version": "新しいバージョン {version} が見つかりました",
+    "download": "更新に移動",
+    "no-update": "既に最新バージョンです",
+    "not-now": "今はしない",
+    "error": "更新の確認に失敗しました。ネットワークエラーが発生しました"
+  },
+
+  "extension-install-error": "拡張機能のインストールに失敗しました",
+
+  "extension-type": {
+    "video": "ビデオ",
+    "novel": "小説",
+    "comic": "漫画"
+  },
+
+  "extension-info": {
+    "author": "作者",
+    "description": "説明",
+    "version": "バージョン",
+    "language": "言語",
+    "original-site": "元のサイト",
+    "other-infomation": "その他の情報",
+    "license": "ライセンス",
+    "title": "拡張機能の情報"
+  },
+
+  "cookie-clean": {
+    "title": "クッキーをクリーン",
+    "subtitle": "クリーンアップ後に再ログインが必要になる場合があります",
+    "success": "クリーンに成功しました",
+    "clean": "クリーン"
+  },
+
+  "tmdb": {
+    "backdrops": "背景",
+    "status": "ステータス",
+    "original-title": "原題",
+    "release-date": "発売日",
+    "genres": "ジャンル",
+    "runtime": "実行時間",
+    "languages": "言語"
+  }
+}
