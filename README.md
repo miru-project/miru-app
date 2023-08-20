@@ -2,6 +2,11 @@
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
 </p>
 
+## 其他语言
+- [英语](README-en.md)
+- [日语](README-ja.md)
+- [沖繩語](README-ryu.md)
+
 <h1 align="center">
 Miru App
 </h1>
