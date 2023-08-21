@@ -12,6 +12,7 @@ import 'package:miru_app/widgets/extension_item_card.dart';
 import 'package:miru_app/widgets/infinite_scroller.dart';
 import 'package:miru_app/widgets/messenger.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
+import 'package:miru_app/widgets/search_appbar.dart';
 
 class SearchExtensionPage extends fluent.StatefulWidget {
   const SearchExtensionPage({
@@ -30,7 +31,6 @@ class SearchExtensionPage extends fluent.StatefulWidget {
 class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
   late ExtensionRuntime _runtime;
   late String _keyWord = widget.keyWord ?? '';
-  bool _showSearh = false;
   final List<ExtensionListItem> _data = [];
   int _page = 1;
   bool _isLoding = true;
@@ -64,6 +64,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
       _data.addAll(data);
       _page++;
     } catch (e) {
+      // ignore: use_build_context_synchronously
       showPlatformSnackbar(
         context: context,
         content: e.toString(),
@@ -88,39 +89,15 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
 
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: _showSearh || _keyWord.isNotEmpty
-            ? TextField(
-                decoration: InputDecoration(
-                  hintText: 'search.hint-text'.i18n,
-                  border: InputBorder.none,
-                ),
-                controller: TextEditingController(
-                  text: _keyWord,
-                ),
-                onChanged: (value) {
-                  if (value.isEmpty) {
-                    _onSearch(value);
-                  }
-                },
-                onSubmitted: _onSearch,
-              )
-            : Text(
-                _runtime.extension.name,
-              ),
-        actions: [
-          IconButton(
-            icon: Icon(_showSearh ? Icons.close : Icons.search),
-            onPressed: () {
-              setState(() {
-                if (_showSearh) {
-                  _keyWord = '';
-                }
-                _showSearh = !_showSearh;
-              });
-            },
-          ),
-        ],
+      appBar: SearchAppBar(
+        title: _runtime.extension.name,
+        textEditingController: TextEditingController(text: _keyWord),
+        onChanged: (value) {
+          if (value.isEmpty) {
+            _onSearch(value);
+          }
+        },
+        onSubmitted: _onSearch,
       ),
       body: InfiniteScroller(
         onRefresh: _onRefresh,

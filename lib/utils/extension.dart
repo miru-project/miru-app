@@ -89,6 +89,7 @@ class ExtensionUtils {
       // 保存文件
       File(savePath).writeAsStringSync(res.data!);
     } catch (e) {
+      // ignore: use_build_context_synchronously
       showPlatformDialog(
         context: context,
         title: 'extension-install-error'.i18n,

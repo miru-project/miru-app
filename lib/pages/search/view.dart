@@ -8,6 +8,7 @@ import 'package:miru_app/pages/search/widgets/search_all_extension.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
+import 'package:miru_app/widgets/search_appbar.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -26,14 +27,11 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildAndroidSearch(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration(
-            hintText: 'search.hint-text'.i18n,
-            border: InputBorder.none,
-          ),
-          controller: TextEditingController(
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: SearchAppBar(
+          textEditingController: TextEditingController(
             text: c.search.value,
           ),
           onChanged: (value) {
@@ -44,86 +42,47 @@ class _SearchPageState extends State<SearchPage> {
           onSubmitted: (value) {
             c.search.value = value;
           },
-        ),
-        flexibleSpace: Obx(
-          () => Column(
-            children: [
-              if (c.finishCount != c.searchResultList.length)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: LinearProgressIndicator(
-                    value: (c.finishCount / c.searchResultList.length),
-                    minHeight: 2,
+          hintText: "search.hint-text".i18n,
+          title: "common.search".i18n,
+          flexibleSpace: Obx(
+            () => Column(
+              children: [
+                if (c.finishCount != c.searchResultList.length)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: LinearProgressIndicator(
+                      value: (c.finishCount / c.searchResultList.length),
+                      minHeight: 2,
+                    ),
                   ),
-                ),
+              ],
+            ),
+          ),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'search.all'.i18n),
+              Tab(text: 'extension-type.video'.i18n),
+              Tab(text: 'extension-type.comic'.i18n),
+              Tab(text: 'extension-type.novel'.i18n),
             ],
+            onTap: (value) {
+              switch (value) {
+                case 0:
+                  c.getRuntime();
+                  break;
+                case 1:
+                  c.getRuntime(type: ExtensionType.bangumi);
+                  break;
+                case 2:
+                  c.getRuntime(type: ExtensionType.manga);
+                  break;
+                case 3:
+                  c.getRuntime(type: ExtensionType.fikushon);
+                  break;
+              }
+            },
           ),
         ),
-      ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              flexibleSpace: Obx(
-                () => SizedBox(
-                  height: 60,
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ChoiceChip(
-                        label: Text('search.all'.i18n),
-                        selected: c.cuurentExtensionType.value == null,
-                        onSelected: (value) {
-                          if (value) {
-                            c.getRuntime();
-                          }
-                        },
-                      ),
-                      const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text('extension-type.video'.i18n),
-                        selected: c.cuurentExtensionType.value ==
-                            ExtensionType.bangumi,
-                        onSelected: (value) {
-                          if (value) {
-                            c.getRuntime(type: ExtensionType.bangumi);
-                          }
-                        },
-                      ),
-                      const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text('extension-type.comic'.i18n),
-                        selected:
-                            c.cuurentExtensionType.value == ExtensionType.manga,
-                        onSelected: (value) {
-                          if (value) {
-                            c.getRuntime(type: ExtensionType.manga);
-                          }
-                        },
-                      ),
-                      const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text('extension-type.novel'.i18n),
-                        selected: c.cuurentExtensionType.value ==
-                            ExtensionType.fikushon,
-                        onSelected: (value) {
-                          if (value) {
-                            c.getRuntime(
-                              type: ExtensionType.fikushon,
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              floating: true,
-              snap: true,
-            )
-          ];
-        },
         body: Obx(
           () {
             // ignore: invalid_use_of_protected_member
