@@ -2,7 +2,7 @@
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
 </p>
 
-## Другие языки
+## Іншыя мовы
 - [Кітайская спрошчаная](README.md)
 - [Японская](README-ja.md)
 - [Акінаўская](README-ryu.md)
