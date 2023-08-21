@@ -6,6 +6,9 @@
 - [Simplified Chinese](README.md)
 - [Japanese](README-ja.md)
 - [Okinawan](README-ryu.md)
+- [Russian] (README-ru.md)
+- [Belarusian] (README-be.md)
+- [Ukrainian] (README-uk.md)
 
 <h1 align="center">
 Miru App
