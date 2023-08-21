@@ -29,8 +29,8 @@ Miru App
 - Support for `windows`,`android`
 - Friendly extension writing support, debug log
 - The extension uses the JavaScript language, and the development is simple
-- Support custom extension warehouse
-- The official extension warehouse provides video sources, which can be used without writing any extensions
+- Support for custom extension repositories
+- The official extension repository provides video sources, which can be used without writing any extensions
 - Support online viewing of multiple sources of videos, comics, and novels, realizing the unification of multiple platforms
 - Unify the design language of the system UI
 - Automatically fetch TMDB metadata information
@@ -38,13 +38,13 @@ Miru App
 ## Todo
 
 - [ ] BT torrent
-- [ ] better debugging tools
-- [ ] data synchronization
+- [ ] Better debugging tools
+- [ ] Data synchronization
 - [ ] Automatically search for subtitles
 
 ## Installing
 
-you can pass [Release](https://github.com/miru-project/miru-app/releases/latest) Download the latest version of the installation package from the page, or build it yourself by the following method 
+You can go to [Release](https://github.com/miru-project/miru-app/releases/latest) to download the latest version of the installation package from the page, or build it yourself by the following method 
 
 ## Building
 
