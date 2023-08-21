@@ -6,7 +6,9 @@
 - [Китайский Упрощённый](README.md)
 - [Японский](README-ja.md)
 - [Окинавский](README-ryu.md)
-- [Английский] ([README-en.md](https://github.com/Atrafon/miru-app/blob/main/README-en.md))
+- [Английский](README-en.md)
+- [Белорусский](README-be.md)
+- [Украинский](README-uk.md)
 
 <h1 align="center">
 Miru App
