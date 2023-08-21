@@ -56,7 +56,7 @@
   },
 
   "settings": {
-    "repo-url": "URL репозиторія розширень,
+    "repo-url": "URL репозиторія розширень",
     "repo-url-subtitle": "Отримати URL репозиторія для розширень",
     "tmdb-key": "Ключ API TMDB",
     "tmdb-key-subtitle": "Отримати ключ API для метаданих TMDB",
@@ -119,7 +119,7 @@
 
   "upgrade": {
     "check-update": "Перевірити наявність оновлень",
-    "new-version": "Нову версію {version} знайдено,
+    "new-version": "Нову версію {version} знайдено",
     "download": "Завантажити оновлення",
     "no-update": "Використовується остання версія",
     "not-now": "Не зараз",
