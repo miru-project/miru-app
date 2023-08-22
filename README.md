@@ -1,4 +1,4 @@
-[English](README-en.md) | [日本語](README-ja.md) | [沖縄](README-ryu.md)
+[English](README-en.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md)
 
 
 <p align="center">
