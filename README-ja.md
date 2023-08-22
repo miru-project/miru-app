@@ -1,4 +1,4 @@
-[簡体字中国語](README.md) | [English](README-en.md) | [うちなーぐち](README-ryu.md)
+[简体中文](README.md) | [English](README-en.md) | [うちなーぐち](README-ryu.md)
 
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
