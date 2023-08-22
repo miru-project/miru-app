@@ -1,11 +1,8 @@
+- [简体中文](README.md) | [English](README-en.md) | [日本語](README-ja.md)
+
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
 </p>
-
-## うぬふかぬぎんぐ
-- [かなーちゃるいじちゅうぐくぐ](README.md)
-- [えいぐ](README-en.md)
-- [んかいふらぐ](README-ja.md)
 
 <h1 align="center">
 Miru App

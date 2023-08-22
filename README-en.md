@@ -1,11 +1,8 @@
+[简体中文](README.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md)
+
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
 </p>
-
-## Other language
-- [Simplified Chinese](README.md)
-- [Japanese](README-ja.md)
-- [Okinawan](README-ryu.md)
 
 <h1 align="center">
 Miru App
