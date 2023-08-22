@@ -1,0 +1,170 @@
+{
+  "common": {
+    "home": "Галоўная",
+    "search": "Пошук",
+    "extension": "Пашырэння",
+    "extension-repo": "Рэпазітар пашырэнняў",
+    "settings": "Налады",
+    "no-extension": "Няма ўсталяваных пашырэнняў",
+    "no-result": "Няма рэлевантных вынікаў",
+    "no-more-data": "Няма больш дадзеных",
+    "cancel": "Адмена",
+    "confirm": "Пацвердзіць",
+    "close": "Закрыць",
+    "copied": "Скапіравана ў буфер абмену",
+    "uninstall": "Выдаліць",
+    "install": "Усталяваць",
+    "repo": "Рэпазітар",
+    "unset": "Не зададзена",
+    "extension-missing": "Пашырэнне {package} адсутнічае",
+    "error": "Памылка",
+    "retry": "Паўтарыць спробу",
+    "next": "Наступнае",
+    "previous": "Папярэдняе",
+    "show-all": "Паказаць усё"
+  },
+
+  "home": {
+    "continue-watching": "Працягнуць",
+    "favorite": "Выбранае",
+    "no-record": "Няма выбранага або прагляду запісаў"
+  },
+
+  "search": {
+    "hint-text": "Калі ласка, выкарыстоўвайце пошук з розумам!~",
+    "all": "Усё"
+  },
+
+  "extension": {
+    "import": {
+      "title": "Імпарт пашырэння",
+      "url-label": "URL пашырэння",
+      "tips": "Вы можаце імпартаваць пашырэнні па спасылцы або пстрыкнуць каталог пашырэння ніжэй і змясціць туды файл пашырэння.",
+      "extension-dir": "Каталог пашырэнняў",
+      "import-by-url": "Імпарт па URL"
+    },
+    "error-dialog": "Паведамленне пра памылку",
+    "installed": "Устаноўлена",
+    "edit-code": "Рэдагаваць код"
+  },
+
+  "extension-repo": {
+    "error": "Адбылася памылка!",
+    "error-tips": "Калі ласка, праверце падлучэнне да сеткі або адрас рэпазітара",
+    "empty": "Рэпазітар пусты",
+    "upgrade": "Абнаўленне"
+  },
+
+  "settings": {
+    "repo-url": "URL рэпазітара пашырэнняў",
+    "repo-url-subtitle": "Атрымаць URL рэпазітара для пашырэнняў",
+    "tmdb-key": "Ключ API TMDB",
+    "tmdb-key-subtitle": "Атрымаць ключ API для метададзеных TMDB",
+    "upgrade": "Абнаўленне ПЗ",
+    "upgrade-subtitle": "версія: {version}",
+    "upgrade-training": "Праверыць наяўнасць абнаўленняў",
+    "auto-check-update": "Аўтаматычна правяраць наяўнасць абнаўленняў",
+    "auto-check-update-subtitle": "Правяраць наяўнасць абнаўленняў пры кожным запуску",
+    "language": "Мова",
+    "theme": "Тэма",
+    "theme-subtitle": "Змяніць тэму праграмы",
+    "theme-system": "Сістэмная",
+    "theme-light": "Светлая",
+    "theme-dark": "Цёмная",
+    "language-subtitle": "Змяніць мову праграмы",
+    "extension-log": "Акно часопіса пашырэнняў",
+    "extension-log-subtitle": "Выкарыстоўваецца для адладкі пашырэнняў",
+    "about": "Аб праграме",
+    "official-site": "Афіцыйны вэб-сайт",
+    "official-site-training": "Наведайце афіцыйны сайт",
+    "source-code": "Адкрыты зыходны код",
+    "source-code-training": "Пастаўце зорку",
+    "license": "Ліцэнзія",
+    "license-subtitle": "Ліцэнзія"
+  },
+
+  "detail": {
+    "favorite": "Выбранае",
+    "favorited": "У выбраных",
+    "continue-watching": "Працягнуць {episode}",
+    "total-episodes": "Усяго {total}",
+    "overview": "Агляд",
+    "cast": "У ролях",
+    "additional-info": "Дадатковая інфармацыя",
+    "get-lastest-data-error": "Не ўдалося атрымаць апошнія дадзеныя"
+  },
+
+  "video": {
+    "episodes": "Эпізоды",
+    "watch-now": "Пачаць прагляд",
+    "no-episodes": "Няма эпізодаў",
+    "play-complete": "Прайграванне завершана",
+    "resume-last-playback": "Аднавіць апошняе прайграванне",
+    "subtitle-none": "Няма субтытраў",
+    "subtitle": "Субтытры",
+    "subtitle-change": "Рэдагаваць субтытры {title}",
+    "subtitle-file": "Файл субтытраў"
+  },
+
+  "comic-settings": {
+    "read-mode": "Рэжым чытання",
+    "standard": "Стандарт",
+    "right-to-left": "Справа налева",
+    "web-tonn": "Манхва"
+  },
+
+  "novel-settings": {
+    "font-size": "Памер тэксту"
+  },
+
+  "reader": {
+    "chapters": "Раздзелы",
+    "read-now": "Пачаць чытанне",
+    "no-chapters": "Няма раздзелаў"
+  },
+
+  "upgrade": {
+    "check-update": "Праверыць наяўнасць абнаўленняў",
+    "new-version": "Новая версія {version} знойдзена",
+    "download": "Спампаваць абнаўленне",
+    "no-update": "Выкарыстоўваецца апошняя версія",
+    "not-now": "Не цяпер",
+    "error": "Не ўдалося праверыць наяўнасць абнаўленняў, адбылася сеткавая памылка"
+  },
+
+  "extension-install-error": "Не атрымалася ўсталяваць пашырэнне",
+
+  "extension-type": {
+    "video": "Відэа",
+    "novel": "Навэла",
+    "comic": "Комікс"
+  },
+
+  "extension-info": {
+    "author": "Аўтар",
+    "description": "Апісанне",
+    "version": "Версія",
+    "language": "Мова",
+    "original-site": "Арыгінальны сайт",
+    "other-infomation": "Астатняя інфармацыя",
+    "license": "Ліцэнзія",
+    "title": "Інфармацыя аб пашырэнні"
+  },
+
+  "cookie-clean": {
+    "title": "Ачыстка файлаў cookie",
+    "subtitle": "Магчыма, вам давядзецца зноў увайсці ў сістэму пасля ачысткі",
+    "success": "Ачыстка завершана",
+    "clean": "Чыста"
+  },
+
+  "tmdb": {
+    "backdrops": "Фоны",
+    "status": "Стан",
+    "original-title": "Арыгінальная назва",
+    "release-date": "Дата выпуску",
+    "genres": "Жанры",
+    "runtime": "Час выканання",
+    "languages": "Мовы"
+  }
+}
