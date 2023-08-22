@@ -1,3 +1,5 @@
+[简体中文](README.md) | [日本語](README-ja.md) | [沖縄](README-ryu.md)
+
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
 </p>
