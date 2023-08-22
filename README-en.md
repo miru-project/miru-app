@@ -21,13 +21,13 @@ Miru App
 
 ![screenshot](assets/screenshot/screenshot.webp)
 
-## Characteristic
+## Features
 
 - Support for `windows`,`android`
 - Friendly extension writing support, debug log
 - The extension uses the JavaScript language, and the development is simple
-- Support custom extension warehouse
-- The official extension warehouse provides video sources, which can be used without writing any extensions
+- Support for a custom extension repository
+- The official extension repository provides video sources, which can be used without writing any extensions
 - Support online viewing of multiple sources of videos, comics, and novels, realizing the unification of multiple platforms
 - Unify the design language of the system UI
 - Automatically fetch TMDB metadata information
@@ -35,15 +35,15 @@ Miru App
 ## Todo
 
 - [ ] BT torrent
-- [ ] better debugging tools
-- [ ] data synchronization
+- [ ] Better debugging tools
+- [ ] Data synchronization
 - [ ] Automatically search for subtitles
 
-## Install
+## Installing
 
 you can pass [Release](https://github.com/miru-project/miru-app/releases/latest) Download the latest version of the installation package from the page, or build it yourself by the following method 
 
-## Construct
+## Building
 
 ### Install Flutter
 
@@ -61,7 +61,7 @@ flutter pub get
 flutter run
 ```
 
-### Pack
+### Build for the right platform
 
 Android
 
@@ -80,7 +80,7 @@ flutter build windows
 At present, Linux cannot start quickjs due to dependency problems, so it is not supported for the time being
 
 
-## Contribute
+## Contribution
 
 Contributions of any kind are welcome, including but not limited to:
 
@@ -90,7 +90,7 @@ Contributions of any kind are welcome, including but not limited to:
 - document writing
 
 
-## Alternating current
+## Additional links
 
 Telegram: https://t.me/MiruChat
 
