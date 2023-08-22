@@ -41,7 +41,7 @@ Miru App
 
 ## Installing
 
-you can pass [Release](https://github.com/miru-project/miru-app/releases/latest) Download the latest version of the installation package from the page, or build it yourself by the following method 
+You can go to [Release](https://github.com/miru-project/miru-app/releases/latest) to download the latest version of the installation package from the page, or build it yourself by the following method 
 
 ## Building
 
