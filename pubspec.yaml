@@ -49,6 +49,8 @@ dependencies:
   cookie_jar: ^4.0.8
   flutter_inappwebview: ^5.7.2+3
   desktop_webview_window: ^0.2.1
+  http_parser: ^4.0.2
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:

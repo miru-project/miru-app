@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:html/parser.dart';
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
@@ -97,6 +98,41 @@ class ExtensionRuntime {
           extension.package, List<String>.from(args[0]));
     });
 
+    // css 选择器
+    runtime.onMessage('querySelector', (dynamic args) {
+      final content = args[0];
+      final selector = args[1];
+      final fun = args[2];
+
+      final doc = parse(content).querySelector(selector);
+
+      switch (fun) {
+        case 'text':
+          return doc?.text;
+        case 'outerHTML':
+          return doc?.outerHtml;
+        case 'innerHTML':
+          return doc?.innerHtml;
+        case 'removeScript':
+          doc?.querySelectorAll('script').forEach((element) {
+            element.remove();
+          });
+          return doc?.outerHtml ?? '';
+        default:
+          return doc?.outerHtml;
+      }
+    });
+
+    runtime.onMessage('querySelectorAll', (dynamic args) async {
+      final content = args[0];
+      final selector = args[1];
+      final doc = parse(content).querySelectorAll(selector);
+      final elements = jsonEncode(doc.map((e) {
+        return e.outerHtml;
+      }).toList());
+      return elements;
+    });
+
     // 初始化运行扩展
     await _initRunExtension(content);
     return this;
@@ -104,64 +140,114 @@ class ExtensionRuntime {
 
   _initRunExtension(String extScript) async {
     runtime.evaluate('''
-          // 重写 console.log
-          var window = global = globalThis;
-          console.log = function (message) {
-            if (typeof message === "object") {
-              message = JSON.stringify(message);
-            }
-            sendMessage("log", JSON.stringify([message.toString()]));
-          };
-          class Extension {
-            package = "${extension.package}";
-            name = "${extension.name}";
-            // 在 load 中注册的 keys
-            settingKeys = [];
-            async request(url, options) {
-              options = options || {};
-              options.headers = options.headers || {};
-              const miruUrl = options.headers["Miru-Url"] || "${extension.webSite}";
-              options.method = options.method || "get";
-              const res = await sendMessage("request", JSON.stringify([miruUrl+url, options]));
-              try {
-                return JSON.parse(res);
-              } catch (e) {
-                return res;
-              }
-            }
-            popular(page){
-              throw new Error("not implement popular");
-            }
-            latest(page) {
-              throw new Error("not implement latest");
-            }
-            search(kw, page, screening) {
-              throw new Error("not implement search");
-            }
-            detail(url) {
-              throw new Error("not implement detail");
-            }
-            watch(url) {
-              throw new Error("not implement watch");
-            }
-            checkUpdate(url) {
-              throw new Error("not implement checkUpdate");
-            }
-            async getSetting(key) {
-              return sendMessage("getSetting", JSON.stringify([key]));
-            }
-            async registerSetting(settings) {
-              console.log(JSON.stringify([settings]));
-              this.settingKeys.push(settings.key)
-              return sendMessage("registerSetting", JSON.stringify([settings]));
-            }
-            async load() {}
+        class Element {
+          constructor(content, selector) {
+            this.content = content;
+            this.selector = selector || "";
           }
 
-          async function stringify(callback){
-              const data = await callback();
-             return typeof data === "object" ? JSON.stringify(data) : data;
+          querySelector(selector) {
+            this.selector = selector;
           }
+
+          async excute(fun) {
+            return await sendMessage(
+              "querySelector",
+              JSON.stringify([this.content, this.selector, fun])
+            );
+          }
+
+          async removeScript() {
+            this.content = await this.excute("removeScript")
+            return this
+          }
+
+          get text() {
+            return this.excute("text");
+          }
+
+          outerHTML() {
+            return this.excute("outerHTML");
+          }
+
+          get innerHTML() {
+            return this.excute("innerHTML");
+          }
+        }
+        // 重写 console.log
+        var window = (global = globalThis);
+        console.log = function (message) {
+          if (typeof message === "object") {
+            message = JSON.stringify(message);
+          }
+          sendMessage("log", JSON.stringify([message.toString()]));
+        };
+        class Extension {
+          package = "${extension.package}";
+          name = "${extension.name}";
+          // 在 load 中注册的 keys
+          settingKeys = [];
+          async request(url, options) {
+            options = options || {};
+            options.headers = options.headers || {};
+            const miruUrl = options.headers["Miru-Url"] || "${extension.webSite}";
+            options.method = options.method || "get";
+            const res = await sendMessage(
+              "request",
+              JSON.stringify([miruUrl + url, options])
+            );
+            try {
+              return JSON.parse(res);
+            } catch (e) {
+              return res;
+            }
+          }
+          querySelector(content, selector) {
+            return new Element(content, selector);
+          }
+          async querySelectorAll(content, selector) {
+            let elements = [];
+            JSON.parse(
+              await sendMessage("querySelectorAll", JSON.stringify([content, selector]))
+            ).forEach((e) => {
+              elements.push(new Element(e));
+            });
+            return elements;
+          }
+          popular(page) {
+            throw new Error("not implement popular");
+          }
+          latest(page) {
+            throw new Error("not implement latest");
+          }
+          search(kw, page, screening) {
+            throw new Error("not implement search");
+          }
+          detail(url) {
+            throw new Error("not implement detail");
+          }
+          watch(url) {
+            throw new Error("not implement watch");
+          }
+          checkUpdate(url) {
+            throw new Error("not implement checkUpdate");
+          }
+          async getSetting(key) {
+            return sendMessage("getSetting", JSON.stringify([key]));
+          }
+          async registerSetting(settings) {
+            console.log(JSON.stringify([settings]));
+            this.settingKeys.push(settings.key);
+            return sendMessage("registerSetting", JSON.stringify([settings]));
+          }
+          async load() {}
+        }
+
+        async function stringify(callback) {
+          const data = await callback();
+          return typeof data === "object" ? JSON.stringify(data) : data;
+        }
+
     ''');
 
     final ext = extScript.replaceAll(
