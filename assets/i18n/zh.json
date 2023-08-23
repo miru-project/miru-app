@@ -1,5 +1,4 @@
 {
-
   "common": {
     "home": "首页",
     "search": "搜索",
@@ -31,7 +30,7 @@
     "continue-watching": "继续观看",
     "favorite": "收藏",
     "no-record": "暂无收藏和观看记录",
-    "watched":"看到 {ep}"
+    "watched": "看到 {ep}"
   },
 
   "search": {
