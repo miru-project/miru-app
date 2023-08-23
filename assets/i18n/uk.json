@@ -71,6 +71,8 @@
     "theme-system": "Системна",
     "theme-light": "Світла",
     "theme-dark": "Темна",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "Показувати NSFW контент",
     "language-subtitle": "Змінити мову додатка",
     "extension-log": "Вікно журналу розширень",
     "extension-log-subtitle": "Використовується для налагодження розширень",
