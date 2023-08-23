@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart';
 import 'dart:io';
 
@@ -39,6 +40,7 @@ class ExtensionRuntime {
     // 注册方法
     // 日志
     runtime.onMessage('log', (dynamic args) {
+      debugPrint(args[0]);
       ExtensionUtils.addLog(
         extension,
         ExtensionLogLevel.info,
@@ -113,14 +115,28 @@ class ExtensionRuntime {
           return doc?.outerHtml;
         case 'innerHTML':
           return doc?.innerHtml;
-        case 'removeScript':
-          doc?.querySelectorAll('script').forEach((element) {
-            element.remove();
-          });
-          return doc?.outerHtml ?? '';
         default:
           return doc?.outerHtml;
       }
+    });
+
+    runtime.onMessage('removeSelector', (dynamic args) {
+      final content = args[0];
+      final selector = args[1];
+      final doc = parse(content);
+      doc.querySelectorAll(selector).forEach((element) {
+        element.remove();
+      });
+      return doc.outerHtml;
+    });
+
+    // 获取标签属性
+    runtime.onMessage('getAttributeText', (args) {
+      final content = args[0];
+      final selector = args[1];
+      final attr = args[2];
+      final doc = parse(content).querySelector(selector);
+      return doc?.attributes[attr];
     });
 
     runtime.onMessage('querySelectorAll', (dynamic args) async {
@@ -146,8 +162,8 @@ class ExtensionRuntime {
             this.selector = selector || "";
           }
 
-          querySelector(selector) {
-            this.selector = selector;
+          async querySelector(selector) {
+            return new Element(await excute(), selector);
           }
 
           async excute(fun) {
@@ -157,16 +173,26 @@ class ExtensionRuntime {
             );
           }
 
-          async removeScript() {
-            this.content = await this.excute("removeScript")
-            return this
+          async removeSelector(selector) {
+            this.content = await sendMessage(
+              "removeSelector",
+              JSON.stringify([await this.outerHTML, selector])
+            );
+            return this;
+          }
+
+          async getAttributeText(attr) {
+            return await sendMessage(
+              "getAttributeText",
+              JSON.stringify([await this.outerHTML, this.selector, attr])
+            );
           }
 
           get text() {
             return this.excute("text");
           }
 
-          outerHTML() {
+          get outerHTML() {
             return this.excute("outerHTML");
           }
 
@@ -213,6 +239,12 @@ class ExtensionRuntime {
               elements.push(new Element(e));
             });
             return elements;
+          }
+          async getAttributeText(content, selector, attr) {
+            return await sendMessage(
+              "getAttributeText",
+              JSON.stringify([content, selector, attr])
+            );
           }
           popular(page) {
             throw new Error("not implement popular");
