@@ -114,6 +114,23 @@ class DatabaseUtils {
     return db.writeTxn(() => db.historys.putByIndex(r'package&url', history));
   }
 
+  // 删除历史
+  static Future<void> deleteHistoryByPackageAndUrl(
+      String package, String url) async {
+    return db.writeTxn(
+      () => db.historys
+          .filter()
+          .packageEqualTo(package)
+          .urlEqualTo(url)
+          .deleteAll(),
+    );
+  }
+
+  // 删除全部历史
+  static Future<void> deleteAllHistory() async {
+    return db.writeTxn(() => db.historys.where().deleteAll());
+  }
+
   // 扩展设置
   // 获取扩展设置
   static Future<List<ExtensionSetting>> getExtensionSettings(String package) {

@@ -31,13 +31,16 @@
     "retry": "Retry",
     "next": "Next",
     "previous": "Previous",
-    "show-all": "Show all"
+    "show-all": "Show all",
+    "delete": "Delete",
+    "delete-all": "Delete all"
   },
 
   "home": {
     "continue-watching": "Continue",
     "favorite": "Favorite",
-    "no-record": "No favorites or viewing records"
+    "no-record": "No favorites or viewing records",
+    "watched":"Watched {ep}"
   },
 
   "search": {
