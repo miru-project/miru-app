@@ -30,7 +30,7 @@
     "continue-watching": "Продолжить",
     "favorite": "Избранное",
     "no-record": "Нет избранного или просмотра записей",
-    "watched":"Просмотрен {ep}"
+    "watched": "Просмотрен {ep}"
   },
 
   "search": {
