@@ -28,16 +28,21 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
           // final width = maxWidth > 800 ? maxWidth / 2 : maxWidth;
           // final height = constraints.maxHeight;
           if (_c.error.value.isNotEmpty) {
-            return Column(
-              children: [
-                Text(_c.error.value),
-                PlatformButton(
-                  child: Text('common.retry'.i18n),
-                  onPressed: () {
-                    _c.getContent();
-                  },
-                )
-              ],
+            return SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(_c.error.value),
+                  const SizedBox(height: 20),
+                  PlatformButton(
+                    child: Text('common.retry'.i18n),
+                    onPressed: () {
+                      _c.getContent();
+                    },
+                  )
+                ],
+              ),
             );
           }
 
