@@ -21,13 +21,16 @@
     "retry": "Паўтарыць спробу",
     "next": "Наступнае",
     "previous": "Папярэдняе",
-    "show-all": "Паказаць усё"
+    "show-all": "Паказаць усё",
+    "delete": "Выдаліць",
+    "delete-all": "Выдаліць усё"
   },
 
   "home": {
     "continue-watching": "Працягнуць",
     "favorite": "Выбранае",
-    "no-record": "Няма выбранага або прагляду запісаў"
+    "no-record": "Няма выбранага або прагляду запісаў",
+    "watched": "Прагледжаны {ep}"
   },
 
   "search": {
@@ -71,6 +74,8 @@
     "theme-system": "Сістэмная",
     "theme-light": "Светлая",
     "theme-dark": "Цёмная",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "Паказваць NSFW кантэнт",
     "language-subtitle": "Змяніць мову праграмы",
     "extension-log": "Акно часопіса пашырэнняў",
     "extension-log-subtitle": "Выкарыстоўваецца для адладкі пашырэнняў",

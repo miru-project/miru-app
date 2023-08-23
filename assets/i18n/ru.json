@@ -21,13 +21,16 @@
     "retry": "Повторить попытку",
     "next": "Следующее",
     "previous": "Предыдущее",
-    "show-all": "Показать всё"
+    "show-all": "Показать всё",
+    "delete": "Удалить",
+    "delete-all": "Удалить всё"
   },
 
   "home": {
     "continue-watching": "Продолжить",
     "favorite": "Избранное",
-    "no-record": "Нет избранного или просмотра записей"
+    "no-record": "Нет избранного или просмотра записей",
+    "watched": "Просмотрен {ep}"
   },
 
   "search": {
@@ -71,6 +74,8 @@
     "theme-system": "Системная",
     "theme-light": "Светлая",
     "theme-dark": "Тёмная",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "Показывать NSFW контент",
     "language-subtitle": "Изменить язык приложения",
     "extension-log": "Окно журнала расширений",
     "extension-log-subtitle": "Используется для отладки расширений",
