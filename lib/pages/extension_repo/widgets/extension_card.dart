@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
@@ -14,11 +15,15 @@ class ExtensionCard extends StatefulWidget {
     required this.version,
     required this.icon,
     required this.package,
+    required this.nsfw,
+    required this.type,
   }) : super(key: key);
   final String? icon;
   final String name;
   final String version;
   final String package;
+  final ExtensionType type;
+  final bool nsfw;
 
   @override
   State<ExtensionCard> createState() => _ExtensionCardState();
@@ -75,8 +80,34 @@ class _ExtensionCardState extends State<ExtensionCard> {
         ),
       ),
       title: Text(widget.name),
-      subtitle: Text(
-        widget.version,
+      subtitle: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              widget.version,
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              ExtensionUtils.typeToString(widget.type),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          if (widget.nsfw)
+            const Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: Text(
+                '18+',
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+        ],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -164,7 +195,31 @@ class _ExtensionCardState extends State<ExtensionCard> {
               const Spacer(),
               Row(
                 children: [
-                  Text(widget.version, style: const TextStyle(fontSize: 12)),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Text(
+                      widget.version,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Text(
+                      ExtensionUtils.typeToString(widget.type),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                  if (widget.nsfw)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Text(
+                        '18+',
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
                   const Spacer(),
                   if (isLoading)
                     const SizedBox(

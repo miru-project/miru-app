@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:miru_app/widgets/messenger.dart';
 
 class ExtensionRepoPageController extends GetxController {
   final isLoading = false.obs;
@@ -33,6 +37,7 @@ class ExtensionRepoPageController extends GetxController {
   onRefresh() async {
     isLoading.value = true;
     isError.value = false;
+
     try {
       final dio = Dio();
       final res = await dio.get<String>(
@@ -43,6 +48,14 @@ class ExtensionRepoPageController extends GetxController {
       }
       extensionsTemp.clear();
       extensionsTemp.addAll(extensions);
+
+      if (Platform.isAndroid && extensions.isEmpty) {
+        // ignore: use_build_context_synchronously
+        showPlatformSnackbar(
+          context: cuurentContext,
+          content: 'extension-repo.empty'.i18n,
+        );
+      }
     } catch (e) {
       isError.value = true;
       debugPrint(e.toString());

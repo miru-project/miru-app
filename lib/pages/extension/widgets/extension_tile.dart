@@ -39,6 +39,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
       title: Text(widget.extension.name),
       subtitle: Text(
         '${widget.extension.version}  ${ExtensionUtils.typeToString(widget.extension.type)} ',
+        style: const TextStyle(fontSize: 12),
       ),
       onTap: () {
         Get.to(ExtensionSettingsPage(package: widget.extension.package));

@@ -1,6 +1,8 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
 import 'package:miru_app/pages/extension_repo/widgets/extension_card.dart';
 import 'package:miru_app/utils/i18n.dart';
@@ -52,20 +54,23 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
         ],
       ));
     }
-    if (c.extensions.isEmpty) {
-      return Center(child: Text('extension-repo.empty'.i18n));
-    }
+
+    final extensionCards = c.extensions
+        .map((e) => ExtensionCard(
+            key: ValueKey(e['package']),
+            name: e['name'],
+            icon: e['icon'],
+            version: e['version'],
+            package: e['package'],
+            nsfw: e['nsfw'] == 'true',
+            type: ExtensionType.values.firstWhere(
+              (element) => element.toString() == 'ExtensionType.${e['type']}',
+            )))
+        .toList();
+
     return PlatformBuildWidget(
       androidBuilder: (context) => ListView(
-        children: c.extensions
-            .map((e) => ExtensionCard(
-                  key: ValueKey(e['package']),
-                  name: e['name'],
-                  icon: e['icon'],
-                  version: e['version'],
-                  package: e['package'],
-                ))
-            .toList(),
+        children: extensionCards,
       ),
       desktopBuilder: (context) => LayoutBuilder(
         builder: (context, constraints) {
@@ -73,15 +78,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
             crossAxisCount: constraints.maxWidth ~/ 220,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            children: c.extensions
-                .map((e) => ExtensionCard(
-                      key: ValueKey(e['package']),
-                      name: e['name'],
-                      icon: e['icon'],
-                      version: e['version'],
-                      package: e['package'],
-                    ))
-                .toList(),
+            children: extensionCards,
           );
         },
       ),
@@ -89,7 +86,16 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
   }
 
   Widget _buildAndroid(BuildContext context) {
-    return Obx(() => _content());
+    return Obx(
+      () => EasyRefresh(
+        onRefresh: c.onRefresh,
+        header: const ClassicHeader(
+          showText: false,
+          showMessage: false,
+        ),
+        child: _content(),
+      ),
+    );
   }
 
   Widget _buildDesktop(BuildContext context) {
@@ -132,7 +138,15 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              Expanded(child: _content()),
+              Expanded(child: Obx(() {
+                if (c.isLoading.value) {
+                  return const Center(child: ProgressRing());
+                }
+                if (c.extensions.isEmpty) {
+                  return Center(child: Text('extension-repo.empty'.i18n));
+                }
+                return _content();
+              })),
             ],
           )),
     );
