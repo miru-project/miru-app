@@ -168,6 +168,21 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
         const SizedBox(height: 8),
+        SettingsSwitchTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.warning_amber_rounded),
+            desktopWidget: Icon(fluent.FluentIcons.warning, size: 24),
+          ),
+          title: 'settings.nsfw'.i18n,
+          buildSubtitle: () => "settings.nsfw-subtitle".i18n,
+          buildValue: () {
+            return MiruStorage.getSetting(SettingKey.enableNSFW);
+          },
+          onChanged: (value) {
+            MiruStorage.setSetting(SettingKey.enableNSFW, value);
+          },
+        ),
+        const SizedBox(height: 8),
         SettingsRadiosTile(
           icon: const PlatformWidget(
             androidWidget: Icon(Icons.color_lens),

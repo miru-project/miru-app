@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 
 class SearchPageController extends GetxController {
   Rx<ExtensionType?> cuurentExtensionType = Rx(null);
@@ -27,6 +28,9 @@ class SearchPageController extends GetxController {
     final exts = ExtensionUtils.runtimes.values.toList();
     if (type != null) {
       exts.removeWhere((element) => element.extension.type != type);
+    }
+    if (!MiruStorage.getSetting(SettingKey.enableNSFW)) {
+      exts.removeWhere((element) => element.extension.nsfw);
     }
     searchResultList.clear();
     for (var element in exts) {
