@@ -1,4 +1,14 @@
 {
+  "languages": {
+    "be": "Беларуская",
+    "en": "English",
+    "ja": "日本語",
+    "ru": "Русский",
+    "ryu": "うちなーぐち",
+    "uk": "Українська",
+    "zh": "中文"
+  },
+  
   "common": {
     "home": "Home",
     "search": "Search",
@@ -71,6 +81,8 @@
     "theme-system": "System",
     "theme-light": "Light",
     "theme-dark": "Dark",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "Show NSFW content",
     "language-subtitle": "Change the language of the software",
     "extension-log": "Extension Log Window",
     "extension-log-subtitle": "Used for debugging extensions",

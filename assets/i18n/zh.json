@@ -1,13 +1,4 @@
 {
-  "languages": {
-    "be": "Беларуская",
-    "en": "English",
-    "ja": "日本語",
-    "ru": "Русский",
-    "ryu": "うちなーぐち",
-    "uk": "Українська",
-    "zh": "中文"
-  },
 
   "common": {
     "home": "首页",
@@ -81,6 +72,8 @@
     "theme-system": "跟随系统",
     "theme-light": "浅色",
     "theme-dark": "深色",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "显示 NSFW 内容",
     "language-subtitle": "选择软件的语言",
     "extension-log": "扩展日志窗口",
     "extension-log-subtitle": "用于调试扩展",

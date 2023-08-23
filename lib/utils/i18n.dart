@@ -14,7 +14,7 @@ class I18nUtils {
   static final flutterI18nDelegate = FlutterI18nDelegate(
     translationLoader: FileTranslationLoader(
       useCountryCode: false,
-      fallbackFile: 'zh',
+      fallbackFile: 'en',
       basePath: 'assets/i18n',
       forcedLocale: Locale(MiruStorage.getSetting(SettingKey.language)),
       decodeStrategies: [JsonDecodeStrategy()],
