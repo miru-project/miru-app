@@ -40,7 +40,7 @@
     "continue-watching": "Continue",
     "favorite": "Favorite",
     "no-record": "No favorites or viewing records",
-    "watched":"Watched {ep}"
+    "watched": "Watched {ep}"
   },
 
   "search": {
@@ -93,7 +93,7 @@
     "official-site": "Official Website",
     "official-site-training": "Visit",
     "source-code": "Open Source",
-    "source-code-training": "Star",
+    "source-code-training": "Give Star",
     "license": "License",
     "license-subtitle": "License"
   },
