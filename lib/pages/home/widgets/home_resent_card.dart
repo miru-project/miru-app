@@ -1,14 +1,20 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/models/history.dart';
 import 'package:miru_app/pages/detail/view.dart';
+import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
+import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 class HomeRecentCard extends StatefulWidget {
@@ -25,7 +31,8 @@ class HomeRecentCard extends StatefulWidget {
 class _HomeRecentCardState extends State<HomeRecentCard> {
   late ExtensionRuntime? _runtime;
   String _update = "";
-
+  final contextController = fluent.FlyoutController();
+  final contextAttachKey = GlobalKey();
   // 主要颜色
   Color? primaryColor;
 
@@ -65,6 +72,19 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
     if (mounted) {
       setState(() {});
     }
+  }
+
+  _delete() async {
+    await DatabaseUtils.deleteHistoryByPackageAndUrl(
+      widget.history.package,
+      widget.history.url,
+    );
+    Get.find<HomePageController>().refreshHistory();
+  }
+
+  _delectAll() async {
+    await DatabaseUtils.deleteAllHistory();
+    Get.find<HomePageController>().refreshHistory();
   }
 
   Widget _bangumiCard() {
@@ -111,7 +131,13 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            "看到 ${widget.history.episodeTitle}",
+                            FlutterI18n.translate(
+                              context,
+                              "home.watched",
+                              translationParams: {
+                                "ep": widget.history.episodeTitle,
+                              },
+                            ),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -194,7 +220,13 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    "看到 ${widget.history.episodeTitle}",
+                    FlutterI18n.translate(
+                      context,
+                      "home.watched",
+                      translationParams: {
+                        "ep": widget.history.episodeTitle,
+                      },
+                    ),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -217,8 +249,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildWidget() {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: MouseRegion(
@@ -249,6 +280,94 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
               : _coverCard(),
         ),
       ),
+    );
+  }
+
+  Widget _buildAndroid(BuildContext context) {
+    return GestureDetector(
+      onLongPress: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Text('common.delete'.i18n),
+                  onTap: () {
+                    _delete();
+                    Get.back();
+                  },
+                ),
+                ListTile(
+                  title: Text('common.delete-all'.i18n),
+                  onTap: () {
+                    _delectAll();
+                    Get.back();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: _buildWidget(),
+    );
+  }
+
+  Widget _buildDesktop(BuildContext context) {
+    return GestureDetector(
+      onSecondaryTapUp: (d) {
+        final targetContext = contextAttachKey.currentContext;
+        if (targetContext == null) return;
+        final box = targetContext.findRenderObject() as RenderBox;
+        final position = box.localToGlobal(
+          d.localPosition,
+          ancestor: Navigator.of(context).context.findRenderObject(),
+        );
+        contextController.showFlyout(
+          barrierColor: Colors.black.withOpacity(0.1),
+          position: position,
+          builder: (context) {
+            return fluent.FlyoutContent(
+              child: SizedBox(
+                width: 200,
+                child: fluent.CommandBar(
+                  primaryItems: [
+                    fluent.CommandBarButton(
+                      label: Text('common.delete'.i18n),
+                      onPressed: () {
+                        _delete();
+                        router.pop();
+                      },
+                    ),
+                    fluent.CommandBarButton(
+                      label: Text('common.delete-all'.i18n),
+                      onPressed: () {
+                        _delectAll();
+                        router.pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: fluent.FlyoutTarget(
+        key: contextAttachKey,
+        controller: contextController,
+        child: _buildWidget(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformBuildWidget(
+      androidBuilder: _buildAndroid,
+      desktopBuilder: _buildDesktop,
     );
   }
 }

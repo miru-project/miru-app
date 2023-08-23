@@ -15,12 +15,16 @@ class HomePageController extends GetxController {
     super.onInit();
   }
 
-  onRefresh() async {
+  refreshHistory() async {
     resents.clear();
-    favorites.clear();
     resents.addAll(
       await DatabaseUtils.getHistorysByType(),
     );
+  }
+
+  onRefresh() async {
+    favorites.clear();
+    await refreshHistory();
     favorites.addAll({
       ExtensionType.bangumi: await DatabaseUtils.getFavoritesByType(
         type: ExtensionType.bangumi,

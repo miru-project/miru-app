@@ -22,13 +22,16 @@
     "retry": "重试",
     "next": "下一个",
     "previous": "上一个",
-    "show-all": "显示全部"
+    "show-all": "显示全部",
+    "delete": "删除",
+    "delete-all": "删除全部"
   },
 
   "home": {
     "continue-watching": "继续观看",
     "favorite": "收藏",
-    "no-record": "暂无收藏和观看记录"
+    "no-record": "暂无收藏和观看记录",
+    "watched":"看到 {ep}"
   },
 
   "search": {

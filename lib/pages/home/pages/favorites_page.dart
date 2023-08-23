@@ -120,7 +120,8 @@ class _FavoritesPageState extends fluent.State<FavoritesPage> {
 
                 return LayoutBuilder(
                   builder: ((context, constraints) => GridView.builder(
-                        padding: const EdgeInsets.all(8),
+                        padding:
+                            const EdgeInsets.only(right: 8, bottom: 8, top: 8),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: constraints.maxWidth ~/ 160,
                           childAspectRatio: 0.6,
