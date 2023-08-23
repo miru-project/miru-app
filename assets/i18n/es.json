@@ -1,0 +1,175 @@
+{
+  "common": {
+    "home": "Inicio",
+    "search": "Buscar",
+    "extension": "Extensiones",
+    "extension-repo": "Repositorio de extensiones",
+    "settings": "Ajustes",
+    "no-extension": "Sin extensiones instaladas",
+    "no-result": "Sin resultados relevantes",
+    "no-more-data": "No hay más datos",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "copied": "Copiado al portapapeles",
+    "uninstall": "Desinstalar",
+    "install": "Instalar",
+    "repo": "Repositorio",
+    "unset": "No establecido",
+    "extension-missing": "Falta la extensión {package}",
+    "error": "Error",
+    "retry": "Reintentar",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "show-all": "Mostrar todo",
+    "delete": "Borrar",
+    "delete-all": "Borrar todo"
+  },
+
+  "home": {
+    "continue-watching": "Continuar",
+    "favorite": "Favorito",
+    "no-record": "Sin favoritos ni registros de visualización",
+    "watched": "Visto {ep}"
+  },
+
+  "search": {
+    "hint-text": "¡Por favor, busca ampliamente!~",
+    "all": "Todo"
+  },
+
+  "extension": {
+    "import": {
+      "title": "Importar extensión",
+      "url-label": "URL de la extensión",
+      "tips": "Puedes importar extensiones mediante un enlace, o haciendo clic en el directorio de extensiones a continuación y colocar el archivo allí.",
+      "extension-dir": "Directorio de extensiones",
+      "import-by-url": "Importar por URL"
+    },
+    "error-dialog": "Mensaje de error",
+    "installed": "Instalado",
+    "edit-code": "Código de edición"
+  },
+
+  "extension-repo": {
+    "error": "¡Ha ocurrido un error!",
+    "error-tips": "Por favor, verifica tu conexión de red o la dirección del repositorio",
+    "empty": "El repositorio está vacío",
+    "upgrade": "Actualizar"
+  },
+
+  "settings": {
+    "repo-url": "URL del repositorio de la extensión",
+    "repo-url-subtitle": "Obtener el URL del repositorio para extensiones",
+    "tmdb-key": "Clave de la API de TMDB",
+    "tmdb-key-subtitle": "Obtener la clave de la API para los metadatos de TMDB",
+    "upgrade": "Actualizar aplicación",
+    "upgrade-subtitle": "versión: {version}",
+    "upgrade-training": "Comprobar",
+    "auto-check-update": "Buscar actualizaciones automáticamente",
+    "auto-check-update-subtitle": "Buscar actualizaciones cada vez que se abra la aplicación",
+    "language": "Idioma",
+    "theme": "Tema",
+    "theme-subtitle": "Cambia el tema de la aplicación",
+    "theme-system": "Sistema",
+    "theme-light": "Claro",
+    "theme-dark": "Oscuro",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "Mostrar contenido NSFW",
+    "language-subtitle": "Cambia el idioma de la aplicación",
+    "extension-log": "Ventana de registro de extensiones",
+    "extension-log-subtitle": "Usado para depurar extensiones",
+    "about": "Acerca de",
+    "official-site": "Sitio web oficial",
+    "official-site-training": "Visitar",
+    "source-code": "Código abierto",
+    "source-code-training": "Dar estrella",
+    "license": "Licencia",
+    "license-subtitle": "Licencia"
+  },
+
+  "detail": {
+    "favorite": "Favorito",
+    "favorited": "Favorito",
+    "continue-watching": "Continuar {episode}",
+    "total-episodes": "Total {total}",
+    "overview": "Descripción general",
+    "cast": "Reparto",
+    "additional-info": "Información adicional",
+    "get-lastest-data-error": "No se pudieron obtener los datos más recientes"
+  },
+
+  "video": {
+    "episodes": "Episodios",
+    "watch-now": "Ver ahora",
+    "no-episodes": "Sin episodios",
+    "play-complete": "Reproducción completa",
+    "resume-last-playback": "Reanudar la última reproducción",
+    "subtitle-none": "Sin subtítulos",
+    "subtitle": "Subtítulos",
+    "subtitle-change": "Cambiar subtítulos {title}",
+    "subtitle-file": "Archivo de subtítulos"
+  },
+
+  "comic-settings": {
+    "read-mode": "Modo de lectura",
+    "standard": "Estándar",
+    "right-to-left": "Derecha a izquierda",
+    "web-tonn": "Webtoon"
+  },
+
+  "novel-settings": {
+    "font-size": "Tamaño de la fuente"
+  },
+
+  "reader": {
+    "chapters": "Capítulos",
+    "read-now": "Leer ahora",
+    "no-chapters": "Sin capítulos"
+  },
+
+  "upgrade": {
+    "check-update": "Buscar actualizaciones",
+    "new-version": "Nueva versión {version} detectada",
+    "download": "Ir a actualizar",
+    "no-update": "Ya actualizado",
+    "not-now": "No ahora",
+    "error": "No se pudo verificar si hay actualizaciones, se produjo un error de red"
+  },
+
+  "extension-install-error": "No se pudo instalar la extensión",
+
+  "extension-type": {
+    "video": "Vídeo",
+    "novel": "Novela",
+    "comic": "Cómic"
+  },
+
+  "extension-info": {
+    "author": "Autor",
+    "description": "Descripción",
+    "version": "Versión",
+    "language": "Idioma",
+    "original-site": "Sitio oficial",
+    "other-infomation": "Otra información",
+    "license": "Licencia",
+    "title": "Información de la extensión"
+  },
+
+  "cookie-clean": {
+    "title": "Limpiar cookies",
+    "subtitle": "Es posible que tengas que iniciar sesión de nuevo después de la limpieza",
+    "success": "Limpiado con éxito",
+    "clean": "Limpiar"
+  },
+
+  "tmdb": {
+    "backdrops": "Bajo el telón",
+    "status": "Estado",
+    "original-title": "Título original",
+    "release-date": "Fecha de lanzamiento",
+    "genres": "Géneros",
+    "runtime": "Tiempo de ejecución",
+    "languages": "Idiomas"
+  }
+}
