@@ -107,10 +107,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       return [
                         for (final speed in speeds)
                           PopupMenuItem(
-                            child: Text(
-                              'x$speed',
-                              style: const TextStyle(color: Colors.white),
-                            ),
+                            child: Text('x$speed'),
                             onTap: () {
                               _c.speed.value = speed;
                             },
@@ -261,10 +258,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       return [
                         for (final speed in speeds)
                           PopupMenuItem(
-                            child: Text(
-                              'x$speed',
-                              style: const TextStyle(color: Colors.white),
-                            ),
+                            child: Text('x$speed'),
                             onTap: () {
                               _c.speed.value = speed;
                             },
