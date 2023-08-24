@@ -173,17 +173,13 @@ class _ExtensionPageState extends State<ExtensionPage> {
               if (c.errors.isNotEmpty)
                 IconButton(
                   icon: const Icon(Icons.error),
-                  onPressed: () {
-                    _loadErrorDialog();
-                  },
+                  onPressed: () => _loadErrorDialog(),
                 ),
+              IconButton(
+                onPressed: () => _importDialog(),
+                icon: const Icon(Icons.add),
+              )
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _importDialog();
-            },
-            child: const Icon(Icons.add),
           ),
           body: TabBarView(children: [
             ListView(
