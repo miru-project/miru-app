@@ -1,4 +1,5 @@
-- [简体中文](README.md) | [English](README-en.md) | [日本語](README-ja.md)
+[简体中文](README.md) | [English](README-en.md) | [日本語](README-ja.md) | [Русский](README-ru.md) | [Беларуская](README-be.md) | [Українська](README-uk.md)
+
 
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>

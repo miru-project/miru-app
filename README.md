@@ -1,4 +1,4 @@
-[English](README-en.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md)
+[English](README-en.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md) | [Русский](README-ru.md) | [Беларуская](README-be.md) | [Українська](README-uk.md)
 
 
 <p align="center">

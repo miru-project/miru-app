@@ -1,4 +1,4 @@
-[简体中文](README.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md)
+[简体中文](README.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md) | [Русский](README-ru.md) | [Беларуская](README-be.md) | [Українська](README-uk.md)
 
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
@@ -47,7 +47,7 @@ You can go to [Release](https://github.com/miru-project/miru-app/releases/latest
 
 ### Install Flutter
 
-参考 [Flutter Official Documentation](https://flutter.dev/docs/get-started/install)
+Please refer to the [Flutter Official Documentation](https://flutter.dev/docs/get-started/install).
 
 ### Install dependencies
 
