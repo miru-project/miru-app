@@ -151,115 +151,96 @@ class _ExtensionCardState extends State<ExtensionCard> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            SizedBox(
-              height: 120,
-              child: CacheNetWorkImage(
-                icon,
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
+    return fluent.Card(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
             ),
-            const Positioned.fill(child: fluent.Acrylic()),
-            Positioned.fill(
-              child: Center(
-                  child: Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: CacheNetWorkImage(
-                  icon,
-                  width: 64,
-                  height: 64,
-                  fit: BoxFit.contain,
-                  fallback: const Icon(fluent.FluentIcons.add_in, size: 32),
-                ),
-              )),
+            clipBehavior: Clip.antiAlias,
+            child: CacheNetWorkImage(
+              icon,
+              width: 64,
+              height: 64,
+              fit: BoxFit.contain,
+              fallback: const Icon(fluent.FluentIcons.add_in, size: 32),
             ),
-          ],
-        ),
-        Expanded(
-            child: Container(
-          color: fluent.FluentTheme.of(context).cardColor,
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          const SizedBox(height: 8),
+          Text(widget.name, style: const TextStyle(fontSize: 17)),
+          Row(
             children: [
-              Text(widget.name, style: const TextStyle(fontSize: 17)),
-              const Spacer(),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Text(
-                      widget.version,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Text(
-                      ExtensionUtils.typeToString(widget.type),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  if (widget.nsfw)
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Text(
-                        '18+',
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  const Spacer(),
-                  if (isLoading)
-                    const SizedBox(
-                      width: 25,
-                      height: 25,
-                      child: ProgressRing(),
-                    )
-                  else if (isInstall) ...[
-                    if (hasUpgrade)
-                      fluent.FilledButton(
-                        child: Text('extension-repo.upgrade'.i18n),
-                        onPressed: () async {
-                          await _install();
-                          setState(() {});
-                        },
-                      ),
-                    const SizedBox(width: 8),
-                    if (isInstall)
-                      fluent.FilledButton(
-                        child: Text('common.uninstall'.i18n),
-                        onPressed: () async {
-                          await ExtensionUtils.uninstall(widget.package);
-                          setState(() {
-                            isInstall = false;
-                          });
-                        },
-                      )
-                  ] else
-                    fluent.FilledButton(
-                      onPressed: () async {
-                        await _install();
-                      },
-                      child: Text('common.install'.i18n),
-                    )
-                ],
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(
+                  ExtensionUtils.typeToString(widget.type),
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
+              if (widget.nsfw)
+                const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: Text(
+                    '18+',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
             ],
           ),
-        ))
-      ],
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(
+                  widget.version,
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
+              const Spacer(),
+              if (isLoading)
+                const SizedBox(
+                  width: 25,
+                  height: 25,
+                  child: ProgressRing(),
+                )
+              else if (isInstall) ...[
+                if (hasUpgrade)
+                  fluent.FilledButton(
+                    child: Text('extension-repo.upgrade'.i18n),
+                    onPressed: () async {
+                      await _install();
+                      setState(() {});
+                    },
+                  ),
+                const SizedBox(width: 8),
+                if (isInstall)
+                  fluent.FilledButton(
+                    child: Text('common.uninstall'.i18n),
+                    onPressed: () async {
+                      await ExtensionUtils.uninstall(widget.package);
+                      setState(() {
+                        isInstall = false;
+                      });
+                    },
+                  )
+              ] else
+                fluent.FilledButton(
+                  onPressed: () async {
+                    await _install();
+                  },
+                  child: Text('common.install'.i18n),
+                )
+            ],
+          ),
+        ],
+      ),
     );
   }
 
