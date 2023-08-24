@@ -47,7 +47,7 @@ You can go to [Release](https://github.com/miru-project/miru-app/releases/latest
 
 ### Install Flutter
 
-参考 [Flutter Official Documentation](https://flutter.dev/docs/get-started/install)
+Please refer to the [Flutter Official Documentation](https://flutter.dev/docs/get-started/install).
 
 ### Install dependencies
 
