@@ -177,7 +177,7 @@ class VideoPlayerController extends GetxController {
       selectedSubtitle.value = -1;
       final playUrl = playList[index.value].url;
       final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
-      player.open(Media(watchData.url));
+      player.open(Media(watchData.url, httpHeaders: watchData.headers));
       subtitles.addAll(watchData.subtitles ?? []);
     } catch (e) {
       debugPrint(e.toString());

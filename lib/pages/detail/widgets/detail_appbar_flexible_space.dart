@@ -58,6 +58,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                       height: double.infinity,
                       fit: BoxFit.cover,
                       width: double.infinity,
+                      headers: c.detail?.headers,
                     ),
             ),
             Positioned.fill(
@@ -94,6 +95,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                             : CacheNetWorkImage(
                                 c.data.value!.cover,
                                 fit: BoxFit.cover,
+                                headers: c.detail?.headers,
                               ),
                       ),
                     ),

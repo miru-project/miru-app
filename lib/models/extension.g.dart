@@ -48,6 +48,9 @@ ExtensionListItem _$ExtensionListItemFromJson(Map<String, dynamic> json) =>
       url: json['url'] as String,
       cover: json['cover'] as String,
       update: json['update'] as String?,
+      headers: (json['headers'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$ExtensionListItemToJson(ExtensionListItem instance) =>
@@ -56,6 +59,7 @@ Map<String, dynamic> _$ExtensionListItemToJson(ExtensionListItem instance) =>
       'url': instance.url,
       'cover': instance.cover,
       'update': instance.update,
+      'headers': instance.headers,
     };
 
 ExtensionDetail _$ExtensionDetailFromJson(Map<String, dynamic> json) =>
@@ -67,6 +71,9 @@ ExtensionDetail _$ExtensionDetailFromJson(Map<String, dynamic> json) =>
           ?.map(
               (e) => ExtensionEpisodeGroup.fromJson(e as Map<String, dynamic>))
           .toList(),
+      headers: (json['headers'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$ExtensionDetailToJson(ExtensionDetail instance) =>
@@ -75,6 +82,7 @@ Map<String, dynamic> _$ExtensionDetailToJson(ExtensionDetail instance) =>
       'cover': instance.cover,
       'desc': instance.desc,
       'episodes': instance.episodes,
+      'headers': instance.headers,
     };
 
 ExtensionEpisodeGroup _$ExtensionEpisodeGroupFromJson(
@@ -114,6 +122,9 @@ ExtensionBangumiWatch _$ExtensionBangumiWatchFromJson(
           ?.map((e) =>
               ExtensionBangumiWatchSubtitle.fromJson(e as Map<String, dynamic>))
           .toList(),
+      headers: (json['headers'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$ExtensionBangumiWatchToJson(
@@ -122,6 +133,7 @@ Map<String, dynamic> _$ExtensionBangumiWatchToJson(
       'type': _$ExtensionWatchBangumiTypeEnumMap[instance.type]!,
       'url': instance.url,
       'subtitles': instance.subtitles,
+      'headers': instance.headers,
     };
 
 const _$ExtensionWatchBangumiTypeEnumMap = {
@@ -148,12 +160,16 @@ Map<String, dynamic> _$ExtensionBangumiWatchSubtitleToJson(
 ExtensionMangaWatch _$ExtensionMangaWatchFromJson(Map<String, dynamic> json) =>
     ExtensionMangaWatch(
       urls: (json['urls'] as List<dynamic>).map((e) => e as String).toList(),
+      headers: (json['headers'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$ExtensionMangaWatchToJson(
         ExtensionMangaWatch instance) =>
     <String, dynamic>{
       'urls': instance.urls,
+      'headers': instance.headers,
     };
 
 ExtensionFikushonWatch _$ExtensionFikushonWatchFromJson(

@@ -10,12 +10,14 @@ class CacheNetWorkImage extends StatelessWidget {
     this.width,
     this.height,
     this.fallback,
+    this.headers,
   }) : super(key: key);
   final String url;
   final BoxFit fit;
   final double? width;
   final double? height;
   final Widget? fallback;
+  final Map<String, String>? headers;
 
   _errorBuild() {
     if (fallback != null) {
@@ -28,6 +30,7 @@ class CacheNetWorkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: url,
+      httpHeaders: headers,
       fit: fit,
       width: width,
       height: height,

@@ -17,6 +17,7 @@ class ExtensionRuntime {
   late Extension extension;
   late PersistCookieJar _cookieJar;
   final _dio = Dio();
+  String _cuurentRequestUrl = '';
 
   initRuntime(Extension ext) async {
     extension = ext;
@@ -54,6 +55,7 @@ class ExtensionRuntime {
         ExtensionLogLevel.info,
         "GET: ${args[0]} , ${args[1]}",
       );
+      _cuurentRequestUrl = args[0];
       return (await _dio.get<String>(args[0],
               options: Options(
                 headers: args[1]['headers'] ?? {},
@@ -388,9 +390,16 @@ class ExtensionRuntime {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync('stringify(()=>extenstion.latest($page))'),
       );
-      return jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
+      List<ExtensionListItem> result =
+          jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
         return ExtensionListItem.fromJson(e);
       }).toList();
+      for (var element in result) {
+        element.headers ??= {
+          "Referer": _cuurentRequestUrl,
+        };
+      }
+      return result;
     });
   }
 
@@ -400,9 +409,16 @@ class ExtensionRuntime {
         await runtime
             .evaluateAsync('stringify(()=>extenstion.search("$kw",$page))'),
       );
-      return jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
+      List<ExtensionListItem> result =
+          jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
         return ExtensionListItem.fromJson(e);
       }).toList();
+      for (var element in result) {
+        element.headers ??= {
+          "Referer": _cuurentRequestUrl,
+        };
+      }
+      return result;
     });
   }
 
@@ -411,7 +427,12 @@ class ExtensionRuntime {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync('stringify(()=>extenstion.detail("$url"))'),
       );
-      return ExtensionDetail.fromJson(jsonDecode(jsResult.stringResult));
+      final result =
+          ExtensionDetail.fromJson(jsonDecode(jsResult.stringResult));
+      result.headers ??= {
+        "Referer": _cuurentRequestUrl,
+      };
+      return result;
     });
   }
 
@@ -424,9 +445,17 @@ class ExtensionRuntime {
 
       switch (extension.type) {
         case ExtensionType.bangumi:
-          return ExtensionBangumiWatch.fromJson(data);
+          final result = ExtensionBangumiWatch.fromJson(data);
+          result.headers ??= {
+            "Referer": _cuurentRequestUrl,
+          };
+          return result;
         case ExtensionType.manga:
-          return ExtensionMangaWatch.fromJson(data);
+          final result = ExtensionMangaWatch.fromJson(data);
+          result.headers ??= {
+            "Referer": _cuurentRequestUrl,
+          };
+          return result;
         default:
           return ExtensionFikushonWatch.fromJson(data);
       }

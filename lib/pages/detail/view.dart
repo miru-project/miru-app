@@ -145,6 +145,7 @@ class _DetailPageState extends State<DetailPage> {
                                 url,
                                 width: 50,
                                 height: 50,
+                                headers: c.detail?.headers,
                               ),
                             ),
                             title: Text(cast.name),
@@ -202,6 +203,7 @@ class _DetailPageState extends State<DetailPage> {
               c.backgorund,
               width: double.infinity,
               height: double.infinity,
+              headers: c.detail?.headers,
             ),
           ).blur(
             begin: const Offset(10, 10),
@@ -237,6 +239,7 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                                 child: CacheNetWorkImage(
                                   c.detail?.cover ?? '',
+                                  headers: c.detail?.headers,
                                 ),
                               ),
                             ),

@@ -104,6 +104,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                   return CacheNetWorkImage(
                     url,
                     fit: BoxFit.fitWidth,
+                    headers: _c.watchData.value?.headers,
                   );
                 },
                 itemCount: images.length,
@@ -126,6 +127,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                     url,
                     key: ValueKey(url),
                     fit: BoxFit.contain,
+                    headers: _c.watchData.value?.headers,
                   ),
                 );
               },

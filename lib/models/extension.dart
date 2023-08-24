@@ -55,12 +55,14 @@ class ExtensionListItem {
     required this.url,
     required this.cover,
     this.update,
+    this.headers,
   });
 
   final String title;
   final String url;
   final String cover;
   final String? update;
+  late Map<String, String>? headers;
 
   factory ExtensionListItem.fromJson(Map<String, dynamic> json) =>
       _$ExtensionListItemFromJson(json);
@@ -77,12 +79,14 @@ class ExtensionDetail {
     required this.cover,
     this.desc,
     this.episodes,
+    this.headers,
   });
 
   final String title;
   final String cover;
   final String? desc;
   final List<ExtensionEpisodeGroup>? episodes;
+  late Map<String, String>? headers;
 
   factory ExtensionDetail.fromJson(Map<String, dynamic> json) =>
       _$ExtensionDetailFromJson(json);
@@ -126,10 +130,12 @@ class ExtensionBangumiWatch {
     required this.type,
     required this.url,
     this.subtitles,
+    this.headers,
   });
   final ExtensionWatchBangumiType type;
   final String url;
   final List<ExtensionBangumiWatchSubtitle>? subtitles;
+  late Map<String, String>? headers;
 
   factory ExtensionBangumiWatch.fromJson(Map<String, dynamic> json) =>
       _$ExtensionBangumiWatchFromJson(json);
@@ -156,10 +162,13 @@ class ExtensionBangumiWatchSubtitle {
 
 @JsonSerializable()
 class ExtensionMangaWatch {
-  final List<String> urls;
   ExtensionMangaWatch({
     required this.urls,
+    this.headers,
   });
+
+  final List<String> urls;
+  late Map<String, String>? headers;
 
   factory ExtensionMangaWatch.fromJson(Map<String, dynamic> json) =>
       _$ExtensionMangaWatchFromJson(json);
