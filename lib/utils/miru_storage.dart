@@ -35,6 +35,7 @@ class MiruStorage {
     await _initSetting(SettingKey.novelFontSize, 18.0);
     await _initSetting(SettingKey.theme, 'system');
     await _initSetting(SettingKey.enableNSFW, false);
+    await _initSetting(SettingKey.videoPlayer, 'built-in');
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -60,4 +61,5 @@ class SettingKey {
   static String language = 'Language';
   static String novelFontSize = 'NovelFontSize';
   static String enableNSFW = 'EnableNSFW';
+  static String videoPlayer = 'VideoPlayer';
 }

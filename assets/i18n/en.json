@@ -9,7 +9,7 @@
     "uk": "Українська",
     "zh": "中文"
   },
-  
+
   "common": {
     "home": "Home",
     "search": "Search",
@@ -87,6 +87,9 @@
     "theme-dark": "Dark",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Show NSFW content",
+    "external-player": "Preferred video player",
+    "external-player-subtitle": "Currently, the preferred player is {player}",
+    "external-player-builtin": "Built-in",
     "language-subtitle": "Change the language of the software",
     "extension-log": "Extension Log Window",
     "extension-log-subtitle": "Used for debugging extensions",
@@ -98,6 +101,8 @@
     "license": "License",
     "license-subtitle": "License"
   },
+
+  "external-player-launching": "Launching {player}",
 
   "detail": {
     "favorite": "Favorite",
