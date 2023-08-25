@@ -9,6 +9,7 @@ class TMDB {
   @Index(unique: true)
   late int tmdbID;
   late String data;
+  late String mediaType;
 }
 
 @JsonSerializable()

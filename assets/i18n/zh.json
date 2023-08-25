@@ -101,7 +101,10 @@
     "overview": "概览",
     "cast": "演员",
     "additional-info": "附加信息",
-    "get-lastest-data-error": "获取最新数据失败"
+    "get-lastest-data-error": "获取最新数据失败",
+    "modify-tmdb-binding": "修改 TMDB 绑定",
+    "no-tmdb-data": "未匹配到 TMDB 数据，请自行绑定数据",
+    "tmdb-key-missing": "TMDB API Key 丢失，请前往设置填写"
   },
 
   "video": {

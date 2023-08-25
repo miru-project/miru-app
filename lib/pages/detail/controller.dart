@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -9,6 +10,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/index.dart';
+import 'package:miru_app/pages/detail/pages/tmdb_binding.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/watch/view.dart';
@@ -49,6 +51,7 @@ class DetailPageController extends GetxController {
 
   ExtensionDetail? get detail => data.value;
   set detail(ExtensionDetail? value) => data.value = value;
+
   TMDBDetail? get tmdbDetail => tmdb.value;
   set tmdbDetail(TMDBDetail? value) => tmdb.value = value;
 
@@ -62,8 +65,11 @@ class DetailPageController extends GetxController {
     return bg;
   }
 
-  int _tmdbID = -1;
   MiruDetail? _miruDetail;
+
+  int _tmdbID = -1;
+
+  final _flyoutController = fluent.FlyoutController();
 
   @override
   void onInit() {
@@ -90,6 +96,35 @@ class DetailPageController extends GetxController {
             })
             ..launch(extension!.webSite + url);
         },
+      ),
+      fluent.FlyoutTarget(
+        controller: _flyoutController,
+        child: fluent.IconButton(
+          icon: const Icon(fluent.FluentIcons.more),
+          onPressed: () {
+            _flyoutController.showFlyout(builder: (context) {
+              return SizedBox(
+                width: 300,
+                child: Card(
+                    child: fluent.Column(
+                  mainAxisSize: fluent.MainAxisSize.min,
+                  children: [
+                    if (detail != null)
+                      fluent.ListTile(
+                        title: Text(
+                          'detail.modify-tmdb-binding'.i18n,
+                        ),
+                        onPressed: () {
+                          router.pop();
+                          modifyTMDBBinding();
+                        },
+                      )
+                  ],
+                )),
+              );
+            });
+          },
+        ),
       )
     ]);
     super.onInit();
@@ -107,6 +142,38 @@ class DetailPageController extends GetxController {
       isLoading.value = false;
     } catch (e) {
       error.value = e.toString();
+      rethrow;
+    }
+  }
+
+  // 修改 tmdb 绑定
+  modifyTMDBBinding() async {
+    // 判断是否有 key
+    if (MiruStorage.getSetting(SettingKey.tmdbKay) == "") {
+      showPlatformSnackbar(
+        context: cuurentContext,
+        content: 'detail.tmdb-key-missing'.i18n,
+        severity: fluent.InfoBarSeverity.error,
+      );
+      return;
+    }
+
+    dynamic data;
+    if (Platform.isAndroid) {
+      data = await Get.to(TMDBBinding(
+        title: detail!.title,
+      ));
+    } else {
+      data = await fluent.showDialog(
+        context: cuurentContext,
+        builder: (context) => TMDBBinding(title: detail!.title),
+      );
+    }
+    if (data != null) {
+      await getRemoteTMDBDetail(
+        id: data['id'],
+        mediaType: data['media_type'],
+      );
     }
   }
 
@@ -160,25 +227,36 @@ class DetailPageController extends GetxController {
     if (detail == null) {
       return;
     }
-    getRemoteTMDBDetail();
-  }
-
-  getRemoteTMDBDetail() async {
-    tmdbDetail = await TmdbApi.getDetail(detail!.title);
     if (tmdbDetail == null) {
+      getRemoteTMDBDetail();
       return;
     }
-    _tmdbID = tmdbDetail!.id;
-    DatabaseUtils.putTMDBDetail(
+    getRemoteTMDBDetail(id: tmdbDetail!.id, mediaType: tmdbDetail!.mediaType);
+  }
+
+  getRemoteTMDBDetail({int? id, String? mediaType}) async {
+    if (id != null && mediaType != null) {
+      tmdbDetail = await TmdbApi.getDetail(id, mediaType);
+      if (tmdbDetail == null) {
+        return;
+      }
+    } else {
+      tmdbDetail = await TmdbApi.getDetailBySearch(detail!.title);
+      if (tmdbDetail == null) {
+        return;
+      }
+    }
+    _tmdbID = await DatabaseUtils.putTMDBDetail(
       tmdbDetail!.id,
       tmdbDetail!,
+      tmdbDetail!.mediaType,
     );
     // 更新 id
     await DatabaseUtils.putMiruDetail(
       package,
       url,
       detail!,
-      tmdbID: tmdbDetail!.id,
+      tmdbID: _tmdbID,
     );
   }
 

@@ -30,6 +30,7 @@ class _SearchAllExtSearchState extends State<SearchAllExtSearch> {
     if (widget.runtimeList.isEmpty) {
       return SizedBox(
         height: 300,
+        width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

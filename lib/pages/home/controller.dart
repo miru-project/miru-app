@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
-import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/models/favorite.dart';
-import 'package:miru_app/models/history.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/database.dart';
 
 class HomePageController extends GetxController {

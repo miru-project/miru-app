@@ -8,9 +8,11 @@ class TmdbApi {
     defaultLanguage: MiruStorage.getSetting(SettingKey.language),
   );
 
-  static Future<tmdb_model.TMDBDetail?> getDetail(String keyword,
-      {int page = 1}) async {
-    final result = await tmdb.v3.search.queryMulti(
+  static Future<tmdb_model.TMDBDetail?> getDetailBySearch(
+    String keyword, {
+    int page = 1,
+  }) async {
+    final result = await search(
       keyword,
       page: page,
     );
@@ -19,20 +21,28 @@ class TmdbApi {
     if (results.isEmpty) {
       return null;
     }
+    return getDetail(
+      results.first["id"],
+      results.first["media_type"],
+    );
+  }
+
+  static Future<tmdb_model.TMDBDetail> getDetail(
+    int id,
+    String mediaType,
+  ) async {
     late Map data;
-    final mediaType = results[0]["media_type"];
     if (mediaType == "movie") {
       data = await tmdb.v3.movies.getDetails(
-        results[0]["id"],
+        id,
         appendToResponse: "credits,images",
       );
     } else {
       data = await tmdb.v3.tv.getDetails(
-        results[0]["id"],
+        id,
         appendToResponse: "credits,images",
       );
     }
-
     return tmdb_model.TMDBDetail(
       id: data["id"],
       mediaType: mediaType,
@@ -69,7 +79,7 @@ class TmdbApi {
     );
   }
 
-  static String? getImageUrl(String path) {
-    return tmdb.images.getUrl(path);
+  static String? getImageUrl(String path, {size = ImageSizes.ORIGINAL}) {
+    return tmdb.images.getUrl(path, size: size);
   }
 }
