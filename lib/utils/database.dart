@@ -277,19 +277,21 @@ class DatabaseUtils {
   static Future<Id> putTMDBDetail(
     int tmdbID,
     TMDBDetail tmdbDetail,
+    String mediaType,
   ) {
     return db.writeTxn(
       () => db.tMDBs.putByTmdbID(
         TMDB()
           ..data = jsonEncode(tmdbDetail.toJson())
-          ..tmdbID = tmdbID,
+          ..tmdbID = tmdbID
+          ..mediaType = mediaType,
       ),
     );
   }
 
   // 获取 TMDB 数据
   static Future<TMDBDetail?> getTMDBDetail(int tmdbID) async {
-    final tmdb = await db.tMDBs.filter().tmdbIDEqualTo(tmdbID).findFirst();
+    final tmdb = await db.tMDBs.filter().idEqualTo(tmdbID).findFirst();
     if (tmdb == null) {
       return null;
     }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
+import 'package:miru_app/pages/detail/pages/tmdb_binding.dart';
 import 'package:miru_app/pages/detail/pages/webview.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_flexible_space.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_title.dart';
@@ -109,6 +110,25 @@ class _DetailPageState extends State<DetailPage> {
                         );
                       },
                       icon: const Icon(Icons.public),
+                    ),
+                    PopupMenuButton(
+                      icon: const Icon(Icons.more_vert),
+                      itemBuilder: (context) {
+                        return [
+                          if (c.detail != null)
+                            PopupMenuItem(
+                              child: ListTile(
+                                title: Text(
+                                  'detail.modify-tmdb-binding'.i18n,
+                                ),
+                                onTap: () {
+                                  Get.back();
+                                  c.modifyTMDBBinding();
+                                },
+                              ),
+                            )
+                        ];
+                      },
                     )
                   ],
                   expandedHeight: 400,
@@ -124,7 +144,21 @@ class _DetailPageState extends State<DetailPage> {
                   if (c.type == ExtensionType.bangumi)
                     Obx(() {
                       if (c.tmdbDetail == null || c.tmdbDetail!.casts.isEmpty) {
-                        return const SizedBox();
+                        return Column(
+                          children: [
+                            const SizedBox(height: 100),
+                            Text('detail.no-tmdb-data'.i18n),
+                            const SizedBox(height: 8),
+                            FilledButton(
+                              onPressed: () {
+                                c.modifyTMDBBinding();
+                              },
+                              child: Text(
+                                'detail.modify-tmdb-binding'.i18n,
+                              ),
+                            )
+                          ],
+                        );
                       }
                       return ListView.builder(
                         padding: const EdgeInsets.all(0),

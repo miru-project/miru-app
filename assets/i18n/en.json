@@ -9,7 +9,7 @@
     "uk": "Українська",
     "zh": "中文"
   },
-  
+
   "common": {
     "home": "Home",
     "search": "Search",
@@ -107,7 +107,10 @@
     "overview": "Overview",
     "cast": "Cast",
     "additional-info": "Additional Info",
-    "get-lastest-data-error": "Failed to get latest data"
+    "get-lastest-data-error": "Failed to get latest data",
+    "modify-tmdb-binding": "Modify TMDB Binding",
+    "no-tmdb-data": "No TMDB data matched, please bind the data yourself",
+    "tmdb-key-missing": "TMDB API Key missing, please fill in the settings"
   },
 
   "video": {
