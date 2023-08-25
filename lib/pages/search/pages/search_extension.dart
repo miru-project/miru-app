@@ -33,7 +33,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
   late String _keyWord = widget.keyWord ?? '';
   final List<ExtensionListItem> _data = [];
   int _page = 1;
-  bool _isLoding = true;
+  bool _isLoading = true;
   final EasyRefreshController _easyRefreshController = EasyRefreshController();
 
   Future<void> _onRefresh() async {
@@ -46,7 +46,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
 
   Future<void> _onLoad() async {
     try {
-      _isLoding = true;
+      _isLoading = true;
       setState(() {});
       late List<ExtensionListItem> data;
       if (_keyWord.isEmpty) {
@@ -71,7 +71,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
         severity: fluent.InfoBarSeverity.error,
       );
     } finally {
-      _isLoding = false;
+      _isLoading = false;
       if (mounted) {
         setState(() {});
       }
@@ -133,7 +133,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (_isLoding)
+        if (_isLoading)
           const SizedBox(
             height: 4,
             width: double.infinity,
