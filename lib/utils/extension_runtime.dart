@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:xpath_selector_html_parser/xpath_selector_html_parser.dart';
 import 'dart:io';
@@ -53,14 +54,18 @@ class ExtensionRuntime {
       ExtensionUtils.addLog(
         extension,
         ExtensionLogLevel.info,
-        "GET: ${args[0]} , ${args[1]}",
+        "Request: ${args[0]} , ${args[1]}",
       );
       _cuurentRequestUrl = args[0];
-      return (await _dio.get<String>(args[0],
-              options: Options(
-                headers: args[1]['headers'] ?? {},
-                method: args[1]['method'] ?? 'get',
-              )))
+      return (await _dio.request<String>(
+        args[0],
+        data: args[1]['data'],
+        queryParameters: args[1]['queryParameters'] ?? {},
+        options: Options(
+          headers: args[1]['headers'] ?? {},
+          method: args[1]['method'] ?? 'get',
+        ),
+      ))
           .data;
     });
 
@@ -138,6 +143,12 @@ class ExtensionRuntime {
           return jsonEncode(result.attrs);
         case 'text':
           return result.node?.text;
+        case 'allHTML':
+          return result.nodes
+              .map((e) => (e.node as Element).outerHtml)
+              .toList();
+        case 'outerHTML':
+          return (result.node?.node as Element).outerHtml;
         default:
           return result.node?.text;
       }
@@ -247,6 +258,14 @@ class ExtensionRuntime {
 
             get text() {
               return this.excute("text");
+            }
+            
+            get allHTML() {
+              return this.excute("allHTML");
+            }
+
+            get outerHTML() {
+              return this.excute("outerHTML");
             }
           }
 
