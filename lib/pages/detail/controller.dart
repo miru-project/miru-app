@@ -324,44 +324,46 @@ class DetailPageController extends GetxController {
       return;
     }
 
-    final player = MiruStorage.getSetting(SettingKey.videoPlayer);
+    if (type == ExtensionType.bangumi) {
+      final player = MiruStorage.getSetting(SettingKey.videoPlayer);
 
-    if (player != 'built-in') {
-      showPlatformSnackbar(
-        context: cuurentContext,
-        content: FlutterI18n.translate(
-          cuurentContext,
-          'external-player-launching',
-          translationParams: {
-            'player': player,
-          },
-        ),
-      );
-      late ExtensionBangumiWatch watchData;
-      try {
-        watchData = await runtime.value!.watch(urls[index].url)
-            as ExtensionBangumiWatch;
-      } catch (e) {
+      if (player != 'built-in') {
         showPlatformSnackbar(
           context: cuurentContext,
-          content: e.toString().split('\n')[0],
-          severity: fluent.InfoBarSeverity.error,
+          content: FlutterI18n.translate(
+            cuurentContext,
+            'external-player-launching',
+            translationParams: {
+              'player': player,
+            },
+          ),
         );
-        return;
-      }
-      try {
-        if (GetPlatform.isMobile) {
-          await launchMobileExternalPlayer(watchData.url, player);
+        late ExtensionBangumiWatch watchData;
+        try {
+          watchData = await runtime.value!.watch(urls[index].url)
+              as ExtensionBangumiWatch;
+        } catch (e) {
+          showPlatformSnackbar(
+            context: cuurentContext,
+            content: e.toString().split('\n')[0],
+            severity: fluent.InfoBarSeverity.error,
+          );
           return;
         }
-        await launchDesktopExternalPlayer(watchData.url, player);
-        return;
-      } catch (e) {
-        showPlatformSnackbar(
-          context: cuurentContext,
-          content: e.toString().split('\n')[0],
-          severity: fluent.InfoBarSeverity.error,
-        );
+        try {
+          if (GetPlatform.isMobile) {
+            await launchMobileExternalPlayer(watchData.url, player);
+            return;
+          }
+          await launchDesktopExternalPlayer(watchData.url, player);
+          return;
+        } catch (e) {
+          showPlatformSnackbar(
+            context: cuurentContext,
+            content: e.toString().split('\n')[0],
+            severity: fluent.InfoBarSeverity.error,
+          );
+        }
       }
     }
 

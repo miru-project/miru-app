@@ -91,7 +91,7 @@
     "license-subtitle": "许可证"
   },
 
-  "external-video-launching": "正在启动 {player}",
+  "external-player-launching": "正在启动 {player}",
 
   "detail": {
     "favorite": "收藏",

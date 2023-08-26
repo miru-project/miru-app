@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
-import 'package:miru_app/pages/detail/pages/tmdb_binding.dart';
 import 'package:miru_app/pages/detail/pages/webview.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_flexible_space.dart';
 import 'package:miru_app/pages/detail/widgets/detail_appbar_title.dart';
