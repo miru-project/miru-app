@@ -49,6 +49,28 @@ class Extension {
 }
 
 @JsonSerializable()
+class ExtensionFilter {
+  ExtensionFilter({
+    required this.title,
+    required this.min,
+    required this.max,
+    required this.defaultOption,
+    required this.options,
+  });
+  final String title;
+  final int min;
+  final int max;
+  @JsonKey(name: "default")
+  final String defaultOption;
+  final Map<String, String> options;
+
+  factory ExtensionFilter.fromJson(Map<String, dynamic> json) =>
+      _$ExtensionFilterFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExtensionFilterToJson(this);
+}
+
+@JsonSerializable()
 class ExtensionListItem {
   ExtensionListItem({
     required this.title,

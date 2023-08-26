@@ -46,7 +46,8 @@
 
   "search": {
     "hint-text": "Please use search wisely!~",
-    "all": "All"
+    "all": "All",
+    "filter": "Filter"
   },
 
   "extension": {

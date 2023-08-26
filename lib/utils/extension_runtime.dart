@@ -305,8 +305,11 @@ class ExtensionRuntime {
             latest(page) {
               throw new Error("not implement latest");
             }
-            search(kw, page, screening) {
+            search(kw, page, filter) {
               throw new Error("not implement search");
+            }
+            createFilter(filter){
+              throw new Error("not implement createFilter");
             }
             detail(url) {
               throw new Error("not implement detail");
@@ -403,11 +406,15 @@ class ExtensionRuntime {
     });
   }
 
-  Future<List<ExtensionListItem>> search(String kw, int page) async {
+  Future<List<ExtensionListItem>> search(
+    String kw,
+    int page, {
+    Map<String, List<String>>? filter,
+  }) async {
     return _runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime
-            .evaluateAsync('stringify(()=>extenstion.search("$kw",$page))'),
+        await runtime.evaluateAsync(
+            'stringify(()=>extenstion.search("$kw",$page,${filter == null ? null : jsonEncode(filter)}))'),
       );
       List<ExtensionListItem> result =
           jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
@@ -419,6 +426,30 @@ class ExtensionRuntime {
         };
       }
       return result;
+    });
+  }
+
+  Future<Map<String, ExtensionFilter>> createFilter({
+    Map<String, List<String>>? filter,
+  }) async {
+    late String eval;
+    if (filter == null) {
+      eval = 'stringify(()=>extenstion.createFilter())';
+    } else {
+      eval =
+          'stringify(()=>extenstion.createFilter(JSON.parse(\'${jsonEncode(filter)}\')))';
+    }
+    return _runExtension(() async {
+      final jsResult = await runtime.handlePromise(
+        await runtime.evaluateAsync(eval),
+      );
+      Map<String, dynamic> result = jsonDecode(jsResult.stringResult);
+      return result.map(
+        (key, value) => MapEntry(
+          key,
+          ExtensionFilter.fromJson(value),
+        ),
+      );
     });
   }
 

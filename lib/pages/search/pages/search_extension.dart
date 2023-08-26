@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:miru_app/models/index.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/extension_item_card.dart';
 import 'package:miru_app/widgets/infinite_scroller.dart';
 import 'package:miru_app/widgets/messenger.dart';
@@ -35,6 +38,26 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
   int _page = 1;
   bool _isLoading = true;
   final EasyRefreshController _easyRefreshController = EasyRefreshController();
+  Map<String, ExtensionFilter>? _filters;
+  // 初始化一开始选择的选项
+  Map<String, List<String>> _selectedFilters = {};
+  // 缓存的选项
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _initFilters();
+    });
+  }
+
+  _initFilters() async {
+    _filters = await _runtime.createFilter();
+    _filters!.forEach((key, value) {
+      _selectedFilters[key] = [value.defaultOption];
+    });
+    setState(() {});
+  }
 
   Future<void> _onRefresh() async {
     setState(() {
@@ -49,10 +72,10 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
       _isLoading = true;
       setState(() {});
       late List<ExtensionListItem> data;
-      if (_keyWord.isEmpty) {
+      if (_keyWord.isEmpty && _filters == null) {
         data = await _runtime.latest(_page);
       } else {
-        data = await _runtime.search(_keyWord, _page);
+        data = await _runtime.search(_keyWord, _page, filter: _selectedFilters);
       }
       if (data.isEmpty && mounted) {
         showPlatformSnackbar(
@@ -87,6 +110,76 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
     }
   }
 
+  _onFilter(BuildContext context) {
+    final fiterWidget = _ExtensionFilterWidget(
+      runtime: _runtime,
+      filters: _filters!,
+      selectedFilters: _selectedFilters,
+      onSelectFilter: (selectedFilters, filters) {
+        _selectedFilters = selectedFilters;
+        _filters = filters;
+      },
+    );
+
+    if (Platform.isAndroid) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      router.pop();
+                    },
+                    child: Text("common.cancel".i18n),
+                  ),
+                  const Spacer(),
+                  FilledButton(
+                    onPressed: () {
+                      router.pop();
+                      _easyRefreshController.callRefresh();
+                    },
+                    child: Text("common.confirm".i18n),
+                  )
+                ],
+              ),
+            ),
+            Expanded(child: fiterWidget)
+          ],
+        ),
+      );
+      return;
+    }
+
+    fluent.showDialog(
+      context: context,
+      builder: (context) {
+        return fluent.ContentDialog(
+          title: Text('search.filter'.i18n),
+          content: fiterWidget,
+          actions: [
+            fluent.Button(
+              child: Text('common.cancel'.i18n),
+              onPressed: () {
+                router.pop();
+              },
+            ),
+            fluent.FilledButton(
+              child: Text('common.confirm'.i18n),
+              onPressed: () {
+                router.pop();
+                _onRefresh();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: SearchAppBar(
@@ -98,6 +191,13 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
           }
         },
         onSubmitted: _onSearch,
+        actions: [
+          if (_filters != null)
+            IconButton(
+              icon: const Icon(Icons.filter_alt_rounded),
+              onPressed: () => _onFilter(context),
+            ),
+        ],
       ),
       body: InfiniteScroller(
         onRefresh: _onRefresh,
@@ -153,6 +253,12 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
                 ),
               ),
               const Spacer(),
+              if (_filters != null)
+                fluent.IconButton(
+                  icon: const Icon(fluent.FluentIcons.filter),
+                  onPressed: () => _onFilter(context),
+                ),
+              const SizedBox(width: 8),
               SizedBox(
                 width: 300,
                 child: fluent.TextBox(
@@ -228,6 +334,103 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
     return PlatformBuildWidget(
       androidBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
+    );
+  }
+}
+
+class _ExtensionFilterWidget extends StatefulWidget {
+  const _ExtensionFilterWidget({
+    Key? key,
+    required this.runtime,
+    required this.selectedFilters,
+    required this.onSelectFilter,
+    required this.filters,
+  }) : super(key: key);
+  final ExtensionRuntime runtime;
+  final Map<String, ExtensionFilter> filters;
+  final Map<String, List<String>> selectedFilters;
+  final Function(
+    Map<String, List<String>> selectedFilters,
+    Map<String, ExtensionFilter> filters,
+  ) onSelectFilter;
+
+  @override
+  State<_ExtensionFilterWidget> createState() => _ExtensionFilterWidgetState();
+}
+
+class _ExtensionFilterWidgetState extends State<_ExtensionFilterWidget> {
+  late final ExtensionRuntime _runtime = widget.runtime;
+  late Map<String, ExtensionFilter> _filters = widget.filters;
+  // 初始化一开始选择的选项
+  late Map<String, List<String>> _selectedFilters = widget.selectedFilters;
+
+  _onSelectFilter(key, value) async {
+    final selectedFilters = Map<String, List<String>>.from(_selectedFilters);
+    // 如果存在就删除，不存在就添加
+    if (selectedFilters[key]!.contains(value)) {
+      if (selectedFilters[key]!.length > _filters[key]!.min) {
+        selectedFilters[key]!.remove(value);
+      }
+    } else {
+      if (selectedFilters[key]!.length >= _filters[key]!.max) {
+        selectedFilters[key]!.removeAt(0);
+      }
+      selectedFilters[key]!.add(value);
+    }
+    // 再请求一次 _filters
+    final filters = Map<String, ExtensionFilter>.from(
+        await _runtime.createFilter(filter: selectedFilters));
+
+    // 剔除 _filters 中不能存在的选项
+    selectedFilters.forEach((key, value) {
+      if (!filters.containsKey(key)) {
+        selectedFilters.remove(key);
+      }
+    });
+
+    setState(() {
+      _selectedFilters = selectedFilters;
+      _filters = filters;
+    });
+    widget.onSelectFilter(_selectedFilters, _filters);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final filter in _filters.entries) ...[
+            Text(
+              filter.value.title,
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final entry in filter.value.options.entries) ...[
+                  PlatformToggleButton(
+                    onChanged: (value) async {
+                      await _onSelectFilter(
+                        filter.key,
+                        entry.key,
+                      );
+                      setState(() {});
+                    },
+                    checked: widget.selectedFilters[filter.key]!.contains(
+                      entry.key,
+                    ),
+                    text: entry.value,
+                  ),
+                ]
+              ],
+            ),
+            const SizedBox(height: 16)
+          ],
+        ],
+      ),
     );
   }
 }
