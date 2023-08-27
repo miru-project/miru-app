@@ -1,0 +1,56 @@
+name: 🐞 Bug report
+description: Report a bug in miru
+labels: [help wanted]
+body:
+
+    - type: textarea
+      id: summary
+      attributes:
+          label: Brief summary
+          description: Please describe, what went wrong
+      validations:
+          required: true
+
+    - type: textarea
+      id: reproduce-steps
+      attributes:
+          label: Steps to reproduce
+          description: Please provide a way to reproduce this issue. Screenshots or videos can be very helpful
+          placeholder: |
+              Example:
+                1. First step
+                2. Second step
+                3. Issue here
+      validations:
+          required: false
+
+
+    - type: input
+      id: miru-version
+      attributes:
+          label: Miru version
+          description: You can find your Miru version in **Settings**.
+          placeholder: |
+              Example: "1.6.7"
+      validations:
+          required: true
+
+    - type: input
+      id: device
+      attributes:
+          label: Device
+          description: List your device and model.
+          placeholder: |
+              Example: "LG Nexus 5X"
+      validations:
+          required: false
+
+    - type: checkboxes
+      id: acknowledgements
+      attributes:
+          label: Acknowledgements
+          options:
+              - label: I have searched the existing issues and this is a new ticket, **NOT** a duplicate or related to another open issue.
+                required: true
+              - label: If this is an issue with a extension, I should be opening an issue in the [extension repository](https://github.com/miru-project/repo/issues/new).
+                required: true
