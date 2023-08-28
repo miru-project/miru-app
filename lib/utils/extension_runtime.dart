@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:xpath_selector_html_parser/xpath_selector_html_parser.dart';
@@ -189,7 +190,9 @@ class ExtensionRuntime {
   }
 
   _initRunExtension(String extScript) async {
+    final cryptoJs = await rootBundle.loadString('assets/js/crypto-js.js');
     runtime.evaluate('''
+          $cryptoJs
           class Element {
             constructor(content, selector) {
               this.content = content;
