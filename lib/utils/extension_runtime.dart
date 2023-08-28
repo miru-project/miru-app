@@ -74,15 +74,6 @@ class ExtensionRuntime {
     runtime.onMessage('registerSetting', (dynamic args) async {
       args[0]['package'] = extension.package;
 
-      // 处理下 options
-      List<String>? options;
-      if (args[0]['options'] != null) {
-        options = [];
-        for (final option in (args[0]['options'] as Map).entries) {
-          options.add('${option.key}:${option.value}');
-        }
-      }
-
       return DatabaseUtils.registerExtensionSetting(
         ExtensionSetting()
           ..package = extension.package
@@ -92,7 +83,7 @@ class ExtensionRuntime {
           ..type = ExtensionSetting.stringToType(args[0]['type'])
           ..description = args[0]['description']
           ..defaultValue = args[0]['defaultValue']
-          ..options = options,
+          ..options = jsonEncode(args[0]['options']),
       );
     });
     runtime.onMessage('getSetting', (dynamic args) async {

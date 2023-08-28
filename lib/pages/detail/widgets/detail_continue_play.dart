@@ -68,6 +68,8 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
                 'episode': history!.episodeTitle,
               },
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(

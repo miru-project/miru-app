@@ -94,7 +94,12 @@ class _VideoPlayerState extends State<VideoPlayer> {
                           maxHeight: 200,
                           maxWidth: maxWidth,
                         ),
-                        child: _c.cuurentMessageWidget.value,
+                        child: DefaultTextStyle(
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          child: _c.cuurentMessageWidget.value!,
+                        ),
                       ).animate().fade(),
                     ),
                 ],

@@ -35,7 +35,7 @@ const ExtensionSettingSchema = CollectionSchema(
     r'options': PropertySchema(
       id: 3,
       name: r'options',
-      type: IsarType.stringList,
+      type: IsarType.string,
     ),
     r'package': PropertySchema(
       id: 4,
@@ -107,15 +107,9 @@ int _extensionSettingEstimateSize(
   }
   bytesCount += 3 + object.key.length * 3;
   {
-    final list = object.options;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += value.length * 3;
-        }
-      }
+    final value = object.options;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
     }
   }
   bytesCount += 3 + object.package.length * 3;
@@ -139,7 +133,7 @@ void _extensionSettingSerialize(
   writer.writeString(offsets[0], object.defaultValue);
   writer.writeString(offsets[1], object.description);
   writer.writeString(offsets[2], object.key);
-  writer.writeStringList(offsets[3], object.options);
+  writer.writeString(offsets[3], object.options);
   writer.writeString(offsets[4], object.package);
   writer.writeString(offsets[5], object.title);
   writer.writeString(offsets[6], object.type.name);
@@ -157,7 +151,7 @@ ExtensionSetting _extensionSettingDeserialize(
   object.description = reader.readStringOrNull(offsets[1]);
   object.id = id;
   object.key = reader.readString(offsets[2]);
-  object.options = reader.readStringList(offsets[3]);
+  object.options = reader.readStringOrNull(offsets[3]);
   object.package = reader.readString(offsets[4]);
   object.title = reader.readString(offsets[5]);
   object.type =
@@ -181,7 +175,7 @@ P _extensionSettingDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
@@ -980,8 +974,8 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementEqualTo(
-    String value, {
+      optionsEqualTo(
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -994,8 +988,8 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementGreaterThan(
-    String value, {
+      optionsGreaterThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1010,8 +1004,8 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementLessThan(
-    String value, {
+      optionsLessThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1026,9 +1020,9 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementBetween(
-    String lower,
-    String upper, {
+      optionsBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1046,7 +1040,7 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementStartsWith(
+      optionsStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1060,7 +1054,7 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementEndsWith(
+      optionsEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1074,7 +1068,7 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementContains(String value, {bool caseSensitive = true}) {
+      optionsContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'options',
@@ -1085,7 +1079,7 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementMatches(String pattern, {bool caseSensitive = true}) {
+      optionsMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'options',
@@ -1096,7 +1090,7 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementIsEmpty() {
+      optionsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'options',
@@ -1106,101 +1100,12 @@ extension ExtensionSettingQueryFilter
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsElementIsNotEmpty() {
+      optionsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'options',
         value: '',
       ));
-    });
-  }
-
-  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'options',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'options',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'options',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'options',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'options',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterFilterCondition>
-      optionsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'options',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
     });
   }
 
@@ -1817,6 +1722,20 @@ extension ExtensionSettingQuerySortBy
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterSortBy>
+      sortByOptions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'options', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterSortBy>
+      sortByOptionsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'options', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterSortBy>
       sortByPackage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'package', Sort.asc);
@@ -1927,6 +1846,20 @@ extension ExtensionSettingQuerySortThenBy
   }
 
   QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterSortBy>
+      thenByOptions() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'options', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterSortBy>
+      thenByOptionsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'options', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ExtensionSetting, ExtensionSetting, QAfterSortBy>
       thenByPackage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'package', Sort.asc);
@@ -2003,10 +1936,10 @@ extension ExtensionSettingQueryWhereDistinct
     });
   }
 
-  QueryBuilder<ExtensionSetting, ExtensionSetting, QDistinct>
-      distinctByOptions() {
+  QueryBuilder<ExtensionSetting, ExtensionSetting, QDistinct> distinctByOptions(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'options');
+      return query.addDistinctBy(r'options', caseSensitive: caseSensitive);
     });
   }
 
@@ -2067,8 +2000,7 @@ extension ExtensionSettingQueryProperty
     });
   }
 
-  QueryBuilder<ExtensionSetting, List<String>?, QQueryOperations>
-      optionsProperty() {
+  QueryBuilder<ExtensionSetting, String?, QQueryOperations> optionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'options');
     });
