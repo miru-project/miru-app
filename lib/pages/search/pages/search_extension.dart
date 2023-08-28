@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:get/get.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
@@ -125,21 +126,26 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
       showModalBottomSheet(
         context: context,
         builder: (context) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+              ),
               child: Row(
                 children: [
                   TextButton(
                     onPressed: () {
-                      router.pop();
+                      Get.back();
                     },
                     child: Text("common.cancel".i18n),
                   ),
                   const Spacer(),
                   FilledButton(
                     onPressed: () {
-                      router.pop();
+                      Get.back();
                       _easyRefreshController.callRefresh();
                     },
                     child: Text("common.confirm".i18n),
@@ -147,7 +153,16 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
                 ],
               ),
             ),
-            Expanded(child: fiterWidget)
+            const Divider(),
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+              ),
+              child: fiterWidget,
+            ))
           ],
         ),
       );
