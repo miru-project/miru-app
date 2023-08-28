@@ -105,3 +105,46 @@ class PlatformIconButton extends StatelessWidget {
     );
   }
 }
+
+class PlatformToggleButton extends fluent.StatelessWidget {
+  const PlatformToggleButton({
+    Key? key,
+    required this.checked,
+    required this.onChanged,
+    required this.text,
+  }) : super(key: key);
+
+  final bool checked;
+  final void Function(bool)? onChanged;
+  final String text;
+
+  Widget _buildAndroid(BuildContext context) {
+    return TextButton(
+      onPressed: () => onChanged?.call(!checked),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: checked
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktop(BuildContext context) {
+    return fluent.ToggleButton(
+      checked: checked,
+      onChanged: onChanged,
+      child: Text(text),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformBuildWidget(
+      androidBuilder: _buildAndroid,
+      desktopBuilder: _buildDesktop,
+    );
+  }
+}
