@@ -192,11 +192,13 @@ class ExtensionRuntime {
   _initRunExtension(String extScript) async {
     final cryptoJs = await rootBundle.loadString('assets/js/CryptoJS.min.js');
     final jsencrypt = await rootBundle.loadString('assets/js/jsencrypt.min.js');
+    final md5 = await rootBundle.loadString('assets/js/md5.min.js');
     runtime.evaluate('''
           // 重写 console.log
           var window = (global = globalThis);
           $cryptoJs
           $jsencrypt
+          $md5
           class Element {
             constructor(content, selector) {
               this.content = content;
