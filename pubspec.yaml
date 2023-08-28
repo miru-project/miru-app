@@ -67,3 +67,4 @@ flutter:
   assets:
     - assets/i18n/
     - assets/icon/logo.png
+    - assets/js/

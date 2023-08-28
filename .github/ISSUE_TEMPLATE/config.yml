@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+    - name: ⚠️ Extension Issue
+      url: https://github.com/miru-project/repo/issues/new
+      about: If you have troubles with a extension or want to propose new extension source, please open an issue in the miru extension repository instead

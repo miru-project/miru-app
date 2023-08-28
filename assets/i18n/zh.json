@@ -35,7 +35,8 @@
 
   "search": {
     "hint-text": "请善用搜索哦!~",
-    "all": "全部"
+    "all": "全部",
+    "filter": "筛选"
   },
 
   "extension": {
