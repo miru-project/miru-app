@@ -30,9 +30,8 @@ class ExtensionSetting {
   late ExtensionSettingType type;
   // 描述
   String? description;
-  // 如果是 radio 类型，这里是各项选项,且必填 , 存储为 ["key:value","key:value"]
-  // 为啥不直接用 map，因为 isar 还不支持 map 类型
-  List<String>? options;
+
+  String? options;
 
   static ExtensionSettingType stringToType(String type) {
     switch (type) {
