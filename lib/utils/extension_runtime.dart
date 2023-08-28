@@ -190,9 +190,13 @@ class ExtensionRuntime {
   }
 
   _initRunExtension(String extScript) async {
-    final cryptoJs = await rootBundle.loadString('assets/js/crypto-js.js');
+    final cryptoJs = await rootBundle.loadString('assets/js/CryptoJS.min.js');
+    final jsencrypt = await rootBundle.loadString('assets/js/jsencrypt.min.js');
     runtime.evaluate('''
+          // 重写 console.log
+          var window = (global = globalThis);
           $cryptoJs
+          $jsencrypt
           class Element {
             constructor(content, selector) {
               this.content = content;
@@ -237,7 +241,6 @@ class ExtensionRuntime {
               return this.excute("innerHTML");
             }
           }
-
           class XPathNode {
             constructor(content, selector) {
               this.content = content;
@@ -272,8 +275,7 @@ class ExtensionRuntime {
             }
           }
 
-          // 重写 console.log
-          var window = (global = globalThis);
+          
           console.log = function (message) {
             if (typeof message === "object") {
               message = JSON.stringify(message);
