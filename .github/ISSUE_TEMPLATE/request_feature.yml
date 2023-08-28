@@ -1,0 +1,24 @@
+name: ⭐ Feature request
+description: Suggest a new idea how to improve Miru
+labels: [enhancement]
+body:
+
+    - type: textarea
+      id: feature-description
+      attributes:
+          label: Describe your suggested feature
+          description: How can Miru be improved?
+          placeholder: |
+              Example:
+                "It should work like this..."
+      validations:
+          required: true
+
+    - type: checkboxes
+      id: acknowledgements
+      attributes:
+          label: Acknowledgements
+          description: Read this carefully, we will close and ignore your issue if you skimmed through this.
+          options:
+              - label: I have searched the existing issues and this is a new ticket, **NOT** a duplicate or related to another open issue.
+                required: true

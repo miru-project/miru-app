@@ -47,7 +47,7 @@ jobs:
       - run: flutter pub get
       # 打包apk
       - name: Collect Apks
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release --split-per-abi -v
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -113,7 +113,7 @@ jobs:
       - name: Install project dependencies
         run: flutter pub get
       - name: Build artifacts
-        run: flutter build windows --release
+        run: flutter build windows --release -v
       - name: Build Installer
         run: iex ("& {0} {1} {2}" -f '"C:\Program Files (x86)\Inno Setup 6\iscc.exe"',"/DMyAppVersion='${{github.ref_name}}'", ".\inno_setup.iss")
       - name: Archive Release
