@@ -18,6 +18,7 @@ import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
+import 'package:miru_app/utils/external_player.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/utils/miru_storage.dart';
@@ -307,7 +308,7 @@ class DetailPageController extends GetxController {
     List<ExtensionEpisode> urls,
     int index,
     int selectEpGroup,
-  ) {
+  ) async {
     if (runtime.value == null) {
       showPlatformSnackbar(
         context: cuurentContext,
@@ -321,6 +322,49 @@ class DetailPageController extends GetxController {
         severity: fluent.InfoBarSeverity.error,
       );
       return;
+    }
+
+    if (type == ExtensionType.bangumi) {
+      final player = MiruStorage.getSetting(SettingKey.videoPlayer);
+
+      if (player != 'built-in') {
+        showPlatformSnackbar(
+          context: cuurentContext,
+          content: FlutterI18n.translate(
+            cuurentContext,
+            'external-player-launching',
+            translationParams: {
+              'player': player,
+            },
+          ),
+        );
+        late ExtensionBangumiWatch watchData;
+        try {
+          watchData = await runtime.value!.watch(urls[index].url)
+              as ExtensionBangumiWatch;
+        } catch (e) {
+          showPlatformSnackbar(
+            context: cuurentContext,
+            content: e.toString().split('\n')[0],
+            severity: fluent.InfoBarSeverity.error,
+          );
+          return;
+        }
+        try {
+          if (GetPlatform.isMobile) {
+            await launchMobileExternalPlayer(watchData.url, player);
+            return;
+          }
+          await launchDesktopExternalPlayer(watchData.url, player);
+          return;
+        } catch (e) {
+          showPlatformSnackbar(
+            context: cuurentContext,
+            content: e.toString().split('\n')[0],
+            severity: fluent.InfoBarSeverity.error,
+          );
+        }
+      }
     }
 
     Navigator.of(context, rootNavigator: true).push(

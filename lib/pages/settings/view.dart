@@ -204,6 +204,41 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
         const SizedBox(height: 8),
+        SettingsRadiosTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.play_arrow),
+            desktopWidget: Icon(fluent.FluentIcons.play_resume, size: 24),
+          ),
+          title: 'settings.external-player'.i18n,
+          itemNameValue: () {
+            if (Platform.isAndroid) {
+              return {
+                "settings.external-player-builtin".i18n: "built-in",
+                "VLC": "vlc",
+                "Other": "other",
+              };
+            }
+            return {
+              "settings.external-player-builtin".i18n: "built-in",
+              "VLC": "vlc",
+              "PotPlayer": "potplayer",
+            };
+          }(),
+          buildSubtitle: () => FlutterI18n.translate(
+            context,
+            'settings.external-player-subtitle',
+            translationParams: {
+              'player': MiruStorage.getSetting(SettingKey.videoPlayer),
+            },
+          ),
+          applyValue: (value) {
+            MiruStorage.setSetting(SettingKey.videoPlayer, value);
+          },
+          buildGroupValue: () {
+            return MiruStorage.getSetting(SettingKey.videoPlayer);
+          },
+        ),
+        const SizedBox(height: 8),
         if (!Platform.isAndroid)
           Obx(
             () {
