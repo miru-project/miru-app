@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:xpath_selector_html_parser/xpath_selector_html_parser.dart';
@@ -73,15 +74,6 @@ class ExtensionRuntime {
     runtime.onMessage('registerSetting', (dynamic args) async {
       args[0]['package'] = extension.package;
 
-      // 处理下 options
-      List<String>? options;
-      if (args[0]['options'] != null) {
-        options = [];
-        for (final option in (args[0]['options'] as Map).entries) {
-          options.add('${option.key}:${option.value}');
-        }
-      }
-
       return DatabaseUtils.registerExtensionSetting(
         ExtensionSetting()
           ..package = extension.package
@@ -91,7 +83,7 @@ class ExtensionRuntime {
           ..type = ExtensionSetting.stringToType(args[0]['type'])
           ..description = args[0]['description']
           ..defaultValue = args[0]['defaultValue']
-          ..options = options,
+          ..options = jsonEncode(args[0]['options']),
       );
     });
     runtime.onMessage('getSetting', (dynamic args) async {
@@ -189,7 +181,15 @@ class ExtensionRuntime {
   }
 
   _initRunExtension(String extScript) async {
+    final cryptoJs = await rootBundle.loadString('assets/js/CryptoJS.min.js');
+    final jsencrypt = await rootBundle.loadString('assets/js/jsencrypt.min.js');
+    final md5 = await rootBundle.loadString('assets/js/md5.min.js');
     runtime.evaluate('''
+          // 重写 console.log
+          var window = (global = globalThis);
+          $cryptoJs
+          $jsencrypt
+          $md5
           class Element {
             constructor(content, selector) {
               this.content = content;
@@ -234,7 +234,6 @@ class ExtensionRuntime {
               return this.excute("innerHTML");
             }
           }
-
           class XPathNode {
             constructor(content, selector) {
               this.content = content;
@@ -269,8 +268,7 @@ class ExtensionRuntime {
             }
           }
 
-          // 重写 console.log
-          var window = (global = globalThis);
+          
           console.log = function (message) {
             if (typeof message === "object") {
               message = JSON.stringify(message);
@@ -324,8 +322,11 @@ class ExtensionRuntime {
             latest(page) {
               throw new Error("not implement latest");
             }
-            search(kw, page, screening) {
+            search(kw, page, filter) {
               throw new Error("not implement search");
+            }
+            createFilter(filter){
+              throw new Error("not implement createFilter");
             }
             detail(url) {
               throw new Error("not implement detail");
@@ -422,11 +423,15 @@ class ExtensionRuntime {
     });
   }
 
-  Future<List<ExtensionListItem>> search(String kw, int page) async {
+  Future<List<ExtensionListItem>> search(
+    String kw,
+    int page, {
+    Map<String, List<String>>? filter,
+  }) async {
     return _runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime
-            .evaluateAsync('stringify(()=>extenstion.search("$kw",$page))'),
+        await runtime.evaluateAsync(
+            'stringify(()=>extenstion.search("$kw",$page,${filter == null ? null : jsonEncode(filter)}))'),
       );
       List<ExtensionListItem> result =
           jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
@@ -438,6 +443,30 @@ class ExtensionRuntime {
         };
       }
       return result;
+    });
+  }
+
+  Future<Map<String, ExtensionFilter>> createFilter({
+    Map<String, List<String>>? filter,
+  }) async {
+    late String eval;
+    if (filter == null) {
+      eval = 'stringify(()=>extenstion.createFilter())';
+    } else {
+      eval =
+          'stringify(()=>extenstion.createFilter(JSON.parse(\'${jsonEncode(filter)}\')))';
+    }
+    return _runExtension(() async {
+      final jsResult = await runtime.handlePromise(
+        await runtime.evaluateAsync(eval),
+      );
+      Map<String, dynamic> result = jsonDecode(jsResult.stringResult);
+      return result.map(
+        (key, value) => MapEntry(
+          key,
+          ExtensionFilter.fromJson(value),
+        ),
+      );
     });
   }
 

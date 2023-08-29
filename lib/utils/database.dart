@@ -169,27 +169,27 @@ class DatabaseUtils {
       throw Exception('options is null');
     }
 
-    // final extSetting = await getExtensionSetting(
-    //     extensionSetting.package, extensionSetting.key);
-    // // 如果不存在相同设置，则添加
-    // if (extSetting == null) {
-    //   return db.writeTxn(() => db.extensionSettings.put(extensionSetting));
-    // }
+    final extSetting = await getExtensionSetting(
+        extensionSetting.package, extensionSetting.key);
+    // 如果不存在相同设置，则添加
+    if (extSetting == null) {
+      return db.writeTxn(() => db.extensionSettings.put(extensionSetting));
+    }
 
-    // extSetting.defaultValue = extensionSetting.defaultValue;
+    extSetting.defaultValue = extensionSetting.defaultValue;
 
-    // // 如果类型不同，重置值
-    // if (extSetting.type != extensionSetting.type) {
-    //   extSetting.type = extensionSetting.type;
-    //   extSetting.value = extensionSetting.defaultValue;
-    // }
-    // extSetting.defaultValue = extensionSetting.defaultValue;
-    // extSetting.description = extensionSetting.description;
-    // extSetting.options = extensionSetting.options;
-    // extSetting.title = extensionSetting.title;
+    // 如果类型不同，重置值
+    if (extSetting.type != extensionSetting.type) {
+      extSetting.type = extensionSetting.type;
+      extSetting.value = extensionSetting.defaultValue;
+    }
+    extSetting.defaultValue = extensionSetting.defaultValue;
+    extSetting.description = extensionSetting.description;
+    extSetting.options = extensionSetting.options;
+    extSetting.title = extensionSetting.title;
 
     return db.writeTxn(
-      () => db.extensionSettings.putByIndex(r'package&key', extensionSetting),
+      () => db.extensionSettings.putByIndex(r'package&key', extSetting),
     );
   }
 

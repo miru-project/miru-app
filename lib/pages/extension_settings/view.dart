@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -80,14 +81,10 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
         ));
       }
       if (setting.type == ExtensionSettingType.radio) {
-        final map = <String, String>{};
+        final map = Map<String, String>.from(jsonDecode(setting.options!));
         list.add(SettingsRadiosTile(
           title: setting.title,
           itemNameValue: () {
-            for (final item in setting.options!) {
-              final split = item.split(':');
-              map[split[0]] = split[1];
-            }
             return map;
           }(),
           buildSubtitle: () => setting.description ?? '',
@@ -101,11 +98,6 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
             setState(() {});
           },
           buildGroupValue: () => setting.value ?? setting.defaultValue,
-          trailing: Text(
-            map.entries
-                .firstWhere((element) => element.value == setting.value)
-                .key,
-          ),
         ));
       }
       if (setting.type == ExtensionSettingType.toggle) {

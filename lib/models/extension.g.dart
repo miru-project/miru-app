@@ -42,6 +42,24 @@ const _$ExtensionTypeEnumMap = {
   ExtensionType.fikushon: 'fikushon',
 };
 
+ExtensionFilter _$ExtensionFilterFromJson(Map<String, dynamic> json) =>
+    ExtensionFilter(
+      title: json['title'] as String,
+      min: json['min'] as int,
+      max: json['max'] as int,
+      defaultOption: json['default'] as String,
+      options: Map<String, String>.from(json['options'] as Map),
+    );
+
+Map<String, dynamic> _$ExtensionFilterToJson(ExtensionFilter instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'min': instance.min,
+      'max': instance.max,
+      'default': instance.defaultOption,
+      'options': instance.options,
+    };
+
 ExtensionListItem _$ExtensionListItemFromJson(Map<String, dynamic> json) =>
     ExtensionListItem(
       title: json['title'] as String,

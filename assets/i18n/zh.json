@@ -35,7 +35,8 @@
 
   "search": {
     "hint-text": "请善用搜索哦!~",
-    "all": "全部"
+    "all": "全部",
+    "filter": "筛选"
   },
 
   "extension": {
@@ -76,6 +77,9 @@
     "theme-dark": "深色",
     "nsfw": "NSFW",
     "nsfw-subtitle": "显示 NSFW 内容",
+    "external-player": "优先使用的视频播放器",
+    "external-player-subtitle": "当前优先使用的是 {player}",
+    "external-player-builtin": "内置播放器",
     "language-subtitle": "选择软件的语言",
     "extension-log": "扩展日志窗口",
     "extension-log-subtitle": "用于调试扩展",
@@ -87,6 +91,8 @@
     "license": "许可",
     "license-subtitle": "许可证"
   },
+
+  "external-player-launching": "正在启动 {player}",
 
   "detail": {
     "favorite": "收藏",
