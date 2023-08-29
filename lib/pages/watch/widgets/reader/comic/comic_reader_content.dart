@@ -10,7 +10,7 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
-import 'package:miru_app/widgets/progress_ring.dart';
+import 'package:miru_app/widgets/progress.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ComicReaderContent extends StatefulWidget {

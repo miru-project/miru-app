@@ -12,12 +12,22 @@ import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/messenger.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 late PackageInfo packageInfo;
+late AndroidDeviceInfo androidDeviceInfo;
+late WindowsDeviceInfo windowsDeviceInfo;
 
 class ApplicationUtils {
   static Future ensureInitialized() async {
     packageInfo = await PackageInfo.fromPlatform();
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      androidDeviceInfo = await deviceInfo.androidInfo;
+    }
+    if (Platform.isWindows) {
+      windowsDeviceInfo = await deviceInfo.windowsInfo;
+    }
     return packageInfo;
   }
 

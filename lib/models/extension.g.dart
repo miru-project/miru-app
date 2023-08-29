@@ -139,6 +139,7 @@ Map<String, dynamic> _$ExtensionBangumiWatchToJson(
 const _$ExtensionWatchBangumiTypeEnumMap = {
   ExtensionWatchBangumiType.hls: 'hls',
   ExtensionWatchBangumiType.mp4: 'mp4',
+  ExtensionWatchBangumiType.torrent: 'torrent',
 };
 
 ExtensionBangumiWatchSubtitle _$ExtensionBangumiWatchSubtitleFromJson(

@@ -19,7 +19,7 @@ import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/card_tile.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
-import 'package:miru_app/widgets/progress_ring.dart';
+import 'package:miru_app/widgets/progress.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {

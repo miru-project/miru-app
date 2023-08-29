@@ -6,8 +6,11 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/controller.dart';
+import 'package:miru_app/pages/bt_dialog/view.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
+import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
+import 'package:miru_app/utils/bt_server.dart';
 import 'package:miru_app/widgets/settings_input_tile.dart';
 import 'package:miru_app/widgets/settings_radios_tile.dart';
 import 'package:miru_app/widgets/settings_switch_tile.dart';
@@ -92,6 +95,32 @@ class _SettingsPageState extends State<SettingsPage> {
             );
           },
           text: MiruStorage.getSetting(SettingKey.tmdbKay),
+        ),
+        const SizedBox(height: 8),
+        SettingsTile(
+          title: 'BT-SERVER'.i18n,
+          buildSubtitle: () =>
+              Get.find<MainController>().btServerisRunning.value.toString(),
+          trailing: PlatformWidget(
+            androidWidget: TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const BTDialog(),
+                );
+              },
+              child: Text('管理'.i18n),
+            ),
+            desktopWidget: fluent.FilledButton(
+              onPressed: () {
+                fluent.showDialog(
+                  context: context,
+                  builder: (context) => const BTDialog(),
+                );
+              },
+              child: Text('管理'.i18n),
+            ),
+          ),
         ),
         const SizedBox(height: 8),
         SettingsTile(

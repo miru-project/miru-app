@@ -18,3 +18,20 @@ class ProgressRing extends StatelessWidget {
     );
   }
 }
+
+class ProgressBar extends StatelessWidget {
+  const ProgressBar({Key? key, this.value}) : super(key: key);
+  final double? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformBuildWidget(
+      androidBuilder: (context) => LinearProgressIndicator(
+        value: value,
+      ),
+      desktopBuilder: (context) => fluent.ProgressBar(
+        value: value != null ? value! * 100 : null,
+      ),
+    );
+  }
+}

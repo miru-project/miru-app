@@ -6,7 +6,7 @@ import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/extension_item_card.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
-import 'package:miru_app/widgets/progress_ring.dart';
+import 'package:miru_app/widgets/progress.dart';
 
 class FavoritesPage extends fluent.StatefulWidget {
   const FavoritesPage({Key? key, required this.type}) : super(key: key);

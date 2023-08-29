@@ -60,7 +60,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       final maxWidth = MediaQuery.of(context).size.width;
       return WillPopScope(
         onWillPop: () async {
-          await _c.addHistory();
+          await _c.onExit();
           return true;
         },
         child: Row(

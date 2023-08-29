@@ -16,7 +16,7 @@ import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/card_tile.dart';
 import 'package:miru_app/widgets/messenger.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
-import 'package:miru_app/widgets/progress_ring.dart';
+import 'package:miru_app/widgets/progress.dart';
 import 'package:miru_app/widgets/settings_input_tile.dart';
 import 'package:miru_app/widgets/settings_radios_tile.dart';
 import 'package:miru_app/widgets/settings_switch_tile.dart';

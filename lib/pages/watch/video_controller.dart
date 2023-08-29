@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:miru_app/api/bt_server.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/router/router.dart';
@@ -53,6 +55,10 @@ class VideoPlayerController extends GetxController {
   final Rx<Widget?> cuurentMessageWidget = Rx(null);
 
   final speed = 1.0.obs;
+
+  final fileList = <String>[].obs;
+
+  String _torrenHash = "";
 
   @override
   void onInit() {
@@ -177,17 +183,33 @@ class VideoPlayerController extends GetxController {
       selectedSubtitle.value = -1;
       final playUrl = playList[index.value].url;
       final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
-      player.open(Media(watchData.url, httpHeaders: watchData.headers));
+      if (watchData.type == ExtensionWatchBangumiType.torrent) {
+        // 下载 torrent
+        final torrentFile = path.join(
+          await MiruDirectory.getCacheDirectory,
+          'temp.torrent',
+        );
+        await Dio().download(watchData.url, torrentFile);
+        final file = File(torrentFile);
+        _torrenHash = await BTServerApi.addTorrent(file.readAsBytesSync());
+        fileList.addAll(await BTServerApi.getFileList(_torrenHash));
+        print(fileList);
+      }
+      // await player.open(Media(watchData.url, httpHeaders: watchData.headers));
       subtitles.addAll(watchData.subtitles ?? []);
     } catch (e) {
-      debugPrint(e.toString());
       sendMessage(
         Message(
           Text(e.toString()),
           time: const Duration(seconds: 5),
         ),
       );
+      rethrow;
     }
+  }
+
+  playTorrentFile(String file) {
+    player.open(Media('${BTServerApi.baseApi}/torrent/$_torrenHash/$file'));
   }
 
   toggleFullscreen() async {
@@ -195,7 +217,11 @@ class VideoPlayerController extends GetxController {
     isFullScreen.value = !isFullScreen.value;
   }
 
-  addHistory() async {
+  onExit() async {
+    if (_torrenHash.isNotEmpty) {
+      await BTServerApi.removeTorrent(_torrenHash);
+    }
+
     if (player.state.duration.inSeconds == 0) {
       return;
     }

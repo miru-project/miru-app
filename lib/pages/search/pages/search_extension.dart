@@ -70,6 +70,7 @@ class _SearchExtensionPageState extends fluent.State<SearchExtensionPage> {
         content: e.toString(),
         severity: fluent.InfoBarSeverity.error,
       );
+      rethrow;
     } finally {
       _isLoading = false;
       if (mounted) {
