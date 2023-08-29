@@ -215,15 +215,12 @@ class _SettingsPageState extends State<SettingsPage> {
               return {
                 "settings.external-player-builtin".i18n: "built-in",
                 "VLC": "vlc",
-                "MXPlayer": "mxplayer",
-                "NPlayer": "nplayer",
-                "MPV": "mpv",
+                "Other": "other",
               };
             }
             return {
               "settings.external-player-builtin".i18n: "built-in",
               "VLC": "vlc",
-              "MPV": "mpv",
               "PotPlayer": "potplayer",
             };
           }(),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -6,18 +8,11 @@ Future<void> launchMobileExternalPlayer(String playUrl, String player) async {
     case "vlc":
       await _launchExternalPlayer("vlc://$playUrl");
       break;
-    case "mxplayer":
+    case "other":
       await AndroidIntent(
         action: 'action_view',
         data: playUrl,
-        package: 'com.mxtech.videoplayer.ad',
-      ).launch();
-      break;
-    case "mpv":
-      await AndroidIntent(
-        action: 'action_view',
-        data: playUrl,
-        package: 'is.xyz.mpv',
+        type: 'video/*',
       ).launch();
       break;
   }
@@ -27,10 +22,8 @@ Future<void> launchMobileExternalPlayer(String playUrl, String player) async {
 Future<void> launchDesktopExternalPlayer(String playUrl, String player) async {
   switch (player) {
     case "vlc":
-      await _launchExternalPlayer("vlc://$playUrl");
-      break;
-    case "mpv":
-      await _launchExternalPlayer("mpv://$playUrl");
+      const vlc = 'C:\\Program Files\\VideoLAN\\VLC\\vlc.exe';
+      await Process.run(vlc, [playUrl]);
       break;
     case "potplayer":
       await _launchExternalPlayer("potplayer://$playUrl");
