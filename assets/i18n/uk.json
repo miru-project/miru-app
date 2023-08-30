@@ -35,7 +35,8 @@
 
   "search": {
     "hint-text": "Будь ласка, використовуйте пошук з розумом!~",
-    "all": "Усе"
+    "all": "Усе",
+    "filter": "Фільтр"
   },
 
   "extension": {
@@ -76,6 +77,9 @@
     "theme-dark": "Темна",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Показувати NSFW контент",
+    "external-player": "Переважний відеоплеєр",
+    "external-player-subtitle": "На даний момент переважним відеоплеєром є {player}.",
+    "external-player-builtin": "Вбудований",
     "language-subtitle": "Змінити мову додатка",
     "extension-log": "Вікно журналу розширень",
     "extension-log-subtitle": "Використовується для налагодження розширень",
