@@ -117,7 +117,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                   ),
                 ),
                 Obx(() {
-                  if (_c.fileList.isEmpty) {
+                  if (_c.torrentMediaFileList.isEmpty) {
                     return const SizedBox.shrink();
                   }
                   return PopupMenuButton(
@@ -127,18 +127,19 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     ),
                     itemBuilder: (context) {
                       return [
-                        for (int i = 0; i < _c.fileList.length; i++)
+                        for (int i = 0; i < _c.torrentMediaFileList.length; i++)
                           PopupMenuItem(
                             padding: const EdgeInsets.all(0),
                             child: Obx(
                               () => CheckboxListTile(
-                                value: _c.selectedSubtitle.value == i,
-                                onChanged: (value) {
+                                value: _c.currentTorrentFile.value ==
+                                    _c.torrentMediaFileList[i],
+                                onChanged: (_) {
                                   _c.playTorrentFile(
-                                    _c.fileList[i],
+                                    _c.torrentMediaFileList[i],
                                   );
                                 },
-                                title: Text(_c.fileList[i]),
+                                title: Text(_c.torrentMediaFileList[i]),
                               ),
                             ),
                           ),
@@ -300,32 +301,37 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     },
                   ),
                 ),
-                if (_c.fileList.isNotEmpty)
-                  PopupMenuButton(
+                Obx(() {
+                  if (_c.torrentMediaFileList.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return PopupMenuButton(
                     icon: const Icon(
                       Icons.file_open,
                       color: Colors.white,
                     ),
                     itemBuilder: (context) {
                       return [
-                        for (int i = 0; i < _c.fileList.length; i++)
+                        for (int i = 0; i < _c.torrentMediaFileList.length; i++)
                           PopupMenuItem(
                             padding: const EdgeInsets.all(0),
                             child: Obx(
                               () => CheckboxListTile(
-                                value: _c.selectedSubtitle.value == i,
-                                onChanged: (value) {
+                                value: _c.currentTorrentFile.value ==
+                                    _c.torrentMediaFileList[i],
+                                onChanged: (_) {
                                   _c.playTorrentFile(
-                                    _c.fileList[i],
+                                    _c.torrentMediaFileList[i],
                                   );
                                 },
-                                title: Text(_c.fileList[i]),
+                                title: Text(_c.torrentMediaFileList[i]),
                               ),
                             ),
                           ),
                       ];
                     },
-                  ),
+                  );
+                }),
                 PopupMenuButton(
                   icon: const Icon(
                     Icons.subtitles,

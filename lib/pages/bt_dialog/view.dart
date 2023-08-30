@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/pages/bt_dialog/controller.dart';
 import 'package:miru_app/utils/bt_server.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress.dart';
@@ -24,7 +26,7 @@ class _BTDialogState extends State<BTDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("BT-Server is not installed"),
+            Text("bt-server.not-installed".i18n),
             const SizedBox(height: 16),
             if (c.isDownloading.value)
               SizedBox(
@@ -33,7 +35,7 @@ class _BTDialogState extends State<BTDialog> {
               )
             else
               PlatformFilledButton(
-                child: const Text("Download"),
+                child: Text("common.install".i18n),
                 onPressed: () {
                   c.downloadOrUpgradeServer(context);
                 },
@@ -46,13 +48,24 @@ class _BTDialogState extends State<BTDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("BT-Server is ${c.isRuning.value ? "running" : "stop"} "),
+          if (c.isRuning.value)
+            Text("bt-server.running".i18n)
+          else
+            Text("bt-server.stopped".i18n),
           const SizedBox(height: 16),
           if (c.isRuning.value)
-            Text("Version: ${c.version.value}")
+            Text(
+              FlutterI18n.translate(
+                context,
+                'bt-server.version',
+                translationParams: {
+                  "version": c.version.value,
+                },
+              ),
+            )
           else
             PlatformFilledButton(
-              child: const Text("Start"),
+              child: Text("bt-server.start".i18n),
               onPressed: () {
                 BTServerUtils.startServer();
               },
@@ -68,7 +81,7 @@ class _BTDialogState extends State<BTDialog> {
       content: _buildContent(context),
       actions: [
         PlatformTextButton(
-          child: const Text("Close"),
+          child: Text("common.close".i18n),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -86,7 +99,7 @@ class _BTDialogState extends State<BTDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text("Close"),
+          child: Text("common.close".i18n),
         ),
       ],
     );

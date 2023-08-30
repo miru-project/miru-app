@@ -74,18 +74,21 @@ class BTServerUtils {
     final btServerPath = path.join(savePath, _getBTServerFilename());
 
     try {
-      _process = await Process.start(
-        btServerPath,
-        [],
-        workingDirectory: savePath,
-      );
-      // final shell = Shell(
-      //   workingDirectory: savePath,
-      // );
-
-      // await shell.run("chmod +x ./bt-server");
-
-      // await shell.run("./bt-server");
+      if (Platform.isWindows) {
+        await Process.run(
+          btServerPath,
+          [],
+          workingDirectory: savePath,
+        );
+      } else {
+        // 添加运行权限
+        await Process.run("chmod", ["+x", btServerPath]);
+        _process = await Process.start(
+          btServerPath,
+          ["&"],
+          workingDirectory: savePath,
+        );
+      }
     } catch (e) {
       final error = e.toString();
       if (error.contains("cannot find the file") ||
@@ -107,7 +110,7 @@ class BTServerUtils {
     final isRunner = mainController.btServerisRunning;
     final version = mainController.btServerVersion;
     timer?.cancel();
-    timer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       try {
         version.value = await BTServerApi.getVersion();
         isRunner.value = true;
@@ -126,8 +129,8 @@ class BTServerUtils {
   // 获取 bt-server 可执行文件名
   static String _getBTServerFilename() {
     if (Platform.isWindows) {
-      return "bt-server.exe";
+      return "btserver.exe";
     }
-    return "bt-server";
+    return "btserver";
   }
 }

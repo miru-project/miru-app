@@ -12,7 +12,9 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/api/bt_server.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/pages/home/controller.dart';
+import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/bt_server.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
 import 'package:miru_app/utils/i18n.dart';
@@ -56,7 +58,9 @@ class VideoPlayerController extends GetxController {
 
   final speed = 1.0.obs;
 
-  final fileList = <String>[].obs;
+  final torrentMediaFileList = <String>[].obs;
+
+  final currentTorrentFile = ''.obs;
 
   String _torrenHash = "";
 
@@ -184,6 +188,15 @@ class VideoPlayerController extends GetxController {
       final playUrl = playList[index.value].url;
       final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
       if (watchData.type == ExtensionWatchBangumiType.torrent) {
+        if (Get.find<MainController>().btServerisRunning.value == false) {
+          await BTServerUtils.startServer();
+        }
+
+        sendMessage(
+          Message(
+            Text('video.torrent-download'.i18n),
+          ),
+        );
         // 下载 torrent
         final torrentFile = path.join(
           await MiruDirectory.getCacheDirectory,
@@ -192,10 +205,27 @@ class VideoPlayerController extends GetxController {
         await Dio().download(watchData.url, torrentFile);
         final file = File(torrentFile);
         _torrenHash = await BTServerApi.addTorrent(file.readAsBytesSync());
-        fileList.addAll(await BTServerApi.getFileList(_torrenHash));
-        print(fileList);
+
+        final files = await BTServerApi.getFileList(_torrenHash);
+
+        torrentMediaFileList.clear();
+
+        for (final file in files) {
+          if (_isSubtitle(file)) {
+            subtitles.add(
+              ExtensionBangumiWatchSubtitle(
+                title: path.basename(file),
+                url: '${BTServerApi.baseApi}/torrent/$_torrenHash/$file',
+              ),
+            );
+          } else {
+            torrentMediaFileList.add(file);
+          }
+        }
+        playTorrentFile(torrentMediaFileList.first);
+      } else {
+        await player.open(Media(watchData.url, httpHeaders: watchData.headers));
       }
-      // await player.open(Media(watchData.url, httpHeaders: watchData.headers));
       subtitles.addAll(watchData.subtitles ?? []);
     } catch (e) {
       sendMessage(
@@ -209,6 +239,7 @@ class VideoPlayerController extends GetxController {
   }
 
   playTorrentFile(String file) {
+    currentTorrentFile.value = file;
     player.open(Media('${BTServerApi.baseApi}/torrent/$_torrenHash/$file'));
   }
 
@@ -257,6 +288,12 @@ class VideoPlayerController extends GetxController {
         },
       );
     });
+  }
+
+  _isSubtitle(String file) {
+    return file.endsWith('.srt') ||
+        file.endsWith('.vtt') ||
+        file.endsWith(".ass");
   }
 
   sendMessage(Message message) {

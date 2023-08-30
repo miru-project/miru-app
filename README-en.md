@@ -34,7 +34,7 @@ Miru App
 
 ## Todo
 
-- [ ] BT torrent
+- [x] BT torrent
 - [ ] Better debugging tools
 - [ ] Data synchronization
 - [ ] Automatically search for subtitles

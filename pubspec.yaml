@@ -53,8 +53,8 @@ dependencies:
   html: ^0.15.4
   xpath_selector_html_parser: ^3.0.1
   device_info_plus: ^9.0.3
-  process_run: ^0.13.1
   android_intent_plus: ^4.0.2
+
 
 dev_dependencies:
   flutter_test:

@@ -75,6 +75,9 @@
     "repo-url-subtitle": "Get the repository URL for extensions",
     "tmdb-key": "TMDB API Key",
     "tmdb-key-subtitle": "Get API Key for TMDB metadata",
+    "bt-server": "BT Server",
+    "bt-server-subtitle": "BT Server is a necessary component for online playback of BT seeds",
+    "bt-server-manager": "Manager",
     "upgrade": "Update Software",
     "upgrade-subtitle": "version: {version}",
     "upgrade-training": "Check",
@@ -191,5 +194,13 @@
     "genres": "Genres",
     "runtime": "Runtime",
     "languages": "Languages"
+  },
+
+  "bt-server": {
+    "not-installed": "BT-Server not installed",
+    "running": "BT-Server is running",
+    "stopped": "BT-Server is stopped",
+    "version": "Version {version}",
+    "start": "Start"
   }
 }

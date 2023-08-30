@@ -8,9 +8,7 @@ import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/controller.dart';
 import 'package:miru_app/pages/bt_dialog/view.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
-import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
-import 'package:miru_app/utils/bt_server.dart';
 import 'package:miru_app/widgets/settings_input_tile.dart';
 import 'package:miru_app/widgets/settings_radios_tile.dart';
 import 'package:miru_app/widgets/settings_switch_tile.dart';
@@ -98,9 +96,15 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         const SizedBox(height: 8),
         SettingsTile(
-          title: 'BT-SERVER'.i18n,
-          buildSubtitle: () =>
-              Get.find<MainController>().btServerisRunning.value.toString(),
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.wifi_tethering),
+            desktopWidget: Icon(
+              fluent.FluentIcons.communications,
+              size: 24,
+            ),
+          ),
+          title: 'settings.bt-server'.i18n,
+          buildSubtitle: () => "settings.bt-server-subtitle".i18n,
           trailing: PlatformWidget(
             androidWidget: TextButton(
               onPressed: () {
@@ -109,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   builder: (context) => const BTDialog(),
                 );
               },
-              child: Text('管理'.i18n),
+              child: Text('settings.bt-server-manager'.i18n),
             ),
             desktopWidget: fluent.FilledButton(
               onPressed: () {
@@ -118,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   builder: (context) => const BTDialog(),
                 );
               },
-              child: Text('管理'.i18n),
+              child: Text('settings.bt-server-manager'.i18n),
             ),
           ),
         ),
