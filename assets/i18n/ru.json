@@ -35,7 +35,8 @@
 
   "search": {
     "hint-text": "Пожалуйста, используйте поиск с умом!~",
-    "all": "Все"
+    "all": "Все",
+    "filter": "Фильтр"
   },
 
   "extension": {
@@ -76,6 +77,9 @@
     "theme-dark": "Тёмная",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Показывать NSFW контент",
+    "external-player": "Предпочтительный видеоплеер",
+    "external-player-subtitle": "На данный момент предпочтительным видеоплеером является {player}.",
+    "external-player-builtin": "Встроенный",
     "language-subtitle": "Изменить язык приложения",
     "extension-log": "Окно журнала расширений",
     "extension-log-subtitle": "Используется для отладки расширений",
