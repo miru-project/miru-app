@@ -35,7 +35,8 @@
 
   "search": {
     "hint-text": "Калі ласка, выкарыстоўвайце пошук з розумам!~",
-    "all": "Усё"
+    "all": "Усё",
+    "filter": "Фільтр"
   },
 
   "extension": {
@@ -76,6 +77,9 @@
     "theme-dark": "Цёмная",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Паказваць NSFW кантэнт",
+    "external-player": "Пераважны відэаплэер",
+    "external-player-subtitle": "На дадзены момант пераважным відэаплэерам з'яўляецца {player}.",
+    "external-player-builtin": "Убудаваны",
     "language-subtitle": "Змяніць мову праграмы",
     "extension-log": "Акно часопіса пашырэнняў",
     "extension-log-subtitle": "Выкарыстоўваецца для адладкі пашырэнняў",
