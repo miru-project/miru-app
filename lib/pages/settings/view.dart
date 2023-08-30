@@ -6,6 +6,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/api/tmdb.dart';
 import 'package:miru_app/controller.dart';
+import 'package:miru_app/pages/bt_dialog/view.dart';
 import 'package:miru_app/pages/extension_repo/controller.dart';
 import 'package:miru_app/pages/settings/controller.dart';
 import 'package:miru_app/widgets/settings_input_tile.dart';
@@ -92,6 +93,38 @@ class _SettingsPageState extends State<SettingsPage> {
             );
           },
           text: MiruStorage.getSetting(SettingKey.tmdbKay),
+        ),
+        const SizedBox(height: 8),
+        SettingsTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.wifi_tethering),
+            desktopWidget: Icon(
+              fluent.FluentIcons.communications,
+              size: 24,
+            ),
+          ),
+          title: 'settings.bt-server'.i18n,
+          buildSubtitle: () => "settings.bt-server-subtitle".i18n,
+          trailing: PlatformWidget(
+            androidWidget: TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const BTDialog(),
+                );
+              },
+              child: Text('settings.bt-server-manager'.i18n),
+            ),
+            desktopWidget: fluent.FilledButton(
+              onPressed: () {
+                fluent.showDialog(
+                  context: context,
+                  builder: (context) => const BTDialog(),
+                );
+              },
+              child: Text('settings.bt-server-manager'.i18n),
+            ),
+          ),
         ),
         const SizedBox(height: 8),
         SettingsTile(

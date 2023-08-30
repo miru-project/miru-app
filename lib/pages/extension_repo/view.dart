@@ -8,7 +8,7 @@ import 'package:miru_app/pages/extension_repo/widgets/extension_card.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/button.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
-import 'package:miru_app/widgets/progress_ring.dart';
+import 'package:miru_app/widgets/progress.dart';
 
 class ExtensionRepoPage extends StatefulWidget {
   const ExtensionRepoPage({Key? key}) : super(key: key);

@@ -64,6 +64,9 @@
     "repo-url-subtitle": "获取扩展的仓库地址",
     "tmdb-key": "TMDB API Key",
     "tmdb-key-subtitle": "获取 TMDB 元数据的 API Key",
+    "bt-server": "BT Server",
+    "bt-server-subtitle": "在线播放 BT 种子的必要组件",
+    "bt-server-manager": "管理",
     "upgrade": "更新软件",
     "upgrade-subtitle": "当前版本：{version}",
     "upgrade-training": "检查更新",
@@ -117,7 +120,8 @@
     "subtitle-none": "不使用字幕",
     "subtitle": "字幕",
     "subtitle-change": "切换字幕 {title}",
-    "subtitle-file": "选择字幕文件"
+    "subtitle-file": "选择字幕文件",
+    "torrent-downloading": "正在下载种子"
   },
 
   "reader": {
@@ -180,5 +184,13 @@
     "genres": "类型",
     "runtime": "时长",
     "languages": "语言"
+  },
+
+  "bt-server": {
+    "not-installed": "BT-Server 未安装",
+    "running": "BT-Server 正在运行",
+    "stopped": "BT-Server 已停止",
+    "version": "版本 {version}",
+    "start": "启动"
   }
 }

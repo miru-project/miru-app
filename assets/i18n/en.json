@@ -75,6 +75,9 @@
     "repo-url-subtitle": "Get the repository URL for extensions",
     "tmdb-key": "TMDB API Key",
     "tmdb-key-subtitle": "Get API Key for TMDB metadata",
+    "bt-server": "BT Server",
+    "bt-server-subtitle": "BT Server is a necessary component for online playback of BT seeds",
+    "bt-server-manager": "Manager",
     "upgrade": "Update Software",
     "upgrade-subtitle": "version: {version}",
     "upgrade-training": "Check",
@@ -128,7 +131,8 @@
     "subtitle-none": "No Subtitle",
     "subtitle": "Subtitle",
     "subtitle-change": "Change Subtitle {title}",
-    "subtitle-file": "Subtitle File"
+    "subtitle-file": "Subtitle File",
+    "torrent-downloading": "Torrent downloading"
   },
 
   "comic-settings": {
@@ -191,5 +195,13 @@
     "genres": "Genres",
     "runtime": "Runtime",
     "languages": "Languages"
+  },
+
+  "bt-server": {
+    "not-installed": "BT-Server not installed",
+    "running": "BT-Server is running",
+    "stopped": "BT-Server is stopped",
+    "version": "Version {version}",
+    "start": "Start"
   }
 }

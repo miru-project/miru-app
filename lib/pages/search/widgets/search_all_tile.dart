@@ -5,7 +5,7 @@ import 'package:miru_app/pages/search/controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/extension_item_card.dart';
 import 'package:miru_app/widgets/horizontal_list.dart';
-import 'package:miru_app/widgets/progress_ring.dart';
+import 'package:miru_app/widgets/progress.dart';
 
 class SearchAllTile extends StatefulWidget {
   const SearchAllTile({
