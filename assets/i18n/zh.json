@@ -120,7 +120,8 @@
     "subtitle-none": "不使用字幕",
     "subtitle": "字幕",
     "subtitle-change": "切换字幕 {title}",
-    "subtitle-file": "选择字幕文件"
+    "subtitle-file": "选择字幕文件",
+    "torrent-downloading": "正在下载种子"
   },
 
   "reader": {

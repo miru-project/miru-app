@@ -194,7 +194,7 @@ class VideoPlayerController extends GetxController {
 
         sendMessage(
           Message(
-            Text('video.torrent-download'.i18n),
+            Text('video.torrent-downloading'.i18n),
           ),
         );
         // 下载 torrent

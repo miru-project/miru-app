@@ -131,7 +131,8 @@
     "subtitle-none": "No Subtitle",
     "subtitle": "Subtitle",
     "subtitle-change": "Change Subtitle {title}",
-    "subtitle-file": "Subtitle File"
+    "subtitle-file": "Subtitle File",
+    "torrent-downloading": "Torrent downloading"
   },
 
   "comic-settings": {
