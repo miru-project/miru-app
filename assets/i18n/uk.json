@@ -92,6 +92,8 @@
     "license-subtitle": "Ліцензія"
   },
 
+  "external-player-launching": "Запуск {player}",
+
   "detail": {
     "favorite": "Вибране",
     "favorited": "В обраних",
@@ -100,7 +102,10 @@
     "overview": "Огляд",
     "cast": "В ролях",
     "additional-info": "Додаткова інформація",
-    "get-lastest-data-error": "Не вдалося отримати останні дані"
+    "get-lastest-data-error": "Не вдалося отримати останні дані",
+    "modify-tmdb-binding": "Змінити прив'язку TMDB",
+    "no-tmdb-data": "Дані TMDB не збігаються, прив'яжіть дані самостійно",
+    "tmdb-key-missing": "Ключ API TMDB відсутній, заповніть налаштування"
   },
 
   "video": {
@@ -112,7 +117,8 @@
     "subtitle-none": "Немає субтитрів",
     "subtitle": "Субтитри",
     "subtitle-change": "Редагувати субтитри {title}",
-    "subtitle-file": "Файл субтитрів"
+    "subtitle-file": "Файл субтитрів",
+    "torrent-downloading": "Торрент скачування"
   },
 
   "comic-settings": {
@@ -175,5 +181,13 @@
     "genres": "Жанри",
     "runtime": "Час виконання",
     "languages": "Мови"
+  },
+
+    "bt-server": {
+    "not-installed": "BT-Сервер не встановлено",
+    "running": "BT-Сервер запущено",
+    "stopped": "BT-Сервер зупинено",
+    "version": "Версія {version}",
+    "start": "Запуск"
   }
 }
