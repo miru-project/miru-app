@@ -92,6 +92,8 @@
     "license-subtitle": "Ліцэнзія"
   },
 
+  "external-player-launching": "Запуск {player}",
+
   "detail": {
     "favorite": "Выбранае",
     "favorited": "У выбраных",
@@ -100,7 +102,10 @@
     "overview": "Агляд",
     "cast": "У ролях",
     "additional-info": "Дадатковая інфармацыя",
-    "get-lastest-data-error": "Не ўдалося атрымаць апошнія дадзеныя"
+    "get-lastest-data-error": "Не ўдалося атрымаць апошнія дадзеныя",
+    "modify-tmdb-binding": "Змяніць прывязку TMDB",
+    "no-tmdb-data": "Дадзеныя TMDB не супадаюць, прывяжыце дадзеныя самастойна",
+    "tmdb-key-missing": "Ключ API TMDB адсутнічае, запоўніце наладкі"
   },
 
   "video": {
@@ -112,7 +117,8 @@
     "subtitle-none": "Няма субтытраў",
     "subtitle": "Субтытры",
     "subtitle-change": "Рэдагаваць субтытры {title}",
-    "subtitle-file": "Файл субтытраў"
+    "subtitle-file": "Файл субтытраў",
+    "torrent-downloading": "Торэнт запампоўка"
   },
 
   "comic-settings": {
@@ -175,5 +181,13 @@
     "genres": "Жанры",
     "runtime": "Час выканання",
     "languages": "Мовы"
+  },
+
+    "bt-server": {
+    "not-installed": "BT-Сервер не ўсталяваны",
+    "running": "BT-Сервер запушчаны",
+    "stopped": "BT-Сервер спынены",
+    "version": "Версія {version}",
+    "start": "Запуск"
   }
 }
