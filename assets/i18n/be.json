@@ -35,14 +35,15 @@
 
   "search": {
     "hint-text": "Калі ласка, выкарыстоўвайце пошук з розумам!~",
-    "all": "Усё"
+    "all": "Усё",
+    "filter": "Фільтр"
   },
 
   "extension": {
     "import": {
       "title": "Імпарт пашырэння",
       "url-label": "URL пашырэння",
-      "tips": "Вы можаце імпартаваць пашырэнні па спасылцы або пстрыкнуць каталог пашырэння ніжэй і змясціць туды файл пашырэння.",
+      "tips": "Вы можаце імпартаваць пашырэнні па спасылцы або пстрыкнуць каталог пашырэння ніжэй і змясціць туды файл пашырэння",
       "extension-dir": "Каталог пашырэнняў",
       "import-by-url": "Імпарт па URL"
     },
@@ -63,6 +64,9 @@
     "repo-url-subtitle": "Атрымаць URL рэпазітара для пашырэнняў",
     "tmdb-key": "Ключ API TMDB",
     "tmdb-key-subtitle": "Атрымаць ключ API для метададзеных TMDB",
+    "bt-server": "BT Сервер",
+    "bt-server-subtitle": "BT Сервер - неабходны кампанент для анлайн-прайгравання сядоў BT",
+    "bt-server-manager": "Мэнэджэр",
     "upgrade": "Абнаўленне ПЗ",
     "upgrade-subtitle": "версія: {version}",
     "upgrade-training": "Праверыць наяўнасць абнаўленняў",
@@ -76,6 +80,9 @@
     "theme-dark": "Цёмная",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Паказваць NSFW кантэнт",
+    "external-player": "Пераважны відэаплэер",
+    "external-player-subtitle": "На дадзены момант пераважным відэаплэерам з'яўляецца {player}",
+    "external-player-builtin": "Убудаваны",
     "language-subtitle": "Змяніць мову праграмы",
     "extension-log": "Акно часопіса пашырэнняў",
     "extension-log-subtitle": "Выкарыстоўваецца для адладкі пашырэнняў",
@@ -88,6 +95,8 @@
     "license-subtitle": "Ліцэнзія"
   },
 
+  "external-player-launching": "Запуск {player}",
+
   "detail": {
     "favorite": "Выбранае",
     "favorited": "У выбраных",
@@ -96,7 +105,10 @@
     "overview": "Агляд",
     "cast": "У ролях",
     "additional-info": "Дадатковая інфармацыя",
-    "get-lastest-data-error": "Не ўдалося атрымаць апошнія дадзеныя"
+    "get-lastest-data-error": "Не ўдалося атрымаць апошнія дадзеныя",
+    "modify-tmdb-binding": "Змяніць прывязку TMDB",
+    "no-tmdb-data": "Дадзеныя TMDB не супадаюць, прывяжыце дадзеныя самастойна",
+    "tmdb-key-missing": "Ключ API TMDB адсутнічае, запоўніце наладкі"
   },
 
   "video": {
@@ -108,7 +120,8 @@
     "subtitle-none": "Няма субтытраў",
     "subtitle": "Субтытры",
     "subtitle-change": "Рэдагаваць субтытры {title}",
-    "subtitle-file": "Файл субтытраў"
+    "subtitle-file": "Файл субтытраў",
+    "torrent-downloading": "Торэнт запампоўка"
   },
 
   "comic-settings": {
@@ -171,5 +184,13 @@
     "genres": "Жанры",
     "runtime": "Час выканання",
     "languages": "Мовы"
+  },
+
+    "bt-server": {
+    "not-installed": "BT-Сервер не ўсталяваны",
+    "running": "BT-Сервер запушчаны",
+    "stopped": "BT-Сервер спынены",
+    "version": "Версія {version}",
+    "start": "Запуск"
   }
 }

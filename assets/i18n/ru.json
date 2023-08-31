@@ -35,14 +35,15 @@
 
   "search": {
     "hint-text": "Пожалуйста, используйте поиск с умом!~",
-    "all": "Все"
+    "all": "Все",
+    "filter": "Фильтр"
   },
 
   "extension": {
     "import": {
       "title": "Импорт расширения",
       "url-label": "URL расширения",
-      "tips": "Вы можете импортировать расширения по ссылке или щёлкнуть каталог расширения ниже и поместить туда файл расширения.",
+      "tips": "Вы можете импортировать расширения по ссылке или щёлкнуть каталог расширения ниже и поместить туда файл расширения",
       "extension-dir": "Каталог расширений",
       "import-by-url": "Импорт по URL"
     },
@@ -63,6 +64,9 @@
     "repo-url-subtitle": "Получить URL репозитория для расширений",
     "tmdb-key": "Ключ API TMDB",
     "tmdb-key-subtitle": "Получить ключ API для метаданных TMDB",
+    "bt-server": "BT Сервер",
+    "bt-server-subtitle": "BT Сервер — необходимый компонент для онлайн-воспроизведения сидов BT",
+    "bt-server-manager": "Менеджер",
     "upgrade": "Обновление ПО",
     "upgrade-subtitle": "версия: {version}",
     "upgrade-training": "Проверить наличие обновлений",
@@ -76,6 +80,9 @@
     "theme-dark": "Тёмная",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Показывать NSFW контент",
+    "external-player": "Предпочтительный видеоплеер",
+    "external-player-subtitle": "На данный момент предпочтительным видеоплеером является {player}",
+    "external-player-builtin": "Встроенный",
     "language-subtitle": "Изменить язык приложения",
     "extension-log": "Окно журнала расширений",
     "extension-log-subtitle": "Используется для отладки расширений",
@@ -88,6 +95,8 @@
     "license-subtitle": "Лицензия"
   },
 
+  "external-player-launching": "Запуск {player}",
+
   "detail": {
     "favorite": "Избранное",
     "favorited": "В избранных",
@@ -96,7 +105,10 @@
     "overview": "Обзор",
     "cast": "В ролях",
     "additional-info": "Дополнительная информация",
-    "get-lastest-data-error": "Не удалось получить последние данные"
+    "get-lastest-data-error": "Не удалось получить последние данные",
+    "modify-tmdb-binding": "Изменить привязку TMDB",
+    "no-tmdb-data": "Данные TMDB не совпадают, привяжите данные самостоятельно",
+    "tmdb-key-missing": "Ключ API TMDB отсутствует, заполните настройки"
   },
 
   "video": {
@@ -108,7 +120,8 @@
     "subtitle-none": "Нет субтитров",
     "subtitle": "Субтитры",
     "subtitle-change": "Редактировать субтитры {title}",
-    "subtitle-file": "Файл субтитров"
+    "subtitle-file": "Файл субтитров",
+    "torrent-downloading": "Торрент скачивание"
   },
 
   "comic-settings": {
@@ -171,5 +184,13 @@
     "genres": "Жанры",
     "runtime": "Время выполнения",
     "languages": "Языки"
+  },
+
+  "bt-server": {
+    "not-installed": "BT-Сервер не установлен",
+    "running": "BT-Сервер запущен",
+    "stopped": "BT-Сервер остановлен",
+    "version": "Версия {version}",
+    "start": "Запуск"
   }
 }
