@@ -43,17 +43,17 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: "build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk"
-          name: Miru-${{github.ref_name}}-armeabi-v7a.apk
+          name: Miru-pr-${{ github.event.pull_request.number }-armeabi-v7a.apk
       - name: Upload Artifact - arm64-v8a
         uses: actions/upload-artifact@v3
         with:
           path: "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
-          name: Miru-${{github.ref_name}}-arm64-v8a.apk
+          name: Miru-pr-${{ github.event.pull_request.number }-arm64-v8a.apk
       - name: Upload Artifact - x86
         uses: actions/upload-artifact@v3
         with:
           path: "build/app/outputs/flutter-apk/app-x86-release.apk"
-          name: Miru-${{github.ref_name}}-x86.apk
+          name: Miru-pr-${{ github.event.pull_request.number }-x86.apk
 
   build-and-release-windows:
     runs-on: windows-latest
@@ -72,11 +72,11 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           type: "zip"
-          filename: Miru-${{github.ref_name}}-windows.zip
+          filename: Miru-pr-${{ github.event.pull_request.number }}-windows.zip
           directory: build/windows/runner/Release
       # 发布安装包
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          path: "build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip"
-          name: Miru-${{github.ref_name}}-windows.zip
+          path: "build/windows/runner/Release/Miru-pr-${{ github.event.pull_request.number }}-windows.zip"
+          name: Miru-pr-${{ github.event.pull_request.number }}-windows.zip
