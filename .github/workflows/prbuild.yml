@@ -52,8 +52,8 @@ jobs:
       - name: Upload Artifact - x86
         uses: actions/upload-artifact@v3
         with:
-          path: "build/app/outputs/flutter-apk/app-x86-release.apk"
-          name: Miru-pr-${{ github.event.pull_request.number }-x86.apk
+          path: "build/app/outputs/flutter-apk/app-x86_64-release.apk"
+          name: Miru-pr-${{ github.event.pull_request.number }-x86_64.apk
 
   build-and-release-windows:
     runs-on: windows-latest
