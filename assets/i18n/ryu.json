@@ -22,15 +22,15 @@
     "next": "ちぎ",
     "previous": "まい",
     "show-all": "まじりひょうじ"
-    "delete": "さくじょ",
-    "delete-all": "すべてさくじょ"
+    "delete": "さちゅるじょ",
+    "delete-all": "まじりさちゅるじょ"
   },
 
   "home": {
     "continue-watching": "ちづきーん",
     "favorite": "うきーがいー",
     "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん"
-    "watched": "しちょうずみ {ep}"
+    "watched": "しちょうじみ {ep}"
   },
 
   "search": {
@@ -65,7 +65,7 @@
     "tmdb-key": "TMDB APIキー",
     "tmdb-key-subtitle": "TMDBメタデータぬAPIキーしーゅとぅくしーん",
     "bt-server": "BTサーバー",
-    "bt-server-subtitle": "BTサーバーは、BTシードのオンラインさいせいにひつようなコンポーネントですs",
+    "bt-server-subtitle": "BTサーバーや、BTシードぬオンラインさいゆいんかいふぃちぐとーるコンポーネントやいびーん",
     "bt-server-manager": "マネージャー",
     "upgrade": "ソフトウェアこうしん",
     "upgrade-subtitle": "バージョン： {version}",
@@ -79,10 +79,10 @@
     "theme-light": "ライト",
     "theme-dark": "ダーク",
     "nsfw": "NSFW",
-    "nsfw-subtitle": "NSFWコンテンツをひょうじします",
-    "external-player": "ゆうせんするビデオプレーヤー",
-    "external-player-subtitle": "げんざい、ゆうせんされてるプレーヤーは{player}です",
-    "external-player-builtin": "くみこみ",
+    "nsfw-subtitle": "NSFWコンテンツひょうじさびーん",
+    "external-player": "ゆうさんしーんビデオプレーヤー",
+    "external-player-subtitle": "ぎんじぇー、ゆうさんさりとーんプレーヤーや{player}やいびーん",
+    "external-player-builtin": "くみくみ",
     "language-subtitle": "ソフトウェアぬぎんぐへいるかんさびーん",
     "extension-log": "かくはべるちぬーログウィンドウ",
     "extension-log-subtitle": "かくはべるちぬーぬデバッグなしようさびーん",
@@ -95,7 +95,7 @@
     "license-subtitle": "ライセンス"
   },
 
-  "external-player-launching": "{player}をきどう",
+  "external-player-launching": "{player}きどう",
 
   "detail": {
     "favorite": "うきーがいー",
@@ -106,9 +106,9 @@
     "cast": "キャスト",
     "additional-info": "ちいかじょうほう",
     "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん"
-    "modify-tmdb-binding": "TMDBバインディングをへんこう",
-    "no-tmdb-data": "TMDBデータはいっちしていません。じぶんでデータをバインドしてください",
-    "tmdb-key-missing": "TMDB APIキーがありません、せっていからにゅうりょくしてください"
+    "modify-tmdb-binding": "TMDBバインディングへいるかん",
+    "no-tmdb-data": "TMDBデーターいっちさびらん。じぶんっしデータバインドしみそーれー",
+    "tmdb-key-missing": "TMDB APIキーぬあいびらん、しっていからんかいゅうりょくしみそーれー"
   },
 
   "video": {
@@ -121,7 +121,7 @@
     "subtitle": "じまちゅん",
     "subtitle-change": "じまちゅんへいるかん {title}",
     "subtitle-file": "じまちゅるファイル"
-    "torrent-downloading": "Torrentでダウンロード"
+    "torrent-downloading": "Torrentっしダウンロード"
   },
 
   "comic-settings": {
@@ -187,9 +187,9 @@
    },
 
   "bt-server": {
-    "not-installed": "BTサーバーがインストールされていません",
-    "running": "BTサーバーはうごいています",
-    "stopped": "BTサーバーはていししています",
+    "not-installed": "BTサーバーぬインストールさりやびらん",
+    "running": "BTサーバーやんじゅちょーいびーん",
+    "stopped": "BTサーバーやていしそーいびーん",
     "version": "バージョン {version}",
     "start": "かいし"
   }
