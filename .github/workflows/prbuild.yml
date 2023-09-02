@@ -68,15 +68,12 @@ jobs:
         run: flutter pub get
       - name: Build artifacts
         run: flutter build windows --release
-      - name: Archive Release
-        uses: thedoctor0/zip-release@master
-        with:
-          type: "zip"
-          filename: Miru-pr-${{ github.event.pull_request.number }}-windows.zip
-          directory: build/windows/runner/Release
+      - name: Rename Release Directory Name to Miru-App # 为了解压缩后更好看一点
+        run: |
+          mv build/windows/runner/Release build/windows/runner/Miru-App
       # 发布安装包
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          path: "build/windows/runner/Release/Miru-pr-${{ github.event.pull_request.number }}-windows.zip"
+          path: "build/windows/runner/Miru-App"
           name: Miru-pr-${{ github.event.pull_request.number }}-windows.zip
