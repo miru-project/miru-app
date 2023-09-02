@@ -65,7 +65,7 @@
     "tmdb-key": "TMDB APIキー",
     "tmdb-key-subtitle": "TMDBメタデータのAPIキーを取得する",
     "bt-server": "BTサーバー",
-    "bt-server-subtitle": "BTサーバーは、BTシードのオンライン再生に必要なコンポーネントですs",
+    "bt-server-subtitle": "BTサーバーは、BTシードのオンライン再生に必要なコンポーネントです",
     "bt-server-manager": "マネージャー",
     "upgrade": "ソフトウェアを更新",
     "upgrade-subtitle": "バージョン： {version}",
