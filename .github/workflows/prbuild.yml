@@ -39,10 +39,21 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD}}
 
       # 发布安装包
-      - name: Upload Artifact
+      - name: Upload Artifact - armeabi-v7a
         uses: actions/upload-artifact@v3
         with:
-          path: "build/app/outputs/flutter-apk/app-*.apk"
+          path: "build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk"
+          name: Miru-${{github.ref_name}}-armeabi-v7a.apk
+      - name: Upload Artifact - arm64-v8a
+        uses: actions/upload-artifact@v3
+        with:
+          path: "build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
+          name: Miru-${{github.ref_name}}-arm64-v8a.apk
+      - name: Upload Artifact - x86
+        uses: actions/upload-artifact@v3
+        with:
+          path: "build/app/outputs/flutter-apk/app-x86-release.apk"
+          name: Miru-${{github.ref_name}}-x86.apk
 
   build-and-release-windows:
     runs-on: windows-latest
@@ -68,3 +79,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: "build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip"
+          name: Miru-${{github.ref_name}}-windows.zip
