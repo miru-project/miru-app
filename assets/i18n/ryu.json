@@ -22,17 +22,21 @@
     "next": "ちぎ",
     "previous": "まい",
     "show-all": "まじりひょうじ"
+    "delete": "さくじょ",
+    "delete-all": "すべてさくじょ"
   },
 
   "home": {
     "continue-watching": "ちづきーん",
     "favorite": "うきーがいー",
     "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん"
+    "watched": "しちょうずみ {ep}"
   },
 
   "search": {
     "hint-text": "きんさくちかてぃくぃみそーれー～！",
     "all": "まじり"
+    "filter": "フィルター"
   },
 
   "extension": {
@@ -60,6 +64,9 @@
     "repo-url-subtitle": "かくはべるちぬーリポジトリぬURLしーゅとぅくしーん",
     "tmdb-key": "TMDB APIキー",
     "tmdb-key-subtitle": "TMDBメタデータぬAPIキーしーゅとぅくしーん",
+    "bt-server": "BTサーバー",
+    "bt-server-subtitle": "BTサーバーは、BTシードのオンラインさいせいにひつようなコンポーネントですs",
+    "bt-server-manager": "マネージャー",
     "upgrade": "ソフトウェアこうしん",
     "upgrade-subtitle": "バージョン： {version}",
     "upgrade-training": "チェック",
@@ -71,6 +78,11 @@
     "theme-system": "システム",
     "theme-light": "ライト",
     "theme-dark": "ダーク",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "NSFWコンテンツをひょうじします",
+    "external-player": "ゆうせんするビデオプレーヤー",
+    "external-player-subtitle": "げんざい、ゆうせんされてるプレーヤーは{player}です",
+    "external-player-builtin": "くみこみ",
     "language-subtitle": "ソフトウェアぬぎんぐへいるかんさびーん",
     "extension-log": "かくはべるちぬーログウィンドウ",
     "extension-log-subtitle": "かくはべるちぬーぬデバッグなしようさびーん",
@@ -83,6 +95,8 @@
     "license-subtitle": "ライセンス"
   },
 
+  "external-player-launching": "{player}をきどう",
+
   "detail": {
     "favorite": "うきーがいー",
     "favorited": "うきーがいー",
@@ -92,6 +106,9 @@
     "cast": "キャスト",
     "additional-info": "ちいかじょうほう",
     "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん"
+    "modify-tmdb-binding": "TMDBバインディングをへんこう",
+    "no-tmdb-data": "TMDBデータはいっちしていません。じぶんでデータをバインドしてください",
+    "tmdb-key-missing": "TMDB APIキーがありません、せっていからにゅうりょくしてください"
   },
 
   "video": {
@@ -104,6 +121,7 @@
     "subtitle": "じまちゅん",
     "subtitle-change": "じまちゅんへいるかん {title}",
     "subtitle-file": "じまちゅるファイル"
+    "torrent-downloading": "Torrentでダウンロード"
   },
 
   "comic-settings": {
@@ -166,5 +184,13 @@
     "genres": "ジャンル",
     "runtime": "じっこうじがん",
     "languages": "ぎんぐ"
+   },
+
+  "bt-server": {
+    "not-installed": "BTサーバーがインストールされていません",
+    "running": "BTサーバーはうごいています",
+    "stopped": "BTサーバーはていししています",
+    "version": "バージョン {version}",
+    "start": "かいし"
   }
 }
