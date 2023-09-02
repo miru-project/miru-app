@@ -133,15 +133,22 @@ jobs:
           type: "zip"
           filename: Miru-${{github.ref_name}}-windows.zip
           directory: build/windows/runner/Release
+      - name: Rename Release Directory Name to Miru-App # For Artifacts.
+        # 但是此处将压缩出来的包迁移到了一个临时 temp 目录，这是用来上传到 Release Assets 的
+        # 再下面的重命名是为了 Artifacts 的
+        run: |
+          mkdir temp
+          mv build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip temp/Miru-${{github.ref_name}}-windows.zip
+          mv build/windows/runner/Release build/windows/runner/Miru-App
       # 发布安装包
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          path: "build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip"
-          name: Miru-${{github.ref_name}}-windows.zip
+          path: "build/windows/runner/Miru-App"
+          name: Miru-pr-${{ github.event.pull_request.number }}-windows.zip
       - name: Release Packages
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/windows/runner/Release/Miru-${{github.ref_name}}-windows.zip,Output/*.exe"
+          artifacts: "temp/Miru-${{github.ref_name}}-windows.zip,Output/*.exe"
           allowUpdates: true
           omitBody: true
