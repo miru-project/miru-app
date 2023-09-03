@@ -22,17 +22,21 @@
     "next": "次",
     "previous": "前",
     "show-all": "全て表示"
+    "delete": "削除",
+    "delete-all": "全て削除"
   },
 
   "home": {
     "continue-watching": "続ける",
     "favorite": "お気に入り",
     "no-record": "お気に入りや閲覧記録はありません"
+    "watched": "視聴済み {ep}"
   },
 
   "search": {
     "hint-text": "検索を使ってください～！",
     "all": "全て"
+    "filter": "フィルター"
   },
 
   "extension": {
@@ -60,6 +64,9 @@
     "repo-url-subtitle": "拡張機能リポジトリのURLを取得する",
     "tmdb-key": "TMDB APIキー",
     "tmdb-key-subtitle": "TMDBメタデータのAPIキーを取得する",
+    "bt-server": "BTサーバー",
+    "bt-server-subtitle": "BTサーバーは、BTシードのオンライン再生に必要なコンポーネントです",
+    "bt-server-manager": "マネージャー",
     "upgrade": "ソフトウェアを更新",
     "upgrade-subtitle": "バージョン： {version}",
     "upgrade-training": "チェック",
@@ -71,6 +78,11 @@
     "theme-system": "システム",
     "theme-light": "ライト",
     "theme-dark": "ダーク",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "NSFWコンテンツを表示します",
+    "external-player": "優先するビデオプレーヤー",
+    "external-player-subtitle": "現在、優先されてるプレーヤーは{player}です",
+    "external-player-builtin": "組み込み",
     "language-subtitle": "ソフトウェアの言語を変更します",
     "extension-log": "拡張機能ログウィンドウ",
     "extension-log-subtitle": "拡張機能のデバッグに使用します",
@@ -83,6 +95,8 @@
     "license-subtitle": "ライセンス"
   },
 
+  "external-player-launching": "{player}を起動",
+
   "detail": {
     "favorite": "お気に入り",
     "favorited": "お気に入り",
@@ -92,6 +106,9 @@
     "cast": "キャスト",
     "additional-info": "追加情報",
     "get-lastest-data-error": "最新データの取得に失敗しました"
+    "modify-tmdb-binding": "TMDBバインディングを変更",
+    "no-tmdb-data": "TMDBデータは一致していません。自分でデータをバインドしてください",
+    "tmdb-key-missing": "TMDB APIキーがありません、設定から入力してください"
   },
 
   "video": {
@@ -104,6 +121,7 @@
     "subtitle": "字幕",
     "subtitle-change": "字幕を変更 {title}",
     "subtitle-file": "字幕ファイル"
+    "torrent-downloading": "Torrentでダウンロード"
   },
 
   "comic-settings": {
@@ -166,5 +184,13 @@
     "genres": "ジャンル",
     "runtime": "実行時間",
     "languages": "言語"
+   },
+
+  "bt-server": {
+    "not-installed": "BTサーバーがインストールされていません",
+    "running": "BTサーバーは動いています",
+    "stopped": "BTサーバーは停止しています",
+    "version": "バージョン {version}",
+    "start": "開始"
   }
 }
