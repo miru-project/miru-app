@@ -93,7 +93,9 @@ class BTServerUtils {
       final error = e.toString();
       if (error.contains("cannot find the file") ||
           error.contains("No such file or directory")) {
-        Get.find<BTDialogController>().isInstalled.value = false;
+        if (Get.isRegistered<BTDialogController>()) {
+          Get.find<BTDialogController>().isInstalled.value = false;
+        }
       }
       rethrow;
     }

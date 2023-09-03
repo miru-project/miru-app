@@ -240,6 +240,7 @@ class VideoPlayerController extends GetxController {
 
   playTorrentFile(String file) {
     currentTorrentFile.value = file;
+    (player.platform as NativePlayer).setProperty("network-timeout", "60");
     player.open(Media('${BTServerApi.baseApi}/torrent/$_torrenHash/$file'));
   }
 
@@ -250,7 +251,7 @@ class VideoPlayerController extends GetxController {
 
   onExit() async {
     if (_torrenHash.isNotEmpty) {
-      await BTServerApi.removeTorrent(_torrenHash);
+      BTServerApi.removeTorrent(_torrenHash);
     }
 
     if (player.state.duration.inSeconds == 0) {
