@@ -142,6 +142,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
                               color: Colors.white,
                               fontSize: 12,
                             ),
+                            maxLines: 1,
                           ),
                         ],
                       ),
@@ -231,6 +232,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
                       color: Colors.white,
                       fontSize: 12,
                     ),
+                    maxLines: 1,
                   ),
                   if (_update.isNotEmpty) ...[
                     const SizedBox(height: 8),

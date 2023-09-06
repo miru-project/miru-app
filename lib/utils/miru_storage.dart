@@ -112,6 +112,7 @@ class MiruStorage {
     await _initSetting(SettingKey.theme, 'system');
     await _initSetting(SettingKey.enableNSFW, false);
     await _initSetting(SettingKey.videoPlayer, 'built-in');
+    await _initSetting(SettingKey.listMode, "grid");
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -139,4 +140,5 @@ class SettingKey {
   static String enableNSFW = 'EnableNSFW';
   static String videoPlayer = 'VideoPlayer';
   static String databaseVersion = 'DatabaseVersion';
+  static String listMode = 'ListMode';
 }

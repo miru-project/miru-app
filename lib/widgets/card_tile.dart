@@ -6,8 +6,10 @@ class CardTile extends StatelessWidget {
     required this.title,
     required this.child,
     this.trailing,
+    this.leading,
   }) : super(key: key);
   final String title;
+  final Widget? leading;
   final Widget? trailing;
   final Widget child;
 
@@ -34,6 +36,8 @@ class CardTile extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(width: 3),
+                if (leading != null) leading!,
                 const Spacer(),
                 if (trailing != null) trailing!
               ],

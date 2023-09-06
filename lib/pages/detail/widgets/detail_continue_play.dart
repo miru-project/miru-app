@@ -119,13 +119,19 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
             children: [
               const Icon(fluent.FluentIcons.play),
               const SizedBox(width: 5),
-              Text(
-                FlutterI18n.translate(
-                  context,
-                  'detail.continue-watching',
-                  translationParams: {
-                    'episode': history.episodeTitle,
-                  },
+              Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 150,
+                ),
+                child: Text(
+                  FlutterI18n.translate(
+                    context,
+                    'detail.continue-watching',
+                    translationParams: {
+                      'episode': history.episodeTitle,
+                    },
+                  ),
+                  maxLines: 1,
                 ),
               )
             ],
