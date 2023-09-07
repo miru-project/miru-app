@@ -54,22 +54,77 @@ class _BTDialogState extends State<BTDialog> {
             Text("bt-server.stopped".i18n),
           const SizedBox(height: 16),
           if (c.isRuning.value)
-            Text(
-              FlutterI18n.translate(
-                context,
-                'bt-server.version',
-                translationParams: {
-                  "version": c.version.value,
-                },
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                children: [
+                  Text(
+                    FlutterI18n.translate(
+                      context,
+                      'bt-server.version',
+                      translationParams: {
+                        "version": c.version.value,
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  if (c.hasUpdate.value)
+                    Text(
+                      FlutterI18n.translate(
+                        context,
+                        'bt-server.remote-version',
+                        translationParams: {
+                          "version": c.remoteVersion.value,
+                        },
+                      ),
+                    ),
+                ],
               ),
-            )
-          else
-            PlatformFilledButton(
-              child: Text("bt-server.start".i18n),
-              onPressed: () {
-                BTServerUtils.startServer();
-              },
             ),
+          Row(
+            children: [
+              if (c.isRuning.value) ...[
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: PlatformFilledButton(
+                    child: Text('bt-server.stop'.i18n),
+                    onPressed: () {
+                      BTServerUtils.stopServer();
+                    },
+                  ),
+                ),
+                // 升级按钮
+                if (c.hasUpdate.value)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: PlatformFilledButton(
+                      child: Text("bt-server.upgrade".i18n),
+                      onPressed: () {
+                        c.downloadOrUpgradeServer(context);
+                      },
+                    ),
+                  ),
+              ] else
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: PlatformFilledButton(
+                    child: Text("bt-server.start".i18n),
+                    onPressed: () {
+                      BTServerUtils.startServer();
+                    },
+                  ),
+                ),
+              if (c.isInstalled.value)
+                //  卸载
+                PlatformFilledButton(
+                  child: Text("common.uninstall".i18n),
+                  onPressed: () async {
+                    await BTServerUtils.uninstall();
+                    c.isInstalled.value = false;
+                  },
+                ),
+            ],
+          ),
         ],
       );
     });

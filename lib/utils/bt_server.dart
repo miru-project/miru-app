@@ -75,7 +75,7 @@ class BTServerUtils {
 
     try {
       if (Platform.isWindows) {
-        await Process.run(
+        _process = await Process.start(
           btServerPath,
           [],
           workingDirectory: savePath,
@@ -120,6 +120,23 @@ class BTServerUtils {
         isRunner.value = false;
       }
     });
+  }
+
+  // 检查更新
+  static Future<String> getRemoteVersion() async {
+    const url =
+        "https://api.github.com/repos/miru-project/bt-server/releases/latest";
+    final res = Dio().get(url);
+    final remoteVersion = (await res).data["tag_name"] as String;
+    return remoteVersion.replaceFirst("v", '');
+  }
+
+  // 卸载 bt-server
+  static Future<void> uninstall() async {
+    stopServer();
+    final savePath = await MiruDirectory.getDirectory;
+    final btServerPath = path.join(savePath, _getBTServerFilename());
+    await File(btServerPath).delete();
   }
 
   static Future<bool> isInstalled() async {

@@ -202,6 +202,9 @@
     "running": "BT-Server is running",
     "stopped": "BT-Server is stopped",
     "version": "Version {version}",
+    "remote-version": "Remote Version {version}",
+    "stop": "Stop",
+    "upgrade": "Upgrade",
     "start": "Start"
   }
 }
