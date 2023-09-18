@@ -81,7 +81,7 @@ class _BTDialogState extends State<BTDialog> {
                 ],
               ),
             ),
-          Row(
+          Wrap(
             children: [
               if (c.isRuning.value) ...[
                 Padding(
