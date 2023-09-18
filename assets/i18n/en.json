@@ -76,7 +76,7 @@
     "tmdb-key": "TMDB API Key",
     "tmdb-key-subtitle": "Get API Key for TMDB metadata",
     "bt-server": "BT Server",
-    "bt-server-subtitle": "BT Server is a necessary component for online playback of BT seeds",
+    "bt-server-subtitle": "BT Server is a necessary component for online playback of torrent",
     "bt-server-manager": "Manager",
     "upgrade": "Update Software",
     "upgrade-subtitle": "version: {version}",
