@@ -28,30 +28,30 @@ class BTServerUtils {
     final res = dio.get(url);
     final remoteVersion = (await res).data["tag_name"] as String;
     debugPrint("最新版本: $remoteVersion");
-    late String structure;
+    late String arch;
     late String platform;
     if (Platform.isAndroid) {
       final supportedAbis = androidDeviceInfo.supportedAbis;
       if (supportedAbis.contains("armeabi-v7a")) {
-        structure = "arm";
+        arch = "arm";
       }
       if (supportedAbis.contains("x86_64")) {
-        structure = "amd64";
+        arch = "amd64";
       }
       if (supportedAbis.contains("arm64-v8a")) {
-        structure = "arm64";
+        arch = "arm64";
       }
       platform = "android";
     }
     if (Platform.isWindows) {
-      structure = "amd64.exe";
+      arch = "amd64.exe";
       platform = "windows";
     }
 
-    debugPrint("下载 bt-server $remoteVersion $platform $structure");
+    debugPrint("下载 bt-server $remoteVersion $platform $arch");
 
     final downloadUrl =
-        "https://github.com/miru-project/bt-server/releases/download/$remoteVersion/bt-server-$remoteVersion-$platform-$structure";
+        "https://github.com/miru-project/bt-server/releases/download/$remoteVersion/bt-server-$remoteVersion-$platform-$arch";
 
     final savePath = await MiruDirectory.getDirectory;
     await dio.download(
@@ -124,11 +124,15 @@ class BTServerUtils {
 
   // 检查更新
   static Future<String> getRemoteVersion() async {
-    const url =
-        "https://api.github.com/repos/miru-project/bt-server/releases/latest";
-    final res = Dio().get(url);
-    final remoteVersion = (await res).data["tag_name"] as String;
-    return remoteVersion.replaceFirst("v", '');
+    try {
+      const url =
+          "https://api.github.com/repos/miru-project/bt-server/releases/latest";
+      final res = Dio().get(url);
+      final remoteVersion = (await res).data["tag_name"] as String;
+      return remoteVersion.replaceFirst("v", '');
+    } catch (e) {
+      return Get.find<MainController>().btServerVersion.value;
+    }
   }
 
   // 卸载 bt-server
