@@ -162,15 +162,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
             const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 8,
-                ),
+              child: Wrap(
                 children: [
                   InfoCard(
                     icon: Icons.person,
@@ -377,13 +369,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                         ],
                         CardTile(
                           title: 'extension-info.other-infomation'.i18n,
-                          child: GridView(
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 300,
-                              childAspectRatio: 3,
-                            ),
-                            shrinkWrap: true,
+                          child: Wrap(
                             children: [
                               InfoCard(
                                 icon: fluent.FluentIcons.contact,
