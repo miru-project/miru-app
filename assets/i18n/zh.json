@@ -191,6 +191,9 @@
     "running": "BT-Server 正在运行",
     "stopped": "BT-Server 已停止",
     "version": "版本 {version}",
+    "remote-version": "远程版本 {version}",
+    "stop": "停止",
+    "upgrade": "升级",
     "start": "启动"
   }
 }
