@@ -153,11 +153,13 @@ class ExtensionBangumiWatch {
     required this.url,
     this.subtitles,
     this.headers,
+    this.audioTrack,
   });
   final ExtensionWatchBangumiType type;
   final String url;
   final List<ExtensionBangumiWatchSubtitle>? subtitles;
   late Map<String, String>? headers;
+  late String? audioTrack;
 
   factory ExtensionBangumiWatch.fromJson(Map<String, dynamic> json) =>
       _$ExtensionBangumiWatchFromJson(json);
