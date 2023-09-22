@@ -35,7 +35,8 @@
 
   "search": {
     "hint-text": "¡Por favor, busca ampliamente!~",
-    "all": "Todo"
+    "all": "Todo",
+    "filter": "Filtro"
   },
 
   "extension": {
@@ -63,6 +64,9 @@
     "repo-url-subtitle": "Obtener el URL del repositorio para extensiones",
     "tmdb-key": "Clave de la API de TMDB",
     "tmdb-key-subtitle": "Obtener la clave de la API para los metadatos de TMDB",
+    "bt-server": "Servidor BT",
+    "bt-server-subtitle": "El servidor BT es un componente necesario para la reproducción en línea de torrents",
+    "bt-server-manager": "Gestionar",
     "upgrade": "Actualizar aplicación",
     "upgrade-subtitle": "versión: {version}",
     "upgrade-training": "Comprobar",
@@ -76,6 +80,9 @@
     "theme-dark": "Oscuro",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Mostrar contenido NSFW",
+    "external-player": "Reproductor de vídeo preferido",
+    "external-player-subtitle": "Actualmente, el reproductor preferido es {player}",
+    "external-player-builtin" : "Incorporado",
     "language-subtitle": "Cambia el idioma de la aplicación",
     "extension-log": "Ventana de registro de extensiones",
     "extension-log-subtitle": "Usado para depurar extensiones",
@@ -88,6 +95,8 @@
     "license-subtitle": "Licencia"
   },
 
+  "external-player-launching": "Lanzando {player}",
+
   "detail": {
     "favorite": "Favorito",
     "favorited": "Favorito",
@@ -96,7 +105,10 @@
     "overview": "Descripción general",
     "cast": "Reparto",
     "additional-info": "Información adicional",
-    "get-lastest-data-error": "No se pudieron obtener los datos más recientes"
+    "get-lastest-data-error": "No se pudieron obtener los datos más recientes",
+    "modify-tmdb-binding": "Modificar enlace a TMDB",
+    "no-tmdb-data": "No hay datos de TMDB coincidentes, por favor, enlaza los datos tu mismo/a",
+    "tmdb-key-missing": "Falta la clave de la API de TMDB, por favor, rellenala en los ajustes"
   },
 
   "video": {
@@ -108,7 +120,8 @@
     "subtitle-none": "Sin subtítulos",
     "subtitle": "Subtítulos",
     "subtitle-change": "Cambiar subtítulos {title}",
-    "subtitle-file": "Archivo de subtítulos"
+    "subtitle-file": "Archivo de subtítulos",
+    "torrent-downloading": "Descargando torrent"
   },
 
   "comic-settings": {
@@ -171,5 +184,16 @@
     "genres": "Géneros",
     "runtime": "Tiempo de ejecución",
     "languages": "Idiomas"
+  },
+
+  "bt-server": {
+    "not-installed": "BT-Server no está instalado",
+    "running": "BT-Server está ejecutándose",
+    "stopped": "BT-Server está detenido",
+    "version": "Versión {version}",
+    "remote-version": "Versión remota {version}",
+    "stop": "Parar",
+    "upgrade": "Mejorar",
+    "start": "Iniciar"
   }
 }

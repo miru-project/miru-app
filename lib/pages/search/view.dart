@@ -23,6 +23,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     c = Get.put(SearchPageController());
+    if (c.needRefresh) {
+      c.getRuntime();
+    }
     super.initState();
   }
 

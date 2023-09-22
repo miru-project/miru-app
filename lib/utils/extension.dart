@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -20,6 +21,7 @@ import 'package:path/path.dart' as path;
 class ExtensionUtils {
   static late Map<String, ExtensionRuntime> runtimes;
   static late Map<String, String> extensionErrorMap;
+  static Timer? _timer;
 
   static Future<String> get getExtensionsDir async =>
       path.join(await MiruDirectory.getDirectory, 'extensions');
@@ -31,7 +33,11 @@ class ExtensionUtils {
     await _loadExtensions();
     // 监听目录变化
     Directory(await getExtensionsDir).watch().listen((event) {
-      _loadExtensions();
+      _timer?.cancel();
+      _timer = Timer(const Duration(seconds: 1), () async {
+        await _loadExtensions();
+        debugPrint("load extension");
+      });
     });
   }
 
@@ -67,7 +73,7 @@ class ExtensionUtils {
     }
     // 重载搜索页面
     if (Get.isRegistered<SearchPageController>()) {
-      Get.find<SearchPageController>().getRuntime();
+      Get.find<SearchPageController>().needRefresh = true;
     }
   }
 

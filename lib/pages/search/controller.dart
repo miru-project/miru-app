@@ -11,10 +11,10 @@ class SearchPageController extends GetxController {
   String _randomKey = "";
   int get finishCount =>
       searchResultList.where((element) => element.completed).length;
+  bool needRefresh = true;
 
   @override
   void onInit() {
-    getRuntime();
     ever(search, (callback) {
       _randomKey = DateTime.now().millisecondsSinceEpoch.toString();
       getResult(_randomKey);
@@ -37,6 +37,7 @@ class SearchPageController extends GetxController {
       searchResultList.add(SearchResult(runitme: element));
     }
     getResult(_randomKey);
+    needRefresh = false;
   }
 
   Future<void> getResult(String key) async {
