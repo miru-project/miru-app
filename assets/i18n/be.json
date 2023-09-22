@@ -186,7 +186,7 @@
     "languages": "Мовы"
   },
 
-    "bt-server": {
+  "bt-server": {
     "not-installed": "BT-Сервер не ўсталяваны",
     "running": "BT-Сервер запушчаны",
     "stopped": "BT-Сервер спынены",
