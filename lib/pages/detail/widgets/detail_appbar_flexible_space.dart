@@ -66,7 +66,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                   ? const SizedBox.shrink()
                   : Cover(
                       alt: c.data.value?.title ?? '',
-                      url: c.data.value?.cover,
+                      url: c.backgorund,
                       noText: true,
                     ),
             ),
