@@ -113,7 +113,12 @@ int _historyEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.cover.length * 3;
+  {
+    final value = object.cover;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.episodeTitle.length * 3;
   bytesCount += 3 + object.package.length * 3;
   bytesCount += 3 + object.progress.length * 3;
@@ -150,7 +155,7 @@ History _historyDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = History();
-  object.cover = reader.readString(offsets[0]);
+  object.cover = reader.readStringOrNull(offsets[0]);
   object.date = reader.readDateTime(offsets[1]);
   object.episodeGroupId = reader.readLong(offsets[2]);
   object.episodeId = reader.readLong(offsets[3]);
@@ -174,7 +179,7 @@ P _historyDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
       return (reader.readDateTime(offset)) as P;
     case 2:
@@ -391,8 +396,24 @@ extension HistoryQueryWhere on QueryBuilder<History, History, QWhereClause> {
 
 extension HistoryQueryFilter
     on QueryBuilder<History, History, QFilterCondition> {
+  QueryBuilder<History, History, QAfterFilterCondition> coverIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'cover',
+      ));
+    });
+  }
+
+  QueryBuilder<History, History, QAfterFilterCondition> coverIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'cover',
+      ));
+    });
+  }
+
   QueryBuilder<History, History, QAfterFilterCondition> coverEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -405,7 +426,7 @@ extension HistoryQueryFilter
   }
 
   QueryBuilder<History, History, QAfterFilterCondition> coverGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -420,7 +441,7 @@ extension HistoryQueryFilter
   }
 
   QueryBuilder<History, History, QAfterFilterCondition> coverLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -435,8 +456,8 @@ extension HistoryQueryFilter
   }
 
   QueryBuilder<History, History, QAfterFilterCondition> coverBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -2020,7 +2041,7 @@ extension HistoryQueryProperty
     });
   }
 
-  QueryBuilder<History, String, QQueryOperations> coverProperty() {
+  QueryBuilder<History, String?, QQueryOperations> coverProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'cover');
     });

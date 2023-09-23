@@ -55,12 +55,12 @@ class DetailPageController extends GetxController {
   TMDBDetail? get tmdbDetail => tmdb.value;
   set tmdbDetail(TMDBDetail? value) => tmdb.value = value;
 
-  String get backgorund {
-    String bg = '';
+  String? get backgorund {
+    String? bg;
     if (tmdbDetail != null && tmdbDetail!.backdrop != null) {
       bg = TmdbApi.getImageUrl(tmdbDetail!.backdrop!) ?? '';
     } else {
-      bg = detail?.cover ?? '';
+      bg = detail?.cover;
     }
     return bg;
   }

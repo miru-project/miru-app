@@ -14,7 +14,7 @@ class ReaderController<T> extends GetxController {
   final int playIndex;
   final int episodeGroupId;
   final ExtensionRuntime runtime;
-  final String cover;
+  final String? cover;
 
   ReaderController({
     required this.title,
@@ -23,7 +23,7 @@ class ReaderController<T> extends GetxController {
     required this.playIndex,
     required this.episodeGroupId,
     required this.runtime,
-    required this.cover,
+    this.cover,
   });
 
   late Rx<T?> watchData = Rx(null);

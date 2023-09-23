@@ -64,7 +64,7 @@ ExtensionListItem _$ExtensionListItemFromJson(Map<String, dynamic> json) =>
     ExtensionListItem(
       title: json['title'] as String,
       url: json['url'] as String,
-      cover: json['cover'] as String,
+      cover: json['cover'] as String?,
       update: json['update'] as String?,
       headers: (json['headers'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
@@ -83,7 +83,7 @@ Map<String, dynamic> _$ExtensionListItemToJson(ExtensionListItem instance) =>
 ExtensionDetail _$ExtensionDetailFromJson(Map<String, dynamic> json) =>
     ExtensionDetail(
       title: json['title'] as String,
-      cover: json['cover'] as String,
+      cover: json['cover'] as String?,
       desc: json['desc'] as String?,
       episodes: (json['episodes'] as List<dynamic>?)
           ?.map(

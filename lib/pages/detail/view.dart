@@ -17,6 +17,7 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 import 'package:miru_app/widgets/card_tile.dart';
+import 'package:miru_app/widgets/cover.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 import 'package:miru_app/widgets/progress.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -232,11 +233,10 @@ class _DetailPageState extends State<DetailPage> {
       return Stack(
         children: [
           Animate(
-            child: CacheNetWorkImage(
-              c.backgorund,
-              width: double.infinity,
-              height: double.infinity,
-              headers: c.detail?.headers,
+            child: Cover(
+              alt: c.detail?.title ?? '',
+              url: c.backgorund,
+              noText: true,
             ),
           ).blur(
             begin: const Offset(10, 10),
@@ -260,24 +260,25 @@ class _DetailPageState extends State<DetailPage> {
                       height: 330,
                       child: Row(
                         children: [
-                          if (constraints.maxWidth > 600) ...[
-                            Hero(
-                              tag: c.heroTag ?? '',
-                              child: Container(
-                                width: 230,
-                                height: double.infinity,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: CacheNetWorkImage(
-                                  c.detail?.cover ?? '',
-                                  headers: c.detail?.headers,
+                          if (c.detail!.cover != null)
+                            if (constraints.maxWidth > 600) ...[
+                              Hero(
+                                tag: c.heroTag ?? '',
+                                child: Container(
+                                  width: 230,
+                                  height: double.infinity,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: CacheNetWorkImage(
+                                    c.detail?.cover ?? '',
+                                    headers: c.detail?.headers,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 30),
-                          ],
+                              const SizedBox(width: 30),
+                            ],
                           Expanded(
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

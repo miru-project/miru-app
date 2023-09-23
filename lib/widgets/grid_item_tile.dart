@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:miru_app/widgets/cache_network_image.dart';
+import 'package:miru_app/widgets/cover.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class GridItemTile extends StatefulWidget {
   const GridItemTile({
     Key? key,
     required this.title,
-    required this.cover,
+    this.cover,
     this.subtitle,
     this.onTap,
   }) : super(key: key);
   final String title;
-  final String cover;
+  final String? cover;
   final String? subtitle;
   final Function()? onTap;
 
@@ -30,10 +30,9 @@ class _GridItemTileState extends State<GridItemTile> {
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           clipBehavior: Clip.antiAlias,
-          child: CacheNetWorkImage(
-            widget.cover,
-            width: double.infinity,
-            height: double.infinity,
+          child: Cover(
+            alt: widget.title,
+            url: widget.cover,
           ),
         ),
         Positioned(
@@ -132,9 +131,9 @@ class _GridItemTileState extends State<GridItemTile> {
                   child: AnimatedScale(
                     scale: _isHover ? 1.05 : 1,
                     duration: const Duration(milliseconds: 80),
-                    child: CacheNetWorkImage(
-                      widget.cover,
-                      width: double.infinity,
+                    child: Cover(
+                      alt: widget.title,
+                      url: widget.cover,
                     ),
                   )),
             ),

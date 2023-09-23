@@ -5,6 +5,7 @@ import 'package:miru_app/pages/detail/widgets/detail_continue_play.dart';
 import 'package:miru_app/pages/detail/widgets/detail_extension_tile.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
+import 'package:miru_app/widgets/cover.dart';
 
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
@@ -43,6 +44,16 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
 
   @override
   Widget build(BuildContext context) {
+    bool needShowCover() {
+      if (c.isLoading.value) {
+        return true;
+      }
+      if (c.data.value?.cover != null) {
+        return true;
+      }
+      return false;
+    }
+
     return Obx(
       () => Opacity(
         opacity: _scrollListener(),
@@ -53,12 +64,10 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               width: double.infinity,
               child: c.isLoading.value
                   ? const SizedBox.shrink()
-                  : CacheNetWorkImage(
-                      c.backgorund,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      headers: c.detail?.headers,
+                  : Cover(
+                      alt: c.data.value?.title ?? '',
+                      url: c.data.value?.cover,
+                      noText: true,
                     ),
             ),
             Positioned.fill(
@@ -83,23 +92,24 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               right: 20,
               child: Row(
                 children: [
-                  Hero(
-                    tag: c.heroTag ?? '',
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: SizedBox(
-                        height: 150,
-                        width: 100,
-                        child: c.isLoading.value
-                            ? const Center(child: CircularProgressIndicator())
-                            : CacheNetWorkImage(
-                                c.data.value!.cover,
-                                fit: BoxFit.cover,
-                                headers: c.detail?.headers,
-                              ),
+                  if (needShowCover())
+                    Hero(
+                      tag: c.heroTag ?? '',
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: SizedBox(
+                          height: 150,
+                          width: 100,
+                          child: c.isLoading.value
+                              ? const Center(child: CircularProgressIndicator())
+                              : CacheNetWorkImage(
+                                  c.data.value?.cover ?? '',
+                                  fit: BoxFit.cover,
+                                  headers: c.detail?.headers,
+                                ),
+                        ),
                       ),
                     ),
-                  ),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.only(left: 20),
