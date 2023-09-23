@@ -17,7 +17,7 @@ class ComicReader extends StatefulWidget {
     required this.playerIndex,
     required this.episodeGroupId,
     required this.runtime,
-    required this.cover,
+    this.cover,
   }) : super(key: key);
 
   final String title;
@@ -26,7 +26,7 @@ class ComicReader extends StatefulWidget {
   final int playerIndex;
   final int episodeGroupId;
   final ExtensionRuntime runtime;
-  final String cover;
+  final String? cover;
 
   @override
   State<ComicReader> createState() => _ComicReaderState();

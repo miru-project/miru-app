@@ -16,7 +16,7 @@ class NovelReader extends StatefulWidget {
     required this.playerIndex,
     required this.title,
     required this.detailUrl,
-    required this.cover,
+    this.cover,
   }) : super(key: key);
 
   final String title;
@@ -25,7 +25,7 @@ class NovelReader extends StatefulWidget {
   final int playerIndex;
   final int episodeGroupId;
   final ExtensionRuntime runtime;
-  final String cover;
+  final String? cover;
 
   @override
   State<NovelReader> createState() => _NovelReaderState();

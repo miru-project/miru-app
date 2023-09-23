@@ -11,11 +11,11 @@ class ExtensionItemCard extends StatefulWidget {
     required this.title,
     required this.url,
     required this.package,
-    required this.cover,
+    this.cover,
     this.update,
   }) : super(key: key);
   final String title;
-  final String cover;
+  final String? cover;
   final String? update;
   final String url;
   final String package;

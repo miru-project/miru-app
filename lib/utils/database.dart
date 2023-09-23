@@ -12,8 +12,8 @@ class DatabaseUtils {
   static toggleFavorite({
     required String package,
     required String url,
-    required String cover,
     required String name,
+    String? cover,
   }) async {
     return db.writeTxn(() async {
       if (await isFavorite(
