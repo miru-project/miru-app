@@ -82,7 +82,7 @@
     "nsfw-subtitle": "Mostrar contenido NSFW",
     "external-player": "Reproductor de vídeo preferido",
     "external-player-subtitle": "Actualmente, el reproductor preferido es {player}",
-    "external-player-builtin" : "Incorporado",
+    "external-player-builtin": "Incorporado",
     "language-subtitle": "Cambia el idioma de la aplicación",
     "extension-log": "Ventana de registro de extensiones",
     "extension-log-subtitle": "Usado para depurar extensiones",

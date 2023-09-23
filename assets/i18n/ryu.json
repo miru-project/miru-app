@@ -21,18 +21,22 @@
     "retry": "リトライ",
     "next": "ちぎ",
     "previous": "まい",
-    "show-all": "まじりひょうじ"
+    "show-all": "まじりひょうじ",
+    "delete": "さちゅるじょ",
+    "delete-all": "まじりさちゅるじょ"
   },
 
   "home": {
     "continue-watching": "ちづきーん",
     "favorite": "うきーがいー",
-    "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん"
+    "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん",
+    "watched": "しちょうじみ {ep}"
   },
 
   "search": {
     "hint-text": "きんさくちかてぃくぃみそーれー～！",
-    "all": "まじり"
+    "all": "まじり",
+    "filter": "フィルター"
   },
 
   "extension": {
@@ -60,6 +64,9 @@
     "repo-url-subtitle": "かくはべるちぬーリポジトリぬURLしーゅとぅくしーん",
     "tmdb-key": "TMDB APIキー",
     "tmdb-key-subtitle": "TMDBメタデータぬAPIキーしーゅとぅくしーん",
+    "bt-server": "BTサーバー",
+    "bt-server-subtitle": "BTサーバーや、BTシードぬオンラインさいゆいんかいふぃちぐとーるコンポーネントやいびーん",
+    "bt-server-manager": "マネージャー",
     "upgrade": "ソフトウェアこうしん",
     "upgrade-subtitle": "バージョン： {version}",
     "upgrade-training": "チェック",
@@ -71,6 +78,11 @@
     "theme-system": "システム",
     "theme-light": "ライト",
     "theme-dark": "ダーク",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "NSFWコンテンツひょうじさびーん",
+    "external-player": "ゆうさんしーんビデオプレーヤー",
+    "external-player-subtitle": "ぎんじぇー、ゆうさんさりとーんプレーヤーや{player}やいびーん",
+    "external-player-builtin": "くみくみ",
     "language-subtitle": "ソフトウェアぬぎんぐへいるかんさびーん",
     "extension-log": "かくはべるちぬーログウィンドウ",
     "extension-log-subtitle": "かくはべるちぬーぬデバッグなしようさびーん",
@@ -83,6 +95,8 @@
     "license-subtitle": "ライセンス"
   },
 
+  "external-player-launching": "{player}きどう",
+
   "detail": {
     "favorite": "うきーがいー",
     "favorited": "うきーがいー",
@@ -91,7 +105,10 @@
     "overview": "がいよう",
     "cast": "キャスト",
     "additional-info": "ちいかじょうほう",
-    "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん"
+    "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん",
+    "modify-tmdb-binding": "TMDBバインディングへいるかん",
+    "no-tmdb-data": "TMDBデーターいっちさびらん。じぶんっしデータバインドしみそーれー",
+    "tmdb-key-missing": "TMDB APIキーぬあいびらん、しっていからんかいゅうりょくしみそーれー"
   },
 
   "video": {
@@ -103,7 +120,8 @@
     "subtitle-none": "じまちゅんなし",
     "subtitle": "じまちゅん",
     "subtitle-change": "じまちゅんへいるかん {title}",
-    "subtitle-file": "じまちゅるファイル"
+    "subtitle-file": "じまちゅるファイル",
+    "torrent-downloading": "Torrentっしダウンロード"
   },
 
   "comic-settings": {
@@ -166,5 +184,13 @@
     "genres": "ジャンル",
     "runtime": "じっこうじがん",
     "languages": "ぎんぐ"
+  },
+
+  "bt-server": {
+    "not-installed": "BTサーバーぬインストールさりやびらん",
+    "running": "BTサーバーやんじゅちょーいびーん",
+    "stopped": "BTサーバーやていしそーいびーん",
+    "version": "バージョン {version}",
+    "start": "かいし"
   }
 }
