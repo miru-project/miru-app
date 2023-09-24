@@ -215,8 +215,11 @@ class _DetailPageState extends State<DetailPage> {
           return Row(
             children: [
               Expanded(child: content),
-              const Expanded(
-                child: SafeArea(child: DetailEpisodes()),
+              Expanded(
+                child: SafeArea(
+                    child: DetailEpisodes(
+                  tag: widget.tag,
+                )),
               ),
             ],
           );
