@@ -223,11 +223,17 @@ class _SettingsPageState extends State<SettingsPage> {
             desktopWidget: Icon(fluent.FluentIcons.color, size: 24),
           ),
           title: 'settings.theme'.i18n,
-          itemNameValue: {
-            'settings.theme-system'.i18n: 'system',
-            'settings.theme-light'.i18n: 'light',
-            'settings.theme-dark'.i18n: 'dark',
-          },
+          itemNameValue: () {
+            final map = {
+              'settings.theme-system'.i18n: 'system',
+              'settings.theme-light'.i18n: 'light',
+              'settings.theme-dark'.i18n: 'dark',
+            };
+            if (Platform.isAndroid) {
+              map['settings.theme-black'.i18n] = 'black';
+            }
+            return map;
+          }(),
           buildSubtitle: () => 'settings.theme-subtitle'.i18n,
           applyValue: (value) {
             Get.find<ApplicationController>().changeTheme(value);
