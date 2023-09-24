@@ -6,7 +6,11 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
 
 class DetailFavoriteButton extends StatefulWidget {
-  const DetailFavoriteButton({Key? key}) : super(key: key);
+  const DetailFavoriteButton({
+    Key? key,
+    this.tag,
+  }) : super(key: key);
+  final String? tag;
 
   @override
   fluent.State<DetailFavoriteButton> createState() =>
@@ -14,7 +18,7 @@ class DetailFavoriteButton extends StatefulWidget {
 }
 
 class _DetailFavoriteButtonState extends State<DetailFavoriteButton> {
-  final c = Get.find<DetailPageController>();
+  late DetailPageController c = Get.find<DetailPageController>(tag: widget.tag);
 
   Widget _buildAndroid(BuildContext context) {
     return Obx(

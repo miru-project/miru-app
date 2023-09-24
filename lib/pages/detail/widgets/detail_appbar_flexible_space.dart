@@ -10,7 +10,10 @@ import 'package:miru_app/widgets/cover.dart';
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
     Key? key,
+    this.tag,
   }) : super(key: key);
+
+  final String? tag;
 
   @override
   State<DetailAppbarflexibleSpace> createState() =>
@@ -18,7 +21,7 @@ class DetailAppbarflexibleSpace extends StatefulWidget {
 }
 
 class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
-  final DetailPageController c = Get.find();
+  late DetailPageController c = Get.find(tag: widget.tag);
 
   double _offset = 1;
 
@@ -122,7 +125,9 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                             style: Get.theme.textTheme.titleLarge,
                           ),
                           const SizedBox(height: 10),
-                          const DetailExtensionTile(),
+                          DetailExtensionTile(
+                            tag: widget.tag,
+                          ),
                         ],
                       ),
                     ),
@@ -130,7 +135,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                 ],
               ),
             ),
-            const Positioned(
+            Positioned(
               top: null,
               left: 20,
               right: 20,
@@ -139,14 +144,18 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                 children: [
                   Expanded(
                     flex: 4,
-                    child: DetailContinuePlay(),
+                    child: DetailContinuePlay(
+                      tag: widget.tag,
+                    ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
                     flex: 3,
-                    child: DetailFavoriteButton(),
+                    child: DetailFavoriteButton(
+                      tag: widget.tag,
+                    ),
                   )
                 ],
               ),

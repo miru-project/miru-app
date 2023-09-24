@@ -13,14 +13,16 @@ import 'package:miru_app/widgets/platform_widget.dart';
 class DetailEpisodes extends StatefulWidget {
   const DetailEpisodes({
     Key? key,
+    this.tag,
   }) : super(key: key);
+  final String? tag;
 
   @override
   State<DetailEpisodes> createState() => _DetailEpisodesState();
 }
 
 class _DetailEpisodesState extends State<DetailEpisodes> {
-  late DetailPageController c = Get.find<DetailPageController>();
+  late DetailPageController c = Get.find<DetailPageController>(tag: widget.tag);
   List<fluent.ComboBoxItem<int>>? comboBoxItems;
   List<DropdownMenuItem<int>>? dropdownItems;
   late List<ExtensionEpisodeGroup> episodes = [];

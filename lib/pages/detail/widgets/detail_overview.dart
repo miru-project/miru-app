@@ -6,11 +6,16 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
 
 class DetailOverView extends StatelessWidget {
-  const DetailOverView({Key? key}) : super(key: key);
+  const DetailOverView({
+    Key? key,
+    this.tag,
+  }) : super(key: key);
+
+  final String? tag;
 
   @override
   Widget build(BuildContext context) {
-    final c = Get.find<DetailPageController>();
+    final c = Get.find<DetailPageController>(tag: tag);
     return Padding(
       padding: const EdgeInsets.only(
         left: 16,

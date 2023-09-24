@@ -27,11 +27,11 @@ class DetailPage extends StatefulWidget {
     Key? key,
     required this.url,
     required this.package,
-    this.heroTag,
+    this.tag,
   }) : super(key: key);
   final String url;
   final String package;
-  final String? heroTag;
+  final String? tag;
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -46,15 +46,18 @@ class _DetailPageState extends State<DetailPage> {
       DetailPageController(
         package: widget.package,
         url: widget.url,
-        heroTag: widget.heroTag,
+        heroTag: widget.tag,
       ),
+      tag: widget.tag,
     );
     super.initState();
   }
 
   @override
   void dispose() {
-    Get.delete<DetailPageController>();
+    Get.delete<DetailPageController>(
+      tag: widget.tag,
+    );
     super.dispose();
   }
 
@@ -95,7 +98,9 @@ class _DetailPageState extends State<DetailPage> {
                     c.detail?.title ?? '',
                     controller: c.scrollController,
                   ),
-                  flexibleSpace: const DetailAppbarflexibleSpace(),
+                  flexibleSpace: DetailAppbarflexibleSpace(
+                    tag: widget.tag,
+                  ),
                   bottom: TabBar(
                     tabs: tabs,
                   ),
@@ -139,8 +144,13 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.all(8),
               child: TabBarView(
                 children: [
-                  if (!LayoutUtils.isTablet) const DetailEpisodes(),
-                  const DetailOverView(),
+                  if (!LayoutUtils.isTablet)
+                    DetailEpisodes(
+                      tag: widget.tag,
+                    ),
+                  DetailOverView(
+                    tag: widget.tag,
+                  ),
                   if (c.type == ExtensionType.bangumi)
                     Obx(() {
                       if (c.tmdbDetail == null || c.tmdbDetail!.casts.isEmpty) {
