@@ -89,6 +89,7 @@
     "theme-system": "System",
     "theme-light": "Light",
     "theme-dark": "Dark",
+    "theme-black": "Black",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Show NSFW content",
     "external-player": "Preferred video player",

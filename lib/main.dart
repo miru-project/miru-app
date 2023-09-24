@@ -95,7 +95,7 @@ class _MainAppState extends fluent.State<MainApp> {
       title: "Miru",
       debugShowCheckedModeBanner: false,
       themeMode: c.theme,
-      theme: ThemeData(useMaterial3: true),
+      theme: c.currentThemeData,
       darkTheme: ThemeData.dark(useMaterial3: true),
       home: const AndroidMainPage(),
       localizationsDelegates: [
