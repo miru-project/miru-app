@@ -143,6 +143,7 @@ ExtensionBangumiWatch _$ExtensionBangumiWatchFromJson(
       headers: (json['headers'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
+      audioTrack: json['audioTrack'] as String?,
     );
 
 Map<String, dynamic> _$ExtensionBangumiWatchToJson(
@@ -152,6 +153,7 @@ Map<String, dynamic> _$ExtensionBangumiWatchToJson(
       'url': instance.url,
       'subtitles': instance.subtitles,
       'headers': instance.headers,
+      'audioTrack': instance.audioTrack,
     };
 
 const _$ExtensionWatchBangumiTypeEnumMap = {
