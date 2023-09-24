@@ -36,7 +36,7 @@ class _ExtensionItemCardState extends State<ExtensionItemCard> {
           Get.to(DetailPage(
             url: widget.url,
             package: widget.package,
-            heroTag: widget.url,
+            tag: widget.url,
           ));
         },
       ),
