@@ -187,9 +187,7 @@ class VideoPlayerController extends GetxController {
       selectedSubtitle.value = -1;
       final playUrl = playList[index.value].url;
       final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
-      if (watchData.audioTrack != null) {
-        player.setAudioTrack(AudioTrack.uri(watchData.audioTrack!));
-      }
+
       if (watchData.type == ExtensionWatchBangumiType.torrent) {
         if (Get.find<MainController>().btServerisRunning.value == false) {
           await BTServerUtils.startServer();
@@ -227,6 +225,9 @@ class VideoPlayerController extends GetxController {
         playTorrentFile(torrentMediaFileList.first);
       } else {
         await player.open(Media(watchData.url, httpHeaders: watchData.headers));
+        if (watchData.audioTrack != null) {
+          await player.setAudioTrack(AudioTrack.uri(watchData.audioTrack!));
+        }
       }
       subtitles.addAll(watchData.subtitles ?? []);
     } catch (e) {
