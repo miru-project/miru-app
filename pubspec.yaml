@@ -54,6 +54,7 @@ dependencies:
   xpath_selector_html_parser: ^3.0.1
   device_info_plus: ^9.0.3
   android_intent_plus: ^4.0.2
+  crypto: ^3.0.3
 
 
 dev_dependencies:
