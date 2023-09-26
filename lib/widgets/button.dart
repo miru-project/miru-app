@@ -121,6 +121,15 @@ class PlatformToggleButton extends fluent.StatelessWidget {
   Widget _buildAndroid(BuildContext context) {
     return TextButton(
       onPressed: () => onChanged?.call(!checked),
+      style: ButtonStyle(
+        side: MaterialStateProperty.all(
+          BorderSide(
+            color: checked
+                ? Theme.of(context).colorScheme.primary
+                : Colors.transparent,
+          ),
+        ),
+      ),
       child: Text(
         text,
         style: TextStyle(

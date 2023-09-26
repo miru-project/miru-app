@@ -76,8 +76,8 @@
     "tmdb-key": "TMDB API Key",
     "tmdb-key-subtitle": "Get API Key for TMDB metadata",
     "bt-server": "BT Server",
-    "bt-server-subtitle": "BT Server is a necessary component for online playback of BT seeds",
-    "bt-server-manager": "Manager",
+    "bt-server-subtitle": "BT Server is a necessary component for online playback of torrent",
+    "bt-server-manager": "Manage",
     "upgrade": "Update Software",
     "upgrade-subtitle": "version: {version}",
     "upgrade-training": "Check",
@@ -89,6 +89,7 @@
     "theme-system": "System",
     "theme-light": "Light",
     "theme-dark": "Dark",
+    "theme-black": "Black",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Show NSFW content",
     "external-player": "Preferred video player",
@@ -202,6 +203,9 @@
     "running": "BT-Server is running",
     "stopped": "BT-Server is stopped",
     "version": "Version {version}",
+    "remote-version": "Remote Version {version}",
+    "stop": "Stop",
+    "upgrade": "Upgrade",
     "start": "Start"
   }
 }

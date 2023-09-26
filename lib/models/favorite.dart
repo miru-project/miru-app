@@ -12,6 +12,6 @@ class Favorite {
   @Enumerated(EnumType.name)
   late ExtensionType type;
   late String title;
-  late String cover;
+  String? cover;
   DateTime date = DateTime.now();
 }

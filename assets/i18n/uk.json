@@ -64,9 +64,9 @@
     "repo-url-subtitle": "Отримати URL репозиторія для розширень",
     "tmdb-key": "Ключ API TMDB",
     "tmdb-key-subtitle": "Отримати ключ API для метаданих TMDB",
-    "bt-server": "BT Сервер",
-    "bt-server-subtitle": "BT Сервер – необхідний компонент для онлайн-відтворення сидів BT",
-    "bt-server-manager": "Менеджер",
+    "bt-server": "Сервер BT",
+    "bt-server-subtitle": "Сервер BT є необхідним компонентом для онлайн-відтворення торрентів",
+    "bt-server-manager": "управляти",
     "upgrade": "Оновлення ПЗ",
     "upgrade-subtitle": "версія: {version}",
     "upgrade-training": "Перевірити наявність оновлень",
@@ -186,11 +186,14 @@
     "languages": "Мови"
   },
 
-    "bt-server": {
+  "bt-server": {
     "not-installed": "BT-Сервер не встановлено",
-    "running": "BT-Сервер запущено",
+    "running": "BT-Сервер працює",
     "stopped": "BT-Сервер зупинено",
     "version": "Версія {version}",
-    "start": "Запуск"
+    "remote-version": "Віддалена версія {version}",
+    "stop": "Зупинити",
+    "upgrade": "Оновити",
+    "start": "Запустити"
   }
 }

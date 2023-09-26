@@ -14,7 +14,7 @@ class WatchPage extends StatelessWidget {
     required this.playerIndex,
     required this.episodeGroupId,
     required this.detailUrl,
-    required this.cover,
+    this.cover,
   }) : super(key: key);
   final List<ExtensionEpisode> playList;
   final int playerIndex;
@@ -22,7 +22,7 @@ class WatchPage extends StatelessWidget {
   final String package;
   final String detailUrl;
   final int episodeGroupId;
-  final String cover;
+  final String? cover;
 
   @override
   Widget build(BuildContext context) {

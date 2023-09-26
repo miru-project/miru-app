@@ -5,11 +5,15 @@ import 'package:miru_app/pages/detail/widgets/detail_continue_play.dart';
 import 'package:miru_app/pages/detail/widgets/detail_extension_tile.dart';
 import 'package:miru_app/pages/detail/widgets/detail_favorite_button.dart';
 import 'package:miru_app/widgets/cache_network_image.dart';
+import 'package:miru_app/widgets/cover.dart';
 
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
     Key? key,
+    this.tag,
   }) : super(key: key);
+
+  final String? tag;
 
   @override
   State<DetailAppbarflexibleSpace> createState() =>
@@ -17,7 +21,7 @@ class DetailAppbarflexibleSpace extends StatefulWidget {
 }
 
 class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
-  final DetailPageController c = Get.find();
+  late DetailPageController c = Get.find(tag: widget.tag);
 
   double _offset = 1;
 
@@ -43,6 +47,16 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
 
   @override
   Widget build(BuildContext context) {
+    bool needShowCover() {
+      if (c.isLoading.value) {
+        return true;
+      }
+      if (c.data.value?.cover != null) {
+        return true;
+      }
+      return false;
+    }
+
     return Obx(
       () => Opacity(
         opacity: _scrollListener(),
@@ -53,12 +67,10 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               width: double.infinity,
               child: c.isLoading.value
                   ? const SizedBox.shrink()
-                  : CacheNetWorkImage(
-                      c.backgorund,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      headers: c.detail?.headers,
+                  : Cover(
+                      alt: c.data.value?.title ?? '',
+                      url: c.backgorund,
+                      noText: true,
                     ),
             ),
             Positioned.fill(
@@ -83,23 +95,24 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               right: 20,
               child: Row(
                 children: [
-                  Hero(
-                    tag: c.heroTag ?? '',
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: SizedBox(
-                        height: 150,
-                        width: 100,
-                        child: c.isLoading.value
-                            ? const Center(child: CircularProgressIndicator())
-                            : CacheNetWorkImage(
-                                c.data.value!.cover,
-                                fit: BoxFit.cover,
-                                headers: c.detail?.headers,
-                              ),
+                  if (needShowCover())
+                    Hero(
+                      tag: c.heroTag ?? '',
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: SizedBox(
+                          height: 150,
+                          width: 100,
+                          child: c.isLoading.value
+                              ? const Center(child: CircularProgressIndicator())
+                              : CacheNetWorkImage(
+                                  c.data.value?.cover ?? '',
+                                  fit: BoxFit.cover,
+                                  headers: c.detail?.headers,
+                                ),
+                        ),
                       ),
                     ),
-                  ),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.only(left: 20),
@@ -112,7 +125,9 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                             style: Get.theme.textTheme.titleLarge,
                           ),
                           const SizedBox(height: 10),
-                          const DetailExtensionTile(),
+                          DetailExtensionTile(
+                            tag: widget.tag,
+                          ),
                         ],
                       ),
                     ),
@@ -120,7 +135,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                 ],
               ),
             ),
-            const Positioned(
+            Positioned(
               top: null,
               left: 20,
               right: 20,
@@ -129,14 +144,18 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                 children: [
                   Expanded(
                     flex: 4,
-                    child: DetailContinuePlay(),
+                    child: DetailContinuePlay(
+                      tag: widget.tag,
+                    ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
                     flex: 3,
-                    child: DetailFavoriteButton(),
+                    child: DetailFavoriteButton(
+                      tag: widget.tag,
+                    ),
                   )
                 ],
               ),

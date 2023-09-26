@@ -10,7 +10,7 @@ class History {
   late String package;
   late String url;
   // 截图，保存封面地址
-  late String cover;
+  String? cover;
   @Enumerated(EnumType.name)
   late ExtensionType type;
   // 不同线路

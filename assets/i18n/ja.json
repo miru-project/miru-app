@@ -21,7 +21,7 @@
     "retry": "リトライ",
     "next": "次",
     "previous": "前",
-    "show-all": "全て表示"
+    "show-all": "全て表示",
     "delete": "削除",
     "delete-all": "全て削除"
   },
@@ -29,13 +29,13 @@
   "home": {
     "continue-watching": "続ける",
     "favorite": "お気に入り",
-    "no-record": "お気に入りや閲覧記録はありません"
+    "no-record": "お気に入りや閲覧記録はありません",
     "watched": "視聴済み {ep}"
   },
 
   "search": {
     "hint-text": "検索を使ってください～！",
-    "all": "全て"
+    "all": "全て",
     "filter": "フィルター"
   },
 
@@ -105,7 +105,7 @@
     "overview": "概要",
     "cast": "キャスト",
     "additional-info": "追加情報",
-    "get-lastest-data-error": "最新データの取得に失敗しました"
+    "get-lastest-data-error": "最新データの取得に失敗しました",
     "modify-tmdb-binding": "TMDBバインディングを変更",
     "no-tmdb-data": "TMDBデータは一致していません。自分でデータをバインドしてください",
     "tmdb-key-missing": "TMDB APIキーがありません、設定から入力してください"
@@ -120,7 +120,7 @@
     "subtitle-none": "字幕なし",
     "subtitle": "字幕",
     "subtitle-change": "字幕を変更 {title}",
-    "subtitle-file": "字幕ファイル"
+    "subtitle-file": "字幕ファイル",
     "torrent-downloading": "Torrentでダウンロード"
   },
 
@@ -184,7 +184,7 @@
     "genres": "ジャンル",
     "runtime": "実行時間",
     "languages": "言語"
-   },
+  },
 
   "bt-server": {
     "not-installed": "BTサーバーがインストールされていません",

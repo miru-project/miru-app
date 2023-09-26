@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/pages/detail/controller.dart';
 import 'package:miru_app/pages/detail/widgets/detail_continue_play.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/widgets/card_tile.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/widgets/platform_widget.dart';
@@ -12,17 +13,20 @@ import 'package:miru_app/widgets/platform_widget.dart';
 class DetailEpisodes extends StatefulWidget {
   const DetailEpisodes({
     Key? key,
+    this.tag,
   }) : super(key: key);
+  final String? tag;
 
   @override
   State<DetailEpisodes> createState() => _DetailEpisodesState();
 }
 
 class _DetailEpisodesState extends State<DetailEpisodes> {
-  late DetailPageController c = Get.find<DetailPageController>();
+  late DetailPageController c = Get.find<DetailPageController>(tag: widget.tag);
   List<fluent.ComboBoxItem<int>>? comboBoxItems;
   List<DropdownMenuItem<int>>? dropdownItems;
   late List<ExtensionEpisodeGroup> episodes = [];
+  late String listMode = MiruStorage.getSetting(SettingKey.listMode);
 
   Widget _buildAndroidEpisodes(BuildContext context) {
     return Column(
@@ -101,8 +105,23 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
     } else {
       episodesString = 'reader.chapters'.i18n;
     }
-    return CardTile(
+
+    Widget cardTile(Widget child) {
+      return CardTile(
         title: episodesString,
+        leading: fluent.IconButton(
+          icon: Icon(
+            listMode == "grid"
+                ? fluent.FluentIcons.view_list
+                : fluent.FluentIcons.grid_view_medium,
+          ),
+          onPressed: () {
+            setState(() {
+              listMode == "grid" ? listMode = "list" : listMode = "grid";
+              MiruStorage.setSetting(SettingKey.listMode, listMode);
+            });
+          },
+        ),
         trailing: Row(
           children: [
             const DetailContinuePlay(),
@@ -118,12 +137,20 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
             )
           ],
         ),
-        child: LayoutBuilder(builder: (context, constraints) {
-          return Container(
-            constraints: const BoxConstraints(
-              maxHeight: 500,
-            ),
-            child: GridView.builder(
+        child: Container(
+          constraints: const BoxConstraints(
+            maxHeight: 500,
+          ),
+          child: child,
+        ),
+      );
+    }
+
+    if (listMode == "grid") {
+      return cardTile(
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return GridView.builder(
               shrinkWrap: true,
               itemCount: episodes.isEmpty
                   ? 0
@@ -149,9 +176,33 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                   },
                 );
               },
-            ),
+            );
+          },
+        ),
+      );
+    }
+
+    return cardTile(
+      ListView.builder(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(0),
+        itemCount:
+            episodes.isEmpty ? 0 : episodes[c.selectEpGroup.value].urls.length,
+        itemBuilder: (context, index) {
+          return fluent.ListTile(
+            title: Text(episodes[c.selectEpGroup.value].urls[index].name),
+            onPressed: () {
+              c.goWatch(
+                context,
+                episodes[c.selectEpGroup.value].urls,
+                index,
+                c.selectEpGroup.value,
+              );
+            },
           );
-        }));
+        },
+      ),
+    );
   }
 
   @override

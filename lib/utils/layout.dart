@@ -6,12 +6,12 @@ class LayoutUtils {
 
   // 获取当前宽度
   static double get getWidth {
-    return MediaQuery.of(cuurentContext).size.width;
+    return MediaQuery.of(currentContext).size.width;
   }
 
   // 获取当前高度
   static double get getHeight {
-    return MediaQuery.of(cuurentContext).size.height;
+    return MediaQuery.of(currentContext).size.height;
   }
 
   // 是否是平板

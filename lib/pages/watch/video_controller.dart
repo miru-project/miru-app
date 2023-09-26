@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
@@ -11,6 +14,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/api/bt_server.dart';
 import 'package:miru_app/models/index.dart';
+import 'package:miru_app/pages/bt_dialog/view.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/router/router.dart';
@@ -22,6 +26,8 @@ import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:crypto/crypto.dart';
 
 class VideoPlayerController extends GetxController {
   final String title;
@@ -63,6 +69,8 @@ class VideoPlayerController extends GetxController {
   final currentTorrentFile = ''.obs;
 
   String _torrenHash = "";
+
+  // 复制当前 context
 
   @override
   void onInit() {
@@ -115,7 +123,7 @@ class VideoPlayerController extends GetxController {
             Message(
               Text(
                 FlutterI18n.translate(
-                  cuurentContext,
+                  currentContext,
                   "video.subtitle-change",
                   translationParams: {"title": value.files.first.name},
                 ),
@@ -132,7 +140,7 @@ class VideoPlayerController extends GetxController {
         Message(
           Text(
             FlutterI18n.translate(
-              cuurentContext,
+              currentContext,
               "video.subtitle-change",
               translationParams: {"title": subtitles[callback].title},
             ),
@@ -182,16 +190,21 @@ class VideoPlayerController extends GetxController {
   }
 
   play() async {
+    // 如果已经 delete 当前 controller
+    if (!Get.isRegistered<VideoPlayerController>(tag: title)) {
+      return;
+    }
+
     try {
       subtitles.clear();
       selectedSubtitle.value = -1;
       final playUrl = playList[index.value].url;
       final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
+
       if (watchData.type == ExtensionWatchBangumiType.torrent) {
         if (Get.find<MainController>().btServerisRunning.value == false) {
           await BTServerUtils.startServer();
         }
-
         sendMessage(
           Message(
             Text('video.torrent-downloading'.i18n),
@@ -225,9 +238,31 @@ class VideoPlayerController extends GetxController {
         playTorrentFile(torrentMediaFileList.first);
       } else {
         await player.open(Media(watchData.url, httpHeaders: watchData.headers));
+        if (watchData.audioTrack != null) {
+          await player.setAudioTrack(AudioTrack.uri(watchData.audioTrack!));
+        }
       }
       subtitles.addAll(watchData.subtitles ?? []);
     } catch (e) {
+      if (e is StartServerException) {
+        if (Platform.isAndroid) {
+          await showDialog(
+            context: currentContext,
+            builder: (context) => const BTDialog(),
+          );
+        } else {
+          await fluent.showDialog(
+            context: currentContext,
+            builder: (context) => const BTDialog(),
+          );
+        }
+
+        // 延时 3 秒再重试
+        await Future.delayed(const Duration(seconds: 3));
+
+        play();
+        return;
+      }
       sendMessage(
         Message(
           Text(e.toString()),
@@ -240,6 +275,7 @@ class VideoPlayerController extends GetxController {
 
   playTorrentFile(String file) {
     currentTorrentFile.value = file;
+    (player.platform as NativePlayer).setProperty("network-timeout", "60");
     player.open(Media('${BTServerApi.baseApi}/torrent/$_torrenHash/$file'));
   }
 
@@ -250,7 +286,7 @@ class VideoPlayerController extends GetxController {
 
   onExit() async {
     if (_torrenHash.isNotEmpty) {
-      await BTServerApi.removeTorrent(_torrenHash);
+      BTServerApi.removeTorrent(_torrenHash);
     }
 
     if (player.state.duration.inSeconds == 0) {
@@ -262,7 +298,8 @@ class VideoPlayerController extends GetxController {
     Directory(coverDir).createSync(recursive: true);
     final epName = playList[index.value].name;
     final filename = '${title}_$epName';
-    final file = File(path.join(coverDir, filename));
+    final file = File(
+        path.join(coverDir, md5.convert(utf8.encode(filename)).toString()));
     if (file.existsSync()) {
       file.deleteSync(recursive: true);
     }
@@ -270,7 +307,7 @@ class VideoPlayerController extends GetxController {
     player.screenshot().then((value) {
       file.writeAsBytes(value!).then(
         (value) async {
-          debugPrint("save..");
+          debugPrint("save.. ${value.path}");
           await DatabaseUtils.putHistory(
             History()
               ..url = detailUrl

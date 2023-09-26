@@ -15,44 +15,51 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformWidget(
-      androidWidget: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            content,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 4),
-          Expanded(
-              child: Text(
-            title,
-            style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-          )),
-        ],
-      ),
-      desktopWidget: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            icon,
-            size: 14,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title),
-                const SizedBox(height: 4),
-                Text(content),
-              ],
+      androidWidget: Container(
+        width: 130,
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SelectableText(
+              content,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          )
-        ],
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+            ),
+          ],
+        ),
+      ),
+      desktopWidget: Container(
+        width: 200,
+        margin: const EdgeInsets.all(8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              icon,
+              size: 14,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title),
+                  const SizedBox(height: 4),
+                  Text(content),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -64,9 +64,9 @@
     "repo-url-subtitle": "Атрымаць URL рэпазітара для пашырэнняў",
     "tmdb-key": "Ключ API TMDB",
     "tmdb-key-subtitle": "Атрымаць ключ API для метададзеных TMDB",
-    "bt-server": "BT Сервер",
-    "bt-server-subtitle": "BT Сервер - неабходны кампанент для анлайн-прайгравання сядоў BT",
-    "bt-server-manager": "Мэнэджэр",
+    "bt-server": "Сервер BT",
+    "bt-server-subtitle": "Сэрвер BT гэта неабходны кампанент для онлайн-выканання торэнтаў",
+    "bt-server-manager": "кіраваць",
     "upgrade": "Абнаўленне ПЗ",
     "upgrade-subtitle": "версія: {version}",
     "upgrade-training": "Праверыць наяўнасць абнаўленняў",
@@ -186,11 +186,14 @@
     "languages": "Мовы"
   },
 
-    "bt-server": {
+  "bt-server": {
     "not-installed": "BT-Сервер не ўсталяваны",
     "running": "BT-Сервер запушчаны",
     "stopped": "BT-Сервер спынены",
     "version": "Версія {version}",
-    "start": "Запуск"
+    "remote-version": "Далёкая Версія {version}",
+    "stop": "Спыніць",
+    "upgrade": "Абнавіць",
+    "start": "Запусціць"
   }
 }

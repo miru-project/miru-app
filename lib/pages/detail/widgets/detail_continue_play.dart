@@ -10,13 +10,16 @@ import 'package:miru_app/widgets/platform_widget.dart';
 class DetailContinuePlay extends StatefulWidget {
   const DetailContinuePlay({
     Key? key,
+    this.tag,
   }) : super(key: key);
+  final String? tag;
+
   @override
   State<DetailContinuePlay> createState() => _DetailContinuePlayState();
 }
 
 class _DetailContinuePlayState extends State<DetailContinuePlay> {
-  late DetailPageController c = Get.find<DetailPageController>();
+  late DetailPageController c = Get.find<DetailPageController>(tag: widget.tag);
 
   Widget _buildAndroid(BuildContext context) {
     return Obx(() {
@@ -119,13 +122,19 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
             children: [
               const Icon(fluent.FluentIcons.play),
               const SizedBox(width: 5),
-              Text(
-                FlutterI18n.translate(
-                  context,
-                  'detail.continue-watching',
-                  translationParams: {
-                    'episode': history.episodeTitle,
-                  },
+              Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 150,
+                ),
+                child: Text(
+                  FlutterI18n.translate(
+                    context,
+                    'detail.continue-watching',
+                    translationParams: {
+                      'episode': history.episodeTitle,
+                    },
+                  ),
+                  maxLines: 1,
                 ),
               )
             ],

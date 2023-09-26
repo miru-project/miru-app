@@ -21,7 +21,7 @@
     "retry": "リトライ",
     "next": "ちぎ",
     "previous": "まい",
-    "show-all": "まじりひょうじ"
+    "show-all": "まじりひょうじ",
     "delete": "さちゅるじょ",
     "delete-all": "まじりさちゅるじょ"
   },
@@ -29,13 +29,13 @@
   "home": {
     "continue-watching": "ちづきーん",
     "favorite": "うきーがいー",
-    "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん"
+    "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん",
     "watched": "しちょうじみ {ep}"
   },
 
   "search": {
     "hint-text": "きんさくちかてぃくぃみそーれー～！",
-    "all": "まじり"
+    "all": "まじり",
     "filter": "フィルター"
   },
 
@@ -105,7 +105,7 @@
     "overview": "がいよう",
     "cast": "キャスト",
     "additional-info": "ちいかじょうほう",
-    "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん"
+    "get-lastest-data-error": "さいしんデータぬしゅとぅくんかいしっぺーさびたん",
     "modify-tmdb-binding": "TMDBバインディングへいるかん",
     "no-tmdb-data": "TMDBデーターいっちさびらん。じぶんっしデータバインドしみそーれー",
     "tmdb-key-missing": "TMDB APIキーぬあいびらん、しっていからんかいゅうりょくしみそーれー"
@@ -120,7 +120,7 @@
     "subtitle-none": "じまちゅんなし",
     "subtitle": "じまちゅん",
     "subtitle-change": "じまちゅんへいるかん {title}",
-    "subtitle-file": "じまちゅるファイル"
+    "subtitle-file": "じまちゅるファイル",
     "torrent-downloading": "Torrentっしダウンロード"
   },
 
@@ -184,7 +184,7 @@
     "genres": "ジャンル",
     "runtime": "じっこうじがん",
     "languages": "ぎんぐ"
-   },
+  },
 
   "bt-server": {
     "not-installed": "BTサーバーぬインストールさりやびらん",

@@ -10,6 +10,7 @@ import 'package:miru_app/models/history.dart';
 import 'package:miru_app/pages/detail/view.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/color.dart';
 import 'package:miru_app/utils/database.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/extension_runtime.dart';
@@ -35,6 +36,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
   final contextAttachKey = GlobalKey();
   // 主要颜色
   Color? primaryColor;
+  late bool noCover = widget.history.cover == null;
 
   @override
   void initState() {
@@ -59,11 +61,11 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
   }
 
   _genColor() async {
-    if (widget.history.type == ExtensionType.bangumi) {
+    if (widget.history.type == ExtensionType.bangumi || noCover) {
       return;
     }
     final paletteGenerator = await PaletteGenerator.fromImageProvider(
-      CachedNetworkImageProvider(widget.history.cover),
+      CachedNetworkImageProvider(widget.history.cover!),
       maximumColorCount: 2,
     );
 
@@ -97,7 +99,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
       child: Stack(
         children: [
           Image.file(
-            File(widget.history.cover),
+            File(widget.history.cover!),
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -142,6 +144,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
                               color: Colors.white,
                               fontSize: 12,
                             ),
+                            maxLines: 1,
                           ),
                         ],
                       ),
@@ -164,22 +167,25 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
   }
 
   Widget _coverCard() {
+    if (widget.history.cover == null) {}
+
     return Container(
       width: 350,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
-        // color:
-        //     _paletteGenerator != null ? _paletteGenerator!.colors.first : null,
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(widget.history.cover),
-          fit: BoxFit.cover,
-          colorFilter: primaryColor != null
-              ? ColorFilter.mode(
-                  primaryColor!.withOpacity(0.9),
-                  BlendMode.srcOver,
-                )
-              : null,
-        ),
+        color: noCover ? ColorUtils.getColor(widget.history.title) : null,
+        image: noCover
+            ? null
+            : DecorationImage(
+                image: CachedNetworkImageProvider(widget.history.cover!),
+                fit: BoxFit.cover,
+                colorFilter: primaryColor != null
+                    ? ColorFilter.mode(
+                        primaryColor!.withOpacity(0.9),
+                        BlendMode.srcOver,
+                      )
+                    : null,
+              ),
       ),
       clipBehavior: Clip.antiAlias,
       child: Container(
@@ -196,51 +202,56 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
         ),
         child: Row(
           children: [
-            Container(
-              margin: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
+            if (!noCover)
+              Container(
+                margin: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CachedNetworkImage(
+                  imageUrl: widget.history.cover!,
+                  width: 130,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
-              clipBehavior: Clip.antiAlias,
-              child: CachedNetworkImage(
-                imageUrl: widget.history.cover,
-                width: 130,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    widget.history.title,
-                    style: const TextStyle(color: Colors.white),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    FlutterI18n.translate(
-                      context,
-                      "home.watched",
-                      translationParams: {
-                        "ep": widget.history.episodeTitle,
-                      },
-                    ),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                  if (_update.isNotEmpty) ...[
-                    const SizedBox(height: 8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     Text(
-                      _update,
+                      widget.history.title,
                       style: const TextStyle(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    Text(
+                      FlutterI18n.translate(
+                        context,
+                        "home.watched",
+                        translationParams: {
+                          "ep": widget.history.episodeTitle,
+                        },
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                    ),
+                    if (_update.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        _update,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
                   ],
-                  const SizedBox(height: 16),
-                ],
+                ),
               ),
             ),
           ],
