@@ -1,10 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/api/bt_server.dart';
 import 'package:miru_app/models/index.dart';
+import 'package:miru_app/pages/bt_dialog/view.dart';
 import 'package:miru_app/pages/home/controller.dart';
 import 'package:miru_app/pages/main/controller.dart';
 import 'package:miru_app/router/router.dart';
@@ -23,6 +26,7 @@ import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:crypto/crypto.dart';
 
 class VideoPlayerController extends GetxController {
@@ -65,6 +69,8 @@ class VideoPlayerController extends GetxController {
   final currentTorrentFile = ''.obs;
 
   String _torrenHash = "";
+
+  // 复制当前 context
 
   @override
   void onInit() {
@@ -117,7 +123,7 @@ class VideoPlayerController extends GetxController {
             Message(
               Text(
                 FlutterI18n.translate(
-                  cuurentContext,
+                  currentContext,
                   "video.subtitle-change",
                   translationParams: {"title": value.files.first.name},
                 ),
@@ -134,7 +140,7 @@ class VideoPlayerController extends GetxController {
         Message(
           Text(
             FlutterI18n.translate(
-              cuurentContext,
+              currentContext,
               "video.subtitle-change",
               translationParams: {"title": subtitles[callback].title},
             ),
@@ -184,6 +190,11 @@ class VideoPlayerController extends GetxController {
   }
 
   play() async {
+    // 如果已经 delete 当前 controller
+    if (!Get.isRegistered<VideoPlayerController>(tag: title)) {
+      return;
+    }
+
     try {
       subtitles.clear();
       selectedSubtitle.value = -1;
@@ -233,6 +244,25 @@ class VideoPlayerController extends GetxController {
       }
       subtitles.addAll(watchData.subtitles ?? []);
     } catch (e) {
+      if (e is StartServerException) {
+        if (Platform.isAndroid) {
+          await showDialog(
+            context: currentContext,
+            builder: (context) => const BTDialog(),
+          );
+        } else {
+          await fluent.showDialog(
+            context: currentContext,
+            builder: (context) => const BTDialog(),
+          );
+        }
+
+        // 延时 3 秒再重试
+        await Future.delayed(const Duration(seconds: 3));
+
+        play();
+        return;
+      }
       sendMessage(
         Message(
           Text(e.toString()),
