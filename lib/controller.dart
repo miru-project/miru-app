@@ -36,7 +36,7 @@ class ApplicationController extends GetxController {
             onBackground: Colors.white,
             onSecondary: Colors.white,
             onSurface: Colors.white,
-            secondary: Colors.black,
+            secondary: Colors.grey,
             surface: Colors.black,
             background: Colors.black,
             onPrimary: Colors.black,

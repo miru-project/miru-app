@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ import 'package:miru_app/utils/miru_directory.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:crypto/crypto.dart';
 
 class VideoPlayerController extends GetxController {
   final String title;
@@ -296,7 +298,8 @@ class VideoPlayerController extends GetxController {
     Directory(coverDir).createSync(recursive: true);
     final epName = playList[index.value].name;
     final filename = '${title}_$epName';
-    final file = File(path.join(coverDir, filename));
+    final file = File(
+        path.join(coverDir, md5.convert(utf8.encode(filename)).toString()));
     if (file.existsSync()) {
       file.deleteSync(recursive: true);
     }
@@ -304,7 +307,7 @@ class VideoPlayerController extends GetxController {
     player.screenshot().then((value) {
       file.writeAsBytes(value!).then(
         (value) async {
-          debugPrint("save..");
+          debugPrint("save.. ${value.path}");
           await DatabaseUtils.putHistory(
             History()
               ..url = detailUrl
