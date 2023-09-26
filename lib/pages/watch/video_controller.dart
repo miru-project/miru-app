@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -22,6 +23,7 @@ import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
+import 'package:crypto/crypto.dart';
 
 class VideoPlayerController extends GetxController {
   final String title;
@@ -266,7 +268,8 @@ class VideoPlayerController extends GetxController {
     Directory(coverDir).createSync(recursive: true);
     final epName = playList[index.value].name;
     final filename = '${title}_$epName';
-    final file = File(path.join(coverDir, filename));
+    final file = File(
+        path.join(coverDir, md5.convert(utf8.encode(filename)).toString()));
     if (file.existsSync()) {
       file.deleteSync(recursive: true);
     }
@@ -274,7 +277,7 @@ class VideoPlayerController extends GetxController {
     player.screenshot().then((value) {
       file.writeAsBytes(value!).then(
         (value) async {
-          debugPrint("save..");
+          debugPrint("save.. ${value.path}");
           await DatabaseUtils.putHistory(
             History()
               ..url = detailUrl
