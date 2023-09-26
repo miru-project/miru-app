@@ -151,7 +151,7 @@ class DetailPageController extends GetxController {
     // 判断是否有 key
     if (MiruStorage.getSetting(SettingKey.tmdbKay) == "") {
       showPlatformSnackbar(
-        context: cuurentContext,
+        context: currentContext,
         content: 'detail.tmdb-key-missing'.i18n,
         severity: fluent.InfoBarSeverity.error,
       );
@@ -165,7 +165,7 @@ class DetailPageController extends GetxController {
       ));
     } else {
       data = await fluent.showDialog(
-        context: cuurentContext,
+        context: currentContext,
         builder: (context) => TMDBBinding(title: detail!.title),
       );
     }
@@ -198,21 +198,21 @@ class DetailPageController extends GetxController {
       // 弹出错误信息
       if (runtime.value == null) {
         final content = FlutterI18n.translate(
-          cuurentContext,
+          currentContext,
           'common.extension-missing',
           translationParams: {
             'package': package,
           },
         );
         showPlatformSnackbar(
-          context: cuurentContext,
+          context: currentContext,
           content: content,
           severity: fluent.InfoBarSeverity.error,
         );
         throw content;
       } else {
         showPlatformSnackbar(
-          context: cuurentContext,
+          context: currentContext,
           title: 'detail.get-lastest-data-error'.i18n,
           content: e.toString().split('\n')[0],
           severity: fluent.InfoBarSeverity.error,
@@ -293,7 +293,7 @@ class DetailPageController extends GetxController {
       );
     } catch (e) {
       showPlatformSnackbar(
-        context: cuurentContext,
+        context: currentContext,
         content: e.toString().split('\n')[0],
         severity: fluent.InfoBarSeverity.error,
       );
@@ -311,9 +311,9 @@ class DetailPageController extends GetxController {
   ) async {
     if (runtime.value == null) {
       showPlatformSnackbar(
-        context: cuurentContext,
+        context: currentContext,
         content: FlutterI18n.translate(
-          cuurentContext,
+          currentContext,
           'common.extension-missing',
           translationParams: {
             'package': package,
@@ -329,9 +329,9 @@ class DetailPageController extends GetxController {
 
       if (player != 'built-in') {
         showPlatformSnackbar(
-          context: cuurentContext,
+          context: currentContext,
           content: FlutterI18n.translate(
-            cuurentContext,
+            currentContext,
             'external-player-launching',
             translationParams: {
               'player': player,
@@ -344,7 +344,7 @@ class DetailPageController extends GetxController {
               as ExtensionBangumiWatch;
         } catch (e) {
           showPlatformSnackbar(
-            context: cuurentContext,
+            context: currentContext,
             content: e.toString().split('\n')[0],
             severity: fluent.InfoBarSeverity.error,
           );
@@ -359,7 +359,7 @@ class DetailPageController extends GetxController {
           return;
         } catch (e) {
           showPlatformSnackbar(
-            context: cuurentContext,
+            context: currentContext,
             content: e.toString().split('\n')[0],
             severity: fluent.InfoBarSeverity.error,
           );

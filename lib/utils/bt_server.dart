@@ -97,7 +97,7 @@ class BTServerUtils {
           Get.find<BTDialogController>().isInstalled.value = false;
         }
       }
-      rethrow;
+      throw StartServerException('Start bt-server failed');
     }
     checkServer();
   }
@@ -155,5 +155,14 @@ class BTServerUtils {
       return "btserver.exe";
     }
     return "btserver";
+  }
+}
+
+class StartServerException implements Exception {
+  final String message;
+  StartServerException(this.message);
+  @override
+  String toString() {
+    return message;
   }
 }

@@ -52,7 +52,7 @@ class ExtensionRepoPageController extends GetxController {
       if (Platform.isAndroid && extensions.isEmpty) {
         // ignore: use_build_context_synchronously
         showPlatformSnackbar(
-          context: cuurentContext,
+          context: currentContext,
           content: 'extension-repo.empty'.i18n,
         );
       }

@@ -19,7 +19,7 @@ import 'package:miru_app/pages/settings/view.dart';
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-BuildContext get cuurentContext {
+BuildContext get currentContext {
   if (Platform.isAndroid) {
     return Get.context!;
   }
