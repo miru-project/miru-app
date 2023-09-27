@@ -1,0 +1,180 @@
+{
+  "common": {
+    "home": "मुख्य पृष्ठ",
+    "search": "खोजें",
+    "extension": "एक्सटेंशन",
+    "extension-repo": "एक्सटेंशन रिपॉजिटरी",
+    "settings": "सेटिंग्स",
+    "no-extension": "कोई स्थापित एक्सटेंशन नहीं",
+    "no-result": "कोई संबंधित परिणाम नहीं मिले",
+    "no-more-data": "और डेटा नहीं है",
+    "cancel": "रद्द करें",
+    "confirm": "पुष्टि करें",
+    "close": "बंद करें",
+    "copied": "क्लिपबोर्ड पर कॉपी किया गया",
+    "uninstall": "अनइंस्टॉल करें",
+    "install": "स्थापित करें",
+    "repo": "रिपॉजिटरी",
+    "unset": "सेट नहीं किया गया",
+    "extension-missing": "एक्सटेंशन {package} गायब है",
+    "error": "त्रुटि",
+    "retry": "पुन: प्रयास करें",
+    "next": "अगला",
+    "previous": "पिछला",
+    "show-all": "सभी दिखाएं",
+    "delete": "हटाएं",
+    "delete-all": "सभी हटाएं"
+  },
+  "home": {
+    "continue-watching": "जारी रखें",
+    "favorite": "पसंदीदा",
+    "no-record": "कोई पसंदीदा या देखने का रिकॉर्ड नहीं",
+    "watched": "देखा गया {ep}"
+  },
+  "search": {
+    "hint-text": "कृपया खोज का उपयोग समझदारी से करें!",
+    "all": "सब",
+    "filter": "फिल्टर"
+  },
+  "extension": {
+    "import": {
+      "title": "एक्सटेंशन आयात करें",
+      "url-label": "एक्सटेंशन URL",
+      "tips": "आप एक लिंक के माध्यम से एक्सटेंशन आयात कर सकते हैं, या नीचे दिए एक्सटेंशन डायरेक्टरी पर क्लिक करके एक्सटेंशन फ़ाइल वहां रख सकते हैं।",
+      "extension-dir": "एक्सटेंशन डायरेक्टरी",
+      "import-by-url": "URL से आयात करें"
+    },
+    "error-dialog": "त्रुटि संदेश",
+    "installed": "स्थापित",
+    "edit-code": "कोड संपादित करें"
+  },
+  "extension-repo": {
+    "error": "त्रुटि आई!",
+    "error-tips": "कृपया अपने नेटवर्क कनेक्शन या रिपॉजिटरी का पता जांचें",
+    "empty": "रिपॉजिटरी खाली है",
+    "upgrade": "अपग्रेड करें"
+  },
+  "settings": {
+    "repo-url": "एक्सटेंशन रिपॉजिटरी URL",
+    "repo-url-subtitle": "एक्सटेंशन्स के लिए रिपॉजिटरी URL प्राप्त करें",
+    "tmdb-key": "TMDB API कुंजी",
+    "tmdb-key-subtitle": "TMDB मेटाडेटा के लिए API कुंजी प्राप्त करें",
+    "bt-server": "BT सर्वर",
+    "bt-server-subtitle": "बीटी सीड के ऑनलाइन प्लेबैक के लिए आवश्यक घटक है",
+    "bt-server-manager": "प्रबंधन",
+    "upgrade": "सॉफ़्टवेयर अपडेट करें",
+    "upgrade-subtitle": "संस्करण: {version}",
+    "upgrade-training": "जाँचें",
+    "auto-check-update": "स्वच्छंद रूप से अपडेट की जाँच करें",
+    "auto-check-update-subtitle": "प्रत्येक स्टार्टअप पर अपडेट की जाँच करें",
+    "language": "भाषा",
+    "theme": "थीम",
+    "theme-subtitle": "सॉफ़्टवेयर की थीम बदलें",
+    "theme-system": "सिस्टम",
+    "theme-light": "लाइट",
+    "theme-dark": "डार्क",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "NSFW सामग्री दिखाएं",
+    "external-player": "पसंदीदा वीडियो प्लेयर",
+    "external-player-subtitle": "वर्तमान में, पसंदीदा प्लेयर {player} है",
+    "external-player-builtin": "बिल्ट-इन",
+    "language-subtitle": "सॉफ़्टवेयर की भाषा बदलें",
+    "extension-log": "एक्सटेंशन लॉग विंडो",
+    "extension-log-subtitle": "एक्सटेंशन्स को डिबग करने के लिए प्रयुक्त होता है",
+    "about": "जानकारी",
+    "official-site": "आधिकारिक वेबसाइट",
+    "official-site-training": "यात्रा करें",
+    "source-code": "ओपन सोर्स",
+    "source-code-training": "स्टार दें",
+    "license": "लाइसेंस",
+    "license-subtitle": "लाइसेंस"
+  },
+  "external-player-launching": "{player} को चालना",
+
+  "detail": {
+    "favorite": "पसंदीदा",
+    "favorited": "पसंदीदा",
+    "continue-watching": "{episode} जारी रखें",
+    "total-episodes": "कुल {total}",
+    "overview": "अवलोकन",
+    "cast": "कास्ट",
+    "additional-info": "अतिरिक्त जानकारी",
+    "get-lastest-data-error": "नवीनतम डेटा प्राप्त करने में विफल",
+    "modify-tmdb-binding": "TMDB बाइंडिंग बदलें",
+    "no-tmdb-data": "कोई TMDB डेटा मेल नहीं रहा है, कृपया खुद डेटा बाइंड करें",
+    "tmdb-key-missing": "TMDB API कुंजी गायब है, कृपया सेटिंग्स में दर्ज करें"
+  },
+  "video": {
+    "episodes": "एपिसोड्स",
+    "watch-now": "अब देखें",
+    "no-episodes": "कोई एपिसोड नहीं",
+    "play-complete": "प्लेबैक पूरा हुआ",
+    "resume-last-playback": "पिछले प्लेबैक को फिर से शुरू करें",
+    "subtitle-none": "कोई सबटाइटल नहीं",
+    "subtitle": "सबटाइटल",
+    "subtitle-change": "सबटाइटल बदलें {title}",
+    "subtitle-file": "सबटाइटल फ़ाइल",
+    "torrent-downloading": "टॉरेंट डाउनलोड हो रहा है"
+  },
+  "comic-settings": {
+    "read-mode": "पढ़ने का मोड",
+    "standard": "मानक",
+    "right-to-left": "दाएं से बाएं",
+    "web-tonn": "वेबटून"
+  },
+  "novel-settings": {
+    "font-size": "फ़ॉन्ट साइज़"
+  },
+  "reader": {
+    "chapters": "अध्याय",
+    "read-now": "अब पढ़ें",
+    "no-chapters": "कोई अध्याय नहीं"
+  },
+  "upgrade": {
+    "check-update": "अपडेट देखें",
+    "new-version": "नई संस्करण {version} मिला",
+    "download": "अपडेट पर जाएं",
+    "no-update": "पहले से ही नवीनतम संस्करण है",
+    "not-now": "अभी नहीं",
+    "error": "अपडेट की जाँच में विफलता, नेटवर्क त्रुटि हुई"
+  },
+  "extension-install-error": "एक्सटेंशन स्थापित करने में विफलता",
+
+  "extension-type": {
+    "video": "वीडियो",
+    "novel": "नॉवल",
+    "comic": "कॉमिक"
+  },
+  "extension-info": {
+    "author": "लेखक",
+    "description": "विवरण",
+    "version": "संस्करण",
+    "language": "भाषा",
+    "original-site": "मूल साइट",
+    "other-infomation": "अन्य जानकारी",
+    "license": "लाइसेंस",
+    "title": "एक्सटेंशन जानकारी"
+  },
+  "cookie-clean": {
+    "title": "कुकी साफ़ करें",
+    "subtitle": "सफ़ाई के बाद फिर से लॉगिन करने की आवश्यकता हो सकती है",
+    "success": "सफलतापूर्वक साफ किया गया",
+    "clean": "सफ़ाई करें"
+  },
+  "tmdb": {
+    "backdrops": "पृष्ठभूमि",
+    "status": "स्थिति",
+    "original-title": "मूल शीर्षक",
+    "release-date": "प्रकाशन तिथि",
+    "genres": "शैली",
+    "runtime": "रनटाइम",
+    "languages": "भाषाएं"
+  },
+  "bt-server": {
+    "not-installed": "BT सर्वर स्थापित नहीं है",
+    "running": "BT सर्वर चल रहा है",
+    "stopped": "BT सर्वर रुका हुआ है",
+    "version": "संस्करण {version}",
+    "start": "शुरू करें"
+  }
+}
