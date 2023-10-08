@@ -5,16 +5,16 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:miru_app/models/index.dart';
-import 'package:miru_app/pages/detail/view.dart';
-import 'package:miru_app/pages/extension/view.dart';
-import 'package:miru_app/pages/extension_repo/view.dart';
-import 'package:miru_app/pages/extension_settings/view.dart';
-import 'package:miru_app/pages/home/pages/favorites_page.dart';
-import 'package:miru_app/pages/home/view.dart';
-import 'package:miru_app/pages/main/view.dart';
-import 'package:miru_app/pages/search/pages/search_extension.dart';
-import 'package:miru_app/pages/search/view.dart';
-import 'package:miru_app/pages/settings/view.dart';
+import 'package:miru_app/views/pages/detail_page.dart';
+import 'package:miru_app/views/pages/extension/extension_page.dart';
+import 'package:miru_app/views/pages/extension/extension_repo_page.dart';
+import 'package:miru_app/views/pages/extension/extension_settings_page.dart';
+import 'package:miru_app/views/pages/favorites_page.dart';
+import 'package:miru_app/views/pages/home_page.dart';
+import 'package:miru_app/views/pages/main_page.dart';
+import 'package:miru_app/views/pages/search/extension_searcher_page.dart';
+import 'package:miru_app/views/pages/search/search_page.dart';
+import 'package:miru_app/views/pages/settings_page.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -60,7 +60,7 @@ final router = GoRouter(
         GoRoute(
           path: '/search_extension',
           builder: (context, state) => _animation(
-            SearchExtensionPage(
+            ExtensionSearcherPage(
               package: state.uri.queryParameters['package']!,
               keyWord: state.uri.queryParameters['keyWord'],
             ),
