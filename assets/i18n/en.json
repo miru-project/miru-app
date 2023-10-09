@@ -7,7 +7,8 @@
     "ru": "Русский",
     "ryu": "うちなーぐち",
     "uk": "Українська",
-    "zh": "中文"
+    "zh": "中文",
+    "hi": "हिंदी"
   },
 
   "common": {
@@ -89,6 +90,7 @@
     "theme-system": "System",
     "theme-light": "Light",
     "theme-dark": "Dark",
+    "theme-black": "Black",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Show NSFW content",
     "external-player": "Preferred video player",
@@ -139,7 +141,7 @@
     "read-mode": "Read mode",
     "standard": "Standard",
     "right-to-left": "Right to left",
-    "web-tonn": "Web Tonn"
+    "web-tonn": "Webtoon"
   },
 
   "novel-settings": {

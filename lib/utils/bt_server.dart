@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/api/bt_server.dart';
-import 'package:miru_app/pages/bt_dialog/controller.dart';
-import 'package:miru_app/pages/main/controller.dart';
+import 'package:miru_app/data/providers/bt_server_provider.dart';
+import 'package:miru_app/controllers/bt_dialog_controller.dart';
+import 'package:miru_app/controllers/main_controller.dart';
 import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:path/path.dart' as path;
@@ -97,7 +97,7 @@ class BTServerUtils {
           Get.find<BTDialogController>().isInstalled.value = false;
         }
       }
-      rethrow;
+      throw StartServerException('Start bt-server failed');
     }
     checkServer();
   }
@@ -155,5 +155,14 @@ class BTServerUtils {
       return "btserver.exe";
     }
     return "btserver";
+  }
+}
+
+class StartServerException implements Exception {
+  final String message;
+  StartServerException(this.message);
+  @override
+  String toString() {
+    return message;
   }
 }

@@ -78,6 +78,7 @@
     "theme-system": "跟随系统",
     "theme-light": "浅色",
     "theme-dark": "深色",
+    "theme-black": "黑色",
     "nsfw": "NSFW",
     "nsfw-subtitle": "显示 NSFW 内容",
     "external-player": "优先使用的视频播放器",
