@@ -19,8 +19,8 @@ import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:path/path.dart' as path;
 
 class ExtensionUtils {
-  static late Map<String, ExtensionService> runtimes;
-  static late Map<String, String> extensionErrorMap;
+  static Map<String, ExtensionService> runtimes = {};
+  static Map<String, String> extensionErrorMap = {};
   static Timer? _timer;
 
   static Future<String> get getExtensionsDir async =>
@@ -69,11 +69,11 @@ class ExtensionUtils {
     extensionErrorMap = extErrorMap;
     // 重载扩展页面
     if (Get.isRegistered<ExtensionPageController>()) {
-      Get.find<ExtensionPageController>().onRefresh();
+      Get.find<ExtensionPageController>().callRefresh();
     }
     // 重载搜索页面
     if (Get.isRegistered<SearchPageController>()) {
-      Get.find<SearchPageController>().needRefresh = true;
+      Get.find<SearchPageController>().callRefresh();
     }
   }
 

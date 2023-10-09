@@ -29,7 +29,17 @@ class _ExtensionPageState extends State<ExtensionPage> {
   @override
   void initState() {
     c = Get.put(ExtensionPageController());
+    c.isPageOpen = true;
+    if (c.needRefresh) {
+      c.onRefresh();
+    }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    c.isPageOpen = false;
+    super.dispose();
   }
 
   // 导入扩展对话框
