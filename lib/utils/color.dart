@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ColorUtils {
-  static Color getColor(String text) {
+  static Color getColorByText(String text) {
     final int colorIndex = text.length % 10;
     final color = [
       Colors.blueGrey[500],
