@@ -42,6 +42,8 @@ class SearchPageController extends GetxController {
 
   Future<void> getResult(String key) async {
     final futures = <Future>[];
+    // 最后一个有结果的搜索结果索引
+    var lastResultIndex = -1;
     for (var i = 0; i < searchResultList.length; i++) {
       final element = searchResultList[i];
       element.completed = false;
@@ -61,9 +63,17 @@ class SearchPageController extends GetxController {
             return;
           }
           element.result = result;
+          // 如果搜索结果不为空,
           if (result.isNotEmpty) {
             searchResultList.remove(element);
-            searchResultList.insert(0, element);
+            // 判断是否是第一个,将第一个放到最前面
+            if (lastResultIndex == -1) {
+              searchResultList.insert(0, element);
+              lastResultIndex = 0;
+            } else {
+              searchResultList.insert(lastResultIndex + 1, element);
+              lastResultIndex++;
+            }
           }
         }).catchError((e) {
           element.error = e.toString();
