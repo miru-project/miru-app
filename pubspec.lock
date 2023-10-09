@@ -389,10 +389,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: b015021e7b19107ebf06277531d48fa40e450a500bad751a330ab5f94c815650
+      sha256: "43e95034b12a8285a78703b5995bb4d2e02a28750a1a363044c150533bc7f027"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.4"
+    version: "4.7.6"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -529,10 +529,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: e1a30a66d734f9e498b1b6522d6a75ded28242bad2359a9158df38a1c30bcf1f
+      sha256: a07c781bf55bf11ae85133338e4850f0b4e33e261c44a66c750fc707d65d8393
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.0"
+    version: "11.1.2"
   graphs:
     dependency: transitive
     description:
@@ -729,58 +729,58 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit
-      sha256: "92c7f59e075d74471b31e703f81ccc1d7102739ebcce945b30a6417fa2f751d5"
+      sha256: "1283b500341d41f033478706204a2b4ae2612e9b331c934bc4fad8c4bb869f6d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.7"
+    version: "1.1.8+2"
   media_kit_libs_android_video:
     dependency: "direct main"
     description:
       name: media_kit_libs_android_video
-      sha256: "498a5062bc5f000bd23ada3be788ea886ab32c52f7a8252dde1264ca019b819b"
+      sha256: a7ef60926ac528e2fabe9ee7084e648e385422a881ba914c978a7a81e6595dee
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.3"
+    version: "1.3.5"
   media_kit_libs_linux:
     dependency: "direct main"
     description:
       name: media_kit_libs_linux
-      sha256: "3b7c272179639a914dc8a50bf8a3f2df0e9a503bd727c88fab499dbdf6cb1eb8"
+      sha256: e186891c31daa6bedab4d74dcdb4e8adfccc7d786bfed6ad81fe24a3b3010310
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.3"
   media_kit_libs_macos_video:
     dependency: "direct main"
     description:
       name: media_kit_libs_macos_video
-      sha256: c06e831f3c22a45296d375788d9bc07871b448f8e9ec98d77b11e5e118a83fb2
+      sha256: f26aa1452b665df288e360393758f84b911f70ffb3878032e1aabba23aa1032d
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.3"
+    version: "1.1.4"
   media_kit_libs_windows_video:
     dependency: "direct main"
     description:
       name: media_kit_libs_windows_video
-      sha256: "923f068344d7d200184e0aaa2597f3de6c05982a3b1f18035d842ab53f2a1350"
+      sha256: "7bace5f35d9afcc7f9b5cdadb7541d2191a66bb3fc71bfa11c1395b3360f6122"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.8"
+    version: "1.0.9"
   media_kit_native_event_loop:
     dependency: "direct main"
     description:
       name: media_kit_native_event_loop
-      sha256: e37ce6fb5fa71b8cf513c6a6cd591367743a342a385e7da621a047dd8ef6f4a4
+      sha256: a605cf185499d14d58935b8784955a92a4bf0ff4e19a23de3d17a9106303930e
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.7"
+    version: "1.0.8"
   media_kit_video:
     dependency: "direct main"
     description:
       name: media_kit_video
-      sha256: cd3ab78e7626146f115134b82c4029ac5987ba6351719c9067d86789723e0c12
+      sha256: b1a427f0540c5f052dfab73e4b76a5eb8efa7ebb5d83179cb23fc3932afc315a
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.8"
+    version: "1.2.1"
   meta:
     dependency: transitive
     description:
@@ -1502,10 +1502,10 @@ packages:
     dependency: "direct main"
     description:
       name: window_manager
-      sha256: "6ee795be9124f90660ea9d05e581a466de19e1c89ee74fc4bf528f60c8600edd"
+      sha256: dcc865277f26a7dad263a47d0e405d77e21f12cb71f30333a52710a408690bd7
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.6"
+    version: "0.3.7"
   xdg_directories:
     dependency: transitive
     description:
