@@ -6,6 +6,8 @@ class ExtensionPageController extends GetxController {
   RxMap<String, ExtensionService> runtimes = <String, ExtensionService>{}.obs;
   RxMap<String, String> errors = <String, String>{}.obs;
   RxBool isInstallloading = false.obs;
+  bool needRefresh = true;
+  bool isPageOpen = false;
 
   @override
   void onInit() {
@@ -18,5 +20,13 @@ class ExtensionPageController extends GetxController {
     errors.clear();
     runtimes.addAll(ExtensionUtils.runtimes);
     errors.addAll(ExtensionUtils.extensionErrorMap);
+  }
+
+  callRefresh() {
+    if (isPageOpen) {
+      onRefresh();
+    } else {
+      needRefresh = true;
+    }
   }
 }

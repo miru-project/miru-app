@@ -44,8 +44,8 @@ void main(List<String> args) async {
 
   // 主窗口
   await MiruStorage.ensureInitialized();
-  await ExtensionUtils.ensureInitialized();
   await ApplicationUtils.ensureInitialized();
+  ExtensionUtils.ensureInitialized();
   MediaKit.ensureInitialized();
 
   if (!Platform.isAndroid) {

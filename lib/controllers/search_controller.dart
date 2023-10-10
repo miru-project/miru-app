@@ -12,6 +12,8 @@ class SearchPageController extends GetxController {
   int get finishCount =>
       searchResultList.where((element) => element.completed).length;
   bool needRefresh = true;
+  bool isPageOpen = false;
+  // 是否打开了这个页面
 
   @override
   void onInit() {
@@ -88,6 +90,14 @@ class SearchPageController extends GetxController {
 
   getPackgeByIndex(int index) {
     return searchResultList[index].runitme.extension.package;
+  }
+
+  callRefresh() {
+    if (isPageOpen) {
+      getRuntime();
+    } else {
+      needRefresh = true;
+    }
   }
 }
 
