@@ -8,15 +8,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:miru_app/controller.dart';
-import 'package:miru_app/pages/extension_log/view.dart';
-import 'package:miru_app/pages/main/view.dart';
+import 'package:miru_app/controllers/application_controller.dart';
+import 'package:miru_app/views/pages/log_page.dart';
+import 'package:miru_app/views/pages/main_page.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/utils/application.dart';
-import 'package:miru_app/widgets/platform_widget.dart';
+import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main(List<String> args) async {
@@ -44,8 +44,8 @@ void main(List<String> args) async {
 
   // 主窗口
   await MiruStorage.ensureInitialized();
-  await ExtensionUtils.ensureInitialized();
   await ApplicationUtils.ensureInitialized();
+  ExtensionUtils.ensureInitialized();
   MediaKit.ensureInitialized();
 
   if (!Platform.isAndroid) {

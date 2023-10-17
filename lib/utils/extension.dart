@@ -7,20 +7,20 @@ import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/pages/extension/controller.dart';
-import 'package:miru_app/pages/search/controller.dart';
-import 'package:miru_app/pages/settings/controller.dart';
-import 'package:miru_app/utils/extension_runtime.dart';
+import 'package:miru_app/controllers/extension_controller.dart';
+import 'package:miru_app/controllers/search_controller.dart';
+import 'package:miru_app/controllers/settings_controller.dart';
+import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/utils/router.dart';
-import 'package:miru_app/widgets/button.dart';
-import 'package:miru_app/widgets/messenger.dart';
+import 'package:miru_app/views/widgets/button.dart';
+import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:path/path.dart' as path;
 
 class ExtensionUtils {
-  static late Map<String, ExtensionRuntime> runtimes;
-  static late Map<String, String> extensionErrorMap;
+  static Map<String, ExtensionService> runtimes = {};
+  static Map<String, String> extensionErrorMap = {};
   static Timer? _timer;
 
   static Future<String> get getExtensionsDir async =>
@@ -42,7 +42,7 @@ class ExtensionUtils {
   }
 
   static _loadExtensions() async {
-    final Map<String, ExtensionRuntime> exts = {};
+    final Map<String, ExtensionService> exts = {};
     final Map<String, String> extErrorMap = {};
 
     // 获取扩展列表
@@ -58,7 +58,7 @@ class ExtensionUtils {
           if (path.basenameWithoutExtension(extension.path) != ext.package) {
             throw Exception("Inconsistency between file name and package name");
           }
-          exts[ext.package] = await ExtensionRuntime().initRuntime(ext);
+          exts[ext.package] = await ExtensionService().initRuntime(ext);
         } catch (e) {
           extErrorMap[extension.path] = e.toString();
         }
@@ -69,11 +69,11 @@ class ExtensionUtils {
     extensionErrorMap = extErrorMap;
     // 重载扩展页面
     if (Get.isRegistered<ExtensionPageController>()) {
-      Get.find<ExtensionPageController>().onRefresh();
+      Get.find<ExtensionPageController>().callRefresh();
     }
     // 重载搜索页面
     if (Get.isRegistered<SearchPageController>()) {
-      Get.find<SearchPageController>().needRefresh = true;
+      Get.find<SearchPageController>().callRefresh();
     }
   }
 
