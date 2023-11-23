@@ -69,7 +69,26 @@ class ExtensionService {
       ))
           .data;
     });
-
+    // request with headers
+    runtime.onMessage('RequestWithHeader', (dynamic args) async {
+      ExtensionUtils.addLog(
+        extension,
+        ExtensionLogLevel.info,
+        "RequestWithHeader: ${args[0]} , ${args[1]}",
+      );
+      _cuurentRequestUrl = args[0];
+      Response response = await _dio.request<String>(
+        args[0],
+        data: args[1]['data'],
+        queryParameters: args[1]['queryParameters'] ?? {},
+        options: Options(
+          headers: args[1]['headers'] ?? {},
+          method: args[1]['method'] ?? 'get',
+        ),
+      );
+      Map<String, dynamic> headers = response.headers.map;
+      return {'data': response.data, 'headers': headers};
+    });
     // 设置
     runtime.onMessage('registerSetting', (dynamic args) async {
       args[0]['package'] = extension.package;
@@ -295,6 +314,22 @@ class ExtensionService {
                 return res;
               }
             }
+            async RequestWithHeader(url, options) {
+              options = options || {};
+              options.headers = options.headers || {};
+              const miruUrl = options.headers["Miru-Url"] || "${extension.webSite}";
+              options.method = options.method || "get";
+              const res = await sendMessage(
+              "RequestWithHeader",
+              JSON.stringify([miruUrl + url, options])
+             );
+             console.log(res)
+            try {
+              return JSON.parse(res);
+            } catch (e) {
+               return res;
+              }
+           }
             querySelector(content, selector) {
               return new Element(content, selector);
             }
@@ -327,6 +362,9 @@ class ExtensionService {
             }
             createFilter(filter){
               throw new Error("not implement createFilter");
+            }
+            updatePages(){
+
             }
             detail(url) {
               throw new Error("not implement detail");
@@ -503,10 +541,31 @@ class ExtensionService {
           result.headers ??= {
             "Referer": _cuurentRequestUrl,
           };
+          if (result.pages == null) {
+            return result;
+          }
+          result.urls.addAll(
+              List<String>.filled(result.pages! - result.urls.length, ""));
           return result;
         default:
           return ExtensionFikushonWatch.fromJson(data);
       }
+    });
+  }
+
+  Future<Object?> updatePages(int page) async {
+    return _runExtension(() async {
+      final jsResult = await runtime.handlePromise(
+        await runtime
+            .evaluateAsync('stringify(()=>extenstion.updatePages("$page"))'),
+      );
+      final data = jsonDecode(jsResult.stringResult);
+
+      final result = ExtensionUpdatePages.fromJson(data);
+      result.headers ??= {
+        "Referer": _cuurentRequestUrl,
+      };
+      return result;
     });
   }
 

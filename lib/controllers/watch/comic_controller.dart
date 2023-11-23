@@ -4,6 +4,7 @@ import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'dart:async';
 
 class ComicController extends ReaderController<ExtensionMangaWatch> {
   ComicController({
@@ -19,7 +20,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   final readType = MangaReadMode.standard.obs;
   // 当前页码
   final currentPage = 0.obs;
-
+  bool timerCancel = false;
   final pageController = PageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
   final itemScrollController = ItemScrollController();
@@ -38,6 +39,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       currentPage.value = pos.index;
     });
+    _pageUpdate();
     ever(readType, (callback) {
       _jumpPage(currentPage.value);
       // 保存设置
@@ -70,6 +72,31 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     super.onInit();
   }
 
+  _pageUpdate() async {
+    int curPage = currentPage.value;
+    Timer(const Duration(seconds: 2), () {
+      //set update timer
+      Timer.periodic(const Duration(milliseconds: 600), (timer) {
+        debugPrint('$curPage');
+        if (curPage >= super.watchData.value!.urls.length - 1 || timerCancel) {
+          timer.cancel();
+        }
+        curPage++;
+
+        if (super.watchData.value!.urls[curPage] == "") {
+          _getPage(curPage);
+        }
+      });
+    });
+  }
+
+  _getPage(int page) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final updatePage = await runtime.updatePages(page) as ExtensionUpdatePages;
+    super.watchData.value!.urls[page] = updatePage.url;
+  }
+
   _initSetting() async {
     readType.value = await DatabaseService.getMnagaReaderType(super.detailUrl);
   }
@@ -81,6 +108,18 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
           index: page,
         );
       }
+      int curPage = currentPage.value;
+      Timer.periodic(const Duration(milliseconds: 600), (timer) {
+        debugPrint('$curPage');
+        if (curPage == -1 || timerCancel) {
+          timer.cancel();
+        }
+        curPage--;
+
+        if (super.watchData.value!.urls[curPage] == "") {
+          _getPage(curPage);
+        }
+      });
       return;
     }
     if (pageController.value.hasClients) {
@@ -133,6 +172,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     }
     pageController.value.dispose();
+    timerCancel = true;
     super.onClose();
   }
 }

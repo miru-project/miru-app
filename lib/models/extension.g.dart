@@ -184,6 +184,7 @@ ExtensionMangaWatch _$ExtensionMangaWatchFromJson(Map<String, dynamic> json) =>
       headers: (json['headers'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
+      pages: json['pages'] as int?,
     );
 
 Map<String, dynamic> _$ExtensionMangaWatchToJson(
@@ -191,6 +192,7 @@ Map<String, dynamic> _$ExtensionMangaWatchToJson(
     <String, dynamic>{
       'urls': instance.urls,
       'headers': instance.headers,
+      'pages': instance.pages,
     };
 
 ExtensionFikushonWatch _$ExtensionFikushonWatchFromJson(
@@ -208,6 +210,22 @@ Map<String, dynamic> _$ExtensionFikushonWatchToJson(
       'content': instance.content,
       'title': instance.title,
       'subtitle': instance.subtitle,
+    };
+
+ExtensionUpdatePages _$ExtensionUpdatePagesFromJson(
+        Map<String, dynamic> json) =>
+    ExtensionUpdatePages(
+      url: json['url'] as String,
+      headers: (json['headers'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
+    );
+
+Map<String, dynamic> _$ExtensionUpdatePagesToJson(
+        ExtensionUpdatePages instance) =>
+    <String, dynamic>{
+      'headers': instance.headers,
+      'url': instance.url,
     };
 
 ExtensionLog _$ExtensionLogFromJson(Map<String, dynamic> json) => ExtensionLog(
