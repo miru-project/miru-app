@@ -28,6 +28,7 @@ import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:crypto/crypto.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 
 class VideoPlayerController extends GetxController {
   final String title;
@@ -53,6 +54,7 @@ class VideoPlayerController extends GetxController {
   final isFullScreen = false.obs;
   late final index = playIndex.obs;
   final subtitles = <ExtensionBangumiWatchSubtitle>[].obs;
+  final keyboardShortcuts = <ShortcutActivator, VoidCallback>{};
   final selectedSubtitle = 0.obs;
 
   // 是否已经自动跳转到上次播放进度
@@ -69,7 +71,6 @@ class VideoPlayerController extends GetxController {
   final currentTorrentFile = ''.obs;
 
   String _torrenHash = "";
-
   // 复制当前 context
 
   @override
@@ -98,7 +99,6 @@ class VideoPlayerController extends GetxController {
         isOpenSidebar.value = false;
       }
     });
-
     // 切换字幕
     ever(selectedSubtitle, (callback) {
       if (callback == -1) {
@@ -190,6 +190,47 @@ class VideoPlayerController extends GetxController {
     });
 
     super.onInit();
+    final skipInterval =
+        int.parse(MiruStorage.getSetting(SettingKey.skipInterval));
+    keyboardShortcuts.addAll({
+      const SingleActivator(LogicalKeyboardKey.mediaPlay): () => player.play(),
+      const SingleActivator(LogicalKeyboardKey.mediaPause): () =>
+          player.pause(),
+      const SingleActivator(LogicalKeyboardKey.mediaPlayPause): () =>
+          player.playOrPause(),
+      const SingleActivator(LogicalKeyboardKey.mediaTrackNext): () =>
+          player.next(),
+      const SingleActivator(LogicalKeyboardKey.mediaTrackPrevious): () =>
+          player.previous(),
+      const SingleActivator(LogicalKeyboardKey.space): () =>
+          player.playOrPause(),
+      const SingleActivator(LogicalKeyboardKey.keyJ): () {
+        final rate =
+            player.state.position - Duration(milliseconds: skipInterval);
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.keyI): () {
+        final rate =
+            player.state.position + Duration(milliseconds: skipInterval);
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
+        final rate = player.state.position - const Duration(seconds: 2);
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowRight): () {
+        final rate = player.state.position + const Duration(seconds: 2);
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowUp): () {
+        final volume = player.state.volume + 5.0;
+        player.setVolume(volume.clamp(0.0, 100.0));
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowDown): () {
+        final volume = player.state.volume - 5.0;
+        player.setVolume(volume.clamp(0.0, 100.0));
+      },
+    });
   }
 
   play() async {

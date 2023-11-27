@@ -295,6 +295,26 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
         const SizedBox(height: 8),
+        if (!Platform.isAndroid)
+          SettingsIntpuTile(
+            icon: const PlatformWidget(
+              androidWidget: Icon(Icons.fast_forward_rounded),
+              desktopWidget: Icon(fluent.FluentIcons.fast_forward, size: 24),
+            ),
+            title: 'settings.skip-interval'.i18n,
+            buildSubtitle: () {
+              if (!Platform.isAndroid) {
+                return 'settings.skip-interval-subtitle-desktop'.i18n;
+              }
+              return 'settings.skip-interval-subtitle-mobile'.i18n;
+            },
+            onChanged: (value) {
+              MiruStorage.setSetting(SettingKey.skipInterval, value);
+              Get.find<ExtensionRepoPageController>().onRefresh();
+            },
+            text: MiruStorage.getSetting(SettingKey.skipInterval),
+          ),
+        const SizedBox(height: 8),
         ListTitle(title: 'settings.about'.i18n),
         const SizedBox(height: 8),
         SettingsTile(
