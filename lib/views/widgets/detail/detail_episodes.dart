@@ -125,19 +125,32 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
     Widget cardTile(Widget child) {
       return CardTile(
         title: episodesString,
-        leading: fluent.IconButton(
-          icon: Icon(
-            listMode == "grid"
-                ? fluent.FluentIcons.view_list
-                : fluent.FluentIcons.grid_view_medium,
+        leading: Row(children: [
+          fluent.IconButton(
+            icon: Icon(
+              listMode == "grid"
+                  ? fluent.FluentIcons.view_list
+                  : fluent.FluentIcons.grid_view_medium,
+            ),
+            onPressed: () {
+              setState(() {
+                listMode == "grid" ? listMode = "list" : listMode = "grid";
+                MiruStorage.setSetting(SettingKey.listMode, listMode);
+              });
+            },
           ),
-          onPressed: () {
-            setState(() {
-              listMode == "grid" ? listMode = "list" : listMode = "grid";
-              MiruStorage.setSetting(SettingKey.listMode, listMode);
-            });
-          },
-        ),
+          fluent.IconButton(
+            icon: isRevered
+                ? const Icon(fluent.FluentIcons.sort_lines_ascending)
+                : const Icon(fluent.FluentIcons.sort_lines),
+            onPressed: () {
+              setState(() {
+                isRevered = !isRevered;
+                // MiruStorage.setSetting(SettingKey.listMode, listMode);
+              });
+            },
+          )
+        ]),
         trailing: Row(
           children: [
             const DetailContinuePlay(),
@@ -167,6 +180,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
         LayoutBuilder(
           builder: (context, constraints) {
             return GridView.builder(
+              reverse: isRevered,
               shrinkWrap: true,
               itemCount: episodes.isEmpty
                   ? 0
@@ -201,6 +215,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
     return cardTile(
       ListView.builder(
         shrinkWrap: true,
+        reverse: isRevered,
         padding: const EdgeInsets.all(0),
         itemCount:
             episodes.isEmpty ? 0 : episodes[c.selectEpGroup.value].urls.length,
