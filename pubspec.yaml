@@ -18,11 +18,11 @@ dependencies:
   flutter_animate: ^4.1.1+1
   flutter_code_editor: ^0.3.0
   flutter_highlight: ^0.7.0
-  flutter_i18n: ^0.33.0
-  flutter_js: ^0.7.2
+  flutter_i18n: ^0.34.0
+  flutter_js: ^0.8.0
   flutter_markdown: ^0.6.17+1
   get: ^4.6.5
-  go_router: ^11.1.2
+  go_router: ^12.1.1
   highlight: ^0.7.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -36,11 +36,11 @@ dependencies:
   media_kit_libs_windows_video: ^1.0.9
   media_kit_native_event_loop: ^1.0.8
   media_kit_video: ^1.2.1
-  package_info_plus: ^4.1.0
+  package_info_plus: ^5.0.1
   palette_generator: ^0.3.3+2
   path: ^1.8.3
   path_provider: ^2.1.0
-  file_picker: ^5.3.3
+  file_picker: ^6.1.1
   screenshot: ^2.1.0
   scrollable_positioned_list: ^0.3.8
   tmdb_api: ^2.1.5
@@ -55,12 +55,12 @@ dependencies:
   device_info_plus: ^9.0.3
   android_intent_plus: ^4.0.2
   crypto: ^3.0.3
-
+  extended_image: ^8.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.2
+  flutter_lints: ^3.0.1
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.5
   json_serializable: ^6.7.0

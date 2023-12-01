@@ -73,7 +73,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
       leading: SizedBox(
         width: 35,
         height: 35,
-        child: CacheNetWorkImage(
+        child: CacheNetWorkImagePic(
           icon,
           fit: BoxFit.contain,
           fallback: const Icon(Icons.extension),
@@ -162,7 +162,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
               borderRadius: BorderRadius.circular(8),
             ),
             clipBehavior: Clip.antiAlias,
-            child: CacheNetWorkImage(
+            child: CacheNetWorkImagePic(
               icon,
               width: 64,
               height: 64,

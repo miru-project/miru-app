@@ -42,7 +42,7 @@ class ExtensionLogTile extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               clipBehavior: Clip.antiAlias,
-              child: CacheNetWorkImage(
+              child: CacheNetWorkImagePic(
                 log.extension.icon!,
                 width: 32,
                 height: 32,

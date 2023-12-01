@@ -105,7 +105,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                           width: 100,
                           child: c.isLoading.value
                               ? const Center(child: CircularProgressIndicator())
-                              : CacheNetWorkImage(
+                              : CacheNetWorkImagePic(
                                   c.data.value?.cover ?? '',
                                   fit: BoxFit.cover,
                                   headers: c.detail?.headers,

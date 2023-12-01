@@ -19,7 +19,7 @@ class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: Platform.isAndroid
-            ? Theme.of(context).colorScheme.background
+            ? Theme.of(context).colorScheme.background.withOpacity(0.5)
             : Colors.transparent,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(40),

@@ -144,7 +144,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: CacheNetWorkImage(
+                child: CacheNetWorkImagePic(
                   extension.icon ?? '',
                   fit: BoxFit.contain,
                 ),
@@ -308,7 +308,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           clipBehavior: Clip.antiAlias,
-                          child: CacheNetWorkImage(
+                          child: CacheNetWorkImagePic(
                             extension.icon ?? '',
                             fit: BoxFit.contain,
                           ),

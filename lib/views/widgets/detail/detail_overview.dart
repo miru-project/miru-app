@@ -58,7 +58,7 @@ class DetailOverView extends StatelessWidget {
                           ),
                           clipBehavior: Clip.antiAlias,
                           margin: const EdgeInsets.only(right: 8),
-                          child: CacheNetWorkImage(
+                          child: CacheNetWorkImagePic(
                             url,
                             height: 160,
                           ),

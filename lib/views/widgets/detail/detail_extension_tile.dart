@@ -35,7 +35,7 @@ class DetailExtensionTile extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               clipBehavior: Clip.antiAlias,
-              child: CacheNetWorkImage(
+              child: CacheNetWorkImagePic(
                 c.extension!.icon!,
                 width: 20,
               ),

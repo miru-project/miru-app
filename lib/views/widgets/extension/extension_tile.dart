@@ -29,7 +29,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
       leading: SizedBox(
         width: 35,
         height: 35,
-        child: CacheNetWorkImage(
+        child: CacheNetWorkImagePic(
           widget.extension.icon ?? '',
           key: ValueKey(widget.extension.icon),
           fit: BoxFit.contain,
@@ -96,7 +96,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
                   child: SizedBox(
                     width: 45,
                     height: 45,
-                    child: CacheNetWorkImage(
+                    child: CacheNetWorkImagePic(
                       widget.extension.icon ?? '',
                       key: ValueKey(widget.extension.icon),
                       fit: BoxFit.contain,

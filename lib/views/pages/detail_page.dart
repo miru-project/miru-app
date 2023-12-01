@@ -185,7 +185,7 @@ class _DetailPageState extends State<DetailPage> {
                                 shape: BoxShape.circle,
                               ),
                               clipBehavior: Clip.antiAlias,
-                              child: CacheNetWorkImage(
+                              child: CacheNetWorkImagePic(
                                 url,
                                 width: 50,
                                 height: 50,
@@ -284,7 +284,7 @@ class _DetailPageState extends State<DetailPage> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: CacheNetWorkImage(
+                                  child: CacheNetWorkImagePic(
                                     c.detail?.cover ?? '',
                                     headers: c.detail?.headers,
                                   ),
@@ -377,7 +377,7 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     clipBehavior: Clip.antiAlias,
                                     margin: const EdgeInsets.only(right: 8),
-                                    child: CacheNetWorkImage(
+                                    child: CacheNetWorkImagePic(
                                       url,
                                       height: 200,
                                     ),
@@ -432,7 +432,7 @@ class _DetailPageState extends State<DetailPage> {
                                                 shape: BoxShape.circle,
                                               ),
                                               clipBehavior: Clip.antiAlias,
-                                              child: CacheNetWorkImage(
+                                              child: CacheNetWorkImagePic(
                                                 url ?? '',
                                                 width: 100,
                                                 height: 100,

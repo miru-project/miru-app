@@ -16,7 +16,7 @@ class Cover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (url != null) {
-      return CacheNetWorkImage(
+      return CacheNetWorkImagePic(
         url!,
         width: double.infinity,
         height: double.infinity,

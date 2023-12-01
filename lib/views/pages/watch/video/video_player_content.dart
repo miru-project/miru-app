@@ -52,6 +52,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
     return MaterialDesktopVideoControlsTheme(
       normal: MaterialDesktopVideoControlsThemeData(
         toggleFullscreenOnDoublePress: false,
+        keyboardShortcuts: _c.keyboardShortcuts,
         topButtonBar: [
           Obx(
             () => Expanded(

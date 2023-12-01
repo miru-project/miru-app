@@ -5,6 +5,7 @@ import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'dart:async';
+import 'package:extended_image/extended_image.dart';
 
 class ComicController extends ReaderController<ExtensionMangaWatch> {
   ComicController({
@@ -21,10 +22,11 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   // 当前页码
   final currentPage = 0.obs;
   bool timerCancel = false;
-  final pageController = PageController().obs;
+  final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
+  final scrolloffsetListener = ScrollOffsetListener.create();
 
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
@@ -77,8 +79,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     Timer(const Duration(seconds: 2), () {
       //set update timer
       Timer.periodic(const Duration(milliseconds: 600), (timer) {
-        debugPrint('$curPage');
-        if (curPage >= super.watchData.value!.urls.length - 1 || timerCancel) {
+        // debugPrint('$curPage');
+        if (curPage >= super.watchData.value!.urls.length - 2 || timerCancel) {
           timer.cancel();
         }
         curPage++;
@@ -101,6 +103,11 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     readType.value = await DatabaseService.getMnagaReaderType(super.detailUrl);
   }
 
+  double mapValue(double value) {
+    double mappedValue = ((value - 0) * (1 - (-1))) / (2.5 - 0) + (-1);
+    return mappedValue;
+  }
+
   _jumpPage(int page) {
     if (readType.value == MangaReadMode.webTonn) {
       if (itemScrollController.isAttached) {
@@ -110,15 +117,15 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       }
       int curPage = currentPage.value;
       Timer.periodic(const Duration(milliseconds: 600), (timer) {
-        debugPrint('$curPage');
-        if (curPage == -1 || timerCancel) {
+        // debugPrint('$curPage');
+        if (curPage == 0 || timerCancel) {
           timer.cancel();
         }
-        curPage--;
 
         if (super.watchData.value!.urls[curPage] == "") {
           _getPage(curPage);
         }
+        curPage--;
       });
       return;
     }
@@ -126,7 +133,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       pageController.value.jumpToPage(page);
       return;
     }
-    pageController.value = PageController(initialPage: page);
+    pageController.value = ExtendedPageController(initialPage: page);
   }
 
   // 下一页
@@ -154,12 +161,19 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     } else {
       scrollOffsetController.animateScroll(
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.ease,
+        duration: const Duration(milliseconds: 10),
+        curve: Curves.linear,
         offset: -200.0,
       );
     }
   }
+
+  // void scrollWithOffset(double offset) {
+  //   scrollOffsetController.animateScroll(
+  //       duration: const Duration(milliseconds: 100),
+  //       curve: Curves.ease,
+  //       offset: offset);
+  // }
 
   @override
   void onClose() {
@@ -172,6 +186,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     }
     pageController.value.dispose();
+
     timerCancel = true;
     super.onClose();
   }
