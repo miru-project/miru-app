@@ -46,6 +46,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                     ? const Icon(Icons.keyboard_double_arrow_up_rounded)
                     : const Icon(Icons.keyboard_double_arrow_down_rounded)),
             Expanded(
+                flex: 1,
                 child: Container(
                     margin: const EdgeInsets.only(left: 8, top: 5, right: 8),
                     padding: const EdgeInsets.only(
@@ -55,8 +56,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                         color: Theme.of(context).colorScheme.primaryContainer,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
-                    child: Expanded(
-                        child: DropdownButton<int>(
+                    child: DropdownButton<int>(
                       // 内容为 primary 颜色
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.primary),
@@ -69,7 +69,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                           c.selectEpGroup.value = value!;
                         });
                       },
-                    ))))
+                    )))
           ])),
         if (episodes.isNotEmpty)
           Container(
