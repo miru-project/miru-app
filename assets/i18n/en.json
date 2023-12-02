@@ -102,6 +102,7 @@
     "extension-log-subtitle": "Used for debugging extensions",
     "skip-interval": "Skip Interval",
     "skip-interval-subtitle": "Skipping interval for builtin video player",
+    "default-reader-mode": "Default reader mode",
     "about": "About",
     "official-site": "Official Website",
     "official-site-training": "Visit",

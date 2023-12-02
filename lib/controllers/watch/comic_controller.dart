@@ -6,6 +6,7 @@ import 'package:miru_app/data/services/database_service.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'dart:async';
 import 'package:extended_image/extended_image.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 
 class ComicController extends ReaderController<ExtensionMangaWatch> {
   ComicController({
@@ -17,8 +18,15 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     required super.runtime,
     required super.cover,
   });
-
+  Map<String, MangaReadMode> readmode = {
+    'standard': MangaReadMode.standard,
+    'rightToLeft': MangaReadMode.rightToLeft,
+    'webTonn': MangaReadMode.webTonn,
+  };
+  final String setting = MiruStorage.getSetting(SettingKey.readingMode);
   final readType = MangaReadMode.standard.obs;
+
+  // MangaReadMode
   // 当前页码
   final currentPage = 0.obs;
   bool timerCancel = false;
@@ -100,13 +108,15 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   }
 
   _initSetting() async {
-    readType.value = await DatabaseService.getMnagaReaderType(super.detailUrl);
+    readType.value = readmode[setting] ?? MangaReadMode.standard;
+    readType.value = await DatabaseService.getMnagaReaderType(
+        super.detailUrl, readType.value);
   }
 
-  double mapValue(double value) {
-    double mappedValue = ((value - 0) * (1 - (-1))) / (2.5 - 0) + (-1);
-    return mappedValue;
-  }
+  // double mapValue(double value) {
+  //   double mappedValue = ((value - 0) * (1 - (-1))) / (2.5 - 0) + (-1);
+  //   return mappedValue;
+  // }
 
   _jumpPage(int page) {
     if (readType.value == MangaReadMode.webTonn) {
@@ -186,7 +196,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     }
     pageController.value.dispose();
-
     timerCancel = true;
     super.onClose();
   }

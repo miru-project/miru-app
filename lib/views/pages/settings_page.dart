@@ -248,6 +248,31 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 8),
         SettingsRadiosTile(
           icon: const PlatformWidget(
+            androidWidget: Icon(Icons.chrome_reader_mode),
+            desktopWidget:
+                Icon(fluent.FluentIcons.reading_mode_solid, size: 24),
+          ),
+          title: 'settings.default-reader-mode'.i18n,
+          itemNameValue: () {
+            final map = {
+              'comic-settings.standard'.i18n: 'standard',
+              'comic-settings.right-to-left'.i18n: 'rightToLeft',
+              'comic-settings.web-tonn'.i18n: 'webTonn',
+            };
+            return map;
+          }(),
+          buildSubtitle: () =>
+              '${MiruStorage.getSetting(SettingKey.readingMode)}'.i18n,
+          applyValue: (value) {
+            MiruStorage.setSetting(SettingKey.readingMode, value);
+          },
+          buildGroupValue: () {
+            return MiruStorage.getSetting(SettingKey.readingMode);
+          },
+        ),
+        const SizedBox(height: 8),
+        SettingsRadiosTile(
+          icon: const PlatformWidget(
             androidWidget: Icon(Icons.play_arrow),
             desktopWidget: Icon(fluent.FluentIcons.play_resume, size: 24),
           ),
@@ -301,7 +326,7 @@ class _SettingsPageState extends State<SettingsPage> {
           fluent.Expander(
             header: Row(
               children: [
-                Icon(fluent.FluentIcons.keyboard_classic, size: 24),
+                const Icon(fluent.FluentIcons.keyboard_classic, size: 24),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

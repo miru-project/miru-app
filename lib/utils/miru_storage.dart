@@ -118,6 +118,7 @@ class MiruStorage {
     await _initSetting(SettingKey.keyJ, -10.0);
     await _initSetting(SettingKey.arrowLeft, -2.0);
     await _initSetting(SettingKey.arrowRight, 2.0);
+    await _initSetting(SettingKey.readingMode, "standard");
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -149,6 +150,7 @@ class SettingKey {
   static String skipInterval = 'SkipInterval';
   static String keyI = 'KeyI';
   static String keyJ = 'KeyJ';
-  static String arrowLeft = 'arrowleft';
-  static String arrowRight = 'arrowright';
+  static String arrowLeft = 'Arrowleft';
+  static String arrowRight = 'Arrowright';
+  static String readingMode = 'ReadingMode';
 }
