@@ -72,7 +72,7 @@ jobs:
         run: flutter build windows --release
       - name: Rename Release Directory Name to Miru-App # 为了解压缩后更好看一点
         run: |
-          mv build/windows/runner/Release build/windows/runner/Miru-App
+          mv build/windows/x64/runner/Release build/windows/x64/runner/Miru-App
       # 发布安装包
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
