@@ -12,6 +12,7 @@ import 'package:miru_app/controllers/settings_controller.dart';
 import 'package:miru_app/views/widgets/settings_input_tile.dart';
 import 'package:miru_app/views/widgets/settings_radios_tile.dart';
 import 'package:miru_app/views/widgets/settings_switch_tile.dart';
+import 'package:miru_app/views/widgets/settings_numberbox_button.dart';
 import 'package:miru_app/views/widgets/settings_tile.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
@@ -296,23 +297,85 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         const SizedBox(height: 8),
         if (!Platform.isAndroid)
-          SettingsIntpuTile(
-            icon: const PlatformWidget(
-              androidWidget: Icon(Icons.fast_forward_rounded),
-              desktopWidget: Icon(fluent.FluentIcons.fast_forward, size: 24),
+          fluent.Expander(
+            header: Row(
+              children: [
+                Icon(fluent.FluentIcons.keyboard_classic, size: 24),
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("settings.skip-interval".i18n),
+                    const SizedBox(height: 2),
+                    Text(
+                      "settings.skip-interval-subtitle".i18n,
+                      style: const TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+                const Spacer(),
+                const SizedBox(),
+              ],
             ),
-            title: 'settings.skip-interval'.i18n,
-            buildSubtitle: () {
-              if (!Platform.isAndroid) {
-                return 'settings.skip-interval-subtitle-desktop'.i18n;
-              }
-              return 'settings.skip-interval-subtitle-mobile'.i18n;
-            },
-            onChanged: (value) {
-              MiruStorage.setSetting(SettingKey.skipInterval, value);
-              Get.find<ExtensionRepoPageController>().onRefresh();
-            },
-            text: MiruStorage.getSetting(SettingKey.skipInterval),
+            content: Column(
+              children: [
+                Row(children: [
+                  Expanded(
+                      child: SettingNumboxButton(
+                    title: "key I",
+                    button1text: "1s",
+                    button2text: "0.1s",
+                    onChanged: (value) {
+                      MiruStorage.setSetting(SettingKey.keyI, value ??= -10.0);
+                    },
+                    numberBoxvalue:
+                        MiruStorage.getSetting(SettingKey.keyI) ?? -10.0,
+                  )),
+                  const SizedBox(width: 30),
+                  Expanded(
+                      child: SettingNumboxButton(
+                    title: "key J",
+                    button1text: "1s",
+                    button2text: "0.1s",
+                    onChanged: (value) {
+                      MiruStorage.setSetting(SettingKey.keyJ, value ??= 10.0);
+                    },
+                    numberBoxvalue:
+                        MiruStorage.getSetting(SettingKey.keyJ) ?? 10.0,
+                  ))
+                ]),
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(
+                      child: SettingNumboxButton(
+                    title: "arrow left",
+                    icon: const Icon(fluent.FluentIcons.chevron_left_med),
+                    button1text: "1s",
+                    button2text: "0.1s",
+                    numberBoxvalue:
+                        MiruStorage.getSetting(SettingKey.arrowLeft) ?? 10.0,
+                    onChanged: (value) {
+                      MiruStorage.setSetting(
+                          SettingKey.arrowLeft, value ??= -2.0);
+                    },
+                  )),
+                  const SizedBox(width: 30),
+                  Expanded(
+                      child: SettingNumboxButton(
+                    title: "arrow right",
+                    icon: const Icon(fluent.FluentIcons.chevron_right_med),
+                    button1text: "1s",
+                    button2text: "0.1s",
+                    onChanged: (value) {
+                      MiruStorage.setSetting(
+                          SettingKey.arrowRight, value ??= 2);
+                    },
+                    numberBoxvalue:
+                        MiruStorage.getSetting(SettingKey.arrowRight) ?? 10.0,
+                  ))
+                ])
+              ],
+            ),
           ),
         const SizedBox(height: 8),
         ListTitle(title: 'settings.about'.i18n),

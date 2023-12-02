@@ -114,6 +114,10 @@ class MiruStorage {
     await _initSetting(SettingKey.videoPlayer, 'built-in');
     await _initSetting(SettingKey.listMode, "grid");
     await _initSetting(SettingKey.skipInterval, "10000");
+    await _initSetting(SettingKey.keyI, 10.0);
+    await _initSetting(SettingKey.keyJ, -10.0);
+    await _initSetting(SettingKey.arrowLeft, -2.0);
+    await _initSetting(SettingKey.arrowRight, 2.0);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -143,4 +147,8 @@ class SettingKey {
   static String databaseVersion = 'DatabaseVersion';
   static String listMode = 'ListMode';
   static String skipInterval = 'SkipInterval';
+  static String keyI = 'KeyI';
+  static String keyJ = 'KeyJ';
+  static String arrowLeft = 'arrowleft';
+  static String arrowRight = 'arrowright';
 }

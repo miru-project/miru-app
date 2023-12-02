@@ -190,8 +190,6 @@ class VideoPlayerController extends GetxController {
     });
 
     super.onInit();
-    final skipInterval =
-        int.parse(MiruStorage.getSetting(SettingKey.skipInterval));
     keyboardShortcuts.addAll({
       const SingleActivator(LogicalKeyboardKey.mediaPlay): () => player.play(),
       const SingleActivator(LogicalKeyboardKey.mediaPause): () =>
@@ -205,21 +203,33 @@ class VideoPlayerController extends GetxController {
       const SingleActivator(LogicalKeyboardKey.space): () =>
           player.playOrPause(),
       const SingleActivator(LogicalKeyboardKey.keyJ): () {
-        final rate =
-            player.state.position - Duration(milliseconds: skipInterval);
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.keyJ) * 1000).toInt());
         player.seek(rate);
       },
       const SingleActivator(LogicalKeyboardKey.keyI): () {
-        final rate =
-            player.state.position + Duration(milliseconds: skipInterval);
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.keyI) * 1000).toInt());
         player.seek(rate);
       },
       const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
-        final rate = player.state.position - const Duration(seconds: 2);
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.arrowLeft) * 1000)
+                        .toInt());
         player.seek(rate);
       },
       const SingleActivator(LogicalKeyboardKey.arrowRight): () {
-        final rate = player.state.position + const Duration(seconds: 2);
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.arrowRight) * 1000)
+                        .toInt());
         player.seek(rate);
       },
       const SingleActivator(LogicalKeyboardKey.arrowUp): () {
