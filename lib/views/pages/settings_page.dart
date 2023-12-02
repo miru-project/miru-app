@@ -193,6 +193,7 @@ class _SettingsPageState extends State<SettingsPage> {
             'languages.ru'.i18n: 'ru',
             'languages.uk'.i18n: 'uk',
             'languages.hi'.i18n: 'hi',
+            'languages.zhHant'.i18n: 'zhHant',
           },
           buildSubtitle: () => 'settings.language-subtitle'.i18n,
           applyValue: (value) {
