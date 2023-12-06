@@ -438,6 +438,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
+  flutter_hls_parser:
+    dependency: "direct main"
+    description:
+      name: flutter_hls_parser
+      sha256: f4b7df4f927623aea5c72006232693e07fdd11438f600c08670d6a23c1aa85c8
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   flutter_i18n:
     dependency: "direct main"
     description:

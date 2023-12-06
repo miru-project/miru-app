@@ -3,9 +3,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -29,6 +30,7 @@ import 'package:path/path.dart' as path;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:crypto/crypto.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:flutter_hls_parser/flutter_hls_parser.dart';
 
 class VideoPlayerController extends GetxController {
   final String title;
@@ -56,10 +58,11 @@ class VideoPlayerController extends GetxController {
   final subtitles = <ExtensionBangumiWatchSubtitle>[].obs;
   final keyboardShortcuts = <ShortcutActivator, VoidCallback>{};
   final selectedSubtitle = 0.obs;
-
+  final currentQality = "null".obs;
+  final qualityUrls = <String, String>{};
   // 是否已经自动跳转到上次播放进度
   bool _isAutoSeekPosition = false;
-
+  Map<String, String>? videoheaders = {};
   final messageQueue = <Message>[];
 
   final Rx<Widget?> cuurentMessageWidget = Rx(null);
@@ -67,10 +70,11 @@ class VideoPlayerController extends GetxController {
   final speed = 1.0.obs;
 
   final torrentMediaFileList = <String>[].obs;
-
   final currentTorrentFile = ''.obs;
 
   String _torrenHash = "";
+  final ReceivePort qualityRereceivePort = ReceivePort();
+  Isolate? qualityReceiver;
   // 复制当前 context
 
   @override
@@ -162,12 +166,26 @@ class VideoPlayerController extends GetxController {
         index.value++;
       }
     });
-
+    //畫質的listener
+    qualityRereceivePort.listen((message) async {
+      debugPrint("${message.keys} get");
+      final resolution = message['resolution'];
+      final urls = message['urls'];
+      qualityUrls.addAll(Map.fromIterables(resolution, urls));
+      qualityRereceivePort.close();
+      qualityReceiver!.kill();
+    });
+    //讀取現在的畫質
+    player.stream.height.listen((event) async {
+      final width = player.state.width;
+      currentQality.value = "${width}x$event";
+    });
     // 自动恢复上次播放进度
     player.stream.duration.listen((event) async {
       if (_isAutoSeekPosition || event.inSeconds == 0) {
         return;
       }
+
       // 获取上次播放进度
       final history = await DatabaseService.getHistoryByPackageAndUrl(
         runtime.extension.package,
@@ -254,6 +272,7 @@ class VideoPlayerController extends GetxController {
       selectedSubtitle.value = -1;
       final playUrl = playList[index.value].url;
       final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
+      videoheaders = watchData.headers;
 
       if (watchData.type == ExtensionWatchBangumiType.torrent) {
         if (Get.find<MainController>().btServerisRunning.value == false) {
@@ -269,7 +288,7 @@ class VideoPlayerController extends GetxController {
           await MiruDirectory.getCacheDirectory,
           'temp.torrent',
         );
-        await Dio().download(watchData.url, torrentFile);
+        await dio.Dio().download(watchData.url, torrentFile);
         final file = File(torrentFile);
         _torrenHash = await BTServerApi.addTorrent(file.readAsBytesSync());
 
@@ -291,6 +310,26 @@ class VideoPlayerController extends GetxController {
         }
         playTorrentFile(torrentMediaFileList.first);
       } else {
+        //背景取得畫質
+        qualityReceiver = await Isolate.spawn((SendPort sendport) async {
+          dio.Dio dioReq = dio.Dio();
+          try {
+            dio.Response response = await dioReq.get(watchData.url,
+                options: dio.Options(headers: watchData.headers));
+            debugPrint(response.data);
+            final playList = await HlsPlaylistParser.create().parseString(
+                Uri.parse(watchData.url), response.data) as HlsMasterPlaylist;
+            List<String> urlList =
+                playList.mediaPlaylistUrls.map((e) => e.toString()).toList();
+            final resolution = playList.variants
+                .map((it) => "${it.format.width}x${it.format.height}");
+            debugPrint("get sources");
+            sendport.send({'resolution': resolution, 'urls': urlList});
+          } catch (error) {
+            debugPrint('Error: $error');
+          }
+        }, qualityRereceivePort.sendPort);
+
         await player.open(Media(watchData.url, httpHeaders: watchData.headers));
         if (watchData.audioTrack != null) {
           await player.setAudioTrack(AudioTrack.uri(watchData.audioTrack!));
@@ -315,6 +354,7 @@ class VideoPlayerController extends GetxController {
         await Future.delayed(const Duration(seconds: 3));
 
         play();
+
         return;
       }
       sendMessage(
@@ -336,6 +376,23 @@ class VideoPlayerController extends GetxController {
   toggleFullscreen() async {
     await WindowManager.instance.setFullScreen(!isFullScreen.value);
     isFullScreen.value = !isFullScreen.value;
+  }
+
+  switchQuality(String qualityUrl) async {
+    final currentSecond = player.state.position.inSeconds;
+    try {
+      await player.open(Media(qualityUrl, httpHeaders: videoheaders));
+      //跳轉到切換之前的時間
+      Timer.periodic(const Duration(seconds: 1), (timer) {
+        player.seek(Duration(seconds: currentSecond));
+        if (player.state.position.inSeconds == currentSecond) {
+          timer.cancel();
+        }
+      });
+    } catch (e) {
+      await Future.delayed(const Duration(seconds: 3));
+      player.open(Media(qualityUrl, httpHeaders: videoheaders));
+    }
   }
 
   onExit() async {

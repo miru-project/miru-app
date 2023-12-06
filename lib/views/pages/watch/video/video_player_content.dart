@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -21,7 +22,8 @@ class VideoPlayerConten extends StatefulWidget {
 class _VideoPlayerContenState extends State<VideoPlayerConten> {
   late final _c = Get.find<VideoPlayerController>(tag: widget.tag);
   final speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-
+  String? selected;
+  final menuController = fluent.FlyoutController();
   Widget _buildDesktop(BuildContext context) {
     final topButtonBar = Row(
       children: [
@@ -196,7 +198,52 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                         ),
                     ];
                   },
-                )
+                ),
+                TextButton(
+                    onPressed: () {
+                      fluent.showDialog(
+                          context: context,
+                          builder: (contex) {
+                            return fluent.ContentDialog(
+                              title: Text("choose-quality".i18n),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (final q in _c.qualityUrls.entries)
+                                    Row(children: [
+                                      fluent.RadioButton(
+                                          checked: selected == q.key ||
+                                              q.key == _c.currentQality.value,
+                                          onChanged: (checked) {
+                                            // debugPrint("$boolean");
+                                            setState(() {
+                                              if (checked) {
+                                                selected = q.key;
+                                                _c.switchQuality(
+                                                    _c.qualityUrls[q.key]!);
+                                                Navigator.pop(context);
+                                              }
+                                            });
+                                          }),
+                                      Text(
+                                        q.key,
+                                        style: const TextStyle(
+                                            fontSize: 20, color: Colors.white),
+                                      ),
+                                    ])
+                                ],
+                              ),
+                              actions: [
+                                fluent.Button(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text("cancel".i18n))
+                              ],
+                            );
+                          });
+                    },
+                    child: Obx(() => (Text(_c.currentQality.value,
+                        style: const TextStyle(color: Colors.white)))))
               ],
             ),
           ),
@@ -280,6 +327,51 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
             data: Theme.of(context),
             child: Row(
               children: [
+                SizedBox(
+                    // height: 8,
+                    // width: 10,
+                    child: TextButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text("choose-quality".i18n),
+                                    content: Column(
+                                      children: [
+                                        for (final q in _c.qualityUrls.entries)
+                                          RadioListTile<String>(
+                                            title: Text(q.key),
+                                            value: q.value,
+                                            groupValue: _c.qualityUrls[
+                                                _c.currentQality.value],
+                                            onChanged: (value) {
+                                              Navigator.pop(context);
+                                              // widget.applyValue(value as T);
+                                              debugPrint(
+                                                  "$value value changed");
+
+                                              _c.currentQality.value = _c
+                                                  .qualityUrls.keys
+                                                  .firstWhere(
+                                                      (element) =>
+                                                          _c.qualityUrls[
+                                                              element] ==
+                                                          value,
+                                                      orElse: () => _c
+                                                          .qualityUrls
+                                                          .keys
+                                                          .first);
+                                              setState(() {});
+                                              _c.switchQuality(value!);
+                                            },
+                                          ),
+                                      ],
+                                    ),
+                                  ));
+                        },
+                        child: Obx(() => (Text(_c.currentQality.value,
+                            style: const TextStyle(color: Colors.white)))))),
+                const SizedBox(width: 2),
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: PopupMenuButton(

@@ -90,19 +90,28 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
           ),
         Expanded(
           child: ListView.builder(
-            reverse: isRevered,
             padding: const EdgeInsets.all(0),
             itemCount: episodes.isEmpty
                 ? 0
                 : episodes[c.selectEpGroup.value].urls.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(episodes[c.selectEpGroup.value].urls[index].name),
+                title: isRevered
+                    ? Text(episodes[c.selectEpGroup.value]
+                        .urls[episodes[c.selectEpGroup.value].urls.length -
+                            1 -
+                            index]
+                        .name)
+                    : Text(episodes[c.selectEpGroup.value].urls[index].name),
                 onTap: () {
                   c.goWatch(
                     context,
                     episodes[c.selectEpGroup.value].urls,
-                    index,
+                    isRevered
+                        ? episodes[c.selectEpGroup.value].urls.length -
+                            1 -
+                            index
+                        : index,
                     c.selectEpGroup.value,
                   );
                 },
