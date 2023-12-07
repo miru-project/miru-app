@@ -134,6 +134,11 @@ class MiruStorage {
   static getSetting(String key) {
     return settings.get(key);
   }
+
+  static deleteAll() async {
+    final re = await database.close(deleteFromDisk: true);
+    debugPrint('Database closed: $re');
+  }
 }
 
 class SettingKey {

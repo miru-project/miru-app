@@ -163,6 +163,59 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
         const SizedBox(height: 8),
+        SettingsTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.backup),
+            desktopWidget: Icon(fluent.FluentIcons.update_restore, size: 24),
+          ),
+          title: 'settings.backup'.i18n,
+          buildSubtitle: () => FlutterI18n.translate(
+            context,
+            'settings.backup-subtitle',
+            translationParams: {
+              'version': packageInfo.version,
+            },
+          ),
+          trailing: PlatformWidget(
+            androidWidget: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    ApplicationUtils.exportSaveFile(context);
+                  },
+                  child: Text('settings.export-file'.i18n),
+                ),
+                TextButton(
+                  onPressed: () {
+                    ApplicationUtils.importSaveFile(context);
+                  },
+                  child: Text('settings.import-file'.i18n),
+                )
+              ],
+            ),
+            desktopWidget: Row(children: [
+              fluent.FilledButton(
+                onPressed: () {
+                  ApplicationUtils.exportSaveFile(
+                    context,
+                  );
+                },
+                child: Text('settings.export-file'.i18n),
+              ),
+              const SizedBox(width: 16),
+              fluent.Button(
+                onPressed: () {
+                  ApplicationUtils.importSaveFile(
+                    context,
+                  );
+                },
+                child: Text('settings.import-file'.i18n),
+              )
+            ]),
+          ),
+        ),
+        const SizedBox(height: 8),
         SettingsSwitchTile(
           icon: const PlatformWidget(
             androidWidget: Icon(Icons.autorenew_sharp),
