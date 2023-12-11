@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
@@ -7,7 +9,6 @@ import 'package:miru_app/controllers/watch/comic_controller.dart';
 // import 'package:miru_app/views/pages/watch/reader/comic/comic_zoom.dart';
 import 'package:miru_app/views/widgets/watch/comic_view.dart';
 import 'package:miru_app/data/services/extension_service.dart';
-import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
 class ComicReader extends StatefulWidget {
@@ -60,22 +61,21 @@ class _ComicReaderState extends State<ComicReader> {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformBuildWidget(
-        androidBuilder: (context) {
-          return ReaderView<ComicController>(
-            widget.title,
-            content: Center(
-              child: ComicReaderContent(widget.title),
-            ),
-            buildSettings: (context) => ComicReaderSettings(widget.title),
-          );
-        },
-        desktopBuilder: (context) => ReaderView<ComicController>(
-              widget.title,
-              content: DragToMoveArea(
-                child: ComicReaderContent(widget.title),
-              ),
-              buildSettings: (context) => ComicReaderSettings(widget.title),
-            ));
+    if (Platform.isAndroid) {
+      return ReaderView<ComicController>(
+        widget.title,
+        content: Center(
+          child: ComicReaderContent(widget.title),
+        ),
+        buildSettings: (context) => ComicReaderSettings(widget.title),
+      );
+    }
+    return ReaderView<ComicController>(
+      widget.title,
+      content: DragToMoveArea(
+        child: ComicReaderContent(widget.title),
+      ),
+      buildSettings: (context) => ComicReaderSettings(widget.title),
+    );
   }
 }
