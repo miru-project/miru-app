@@ -98,88 +98,107 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             final cuurentPage = _c.currentPage.value;
             if (readerType == MangaReadMode.webTonn) {
               //zooming is inspired by: https://github.com/flutter/flutter/issues/86531
+              if (Platform.isAndroid) {
+                return Stack(children: [
+                  InteractiveViewer(
+                    minScale: minScaleValue,
+                    // maxScale: 2.0,
 
-              return Stack(children: [
-                InteractiveViewer(
-                  minScale: minScaleValue,
-                  // maxScale: 2.0,
-                  transformationController: transformationController,
-                  onInteractionEnd: (ScaleEndDetails endDetails) {
-                    setState(() {
-                      isZoomed = false;
-                    });
-                  },
-                  onInteractionUpdate: (x) {
-                    double correctScaleValue =
-                        transformationController.value.getMaxScaleOnAxis();
-                    if (correctScaleValue > minScaleValue) {}
-                    if (x.scale == correctScaleValue) {
+                    transformationController: transformationController,
+                    onInteractionEnd: (ScaleEndDetails endDetails) {
                       setState(() {
                         isZoomed = false;
                       });
-                    }
-                    setState(() {
-                      isZoomed = true;
-                    });
-                    debugPrint("${x.scale}");
-                  },
-                  child: ScrollablePositionedList.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: viewPadding,
-                    ),
-                    initialScrollIndex: cuurentPage,
-                    itemScrollController: _c.itemScrollController,
-                    itemPositionsListener: _c.itemPositionsListener,
-                    scrollOffsetController: _c.scrollOffsetController,
-                    scrollOffsetListener: _c.scrolloffsetListener,
-                    physics: isZoomed
-                        ? const NeverScrollableScrollPhysics()
-                        : const ScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final url = images[index];
-                      return Obx(
-                        () => CacheNetWorkImageComic(
-                          url,
-                          fit: BoxFit.cover,
-                          headers: _c.watchData.value?.headers,
-                        ),
-                      );
                     },
-                    itemCount: images.length,
-                  ),
-                ),
-                Positioned.fill(
-                    top: 120,
-                    bottom: 120,
-                    child: GestureDetector(
-                      onTapDown: (TapDownDetails details) {
-                        final xPos = details.globalPosition.dx;
-                        if (xPos > Get.width * 4 / 5) {
-                          return _c.nextPage();
-                        }
-                        if (xPos < Get.width / 5) {
-                          return _c.previousPage();
-                        }
+                    onInteractionUpdate: (x) {
+                      double correctScaleValue =
+                          transformationController.value.getMaxScaleOnAxis();
+                      if (correctScaleValue > minScaleValue) {}
+                      if (x.scale == correctScaleValue) {
+                        setState(() {
+                          isZoomed = false;
+                        });
+                      }
+                      setState(() {
+                        isZoomed = true;
+                      });
+                      debugPrint("${x.scale}");
+                    },
+                    child: ScrollablePositionedList.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: viewPadding,
+                      ),
+                      initialScrollIndex: cuurentPage,
+                      itemScrollController: _c.itemScrollController,
+                      itemPositionsListener: _c.itemPositionsListener,
+                      scrollOffsetController: _c.scrollOffsetController,
+                      scrollOffsetListener: _c.scrolloffsetListener,
+                      physics: isZoomed
+                          ? const NeverScrollableScrollPhysics()
+                          : const ScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final url = images[index];
+                        return Obx(
+                          () => CacheNetWorkImageComic(
+                            url,
+                            fit: BoxFit.cover,
+                            headers: _c.watchData.value?.headers,
+                          ),
+                        );
                       },
-                    )),
-                Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: const EdgeInsets.only(bottom: 40),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        alignment: Alignment.center,
-                        width: 200,
-                        height: 30,
-                        child: Text(
-                          "${cuurentPage + 1}/${images.length}",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 15),
-                        )))
-              ]);
-
+                      itemCount: images.length,
+                    ),
+                  ),
+                  Positioned.fill(
+                      top: 120,
+                      bottom: 120,
+                      child: GestureDetector(
+                        onTapDown: (TapDownDetails details) {
+                          final xPos = details.globalPosition.dx;
+                          if (xPos > Get.width * 4 / 5) {
+                            return _c.nextPage();
+                          }
+                          if (xPos < Get.width / 5) {
+                            return _c.previousPage();
+                          }
+                        },
+                      )),
+                  Container(
+                      alignment: Alignment.bottomCenter,
+                      margin: const EdgeInsets.only(bottom: 40),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          alignment: Alignment.center,
+                          width: 200,
+                          height: 30,
+                          child: Text(
+                            "${cuurentPage + 1}/${images.length}",
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 15),
+                          )))
+                ]);
+              }
+              return ScrollablePositionedList.builder(
+                padding: EdgeInsets.symmetric(
+                  horizontal: viewPadding,
+                ),
+                initialScrollIndex: cuurentPage,
+                itemScrollController: _c.itemScrollController,
+                itemPositionsListener: _c.itemPositionsListener,
+                scrollOffsetController: _c.scrollOffsetController,
+                itemBuilder: (context, index) {
+                  final url = images[index];
+                  return CacheNetWorkImagePic(
+                    url,
+                    fit: BoxFit.fitWidth,
+                    headers: _c.watchData.value?.headers,
+                  );
+                },
+                itemCount: images.length,
+              );
               //works but lots of bugs
               // return Stack(children: [
               //   Obx(() => Transform.scale(
