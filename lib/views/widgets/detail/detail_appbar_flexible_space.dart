@@ -9,9 +9,9 @@ import 'package:miru_app/views/widgets/cover.dart';
 
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
 
   final String? tag;
 

@@ -4,10 +4,10 @@ import 'package:miru_app/data/services/extension_service.dart';
 
 class WebViewPage extends StatefulWidget {
   const WebViewPage({
-    Key? key,
+    super.key,
     required this.extensionRuntime,
     required this.url,
-  }) : super(key: key);
+  });
   final ExtensionService extensionRuntime;
   final String url;
 

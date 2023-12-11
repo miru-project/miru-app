@@ -11,11 +11,11 @@ import 'package:miru_app/views/widgets/button.dart';
 
 class SearchAllExtSearch extends StatefulWidget {
   const SearchAllExtSearch({
-    Key? key,
+    super.key,
     required this.kw,
     required this.runtimeList,
     required this.onClickMore,
-  }) : super(key: key);
+  });
   final String kw;
   final List<SearchResult> runtimeList;
   final Function(int) onClickMore;

@@ -5,13 +5,13 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class SettingsSwitchTile extends StatefulWidget {
   const SettingsSwitchTile({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     required this.buildValue,
     required this.onChanged,
     this.buildSubtitle,
-  }) : super(key: key);
+  });
   final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;

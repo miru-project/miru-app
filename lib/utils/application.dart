@@ -292,7 +292,7 @@ class ApplicationUtils {
       return true;
     }
     File(targetPath).writeAsBytesSync(output);
-    debugPrint("$targetPath");
+    debugPrint(targetPath);
     //
     return true;
   }

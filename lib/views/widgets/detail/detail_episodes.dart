@@ -12,9 +12,9 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class DetailEpisodes extends StatefulWidget {
   const DetailEpisodes({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
   final String? tag;
 
   @override

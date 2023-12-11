@@ -16,11 +16,11 @@ import 'package:window_manager/window_manager.dart';
 
 class DesktopMainPage extends StatefulWidget {
   const DesktopMainPage({
-    Key? key,
+    super.key,
     required this.child,
     required this.shellContext,
     required this.state,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final BuildContext? shellContext;
@@ -150,7 +150,7 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
 }
 
 class AndroidMainPage extends fluent.StatefulWidget {
-  const AndroidMainPage({Key? key}) : super(key: key);
+  const AndroidMainPage({super.key});
 
   @override
   fluent.State<AndroidMainPage> createState() => _AndroidMainPageState();

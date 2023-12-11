@@ -7,9 +7,9 @@ import 'package:miru_app/views/widgets/log/extension_log_tile.dart';
 
 class ExtensionLogWindow extends StatefulWidget {
   const ExtensionLogWindow({
-    Key? key,
+    super.key,
     required this.windowController,
-  }) : super(key: key);
+  });
   final WindowController windowController;
 
   @override

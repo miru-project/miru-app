@@ -11,7 +11,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/search_appbar.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({super.key});
 
   @override
   State<SearchPage> createState() => _SearchPageState();

@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path;
 
 class ExtensionTile extends StatefulWidget {
-  const ExtensionTile(this.extension, {Key? key}) : super(key: key);
+  const ExtensionTile(this.extension, {super.key});
   final Extension extension;
 
   @override

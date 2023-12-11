@@ -10,7 +10,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 
 class BTDialog extends StatefulWidget {
-  const BTDialog({Key? key}) : super(key: key);
+  const BTDialog({super.key});
 
   @override
   State<BTDialog> createState() => _BTDialogState();

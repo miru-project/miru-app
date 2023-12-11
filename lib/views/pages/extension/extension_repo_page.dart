@@ -11,7 +11,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 
 class ExtensionRepoPage extends StatefulWidget {
-  const ExtensionRepoPage({Key? key}) : super(key: key);
+  const ExtensionRepoPage({super.key});
 
   @override
   State<ExtensionRepoPage> createState() => _ExtensionRepoPageState();

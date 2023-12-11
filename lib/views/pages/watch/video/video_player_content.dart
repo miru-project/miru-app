@@ -10,9 +10,9 @@ import 'package:window_manager/window_manager.dart';
 
 class VideoPlayerConten extends StatefulWidget {
   const VideoPlayerConten({
-    Key? key,
+    super.key,
     required this.tag,
-  }) : super(key: key);
+  });
   final String tag;
 
   @override

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 class CacheNetWorkImagePic extends StatelessWidget {
   const CacheNetWorkImagePic(
     this.url, {
-    Key? key,
+    super.key,
     this.fit = BoxFit.cover,
     this.width,
     this.height,
     this.fallback,
     this.headers,
-  }) : super(key: key);
+  });
   final String url;
   final BoxFit fit;
   final double? width;
@@ -42,13 +42,13 @@ class CacheNetWorkImagePic extends StatelessWidget {
 class CacheNetWorkImageComic extends StatelessWidget {
   const CacheNetWorkImageComic(
     this.url, {
-    Key? key,
+    super.key,
     this.fit = BoxFit.cover,
     this.width,
     this.height,
     this.fallback,
     this.headers,
-  }) : super(key: key);
+  });
   final String url;
   final BoxFit fit;
   final double? width;

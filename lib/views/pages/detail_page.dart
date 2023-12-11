@@ -24,11 +24,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({
-    Key? key,
+    super.key,
     required this.url,
     required this.package,
     this.tag,
-  }) : super(key: key);
+  });
   final String url;
   final String package;
   final String? tag;
@@ -528,7 +528,7 @@ class _DetailPageState extends State<DetailPage> {
                                       width: 200,
                                       child: e,
                                     ))
-                                .toList(),
+                                ,
                           ]),
                         );
                       },

@@ -4,12 +4,12 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class GridItemTile extends StatefulWidget {
   const GridItemTile({
-    Key? key,
+    super.key,
     required this.title,
     this.cover,
     this.subtitle,
     this.onTap,
-  }) : super(key: key);
+  });
   final String title;
   final String? cover;
   final String? subtitle;

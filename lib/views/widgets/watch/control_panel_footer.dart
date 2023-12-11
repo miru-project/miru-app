@@ -8,7 +8,7 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/button.dart';
 
 class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
-  const ControlPanelFooter(this.tag, {Key? key}) : super(key: key);
+  const ControlPanelFooter(this.tag, {super.key});
   final String tag;
 
   @override

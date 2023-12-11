@@ -1,19 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
-import 'package:miru_app/utils/i18n.dart';
 // import 'package:miru_app/views/widgets/platform_widget.dart';
-import 'package:miru_app/views/widgets/settings_tile.dart';
 
 class SettingNumboxButton extends fluent.StatefulWidget {
   const SettingNumboxButton({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     required this.onChanged,
     required this.button1text,
     required this.button2text,
     required this.numberBoxvalue,
-  }) : super(key: key);
+  });
   final Widget? icon;
   final String title;
   final String button1text;

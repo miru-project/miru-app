@@ -7,9 +7,9 @@ import 'package:miru_app/views/widgets/cache_network_image.dart';
 
 class DetailExtensionTile extends StatelessWidget {
   const DetailExtensionTile({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
 
   final String? tag;
 

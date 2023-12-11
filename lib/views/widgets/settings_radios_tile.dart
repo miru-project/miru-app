@@ -5,7 +5,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class SettingsRadiosTile<T> extends StatefulWidget {
   const SettingsRadiosTile({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     this.buildSubtitle,
@@ -13,7 +13,7 @@ class SettingsRadiosTile<T> extends StatefulWidget {
     required this.applyValue,
     required this.buildGroupValue,
     this.trailing = const Icon(Icons.chevron_right),
-  }) : super(key: key);
+  });
   final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;

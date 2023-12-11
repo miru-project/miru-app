@@ -3,11 +3,11 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.content,
-  }) : super(key: key);
+  });
   final IconData icon;
   final String title;
   final String content;

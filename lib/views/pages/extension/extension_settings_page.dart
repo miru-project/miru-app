@@ -25,9 +25,9 @@ import 'package:miru_app/views/widgets/settings_tile.dart';
 
 class ExtensionSettingsPage extends StatefulWidget {
   const ExtensionSettingsPage({
-    Key? key,
+    super.key,
     required this.package,
-  }) : super(key: key);
+  });
   final String package;
 
   @override

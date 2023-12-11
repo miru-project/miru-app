@@ -15,7 +15,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
 
 class ComicReaderContent extends StatefulWidget {
-  const ComicReaderContent(this.tag, {Key? key}) : super(key: key);
+  const ComicReaderContent(this.tag, {super.key});
   final String tag;
 
   @override
@@ -112,7 +112,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                   onInteractionUpdate: (x) {
                     double correctScaleValue =
                         transformationController.value.getMaxScaleOnAxis();
-                    if (correctScaleValue > minScaleValue) ;
+                    if (correctScaleValue > minScaleValue) {}
                     if (x.scale == correctScaleValue) {
                       setState(() {
                         isZoomed = false;

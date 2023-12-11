@@ -12,7 +12,7 @@ import 'package:window_manager/window_manager.dart';
 
 class ComicReader extends StatefulWidget {
   const ComicReader({
-    Key? key,
+    super.key,
     required this.title,
     required this.playList,
     required this.detailUrl,
@@ -20,7 +20,7 @@ class ComicReader extends StatefulWidget {
     required this.episodeGroupId,
     required this.runtime,
     this.cover,
-  }) : super(key: key);
+  });
 
   final String title;
   final List<ExtensionEpisode> playList;

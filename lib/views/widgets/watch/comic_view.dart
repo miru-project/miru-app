@@ -7,10 +7,10 @@ import 'package:miru_app/controllers/watch/reader_controller.dart';
 class ReaderView<T extends ReaderController> extends StatelessWidget {
   const ReaderView(
     this.tag, {
-    Key? key,
+    super.key,
     required this.content,
     required this.buildSettings,
-  }) : super(key: key);
+  });
   final String tag;
   final Widget content;
   final Widget Function(BuildContext context) buildSettings;

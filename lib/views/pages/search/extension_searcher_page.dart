@@ -20,10 +20,10 @@ import 'package:miru_app/views/widgets/search_appbar.dart';
 
 class ExtensionSearcherPage extends fluent.StatefulWidget {
   const ExtensionSearcherPage({
-    Key? key,
+    super.key,
     required this.package,
     this.keyWord,
-  }) : super(key: key);
+  });
   final String package;
   final String? keyWord;
 
@@ -356,12 +356,11 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
 
 class _ExtensionFilterWidget extends StatefulWidget {
   const _ExtensionFilterWidget({
-    Key? key,
     required this.runtime,
     required this.selectedFilters,
     required this.onSelectFilter,
     required this.filters,
-  }) : super(key: key);
+  });
   final ExtensionService runtime;
   final Map<String, ExtensionFilter> filters;
   final Map<String, List<String>> selectedFilters;

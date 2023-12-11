@@ -4,13 +4,13 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class SettingsTile extends StatefulWidget {
   const SettingsTile({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     this.trailing,
     this.buildSubtitle,
     this.onTap,
-  }) : super(key: key);
+  });
   final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;

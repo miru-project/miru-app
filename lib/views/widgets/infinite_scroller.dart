@@ -7,14 +7,14 @@ import 'package:easy_refresh/easy_refresh.dart';
 
 class InfiniteScroller extends StatefulWidget {
   const InfiniteScroller({
-    Key? key,
+    super.key,
     required this.child,
     required this.onRefresh,
     required this.onLoad,
     this.refreshOnStart = true,
     this.enableInfiniteScroll = true,
     this.easyRefreshController,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final Future<void> Function() onRefresh;

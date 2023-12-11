@@ -16,9 +16,9 @@ import 'package:tmdb_api/tmdb_api.dart';
 
 class TMDBBinding extends StatefulWidget {
   const TMDBBinding({
-    Key? key,
+    super.key,
     required this.title,
-  }) : super(key: key);
+  });
   final String title;
 
   @override

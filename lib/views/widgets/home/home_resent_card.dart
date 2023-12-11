@@ -20,9 +20,9 @@ import 'package:palette_generator/palette_generator.dart';
 
 class HomeRecentCard extends StatefulWidget {
   const HomeRecentCard({
-    Key? key,
+    super.key,
     required this.history,
-  }) : super(key: key);
+  });
   final History history;
 
   @override
