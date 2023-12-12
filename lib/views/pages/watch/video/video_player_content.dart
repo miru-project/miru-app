@@ -94,7 +94,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
           const MaterialDesktopPositionIndicator(),
           const Spacer(),
           Theme(
-            data: Theme.of(context),
+            data: ThemeData.dark(useMaterial3: true),
             child: Row(
               children: [
                 Padding(
@@ -132,7 +132,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       return [
                         for (int i = 0; i < _c.torrentMediaFileList.length; i++)
                           PopupMenuItem(
-                            padding: const EdgeInsets.all(0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
                             child: Obx(
                               () => CheckboxListTile(
                                 value: _c.currentTorrentFile.value ==
@@ -159,7 +160,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     return [
                       // 是否显示字幕
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -1,
@@ -172,7 +174,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       // 选择文件
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -2,
@@ -185,7 +188,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       for (int i = 0; i < _c.subtitles.length; i++)
                         PopupMenuItem(
-                          padding: const EdgeInsets.all(0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
                           child: Obx(
                             () => CheckboxListTile(
                               value: _c.selectedSubtitle.value == i,
@@ -199,51 +203,33 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     ];
                   },
                 ),
-                TextButton(
-                    onPressed: () {
-                      fluent.showDialog(
-                          context: context,
-                          builder: (contex) {
-                            return fluent.ContentDialog(
-                              title: Text("choose-quality".i18n),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  for (final q in _c.qualityUrls.entries)
-                                    Row(children: [
-                                      fluent.RadioButton(
-                                          checked: selected == q.key ||
-                                              q.key == _c.currentQality.value,
-                                          onChanged: (checked) {
-                                            // debugPrint("$boolean");
-                                            setState(() {
-                                              if (checked) {
-                                                selected = q.key;
-                                                _c.switchQuality(
-                                                    _c.qualityUrls[q.key]!);
-                                                Navigator.pop(context);
-                                              }
-                                            });
-                                          }),
-                                      Text(
-                                        q.key,
-                                        style: const TextStyle(
-                                            fontSize: 20, color: Colors.white),
-                                      ),
-                                    ])
-                                ],
-                              ),
-                              actions: [
-                                fluent.Button(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text("cancel".i18n))
-                              ],
-                            );
-                          });
-                    },
-                    child: Obx(() => (Text(_c.currentQality.value,
-                        style: const TextStyle(color: Colors.white)))))
+                Obx(() {
+                  if (_c.currentQality.value.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: PopupMenuButton(
+                      child: Obx(
+                        () => Text(
+                          _c.currentQality.value,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          for (final qualit in _c.qualityUrls.entries)
+                            PopupMenuItem(
+                              child: Text(qualit.key),
+                              onTap: () {
+                                _c.switchQuality(_c.qualityUrls[qualit.key]!);
+                              },
+                            ),
+                        ];
+                      },
+                    ),
+                  );
+                })
               ],
             ),
           ),
@@ -327,51 +313,6 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
             data: Theme.of(context),
             child: Row(
               children: [
-                SizedBox(
-                    // height: 8,
-                    // width: 10,
-                    child: TextButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: Text("choose-quality".i18n),
-                                    content: Column(
-                                      children: [
-                                        for (final q in _c.qualityUrls.entries)
-                                          RadioListTile<String>(
-                                            title: Text(q.key),
-                                            value: q.value,
-                                            groupValue: _c.qualityUrls[
-                                                _c.currentQality.value],
-                                            onChanged: (value) {
-                                              Navigator.pop(context);
-                                              // widget.applyValue(value as T);
-                                              debugPrint(
-                                                  "$value value changed");
-
-                                              _c.currentQality.value = _c
-                                                  .qualityUrls.keys
-                                                  .firstWhere(
-                                                      (element) =>
-                                                          _c.qualityUrls[
-                                                              element] ==
-                                                          value,
-                                                      orElse: () => _c
-                                                          .qualityUrls
-                                                          .keys
-                                                          .first);
-                                              setState(() {});
-                                              _c.switchQuality(value!);
-                                            },
-                                          ),
-                                      ],
-                                    ),
-                                  ));
-                        },
-                        child: Obx(() => (Text(_c.currentQality.value,
-                            style: const TextStyle(color: Colors.white)))))),
-                const SizedBox(width: 2),
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: PopupMenuButton(
@@ -407,7 +348,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       return [
                         for (int i = 0; i < _c.torrentMediaFileList.length; i++)
                           PopupMenuItem(
-                            padding: const EdgeInsets.all(0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
                             child: Obx(
                               () => CheckboxListTile(
                                 value: _c.currentTorrentFile.value ==
@@ -434,7 +376,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     return [
                       // 是否显示字幕
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -1,
@@ -447,7 +390,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       // 选择文件
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -2,
@@ -460,7 +404,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       for (int i = 0; i < _c.subtitles.length; i++)
                         PopupMenuItem(
-                          padding: const EdgeInsets.all(0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
                           child: Obx(
                             () => CheckboxListTile(
                               value: _c.selectedSubtitle.value == i,
@@ -473,7 +418,34 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                         ),
                     ];
                   },
-                )
+                ),
+                Obx(() {
+                  if (_c.currentQality.value.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: PopupMenuButton(
+                      child: Obx(
+                        () => Text(
+                          _c.currentQality.value,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          for (final qualit in _c.qualityUrls.entries)
+                            PopupMenuItem(
+                              child: Text(qualit.key),
+                              onTap: () {
+                                _c.switchQuality(_c.qualityUrls[qualit.key]!);
+                              },
+                            ),
+                        ];
+                      },
+                    ),
+                  );
+                }),
               ],
             ),
           ),

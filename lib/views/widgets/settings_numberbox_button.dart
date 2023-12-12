@@ -44,6 +44,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingNumboxButton> {
                 mode: fluent.SpinButtonPlacementMode.inline,
               ),
             )),
+            const SizedBox(width: 8),
             if (!buttonSwitch)
               fluent.Button(
                 child: Text(widget.button1text),
