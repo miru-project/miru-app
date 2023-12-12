@@ -58,7 +58,7 @@ class VideoPlayerController extends GetxController {
   final subtitles = <ExtensionBangumiWatchSubtitle>[].obs;
   final keyboardShortcuts = <ShortcutActivator, VoidCallback>{};
   final selectedSubtitle = 0.obs;
-  final currentQality = "null".obs;
+  final currentQality = "".obs;
   final qualityUrls = <String, String>{};
   // 是否已经自动跳转到上次播放进度
   bool _isAutoSeekPosition = false;
@@ -177,8 +177,10 @@ class VideoPlayerController extends GetxController {
     });
     //讀取現在的畫質
     player.stream.height.listen((event) async {
-      final width = player.state.width;
-      currentQality.value = "${width}x$event";
+      if (player.state.width != null) {
+        final width = player.state.width;
+        currentQality.value = "${width}x$event";
+      }
     });
     // 自动恢复上次播放进度
     player.stream.duration.listen((event) async {
