@@ -324,23 +324,18 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 8),
         if (!Platform.isAndroid)
           fluent.Expander(
-            header: Row(
+            leading: const Icon(fluent.FluentIcons.keyboard_classic, size: 24),
+            header: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(fluent.FluentIcons.keyboard_classic, size: 24),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("settings.skip-interval".i18n),
-                    const SizedBox(height: 2),
-                    Text(
-                      "settings.skip-interval-subtitle".i18n,
-                      style: const TextStyle(fontSize: 12),
-                    )
-                  ],
+                const SizedBox(height: 10),
+                Text("settings.skip-interval".i18n),
+                const SizedBox(height: 2),
+                Text(
+                  "settings.skip-interval-subtitle".i18n,
+                  style: const TextStyle(fontSize: 12),
                 ),
-                const Spacer(),
-                const SizedBox(),
+                const SizedBox(height: 15)
               ],
             ),
             content: Column(
