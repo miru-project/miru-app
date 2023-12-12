@@ -139,7 +139,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                       itemBuilder: (context, index) {
                         final url = images[index];
                         return Obx(
-                          () => CacheNetWorkImageComic(
+                          () => CacheNetWorkImagePic(
                             url,
                             fit: BoxFit.cover,
                             headers: _c.watchData.value?.headers,
