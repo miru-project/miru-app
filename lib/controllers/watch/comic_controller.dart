@@ -49,7 +49,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       currentPage.value = pos.index;
     });
-    _pageUpdate();
     ever(readType, (callback) {
       _jumpPage(currentPage.value);
       // 保存设置
@@ -82,31 +81,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     super.onInit();
   }
 
-  _pageUpdate() async {
-    int curPage = currentPage.value;
-    Timer(const Duration(seconds: 2), () {
-      //set update timer
-      Timer.periodic(const Duration(milliseconds: 600), (timer) {
-        // debugPrint('$curPage');
-        if (curPage >= super.watchData.value!.urls.length - 2 || timerCancel) {
-          timer.cancel();
-        }
-        curPage++;
-
-        if (super.watchData.value!.urls[curPage] == "") {
-          _getPage(curPage);
-        }
-      });
-    });
-  }
-
-  _getPage(int page) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    final updatePage = await runtime.updatePages(page) as ExtensionUpdatePages;
-    super.watchData.value!.urls[page] = updatePage.url;
-  }
-
   _initSetting() async {
     readType.value = readmode[setting] ?? MangaReadMode.standard;
     readType.value = await DatabaseService.getMnagaReaderType(
@@ -125,18 +99,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
           index: page,
         );
       }
-      int curPage = currentPage.value;
-      Timer.periodic(const Duration(milliseconds: 600), (timer) {
-        // debugPrint('$curPage');
-        if (curPage == 0 || timerCancel) {
-          timer.cancel();
-        }
-
-        if (super.watchData.value!.urls[curPage] == "") {
-          _getPage(curPage);
-        }
-        curPage--;
-      });
       return;
     }
     if (pageController.value.hasClients) {
@@ -196,7 +158,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     }
     pageController.value.dispose();
-    timerCancel = true;
     super.onClose();
   }
 }

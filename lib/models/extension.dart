@@ -186,12 +186,11 @@ class ExtensionMangaWatch {
   ExtensionMangaWatch({
     required this.urls,
     this.headers,
-    this.pages,
   });
 
   final List<String> urls;
   late Map<String, String>? headers;
-  final int? pages;
+
   factory ExtensionMangaWatch.fromJson(Map<String, dynamic> json) =>
       _$ExtensionMangaWatchFromJson(json);
 
@@ -213,21 +212,6 @@ class ExtensionFikushonWatch {
       _$ExtensionFikushonWatchFromJson(json);
 
   Map<String, dynamic> toJson() => _$ExtensionFikushonWatchToJson(this);
-}
-
-@JsonSerializable()
-class ExtensionUpdatePages {
-  late Map<String, String>? headers;
-  final String url;
-  ExtensionUpdatePages({
-    required this.url,
-    this.headers,
-  });
-
-  factory ExtensionUpdatePages.fromJson(Map<String, dynamic> json) =>
-      _$ExtensionUpdatePagesFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ExtensionUpdatePagesToJson(this);
 }
 
 @JsonSerializable()
