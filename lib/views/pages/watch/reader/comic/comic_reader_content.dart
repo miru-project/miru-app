@@ -324,6 +324,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
 //common mode and left to right mode
             return Stack(children: [
               ExtendedImageGesturePageView.builder(
+                  itemCount: images.length,
                   reverse: readerType == MangaReadMode.rightToLeft,
                   onPageChanged: (index) {
                     _c.currentPage.value = index;
