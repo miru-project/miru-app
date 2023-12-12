@@ -9,11 +9,11 @@ import 'package:miru_app/views/widgets/progress.dart';
 
 class SearchAllTile extends StatefulWidget {
   const SearchAllTile({
-    Key? key,
+    super.key,
     required this.searchResult,
     required this.onClickMore,
     required this.kw,
-  }) : super(key: key);
+  });
 
   final String kw;
   final SearchResult searchResult;

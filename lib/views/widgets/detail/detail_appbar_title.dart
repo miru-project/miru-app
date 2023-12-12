@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class DetailAppbarTitle extends StatefulWidget {
   const DetailAppbarTitle(
     this.text, {
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
   final String text;
   final ScrollController controller;
 

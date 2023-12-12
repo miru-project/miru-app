@@ -41,7 +41,7 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
               left: 0,
               right: 0,
               child: GestureDetector(
-                onTap: () {
+                onDoubleTap: () {
                   // 中间点击的话 将不会定时关闭
                   c.isShowControlPanel.value = !c.isShowControlPanel.value;
                 },
@@ -63,7 +63,7 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
               bottom: 0,
               child: ControlPanelFooter<T>(tag),
             ),
-          ]
+          ],
         ],
       ),
     );

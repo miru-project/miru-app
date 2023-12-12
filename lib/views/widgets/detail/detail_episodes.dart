@@ -12,9 +12,9 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class DetailEpisodes extends StatefulWidget {
   const DetailEpisodes({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
   final String? tag;
 
   @override
@@ -27,35 +27,50 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
   List<DropdownMenuItem<int>>? dropdownItems;
   late List<ExtensionEpisodeGroup> episodes = [];
   late String listMode = MiruStorage.getSetting(SettingKey.listMode);
-
+  bool isRevered = false;
   Widget _buildAndroidEpisodes(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // select 选择框
         if (episodes.isNotEmpty)
-          Container(
-            margin: const EdgeInsets.only(left: 8, top: 5, right: 8),
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-            decoration: BoxDecoration(
-                // 背景颜色为 primaryContainer
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: const BorderRadius.all(Radius.circular(10))),
-            child: DropdownButton<int>(
-              // 内容为 primary 颜色
-              style: TextStyle(color: Theme.of(context).colorScheme.primary),
-              isExpanded: true,
-              underline: const SizedBox(),
-              value: c.selectEpGroup.value,
-              items: dropdownItems,
-              onChanged: (value) {
-                setState(() {
-                  c.selectEpGroup.value = value!;
-                });
-              },
-            ),
-          ),
+          SizedBox(
+              child: Row(children: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    isRevered = !isRevered;
+                  });
+                },
+                icon: isRevered
+                    ? const Icon(Icons.keyboard_double_arrow_up_rounded)
+                    : const Icon(Icons.keyboard_double_arrow_down_rounded)),
+            Expanded(
+                flex: 1,
+                child: Container(
+                    margin: const EdgeInsets.only(left: 8, top: 5, right: 8),
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, top: 5, bottom: 5),
+                    decoration: BoxDecoration(
+                        // 背景颜色为 primaryContainer
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: DropdownButton<int>(
+                      // 内容为 primary 颜色
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      value: c.selectEpGroup.value,
+                      items: dropdownItems,
+                      onChanged: (value) {
+                        setState(() {
+                          c.selectEpGroup.value = value!;
+                        });
+                      },
+                    )))
+          ])),
         if (episodes.isNotEmpty)
           Container(
             margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
@@ -81,12 +96,22 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                 : episodes[c.selectEpGroup.value].urls.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(episodes[c.selectEpGroup.value].urls[index].name),
+                title: isRevered
+                    ? Text(episodes[c.selectEpGroup.value]
+                        .urls[episodes[c.selectEpGroup.value].urls.length -
+                            1 -
+                            index]
+                        .name)
+                    : Text(episodes[c.selectEpGroup.value].urls[index].name),
                 onTap: () {
                   c.goWatch(
                     context,
                     episodes[c.selectEpGroup.value].urls,
-                    index,
+                    isRevered
+                        ? episodes[c.selectEpGroup.value].urls.length -
+                            1 -
+                            index
+                        : index,
                     c.selectEpGroup.value,
                   );
                 },
@@ -109,19 +134,32 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
     Widget cardTile(Widget child) {
       return CardTile(
         title: episodesString,
-        leading: fluent.IconButton(
-          icon: Icon(
-            listMode == "grid"
-                ? fluent.FluentIcons.view_list
-                : fluent.FluentIcons.grid_view_medium,
+        leading: Row(children: [
+          fluent.IconButton(
+            icon: Icon(
+              listMode == "grid"
+                  ? fluent.FluentIcons.view_list
+                  : fluent.FluentIcons.grid_view_medium,
+            ),
+            onPressed: () {
+              setState(() {
+                listMode == "grid" ? listMode = "list" : listMode = "grid";
+                MiruStorage.setSetting(SettingKey.listMode, listMode);
+              });
+            },
           ),
-          onPressed: () {
-            setState(() {
-              listMode == "grid" ? listMode = "list" : listMode = "grid";
-              MiruStorage.setSetting(SettingKey.listMode, listMode);
-            });
-          },
-        ),
+          fluent.IconButton(
+            icon: isRevered
+                ? const Icon(fluent.FluentIcons.sort_lines_ascending)
+                : const Icon(fluent.FluentIcons.sort_lines),
+            onPressed: () {
+              setState(() {
+                isRevered = !isRevered;
+                // MiruStorage.setSetting(SettingKey.listMode, listMode);
+              });
+            },
+          )
+        ]),
         trailing: Row(
           children: [
             const DetailContinuePlay(),
@@ -151,6 +189,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
         LayoutBuilder(
           builder: (context, constraints) {
             return GridView.builder(
+              reverse: isRevered,
               shrinkWrap: true,
               itemCount: episodes.isEmpty
                   ? 0
@@ -185,6 +224,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
     return cardTile(
       ListView.builder(
         shrinkWrap: true,
+        reverse: isRevered,
         padding: const EdgeInsets.all(0),
         itemCount:
             episodes.isEmpty ? 0 : episodes[c.selectEpGroup.value].urls.length,

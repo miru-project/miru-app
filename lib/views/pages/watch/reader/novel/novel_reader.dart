@@ -9,7 +9,7 @@ import 'package:miru_app/data/services/extension_service.dart';
 
 class NovelReader extends StatefulWidget {
   const NovelReader({
-    Key? key,
+    super.key,
     required this.playList,
     required this.runtime,
     required this.episodeGroupId,
@@ -17,7 +17,7 @@ class NovelReader extends StatefulWidget {
     required this.title,
     required this.detailUrl,
     this.cover,
-  }) : super(key: key);
+  });
 
   final String title;
   final List<ExtensionEpisode> playList;

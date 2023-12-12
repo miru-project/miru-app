@@ -9,9 +9,9 @@ import 'package:miru_app/views/widgets/cover.dart';
 
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
 
   final String? tag;
 
@@ -105,7 +105,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                           width: 100,
                           child: c.isLoading.value
                               ? const Center(child: CircularProgressIndicator())
-                              : CacheNetWorkImage(
+                              : CacheNetWorkImagePic(
                                   c.data.value?.cover ?? '',
                                   fit: BoxFit.cover,
                                   headers: c.detail?.headers,

@@ -6,14 +6,14 @@ import 'package:miru_app/views/widgets/settings_tile.dart';
 
 class SettingsIntpuTile extends fluent.StatefulWidget {
   const SettingsIntpuTile({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     required this.onChanged,
     required this.text,
     required this.buildSubtitle,
     this.trailing = const Icon(Icons.chevron_right),
-  }) : super(key: key);
+  });
   final Widget? icon;
   final String title;
   final String Function() buildSubtitle;

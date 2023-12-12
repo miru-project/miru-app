@@ -11,10 +11,10 @@ import 'package:miru_app/views/widgets/horizontal_list.dart';
 
 class HomeFavorites extends StatefulWidget {
   const HomeFavorites({
-    Key? key,
+    super.key,
     required this.type,
     required this.data,
-  }) : super(key: key);
+  });
   final ExtensionType type;
   final List<Favorite> data;
 

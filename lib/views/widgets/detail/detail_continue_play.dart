@@ -9,9 +9,9 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class DetailContinuePlay extends StatefulWidget {
   const DetailContinuePlay({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
   final String? tag;
 
   @override

@@ -1,0 +1,200 @@
+{
+  "common": {
+    "home": "首頁",
+    "search": "搜尋",
+    "extension": "擴充套件",
+    "extension-repo": "擴充套件庫",
+    "settings": "設定",
+    "no-extension": "未安装任何擴充套件",
+    "no-result": "未找到相關结果",
+    "no-more-data": "没有更多數據了",
+    "cancel": "取消",
+    "confirm": "確定",
+    "close": "關閉",
+    "copied": "已複製到剪貼簿",
+    "uninstall": "解除安裝",
+    "install": "安装",
+    "repo": "倉庫",
+    "unset": "未設定",
+    "extension-missing": "未找到擴充套件 {package} ",
+    "error": "錯誤",
+    "retry": "重試",
+    "next": "下一個",
+    "previous": "上一個",
+    "show-all": "顯示全部",
+    "delete": "删除",
+    "delete-all": "删除全部"
+  },
+
+  "home": {
+    "continue-watching": "繼續觀看",
+    "favorite": "收藏",
+    "no-record": "暫無收藏和觀看紀錄",
+    "watched": "看到 {ep}"
+  },
+
+  "search": {
+    "hint-text": "請善用搜索哦!~",
+    "all": "全部",
+    "filter": "篩選"
+  },
+
+  "extension": {
+    "import": {
+      "title": "導入擴充套件",
+      "url-label": "擴充套件地址",
+      "tips": "你可以通過連結導入擴充套件，或者點擊下方的目錄，將擴充套件文件放入其中。",
+      "extension-dir": "擴充套件目錄",
+      "import-by-url": "通過連結導入"
+    },
+    "error-dialog": "錯誤信息",
+    "installed": "已安装",
+    "edit-code": "編輯程式"
+  },
+
+  "extension-repo": {
+    "error": "發生錯誤!",
+    "error-tips": "請檢查網絡連線或者擴充套件庫地址是否正確",
+    "empty": "擴充套件庫為空",
+    "upgrade": "更新"
+  },
+
+  "settings": {
+    "repo-url": "擴充套件庫地址",
+    "repo-url-subtitle": "獲取擴充套件的仓库地址",
+    "tmdb-key": "TMDB API Key",
+    "tmdb-key-subtitle": "在這裡輸入您的 TMDB API Key",
+    "bt-server": "BT Server",
+    "bt-server-subtitle": "線上播放 BT 種子的必要套件",
+    "bt-server-manager": "管理",
+    "upgrade": "更新軟體",
+    "upgrade-subtitle": "現在版本：{version}",
+    "upgrade-training": "檢查更新",
+    "auto-check-update": "自動檢查更新",
+    "auto-check-update-subtitle": "每次啟動時檢查更新",
+    "language": "語言",
+    "theme": "主題",
+    "theme-subtitle": "選擇螢幕主題",
+    "theme-system": "跟隨系统",
+    "theme-light": "浅色",
+    "theme-dark": "深色",
+    "theme-black": "黑色",
+    "nsfw": "NSFW",
+    "nsfw-subtitle": "顯示成人内容",
+    "external-player": "預設播放器",
+    "external-player-subtitle": "現在使用的是 {player}",
+    "external-player-builtin": "内建播放器",
+    "language-subtitle": "選擇軟體的語言",
+    "extension-log": "擴充套件日誌視窗",
+    "extension-log-subtitle": "擴充套件除錯視窗",
+    "about": "關於",
+    "official-site": "官網",
+    "official-site-training": "前往官網",
+    "source-code": "原始碼",
+    "source-code-training": "前往 Star",
+    "license": "許可證",
+    "license-subtitle": "許可證"
+  },
+
+  "external-player-launching": "正在啟動 {player}",
+
+  "detail": {
+    "favorite": "收藏",
+    "favorited": "已收藏",
+    "continue-watching": "繼續 {episode}",
+    "total-episodes": "共 {total}",
+    "overview": "簡介",
+    "cast": "演員",
+    "additional-info": "額外資訊",
+    "get-lastest-data-error": "無法獲取最新數據",
+    "modify-tmdb-binding": "修改 TMDB 绑定",
+    "no-tmdb-data": "未匹配到 TMDB 數據，请自行綁定數據",
+    "tmdb-key-missing": "TMDB API Key 丢失，請前往設置填寫"
+  },
+
+  "video": {
+    "episodes": "集",
+    "watch-now": "立即觀看",
+    "no-episodes": "暫無",
+    "play-complete": "播放完成",
+    "resume-last-playback": "恢復上次播放位置",
+    "subtitle-none": "不使用字幕",
+    "subtitle": "字幕",
+    "subtitle-change": "切換字幕 {title}",
+    "subtitle-file": "選擇字幕文件",
+    "torrent-downloading": "正在下載種子"
+  },
+
+  "reader": {
+    "chapters": "章",
+    "read-now": "立即閱讀",
+    "no-chapters": "暫無章節"
+  },
+
+  "comic-settings": {
+    "read-mode": "漫畫閱讀模式",
+    "standard": "標準模式",
+    "right-to-left": "從右到左",
+    "web-tonn": "Webtoon"
+  },
+
+  "novel-settings": {
+    "font-size": "字體大小"
+  },
+
+  "upgrade": {
+    "check-update": "檢查更新",
+    "new-version": "偵測到新版本 {version}",
+    "download": "前往更新",
+    "no-update": "已经是最新版本",
+    "not-now": "暫不更新",
+    "error": "检查更新失敗，請檢查網路狀態"
+  },
+
+  "extension-install-error": "擴充套件安裝失敗",
+
+  "extension-type": {
+    "video": "影片",
+    "novel": "小說",
+    "comic": "漫畫"
+  },
+
+  "extension-info": {
+    "author": "作者",
+    "description": "描述",
+    "version": "版本",
+    "language": "語言",
+    "original-site": "原始網站",
+    "other-infomation": "其他訊息",
+    "license": "許可",
+    "title": "擴充套件詳情"
+  },
+
+  "cookie-clean": {
+    "title": "清除 Cookie",
+    "subtitle": "清除之後可能要重新登錄",
+    "success": "清除成功",
+    "clean": "清除"
+  },
+
+  "tmdb": {
+    "backdrops": "劇照",
+    "status": "狀態",
+    "original-title": "原始標題",
+    "release-date": "發佈日期",
+    "genres": "類型",
+    "runtime": "時長",
+    "languages": "語言"
+  },
+
+  "bt-server": {
+    "not-installed": "BT-Server 尚未安装",
+    "running": "BT-Server 正在執行",
+    "stopped": "BT-Server 已停止",
+    "version": "版本 {version}",
+    "remote-version": "遠程版本 {version}",
+    "stop": "停止",
+    "upgrade": "升级",
+    "start": "啟動"
+  }
+}

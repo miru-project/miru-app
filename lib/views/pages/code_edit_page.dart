@@ -11,8 +11,8 @@ import 'package:flutter_highlight/themes/monokai-sublime.dart';
 class CodeEditPage extends StatefulWidget {
   const CodeEditPage({
     required this.extension,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final Extension extension;
   @override
   State<CodeEditPage> createState() => _CodeEditPageState();

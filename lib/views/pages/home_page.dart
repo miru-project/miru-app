@@ -8,7 +8,7 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();

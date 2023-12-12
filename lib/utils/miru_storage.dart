@@ -113,6 +113,11 @@ class MiruStorage {
     await _initSetting(SettingKey.enableNSFW, false);
     await _initSetting(SettingKey.videoPlayer, 'built-in');
     await _initSetting(SettingKey.listMode, "grid");
+    await _initSetting(SettingKey.keyI, 10.0);
+    await _initSetting(SettingKey.keyJ, -10.0);
+    await _initSetting(SettingKey.arrowLeft, -2.0);
+    await _initSetting(SettingKey.arrowRight, 2.0);
+    await _initSetting(SettingKey.readingMode, "standard");
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -141,4 +146,9 @@ class SettingKey {
   static String videoPlayer = 'VideoPlayer';
   static String databaseVersion = 'DatabaseVersion';
   static String listMode = 'ListMode';
+  static String keyI = 'KeyI';
+  static String keyJ = 'KeyJ';
+  static String arrowLeft = 'Arrowleft';
+  static String arrowRight = 'Arrowright';
+  static String readingMode = 'ReadingMode';
 }

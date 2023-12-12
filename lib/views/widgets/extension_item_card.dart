@@ -7,13 +7,13 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class ExtensionItemCard extends StatefulWidget {
   const ExtensionItemCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.url,
     required this.package,
     this.cover,
     this.update,
-  }) : super(key: key);
+  });
   final String title;
   final String? cover;
   final String? update;

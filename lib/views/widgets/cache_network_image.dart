@@ -2,16 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 
-class CacheNetWorkImage extends StatelessWidget {
-  const CacheNetWorkImage(
+class CacheNetWorkImagePic extends StatelessWidget {
+  const CacheNetWorkImagePic(
     this.url, {
-    Key? key,
+    super.key,
     this.fit = BoxFit.cover,
     this.width,
     this.height,
     this.fallback,
     this.headers,
-  }) : super(key: key);
+  });
   final String url;
   final BoxFit fit;
   final double? width;

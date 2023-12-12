@@ -3,7 +3,7 @@ import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 
 class ExtensionLogTile extends StatelessWidget {
-  const ExtensionLogTile({Key? key, required this.log}) : super(key: key);
+  const ExtensionLogTile({super.key, required this.log});
   final ExtensionLog log;
 
   @override
@@ -42,7 +42,7 @@ class ExtensionLogTile extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               clipBehavior: Clip.antiAlias,
-              child: CacheNetWorkImage(
+              child: CacheNetWorkImagePic(
                 log.extension.icon!,
                 width: 32,
                 height: 32,

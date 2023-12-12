@@ -7,9 +7,9 @@ import 'package:miru_app/views/widgets/cache_network_image.dart';
 
 class DetailOverView extends StatelessWidget {
   const DetailOverView({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
 
   final String? tag;
 
@@ -58,7 +58,7 @@ class DetailOverView extends StatelessWidget {
                           ),
                           clipBehavior: Clip.antiAlias,
                           margin: const EdgeInsets.only(right: 8),
-                          child: CacheNetWorkImage(
+                          child: CacheNetWorkImagePic(
                             url,
                             height: 160,
                           ),

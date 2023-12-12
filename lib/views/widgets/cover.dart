@@ -4,11 +4,11 @@ import 'package:miru_app/views/widgets/cache_network_image.dart';
 
 class Cover extends StatelessWidget {
   const Cover({
-    Key? key,
+    super.key,
     required this.alt,
     this.url,
     this.noText = false,
-  }) : super(key: key);
+  });
   final String? url;
   final String alt;
   final bool noText;
@@ -16,7 +16,7 @@ class Cover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (url != null) {
-      return CacheNetWorkImage(
+      return CacheNetWorkImagePic(
         url!,
         width: double.infinity,
         height: double.infinity,

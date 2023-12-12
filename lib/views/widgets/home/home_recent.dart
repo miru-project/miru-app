@@ -7,9 +7,9 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class HomeRecent extends StatefulWidget {
   const HomeRecent({
-    Key? key,
+    super.key,
     required this.data,
-  }) : super(key: key);
+  });
   final List<History> data;
 
   @override

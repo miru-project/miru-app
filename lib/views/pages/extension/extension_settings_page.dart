@@ -25,9 +25,9 @@ import 'package:miru_app/views/widgets/settings_tile.dart';
 
 class ExtensionSettingsPage extends StatefulWidget {
   const ExtensionSettingsPage({
-    Key? key,
+    super.key,
     required this.package,
-  }) : super(key: key);
+  });
   final String package;
 
   @override
@@ -144,7 +144,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: CacheNetWorkImage(
+                child: CacheNetWorkImagePic(
                   extension.icon ?? '',
                   fit: BoxFit.contain,
                 ),
@@ -308,7 +308,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           clipBehavior: Clip.antiAlias,
-                          child: CacheNetWorkImage(
+                          child: CacheNetWorkImagePic(
                             extension.icon ?? '',
                             fit: BoxFit.contain,
                           ),

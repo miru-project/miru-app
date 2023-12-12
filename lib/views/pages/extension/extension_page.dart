@@ -17,7 +17,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ExtensionPage extends StatefulWidget {
-  const ExtensionPage({Key? key}) : super(key: key);
+  const ExtensionPage({super.key});
 
   @override
   State<ExtensionPage> createState() => _ExtensionPageState();

@@ -221,9 +221,10 @@ class DatabaseService {
   }
 
   // 获取漫画阅读模式
-  static Future<MangaReadMode> getMnagaReaderType(String url) {
+  static Future<MangaReadMode> getMnagaReaderType(
+      String url, MangaReadMode defaultMode) {
     return db.mangaSettings.filter().urlEqualTo(url).findFirst().then(
-          (value) => value?.readMode ?? MangaReadMode.standard,
+          (value) => value?.readMode ?? defaultMode,
         );
   }
 

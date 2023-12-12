@@ -7,7 +7,7 @@ import 'package:miru_app/utils/extension.dart';
 
 class WatchPage extends StatelessWidget {
   const WatchPage({
-    Key? key,
+    super.key,
     required this.playList,
     required this.package,
     required this.title,
@@ -15,7 +15,7 @@ class WatchPage extends StatelessWidget {
     required this.episodeGroupId,
     required this.detailUrl,
     this.cover,
-  }) : super(key: key);
+  });
   final List<ExtensionEpisode> playList;
   final int playerIndex;
   final String title;

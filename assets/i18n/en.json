@@ -8,6 +8,7 @@
     "ryu": "うちなーぐち",
     "uk": "Українська",
     "zh": "中文",
+    "zhHant": "繁體中文",
     "hi": "हिंदी"
   },
 
@@ -99,6 +100,9 @@
     "language-subtitle": "Change the language of the software",
     "extension-log": "Extension Log Window",
     "extension-log-subtitle": "Used for debugging extensions",
+    "skip-interval": "Skip Interval",
+    "skip-interval-subtitle": "Skipping interval for builtin video player",
+    "default-reader-mode": "Default reader mode",
     "about": "About",
     "official-site": "Official Website",
     "official-site-training": "Visit",

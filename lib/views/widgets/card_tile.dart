@@ -2,12 +2,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class CardTile extends StatelessWidget {
   const CardTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.trailing,
     this.leading,
-  }) : super(key: key);
+  });
   final String title;
   final Widget? leading;
   final Widget? trailing;

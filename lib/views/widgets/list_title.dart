@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class ListTitle extends StatelessWidget {
-  const ListTitle({Key? key, required this.title}) : super(key: key);
+  const ListTitle({super.key, required this.title});
 
   final String title;
 

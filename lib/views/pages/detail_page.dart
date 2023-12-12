@@ -24,11 +24,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({
-    Key? key,
+    super.key,
     required this.url,
     required this.package,
     this.tag,
-  }) : super(key: key);
+  });
   final String url;
   final String package;
   final String? tag;
@@ -185,7 +185,7 @@ class _DetailPageState extends State<DetailPage> {
                                 shape: BoxShape.circle,
                               ),
                               clipBehavior: Clip.antiAlias,
-                              child: CacheNetWorkImage(
+                              child: CacheNetWorkImagePic(
                                 url,
                                 width: 50,
                                 height: 50,
@@ -284,7 +284,7 @@ class _DetailPageState extends State<DetailPage> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: CacheNetWorkImage(
+                                  child: CacheNetWorkImagePic(
                                     c.detail?.cover ?? '',
                                     headers: c.detail?.headers,
                                   ),
@@ -377,7 +377,7 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     clipBehavior: Clip.antiAlias,
                                     margin: const EdgeInsets.only(right: 8),
-                                    child: CacheNetWorkImage(
+                                    child: CacheNetWorkImagePic(
                                       url,
                                       height: 200,
                                     ),
@@ -432,7 +432,7 @@ class _DetailPageState extends State<DetailPage> {
                                                 shape: BoxShape.circle,
                                               ),
                                               clipBehavior: Clip.antiAlias,
-                                              child: CacheNetWorkImage(
+                                              child: CacheNetWorkImagePic(
                                                 url ?? '',
                                                 width: 100,
                                                 height: 100,
@@ -528,7 +528,7 @@ class _DetailPageState extends State<DetailPage> {
                                       width: 200,
                                       child: e,
                                     ))
-                                .toList(),
+                                ,
                           ]),
                         );
                       },

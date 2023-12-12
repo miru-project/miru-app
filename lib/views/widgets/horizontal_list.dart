@@ -5,7 +5,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class HorizontalList extends StatefulWidget {
   const HorizontalList({
-    Key? key,
+    super.key,
     required this.title,
     required this.onClickMore,
     this.itemCount,
@@ -14,8 +14,7 @@ class HorizontalList extends StatefulWidget {
   })  : assert(
           (itemCount != null && itemBuilder != null) || contentBuilder != null,
           "itemCount and itemBuilder or contentBuilder must not be null",
-        ),
-        super(key: key);
+        );
   final String title;
   final void Function() onClickMore;
   final int? itemCount;
@@ -136,8 +135,7 @@ class _HorizontalListState extends State<HorizontalList> {
 }
 
 class HorizontalTitle extends StatefulWidget {
-  const HorizontalTitle(this.text, {Key? key, required this.onClick})
-      : super(key: key);
+  const HorizontalTitle(this.text, {super.key, required this.onClick});
   final String text;
   final Function() onClick;
 

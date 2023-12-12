@@ -10,14 +10,14 @@ import 'package:miru_app/views/widgets/progress.dart';
 
 class ExtensionCard extends StatefulWidget {
   const ExtensionCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.version,
     required this.icon,
     required this.package,
     required this.nsfw,
     required this.type,
-  }) : super(key: key);
+  });
   final String? icon;
   final String name;
   final String version;
@@ -73,7 +73,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
       leading: SizedBox(
         width: 35,
         height: 35,
-        child: CacheNetWorkImage(
+        child: CacheNetWorkImagePic(
           icon,
           fit: BoxFit.contain,
           fallback: const Icon(Icons.extension),
@@ -162,7 +162,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
               borderRadius: BorderRadius.circular(8),
             ),
             clipBehavior: Clip.antiAlias,
-            child: CacheNetWorkImage(
+            child: CacheNetWorkImagePic(
               icon,
               width: 64,
               height: 64,

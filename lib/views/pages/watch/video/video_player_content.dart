@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -9,9 +10,9 @@ import 'package:window_manager/window_manager.dart';
 
 class VideoPlayerConten extends StatefulWidget {
   const VideoPlayerConten({
-    Key? key,
+    super.key,
     required this.tag,
-  }) : super(key: key);
+  });
   final String tag;
 
   @override
@@ -21,7 +22,8 @@ class VideoPlayerConten extends StatefulWidget {
 class _VideoPlayerContenState extends State<VideoPlayerConten> {
   late final _c = Get.find<VideoPlayerController>(tag: widget.tag);
   final speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-
+  String? selected;
+  final menuController = fluent.FlyoutController();
   Widget _buildDesktop(BuildContext context) {
     final topButtonBar = Row(
       children: [
@@ -52,6 +54,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
     return MaterialDesktopVideoControlsTheme(
       normal: MaterialDesktopVideoControlsThemeData(
         toggleFullscreenOnDoublePress: false,
+        keyboardShortcuts: _c.keyboardShortcuts,
         topButtonBar: [
           Obx(
             () => Expanded(
@@ -91,7 +94,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
           const MaterialDesktopPositionIndicator(),
           const Spacer(),
           Theme(
-            data: Theme.of(context),
+            data: ThemeData.dark(useMaterial3: true),
             child: Row(
               children: [
                 Padding(
@@ -129,7 +132,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       return [
                         for (int i = 0; i < _c.torrentMediaFileList.length; i++)
                           PopupMenuItem(
-                            padding: const EdgeInsets.all(0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
                             child: Obx(
                               () => CheckboxListTile(
                                 value: _c.currentTorrentFile.value ==
@@ -156,7 +160,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     return [
                       // 是否显示字幕
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -1,
@@ -169,7 +174,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       // 选择文件
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -2,
@@ -182,7 +188,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       for (int i = 0; i < _c.subtitles.length; i++)
                         PopupMenuItem(
-                          padding: const EdgeInsets.all(0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
                           child: Obx(
                             () => CheckboxListTile(
                               value: _c.selectedSubtitle.value == i,
@@ -195,7 +202,34 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                         ),
                     ];
                   },
-                )
+                ),
+                Obx(() {
+                  if (_c.currentQality.value.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: PopupMenuButton(
+                      child: Obx(
+                        () => Text(
+                          _c.currentQality.value,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          for (final qualit in _c.qualityUrls.entries)
+                            PopupMenuItem(
+                              child: Text(qualit.key),
+                              onTap: () {
+                                _c.switchQuality(_c.qualityUrls[qualit.key]!);
+                              },
+                            ),
+                        ];
+                      },
+                    ),
+                  );
+                })
               ],
             ),
           ),
@@ -314,7 +348,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       return [
                         for (int i = 0; i < _c.torrentMediaFileList.length; i++)
                           PopupMenuItem(
-                            padding: const EdgeInsets.all(0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
                             child: Obx(
                               () => CheckboxListTile(
                                 value: _c.currentTorrentFile.value ==
@@ -341,7 +376,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     return [
                       // 是否显示字幕
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -1,
@@ -354,7 +390,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       // 选择文件
                       PopupMenuItem(
-                        padding: const EdgeInsets.all(0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 0),
                         child: Obx(
                           () => CheckboxListTile(
                             value: _c.selectedSubtitle.value == -2,
@@ -367,7 +404,8 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                       ),
                       for (int i = 0; i < _c.subtitles.length; i++)
                         PopupMenuItem(
-                          padding: const EdgeInsets.all(0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
                           child: Obx(
                             () => CheckboxListTile(
                               value: _c.selectedSubtitle.value == i,
@@ -380,7 +418,34 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                         ),
                     ];
                   },
-                )
+                ),
+                Obx(() {
+                  if (_c.currentQality.value.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: PopupMenuButton(
+                      child: Obx(
+                        () => Text(
+                          _c.currentQality.value,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      itemBuilder: (context) {
+                        return [
+                          for (final qualit in _c.qualityUrls.entries)
+                            PopupMenuItem(
+                              child: Text(qualit.key),
+                              onTap: () {
+                                _c.switchQuality(_c.qualityUrls[qualit.key]!);
+                              },
+                            ),
+                        ];
+                      },
+                    ),
+                  );
+                }),
               ],
             ),
           ),
