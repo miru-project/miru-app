@@ -44,13 +44,15 @@ class ReaderController<T> extends GetxController {
     try {
       error.value = '';
       watchData.value = null;
-      watchData.value = await runtime.watch(
-        cuurentPlayUrl,
-      ) as T;
+      watchData.value = await runtime.watch(cuurentPlayUrl) as T;
     } catch (e) {
       error.value = e.toString();
     }
   }
+
+  void previousPage() {}
+
+  void nextPage() {}
 
   showControlPanel() {
     isShowControlPanel.value = true;
