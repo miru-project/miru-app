@@ -40,7 +40,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                   label: Text('comic-settings.right-to-left'.i18n),
                 ),
                 ButtonSegment<MangaReadMode>(
-                  value: MangaReadMode.webTonn,
+                  value: MangaReadMode.webToon,
                   label: Text('comic-settings.web-tonn'.i18n),
                 ),
               ],
@@ -98,11 +98,11 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                 ),
                 const SizedBox(width: 8),
                 fluent.ToggleButton(
-                  checked: _c.readType.value == MangaReadMode.webTonn,
+                  checked: _c.readType.value == MangaReadMode.webToon,
                   onChanged: (value) {
                     if (value) {
                       setState(() {
-                        _c.readType.value = MangaReadMode.webTonn;
+                        _c.readType.value = MangaReadMode.webToon;
                       });
                     }
                   },
