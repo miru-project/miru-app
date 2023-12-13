@@ -8,7 +8,7 @@ enum MangaReadMode {
   // 从右到左
   rightToLeft,
   // 条漫
-  webTonn,
+  webToon,
 }
 
 @collection
