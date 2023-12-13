@@ -20,7 +20,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   Map<String, MangaReadMode> readmode = {
     'standard': MangaReadMode.standard,
     'rightToLeft': MangaReadMode.rightToLeft,
-    'webTonn': MangaReadMode.webTonn,
+    'webToon': MangaReadMode.webToon,
   };
   final String setting = MiruStorage.getSetting(SettingKey.readingMode);
   final readType = MangaReadMode.standard.obs;
