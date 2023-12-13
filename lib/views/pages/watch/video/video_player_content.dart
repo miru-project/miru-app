@@ -42,7 +42,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                 _c.playList[_c.index.value].name,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 1,
+                  fontSize: 14,
                 ),
               )
             ],
