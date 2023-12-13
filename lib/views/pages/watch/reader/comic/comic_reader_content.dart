@@ -31,6 +31,27 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
       TransformationController();
   final double minScaleValue = 1.0;
 
+  _buildDisplay(Widget child) {
+    return Stack(
+      children: [
+        child,
+        Positioned(
+          bottom: 0,
+          child: Container(
+            color: Colors.black.withAlpha(200),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+            child: Obx(
+              () => Text(
+                "${_c.currentPage.value + 1}/${_c.watchData.value?.urls.length ?? 0}",
+                style: const TextStyle(color: Colors.white, fontSize: 15),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   _buildContent() {
     late Color backgroundColor;
     if (Platform.isAndroid) {
@@ -98,71 +119,55 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             final images = _c.watchData.value!.urls;
             final readerType = _c.readType.value;
             final cuurentPage = _c.currentPage.value;
+
             if (readerType == MangaReadMode.webTonn) {
               //zooming is inspired by: https://github.com/flutter/flutter/issues/86531
               if (Platform.isAndroid) {
-                return Stack(
-                  children: [
-                    InteractiveViewer(
-                      minScale: minScaleValue,
-                      transformationController: transformationController,
-                      onInteractionEnd: (ScaleEndDetails endDetails) {
-                        setState(() {
-                          isZoomed = false;
-                        });
-                      },
-                      onInteractionUpdate: (x) {
-                        double correctScaleValue =
-                            transformationController.value.getMaxScaleOnAxis();
-                        if (x.scale == correctScaleValue) {
-                          setState(() {
-                            isZoomed = false;
-                          });
-                        }
-                        setState(() {
-                          isZoomed = true;
-                        });
-                        debugPrint("${x.scale}");
-                      },
-                      child: ScrollablePositionedList.builder(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: viewPadding,
-                        ),
-                        initialScrollIndex: cuurentPage,
-                        itemScrollController: _c.itemScrollController,
-                        itemPositionsListener: _c.itemPositionsListener,
-                        scrollOffsetController: _c.scrollOffsetController,
-                        scrollOffsetListener: _c.scrolloffsetListener,
-                        physics: isZoomed
-                            ? const NeverScrollableScrollPhysics()
-                            : const ScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final url = images[index];
-                          return Obx(
-                            () => CacheNetWorkImagePic(
-                              url,
-                              fit: BoxFit.cover,
-                              headers: _c.watchData.value?.headers,
-                            ),
-                          );
-                        },
-                        itemCount: images.length,
-                      ),
+                return InteractiveViewer(
+                  minScale: minScaleValue,
+                  transformationController: transformationController,
+                  onInteractionEnd: (ScaleEndDetails endDetails) {
+                    setState(() {
+                      isZoomed = false;
+                    });
+                  },
+                  onInteractionUpdate: (x) {
+                    double correctScaleValue =
+                        transformationController.value.getMaxScaleOnAxis();
+                    if (x.scale == correctScaleValue) {
+                      setState(() {
+                        isZoomed = false;
+                      });
+                    }
+                    setState(() {
+                      isZoomed = true;
+                    });
+                    debugPrint("${x.scale}");
+                  },
+                  child: ScrollablePositionedList.builder(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: viewPadding,
                     ),
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        color: Colors.black.withAlpha(200),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 2),
-                        child: Text(
-                          "${cuurentPage + 1}/${images.length}",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 15),
+                    initialScrollIndex: cuurentPage,
+                    itemScrollController: _c.itemScrollController,
+                    itemPositionsListener: _c.itemPositionsListener,
+                    scrollOffsetController: _c.scrollOffsetController,
+                    scrollOffsetListener: _c.scrolloffsetListener,
+                    physics: isZoomed
+                        ? const NeverScrollableScrollPhysics()
+                        : const ScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final url = images[index];
+                      return Obx(
+                        () => CacheNetWorkImagePic(
+                          url,
+                          fit: BoxFit.cover,
+                          headers: _c.watchData.value?.headers,
                         ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                    itemCount: images.length,
+                  ),
                 );
               }
               return ScrollablePositionedList.builder(
@@ -185,45 +190,29 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
               );
             }
             //common mode and left to right mode
-            return Stack(
-              children: [
-                ExtendedImageGesturePageView.builder(
-                  itemCount: images.length,
-                  reverse: readerType == MangaReadMode.rightToLeft,
-                  onPageChanged: (index) {
-                    _c.currentPage.value = index;
-                  },
-                  scrollDirection: Axis.horizontal,
-                  controller: _c.pageController.value,
-                  itemBuilder: (BuildContext context, int index) {
-                    final url = images[index];
-                    return Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: viewPadding,
-                      ),
-                      child: ExtendedImage.network(
-                        url,
-                        mode: ExtendedImageMode.gesture,
-                        key: ValueKey(url),
-                        fit: BoxFit.contain,
-                        headers: _c.watchData.value?.headers,
-                      ),
-                    );
-                  },
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    color: Colors.black.withAlpha(200),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-                    child: Text(
-                      "${cuurentPage + 1}/${images.length}",
-                      style: const TextStyle(color: Colors.white, fontSize: 15),
-                    ),
+            return ExtendedImageGesturePageView.builder(
+              itemCount: images.length,
+              reverse: readerType == MangaReadMode.rightToLeft,
+              onPageChanged: (index) {
+                _c.currentPage.value = index;
+              },
+              scrollDirection: Axis.horizontal,
+              controller: _c.pageController.value,
+              itemBuilder: (BuildContext context, int index) {
+                final url = images[index];
+                return Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: viewPadding,
                   ),
-                ),
-              ],
+                  child: ExtendedImage.network(
+                    url,
+                    mode: ExtendedImageMode.gesture,
+                    key: ValueKey(url),
+                    fit: BoxFit.contain,
+                    headers: _c.watchData.value?.headers,
+                  ),
+                );
+              },
             );
           });
         })),
@@ -235,9 +224,16 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
       androidBuilder: (context) {
-        return Scaffold(body: SafeArea(child: _buildContent()));
+        return Scaffold(
+            body: SafeArea(
+          child: _buildDisplay(
+            _buildContent(),
+          ),
+        ));
       },
-      desktopBuilder: (context) => _buildContent(),
+      desktopBuilder: (context) => _buildDisplay(
+        _buildContent(),
+      ),
     );
   }
 }
