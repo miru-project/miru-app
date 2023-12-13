@@ -11,7 +11,6 @@
     "zhHant": "繁體中文",
     "hi": "हिंदी"
   },
-
   "common": {
     "home": "Home",
     "search": "Search",
@@ -38,20 +37,17 @@
     "delete": "Delete",
     "delete-all": "Delete all"
   },
-
   "home": {
     "continue-watching": "Continue",
     "favorite": "Favorite",
     "no-record": "No favorites or viewing records",
     "watched": "Watched {ep}"
   },
-
   "search": {
     "hint-text": "Please use search wisely!~",
     "all": "All",
     "filter": "Filter"
   },
-
   "extension": {
     "import": {
       "title": "Import Extension",
@@ -64,14 +60,12 @@
     "installed": "Installed",
     "edit-code": "Edit Code"
   },
-
   "extension-repo": {
     "error": "An error occurred!",
     "error-tips": "Please check your network connection or the repository address",
     "empty": "Repository is empty",
     "upgrade": "Update"
   },
-
   "settings": {
     "repo-url": "Extension Repository URL",
     "repo-url-subtitle": "Get the repository URL for extensions",
@@ -111,9 +105,7 @@
     "license": "License",
     "license-subtitle": "License"
   },
-
   "external-player-launching": "Launching {player}",
-
   "detail": {
     "favorite": "Favorite",
     "favorited": "Favorited",
@@ -127,7 +119,6 @@
     "no-tmdb-data": "No TMDB data matched, please bind the data yourself",
     "tmdb-key-missing": "TMDB API Key missing, please fill in the settings"
   },
-
   "video": {
     "episodes": "Episodes",
     "watch-now": "Watch Now",
@@ -138,26 +129,36 @@
     "subtitle": "Subtitle",
     "subtitle-change": "Change Subtitle {title}",
     "subtitle-file": "Subtitle File",
-    "torrent-downloading": "Torrent downloading"
+    "torrent-downloading": "Torrent downloading",
+    "tooltip": {
+      "close": "Close",
+      "subtitle": "Subtitle",
+      "play-list": "Play List",
+      "quality": "Quality",
+      "speed": "Speed",
+      "play": "Play",
+      "play-or-pause": "Pause",
+      "previous": "Previous",
+      "next": "Next",
+      "full-screen": "Full Screen",
+      "volume": "Volume",
+      "torrent-file-list": "Torrent file list"
+    }
   },
-
   "comic-settings": {
     "read-mode": "Read mode",
     "standard": "Standard",
     "right-to-left": "Right to left",
     "web-tonn": "Webtoon"
   },
-
   "novel-settings": {
     "font-size": "Font size"
   },
-
   "reader": {
     "chapters": "Chapters",
     "read-now": "Read Now",
     "no-chapters": "No chapters"
   },
-
   "upgrade": {
     "check-update": "Check for Updates",
     "new-version": "New version {version} detected",
@@ -166,15 +167,12 @@
     "not-now": "Not now",
     "error": "Failed to check for updates, network error occurred"
   },
-
   "extension-install-error": "Failed to install extension",
-
   "extension-type": {
     "video": "Video",
     "novel": "Novel",
     "comic": "Comic"
   },
-
   "extension-info": {
     "author": "Author",
     "description": "Description",
@@ -185,14 +183,12 @@
     "license": "License",
     "title": "Extension Info"
   },
-
   "cookie-clean": {
     "title": "Cookie Clean",
     "subtitle": "You may need to log in again after the cleanup",
     "success": "Clean success",
     "clean": "Clean"
   },
-
   "tmdb": {
     "backdrops": "Backdrops",
     "status": "Status",
@@ -202,7 +198,6 @@
     "runtime": "Runtime",
     "languages": "Languages"
   },
-
   "bt-server": {
     "not-installed": "BT-Server not installed",
     "running": "BT-Server is running",

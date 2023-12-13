@@ -108,6 +108,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   }
 
   // 下一页
+  @override
   void nextPage() {
     if (readType.value != MangaReadMode.webTonn) {
       pageController.value.nextPage(
@@ -124,6 +125,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   }
 
   // 上一页
+  @override
   void previousPage() {
     if (readType.value != MangaReadMode.webTonn) {
       pageController.value.previousPage(
