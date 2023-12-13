@@ -96,7 +96,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             final images = _c.watchData.value!.urls;
             final readerType = _c.readType.value;
             final cuurentPage = _c.currentPage.value;
-            if (readerType == MangaReadMode.webTonn) {
+            if (readerType == MangaReadMode.webToon) {
               //zooming is inspired by: https://github.com/flutter/flutter/issues/86531
               if (Platform.isAndroid) {
                 return Stack(children: [
