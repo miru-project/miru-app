@@ -114,12 +114,12 @@ P _mangaSettingDeserializeProp<P>(
 const _MangaSettingreadModeEnumValueMap = {
   r'standard': r'standard',
   r'rightToLeft': r'rightToLeft',
-  r'webTonn': r'webTonn',
+  r'webToon': r'webToon',
 };
 const _MangaSettingreadModeValueEnumMap = {
   r'standard': MangaReadMode.standard,
   r'rightToLeft': MangaReadMode.rightToLeft,
-  r'webTonn': MangaReadMode.webTonn,
+  r'webToon': MangaReadMode.webToon,
 };
 
 Id _mangaSettingGetId(MangaSetting object) {
