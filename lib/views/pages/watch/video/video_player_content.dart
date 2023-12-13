@@ -28,25 +28,28 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
     children: [
       Expanded(
         child: Obx(
-          () => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _c.title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
+          () => DefaultTextStyle(
+              style: const TextStyle(
+                overflow: TextOverflow.ellipsis,
+                color: Colors.white,
               ),
-              Text(
-                _c.playList[_c.index.value].name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              )
-            ],
-          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _c.title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    _c.playList[_c.index.value].name,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  )
+                ],
+              )),
         ),
       ),
       MaterialDesktopCustomButton(
