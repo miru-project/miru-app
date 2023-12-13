@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -21,36 +22,50 @@ class VideoPlayerConten extends StatefulWidget {
 
 class _VideoPlayerContenState extends State<VideoPlayerConten> {
   late final _c = Get.find<VideoPlayerController>(tag: widget.tag);
+
   final speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
-  String? selected;
-  final menuController = fluent.FlyoutController();
-  Widget _buildDesktop(BuildContext context) {
-    final topButtonBar = Row(
-      children: [
-        Expanded(
-          child: Obx(
-            () => Text(
-              "${_c.title} - ${_c.playList[_c.index.value].name}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+  late final topButtonBar = Row(
+    children: [
+      Expanded(
+        child: Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _c.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
               ),
-            ),
+              Text(
+                _c.playList[_c.index.value].name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 1,
+                ),
+              )
+            ],
           ),
         ),
-        MaterialDesktopCustomButton(
-          icon: const Icon(
-            Icons.keyboard_arrow_down,
-            color: Colors.white,
-          ),
-          onPressed: () async {
+      ),
+      MaterialDesktopCustomButton(
+        icon: const Icon(
+          Icons.keyboard_arrow_down,
+          color: Colors.white,
+        ),
+        onPressed: () async {
+          if (!Platform.isAndroid) {
             await WindowManager.instance.setFullScreen(false);
-            await _c.onExit();
-            RouterUtils.pop();
-          },
-        ),
-      ],
-    );
+          }
+          await _c.onExit();
+          RouterUtils.pop();
+        },
+      ),
+    ],
+  );
+
+  Widget _buildDesktop(BuildContext context) {
     return MaterialDesktopVideoControlsTheme(
       normal: MaterialDesktopVideoControlsThemeData(
         toggleFullscreenOnDoublePress: false,
@@ -261,28 +276,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
       normal: MaterialVideoControlsThemeData(
         volumeGesture: true,
         brightnessGesture: true,
-        topButtonBar: [
-          Obx(
-            () => Text(
-              "${_c.title} - ${_c.playList[_c.index.value].name}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-          ),
-          const Spacer(),
-          MaterialCustomButton(
-            icon: const Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white,
-            ),
-            onPressed: () async {
-              await _c.onExit();
-              RouterUtils.pop();
-            },
-          ),
-        ],
+        topButtonBar: [Expanded(child: topButtonBar)],
         bottomButtonBar: [
           Obx(() {
             if (_c.index.value > 0) {
