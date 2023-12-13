@@ -52,18 +52,21 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
               )),
         ),
       ),
-      MaterialDesktopCustomButton(
-        icon: const Icon(
-          Icons.keyboard_arrow_down,
-          color: Colors.white,
+      Tooltip(
+        message: "video.tooltip.close".i18n,
+        child: MaterialDesktopCustomButton(
+          icon: const Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.white,
+          ),
+          onPressed: () async {
+            if (!Platform.isAndroid) {
+              await WindowManager.instance.setFullScreen(false);
+            }
+            await _c.onExit();
+            RouterUtils.pop();
+          },
         ),
-        onPressed: () async {
-          if (!Platform.isAndroid) {
-            await WindowManager.instance.setFullScreen(false);
-          }
-          await _c.onExit();
-          RouterUtils.pop();
-        },
       ),
     ],
   );
@@ -87,28 +90,40 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
         bottomButtonBar: [
           Obx(() {
             if (_c.index.value > 0) {
-              return MaterialDesktopCustomButton(
-                icon: const Icon(Icons.skip_previous),
-                onPressed: () {
-                  _c.index.value--;
-                },
+              return Tooltip(
+                message: "video.tooltip.previous".i18n,
+                child: MaterialDesktopCustomButton(
+                  icon: const Icon(Icons.skip_previous),
+                  onPressed: () {
+                    _c.index.value--;
+                  },
+                ),
               );
             }
             return const SizedBox.shrink();
           }),
-          const MaterialDesktopPlayOrPauseButton(),
+          Tooltip(
+            message: "video.tooltip.play-or-pause".i18n,
+            child: const MaterialDesktopPlayOrPauseButton(),
+          ),
           Obx(() {
             if (_c.index.value != _c.playList.length - 1) {
-              return MaterialDesktopCustomButton(
-                icon: const Icon(Icons.skip_next),
-                onPressed: () {
-                  _c.index.value++;
-                },
+              return Tooltip(
+                message: "video.tooltip.next".i18n,
+                child: MaterialDesktopCustomButton(
+                  icon: const Icon(Icons.skip_next),
+                  onPressed: () {
+                    _c.index.value++;
+                  },
+                ),
               );
             }
             return const SizedBox.shrink();
           }),
-          const MaterialDesktopVolumeButton(),
+          Tooltip(
+            message: "video.tooltip.volume".i18n,
+            child: const MaterialDesktopVolumeButton(),
+          ),
           const MaterialDesktopPositionIndicator(),
           const Spacer(),
           Theme(
@@ -118,6 +133,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: PopupMenuButton(
+                    tooltip: "video.tooltip.speed".i18n,
                     child: Obx(
                       () => Text(
                         'x${_c.speed.value}',
@@ -142,6 +158,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                     return const SizedBox.shrink();
                   }
                   return PopupMenuButton(
+                    tooltip: "video.tooltip.torrent-file-list".i18n,
                     icon: const Icon(
                       Icons.file_open,
                       color: Colors.white,
@@ -170,6 +187,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                   );
                 }),
                 PopupMenuButton(
+                  tooltip: "video.tooltip.subtitle".i18n,
                   icon: const Icon(
                     Icons.subtitles,
                     color: Colors.white,
@@ -228,6 +246,7 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: PopupMenuButton(
+                      tooltip: "video.tooltip.quality".i18n,
                       child: Obx(
                         () => Text(
                           _c.currentQality.value,
@@ -251,18 +270,24 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
               ],
             ),
           ),
-          MaterialDesktopCustomButton(
-            onPressed: () {
-              _c.showPlayList.value = !_c.showPlayList.value;
-            },
-            icon: const Icon(Icons.list),
+          Tooltip(
+            message: "video.tooltip.play-list".i18n,
+            child: MaterialDesktopCustomButton(
+              onPressed: () {
+                _c.showPlayList.value = !_c.showPlayList.value;
+              },
+              icon: const Icon(Icons.list),
+            ),
           ),
           Obx(
-            () => MaterialDesktopCustomButton(
-              onPressed: () => _c.toggleFullscreen(),
-              icon: (_c.isFullScreen.value
-                  ? const Icon(Icons.fullscreen_exit)
-                  : const Icon(Icons.fullscreen)),
+            () => Tooltip(
+              message: "video.tooltip.full-screen".i18n,
+              child: MaterialDesktopCustomButton(
+                onPressed: () => _c.toggleFullscreen(),
+                icon: (_c.isFullScreen.value
+                    ? const Icon(Icons.fullscreen_exit)
+                    : const Icon(Icons.fullscreen)),
+              ),
             ),
           )
         ],
