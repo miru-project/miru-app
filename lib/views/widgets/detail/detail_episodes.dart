@@ -74,19 +74,28 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
         if (episodes.isNotEmpty)
           Container(
             margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
-            child: Text(
-              FlutterI18n.translate(
-                context,
-                'detail.total-episodes',
-                translationParams: {
-                  'total':
-                      episodes[c.selectEpGroup.value].urls.length.toString(),
-                },
+            child: Row(children: [
+              Text(
+                FlutterI18n.translate(
+                  context,
+                  'detail.total-episodes',
+                  translationParams: {
+                    'total':
+                        episodes[c.selectEpGroup.value].urls.length.toString(),
+                  },
+                ),
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
               ),
-              style: const TextStyle(
-                fontSize: 18,
-              ),
-            ),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isRevered = !isRevered;
+                    });
+                  },
+                  icon: const Icon(Icons.sort_rounded))
+            ]),
           ),
         Expanded(
           child: ListView.builder(
