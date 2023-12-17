@@ -33,47 +33,33 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // select 选择框
-        if (episodes.isNotEmpty)
-          SizedBox(
-              child: Row(children: [
-            IconButton(
-                onPressed: () {
+        if (episodes.isNotEmpty) ...[
+          Container(
+              margin: const EdgeInsets.only(left: 8, top: 5, right: 8),
+              padding:
+                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              decoration: BoxDecoration(
+                // 背景颜色为 primaryContainer
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: DropdownButton<int>(
+                // 内容为 primary 颜色
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                isExpanded: true,
+                underline: const SizedBox(),
+                value: c.selectEpGroup.value,
+                items: dropdownItems,
+                onChanged: (value) {
                   setState(() {
-                    isRevered = !isRevered;
+                    c.selectEpGroup.value = value!;
                   });
                 },
-                icon: isRevered
-                    ? const Icon(Icons.keyboard_double_arrow_up_rounded)
-                    : const Icon(Icons.keyboard_double_arrow_down_rounded)),
-            Expanded(
-                flex: 1,
-                child: Container(
-                    margin: const EdgeInsets.only(left: 8, top: 5, right: 8),
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 5, bottom: 5),
-                    decoration: BoxDecoration(
-                        // 背景颜色为 primaryContainer
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: DropdownButton<int>(
-                      // 内容为 primary 颜色
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
-                      isExpanded: true,
-                      underline: const SizedBox(),
-                      value: c.selectEpGroup.value,
-                      items: dropdownItems,
-                      onChanged: (value) {
-                        setState(() {
-                          c.selectEpGroup.value = value!;
-                        });
-                      },
-                    )))
-          ])),
-        if (episodes.isNotEmpty)
+              )),
           Container(
-            margin: const EdgeInsets.only(left: 16, top: 10, bottom: 10),
+            margin: const EdgeInsets.only(left: 16, top: 10),
             child: Row(children: [
               Text(
                 FlutterI18n.translate(
@@ -88,15 +74,20 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
                   fontSize: 18,
                 ),
               ),
-              IconButton(
+              Transform.flip(
+                flipY: isRevered,
+                child: IconButton(
                   onPressed: () {
                     setState(() {
                       isRevered = !isRevered;
                     });
                   },
-                  icon: const Icon(Icons.sort_rounded))
+                  icon: const Icon(Icons.sort_rounded),
+                ),
+              )
             ]),
-          ),
+          )
+        ],
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(0),
