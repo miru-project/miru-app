@@ -22,6 +22,7 @@ import 'package:miru_app/views/widgets/list_title.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:miru_app/views/pages/sync_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -79,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (!Platform.isAndroid) {
               return 'settings.tmdb-key-subtitle'.i18n;
             }
-            final key = MiruStorage.getSetting(SettingKey.tmdbKay) as String;
+            final key = MiruStorage.getSetting(SettingKey.tmdbKey) as String;
             if (key.isEmpty) {
               return 'common.unset'.i18n;
             }
@@ -87,13 +88,13 @@ class _SettingsPageState extends State<SettingsPage> {
             return key.replaceAll(RegExp(r"."), '*');
           },
           onChanged: (value) {
-            MiruStorage.setSetting(SettingKey.tmdbKay, value);
+            MiruStorage.setSetting(SettingKey.tmdbKey, value);
             TmdbApi.tmdb = TMDB(
               ApiKeys(value, ''),
               defaultLanguage: MiruStorage.getSetting(SettingKey.language),
             );
           },
-          text: MiruStorage.getSetting(SettingKey.tmdbKay),
+          text: MiruStorage.getSetting(SettingKey.tmdbKey),
         ),
         const SizedBox(height: 8),
         SettingsTile(
@@ -126,6 +127,28 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Text('settings.bt-server-manager'.i18n),
             ),
           ),
+        ),
+        const SizedBox(height: 8),
+        SettingsTile(
+          icon: const PlatformWidget(
+            androidWidget: Icon(Icons.sync),
+            desktopWidget: Icon(
+              fluent.FluentIcons.sync,
+              size: 24,
+            ),
+          ),
+          title: 'settings.sync'.i18n,
+          buildSubtitle: () => 'settings.sync-subtitle'.i18n,
+          trailing: (!Platform.isAndroid)
+              ? const Icon(Icons.chevron_right)
+              : IconButton(
+                  onPressed: () {
+                    Get.to(() => const SyncPage());
+                  },
+                  icon: const Icon(Icons.chevron_right)),
+          onTap: () {
+            Get.to(() => const SyncPage());
+          },
         ),
         const SizedBox(height: 8),
         SettingsTile(

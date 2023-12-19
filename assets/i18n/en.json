@@ -103,7 +103,9 @@
     "source-code": "Open Source",
     "source-code-training": "Give Star",
     "license": "License",
-    "license-subtitle": "License"
+    "license-subtitle": "License",
+    "sync": "Sync and Tracking",
+    "sync-subtitle":"Sync your viewing record to tracking service"
   },
   "external-player-launching": "Launching {player}",
   "detail": {

@@ -47,7 +47,6 @@ dependencies:
   url_launcher: ^6.1.11
   window_manager: ^0.3.7
   cookie_jar: ^4.0.8
-  flutter_inappwebview: ^5.7.2+3
   desktop_webview_window: ^0.2.1
   http_parser: ^4.0.2
   html: ^0.15.4
@@ -57,7 +56,11 @@ dependencies:
   crypto: ^3.0.3
   extended_image: ^8.2.0
   flutter_hls_parser: ^2.0.1
-
+  # oauth2_client: ^3.2.2
+  flutter_inappwebview: ^5.8.0
+  flutter_web_auth_2: ^2.2.1
+  flutter_svg: ^2.0.9
+  # webview_flutter: ^4.4.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -72,3 +75,4 @@ flutter:
     - assets/i18n/
     - assets/icon/logo.png
     - assets/js/
+    - assets/icon/anilist_black_white.svg

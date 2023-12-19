@@ -105,7 +105,7 @@ class MiruStorage {
 
   static _initSettings() async {
     await _initSetting(SettingKey.miruRepoUrl, "https://miru-repo.0n0.dev");
-    await _initSetting(SettingKey.tmdbKay, "");
+    await _initSetting(SettingKey.tmdbKey, "");
     await _initSetting(SettingKey.autoCheckUpdate, true);
     await _initSetting(SettingKey.language, 'en');
     await _initSetting(SettingKey.novelFontSize, 18.0);
@@ -118,6 +118,8 @@ class MiruStorage {
     await _initSetting(SettingKey.arrowLeft, -2.0);
     await _initSetting(SettingKey.arrowRight, 2.0);
     await _initSetting(SettingKey.readingMode, "standard");
+    await _initSetting(SettingKey.aniListToken, '');
+    await _initSetting(SettingKey.aniListUserId, '');
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -138,7 +140,7 @@ class MiruStorage {
 class SettingKey {
   static String theme = "Theme";
   static String miruRepoUrl = "MiruRepoUrl";
-  static String tmdbKay = 'TMDBKey';
+  static String tmdbKey = 'TMDBKey';
   static String autoCheckUpdate = 'AutoCheckUpdate';
   static String language = 'Language';
   static String novelFontSize = 'NovelFontSize';
@@ -151,4 +153,6 @@ class SettingKey {
   static String arrowLeft = 'Arrowleft';
   static String arrowRight = 'Arrowright';
   static String readingMode = 'ReadingMode';
+  static String aniListToken = 'AniListToken';
+  static String aniListUserId = 'AniListUserId';
 }

@@ -149,7 +149,7 @@ class DetailPageController extends GetxController {
   // 修改 tmdb 绑定
   modifyTMDBBinding() async {
     // 判断是否有 key
-    if (MiruStorage.getSetting(SettingKey.tmdbKay) == "") {
+    if (MiruStorage.getSetting(SettingKey.tmdbKey) == "") {
       showPlatformSnackbar(
         context: currentContext,
         content: 'detail.tmdb-key-missing'.i18n,
