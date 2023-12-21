@@ -34,26 +34,14 @@ class _SettingsTileState extends State<SettingsTile> {
 
   Widget _buildDesktop(BuildContext context) {
     return fluent.Card(
-        child: Row(
-      children: [
-        if (widget.icon != null) ...[
-          widget.icon!,
-          const SizedBox(width: 16),
-        ],
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.title),
-            Text(
-              widget.buildSubtitle?.call() ?? "",
-              style: const TextStyle(fontSize: 12),
-            )
-          ],
-        ),
-        const Spacer(),
-        widget.trailing ?? const SizedBox(),
-      ],
-    ));
+        padding: const EdgeInsets.all(2),
+        child: fluent.ListTile(
+          leading: widget.icon,
+          title: Text(widget.title),
+          subtitle: Text(widget.buildSubtitle?.call() ?? ""),
+          trailing: widget.trailing,
+          onPressed: widget.onTap,
+        ));
   }
 
   @override

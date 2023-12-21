@@ -141,13 +141,18 @@ class _SettingsPageState extends State<SettingsPage> {
           buildSubtitle: () => 'settings.sync-subtitle'.i18n,
           trailing: (!Platform.isAndroid)
               ? const Icon(Icons.chevron_right)
-              : IconButton(
+              : fluent.IconButton(
                   onPressed: () {
                     Get.to(() => const SyncPage());
+                    debugPrint("press");
                   },
                   icon: const Icon(Icons.chevron_right)),
           onTap: () {
-            Get.to(() => const SyncPage());
+            // Get.to(() => const SyncPage());
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SyncPage()),
+            );
           },
         ),
         const SizedBox(height: 8),

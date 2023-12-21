@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/anilist_horizontal_list.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
@@ -43,7 +44,7 @@ class _AnilistMorePageState extends fluent.State<AnilistMorePage> {
               final status = tab.text;
               if (data[status] == null) {
                 return Center(
-                  child: Text("Not found"),
+                  child: Text("Not found".i18n),
                 );
               }
               return LayoutBuilder(
