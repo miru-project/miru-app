@@ -78,12 +78,20 @@ class VideoPlayerController extends GetxController {
   // 复制当前 context
 
   @override
-  void onInit() {
+  void onInit() async {
     if (Platform.isAndroid) {
       // 切换到横屏
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    }
+
+    if (player.platform is NativePlayer) {
+      await (player.platform as dynamic).setProperty('cache', 'yes');
+      await (player.platform as dynamic)
+          .setProperty('demuxer-readahead-secs', '20');
+      await (player.platform as dynamic)
+          .setProperty('demuxer-max-bytes', '30MiB');
     }
     play();
 
