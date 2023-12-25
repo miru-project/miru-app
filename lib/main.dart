@@ -18,6 +18,7 @@ import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:miru_app/utils/anilist.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,7 @@ void main(List<String> args) async {
   await ApplicationUtils.ensureInitialized();
   ExtensionUtils.ensureInitialized();
   MediaKit.ensureInitialized();
+  AniList.initToken();
 
   if (!Platform.isAndroid) {
     await windowManager.ensureInitialized();

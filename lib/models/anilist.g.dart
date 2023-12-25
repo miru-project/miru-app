@@ -100,7 +100,12 @@ Map<String, dynamic> _$EntryToJson(Entry instance) => <String, dynamic>{
     };
 
 Media _$MediaFromJson(Map<String, dynamic> json) => Media(
+      endDate: StartDate.fromJson(json['endDate'] as Map<String, dynamic>),
+      description: json['description'] as String,
+      isAdult: json['isAdult'] as bool,
+      season: json['season'] as String,
       type: json['type'] as String,
+      startDate: StartDate.fromJson(json['startDate'] as Map<String, dynamic>),
       id: json['id'] as String,
       status: json['status'] as String,
       chapters: json['chapters'] as int,
@@ -118,10 +123,27 @@ Map<String, dynamic> _$MediaToJson(Media instance) => <String, dynamic>{
       'chapters': instance.chapters,
       'episodes': instance.episodes,
       'meanScore': instance.meanScore,
+      'season': instance.season,
+      'description': instance.description,
       'isFavourite': instance.isFavourite,
+      'isAdult': instance.isAdult,
       'coverImage': instance.coverImage,
+      'startDate': instance.startDate,
+      'endDate': instance.endDate,
       'title': instance.title,
       'type': instance.type,
+    };
+
+StartDate _$StartDateFromJson(Map<String, dynamic> json) => StartDate(
+      year: json['year'] as int,
+      month: json['month'] as int,
+      day: json['day'] as int,
+    );
+
+Map<String, dynamic> _$StartDateToJson(StartDate instance) => <String, dynamic>{
+      'year': instance.year,
+      'month': instance.month,
+      'day': instance.day,
     };
 
 CoverImage _$CoverImageFromJson(Map<String, dynamic> json) => CoverImage(
@@ -161,11 +183,23 @@ Map<String, dynamic> _$PageResponseToJson(PageResponse instance) =>
 SaveMediaListEntry _$SaveMediaListEntryFromJson(Map<String, dynamic> json) =>
     SaveMediaListEntry(
       score: json['score'] as int,
-      id: json['id'] as int,
+      id: json['id'] as String,
     );
 
 Map<String, dynamic> _$SaveMediaListEntryToJson(SaveMediaListEntry instance) =>
     <String, dynamic>{
       'score': instance.score,
       'id': instance.id,
+    };
+
+DeleteMediaListEntry _$DeleteMediaListEntryFromJson(
+        Map<String, dynamic> json) =>
+    DeleteMediaListEntry(
+      deleted: json['deleted'] as bool,
+    );
+
+Map<String, dynamic> _$DeleteMediaListEntryToJson(
+        DeleteMediaListEntry instance) =>
+    <String, dynamic>{
+      'deleted': instance.deleted,
     };

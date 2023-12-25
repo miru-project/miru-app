@@ -7,7 +7,7 @@ class SyncPageController extends GetxController {
   final anilistOauthUrl = "".obs;
   updateAniListToken(String accessToken) {
     MiruStorage.setSetting(SettingKey.aniListToken, accessToken);
-    AniList.initToken(accessToken);
+    AniList.initToken();
     anilistIsLogin.value = true;
   }
 
@@ -16,7 +16,7 @@ class SyncPageController extends GetxController {
     final token = MiruStorage.getSetting(SettingKey.aniListToken);
     if (token != "") {
       anilistIsLogin.value = true;
-      AniList.initToken(token);
+      AniList.initToken();
       print("user regeistered");
     }
 

@@ -248,6 +248,7 @@ class DatabaseService {
     String url,
     ExtensionDetail extensionDetail, {
     int? tmdbID,
+    String? listID,
   }) {
     return db.writeTxn(
       () => db.miruDetails.putByIndex(
@@ -256,7 +257,8 @@ class DatabaseService {
           ..data = jsonEncode(extensionDetail.toJson())
           ..package = package
           ..tmdbID = tmdbID
-          ..url = url,
+          ..url = url
+          ..aniListID = listID,
       ),
     );
   }

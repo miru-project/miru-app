@@ -29,7 +29,7 @@ class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
           ),
           onLoadStart: (controller, url) async {
             if (url != null && url.path != "/login") {
-              debugPrint("${url.host}");
+              debugPrint(url.host);
               AniList.saveAuthToken(url.toString());
               Get.back();
             }

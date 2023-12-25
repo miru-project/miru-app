@@ -72,7 +72,7 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
               title: "Error".i18n,
             );
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         });
   }

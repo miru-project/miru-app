@@ -10,7 +10,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
-import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 
 class SyncPage extends StatefulWidget {
@@ -65,7 +64,7 @@ class _SyncPageState extends State<SyncPage> {
               )
             ],
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           )
         ],
@@ -124,7 +123,7 @@ class _SyncPageState extends State<SyncPage> {
                                 title: "Error".i18n,
                               );
                             } else {
-                              return CircularProgressIndicator();
+                              return const CircularProgressIndicator();
                             }
                           }),
                       const AnilistHorizontalList(
@@ -134,32 +133,21 @@ class _SyncPageState extends State<SyncPage> {
                       )
                     ]),
                   const SizedBox(height: 8),
-                  FilledButton(
-                    onPressed: () async {
-                      AniList.authenticate();
-                      // Get.to(() => AnilistWebViewPage(url: anilsitUrl));
-                    },
-                    child: Text("Login".i18n),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        // AniList.query();
-                        // AniList.getuserData();
-                        // AniList.mediaQuerypage(
-                        //     searchString: "konosuba", type: "ANIME", page: 1);
-                        AniList.editList(
-                            mediaId: 21202,
-                            status: "PLANNING",
-                            score: 80,
-                            progress: 1,
-                            startyear: 2023,
-                            startmonth: 10,
-                            startday: 1,
-                            endmonth: 2023,
-                            endyear: 11,
-                            endday: 2);
-                      },
-                      child: const Text("testing button")),
+                  // FilledButton(
+                  //   onPressed: () async {
+                  //     AniList.authenticate();
+                  //     // Get.to(() => AnilistWebViewPage(url: anilsitUrl));
+                  //   },
+                  //   child: Text("Login".i18n),
+                  // ),
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       // AniList.query();
+                  //       // AniList.getuserData();
+                  //       AniList.mediaQuerypage(
+                  //           searchString: "konosuba", type: "ANIME", page: 1);
+                  //     },
+                  //     child: const Text("testing button")),
                 ])),
           )),
       floatingActionButton: FloatingActionButton.extended(
@@ -168,7 +156,7 @@ class _SyncPageState extends State<SyncPage> {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog();
+                  return const AlertDialog();
                 });
           },
           icon: SvgPicture.asset(
@@ -250,7 +238,7 @@ class _SyncPageState extends State<SyncPage> {
                                 title: "Error".i18n,
                               );
                             } else {
-                              return CircularProgressIndicator();
+                              return const CircularProgressIndicator();
                             }
                           }),
                       const AnilistHorizontalList(
@@ -264,21 +252,10 @@ class _SyncPageState extends State<SyncPage> {
                       onPressed: () {
                         // AniList.query();
                         // AniList.getuserData();
-                        // AniList.mediaQuerypage(
-                        //     searchString: "konosuba", type: "ANIME", page: 1);
-                        AniList.editList(
-                            mediaId: 21202,
-                            status: "PLANNING",
-                            score: 80,
-                            progress: 1,
-                            startyear: 2023,
-                            startmonth: 10,
-                            startday: 1,
-                            endmonth: 2023,
-                            endyear: 11,
-                            endday: 2);
+                        AniList.mediaQuerypage(
+                            searchString: "konosuba", type: "ANIME", page: 1);
                       },
-                      child: const Text("testing button")),
+                      child: const Text("testing buttons")),
                 ])),
           )),
       floatingActionButton: FloatingActionButton.extended(
@@ -287,7 +264,7 @@ class _SyncPageState extends State<SyncPage> {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog();
+                  return const AlertDialog();
                 });
           },
           icon: SvgPicture.asset(

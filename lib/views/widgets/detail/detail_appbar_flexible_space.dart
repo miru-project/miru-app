@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/detail_controller.dart';
+import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/views/widgets/detail/detail_continue_play.dart';
 import 'package:miru_app/views/widgets/detail/detail_extension_tile.dart';
 import 'package:miru_app/views/widgets/detail/detail_favorite_button.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/cover.dart';
+import 'package:miru_app/views/widgets/detail/detail_tracker_button.dart';
+import 'package:miru_app/utils/anilist.dart';
 
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
@@ -24,7 +27,10 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
   late DetailPageController c = Get.find(tag: widget.tag);
 
   double _offset = 1;
-
+  static const anlistExtensionMap = <ExtensionType, String>{
+    ExtensionType.bangumi: "ANIME",
+    ExtensionType.manga: "MANGA",
+  };
   @override
   void initState() {
     c.scrollController.addListener(() {
@@ -148,6 +154,16 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                       tag: widget.tag,
                     ),
                   ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  if (AniList.anilistToken != "")
+                    Expanded(
+                      flex: 3,
+                      child: DetailTrackButton(
+                          tag: widget.tag,
+                          anilistType: anlistExtensionMap[c.type] ?? "ANIME"),
+                    ),
                   const SizedBox(
                     width: 10,
                   ),

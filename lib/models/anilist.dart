@@ -118,13 +118,23 @@ class Media {
   final int chapters;
   final int episodes;
   final double meanScore;
+  final String season;
+  final String description;
   final bool isFavourite;
+  final bool isAdult;
   final CoverImage coverImage;
+  final StartDate startDate;
+  final StartDate endDate;
   final Title title;
   final String type;
 
   Media({
+    required this.endDate,
+    required this.description,
+    required this.isAdult,
+    required this.season,
     required this.type,
+    required this.startDate,
     required this.id,
     required this.status,
     required this.chapters,
@@ -141,6 +151,19 @@ class Media {
 }
 
 @JsonSerializable()
+class StartDate {
+  final int year;
+  final int month;
+  final int day;
+
+  StartDate({required this.year, required this.month, required this.day});
+
+  factory StartDate.fromJson(Map<String, dynamic> json) =>
+      _$StartDateFromJson(json);
+  Map<String, dynamic> toJson() => _$StartDateToJson(this);
+}
+
+@JsonSerializable()
 class CoverImage {
   final String large;
 
@@ -153,19 +176,6 @@ class CoverImage {
 
   Map<String, dynamic> toJson() => _$CoverImageToJson(this);
 }
-
-// @JsonSerializable()
-// class Title {
-//   final String userPreferred;
-
-//   Title({
-//     required this.userPreferred,
-//   });
-
-//   factory Title.fromJson(Map<String, dynamic> json) => _$TitleFromJson(json);
-
-//   Map<String, dynamic> toJson() => _$TitleToJson(this);
-// }
 
 @JsonSerializable()
 class Title {
@@ -184,19 +194,6 @@ class Title {
   Map<String, dynamic> toJson() => _$TitleToJson(this);
 }
 
-// @JsonSerializable()
-// class Media {
-//   final String id;
-//   final String type;
-//   final CoverImage coverImage;
-//   final Title title;
-
-//   Media({required this.id, required this.type, required this.coverImage, required this.title});
-
-//   factory Media.fromJson(Map<String, dynamic> json) => _$MediaFromJson(json);
-//   Map<String, dynamic> toJson() => _$MediaToJson(this);
-// }
-
 @JsonSerializable()
 class PageResponse {
   final List<Media> media;
@@ -211,7 +208,7 @@ class PageResponse {
 @JsonSerializable()
 class SaveMediaListEntry {
   final int score;
-  final int id;
+  final String id;
 
   SaveMediaListEntry({required this.score, required this.id});
 
@@ -219,4 +216,15 @@ class SaveMediaListEntry {
       _$SaveMediaListEntryFromJson(json);
 
   Map<String, dynamic> toJson() => _$SaveMediaListEntryToJson(this);
+}
+
+@JsonSerializable()
+class DeleteMediaListEntry {
+  final bool deleted;
+
+  DeleteMediaListEntry({required this.deleted});
+
+  factory DeleteMediaListEntry.fromJson(Map<String, dynamic> json) =>
+      _$DeleteMediaListEntryFromJson(json);
+  Map<String, dynamic> toJson() => _$DeleteMediaListEntryToJson(this);
 }

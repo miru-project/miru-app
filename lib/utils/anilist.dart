@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/sync_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:miru_app/models/anilist.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
 class AniList {
@@ -16,32 +17,19 @@ class AniList {
     'Accept': 'application/json',
   };
 
-  static const String aniListId = "15748";
   static const String apiUrl = 'https://graphql.anilist.co';
-  static const String graphiQuery = """
-  query (\$id: Int) { # Define which variables will be used in the query (id)
-    Media (id: \$id, type: ANIME) {
-      title {
-        romaji
-        english
-        native
-      }
-    }
-  }
-""";
 
   static const String userDataQuery =
       """{Viewer {name  id avatar{medium} statistics{anime{episodesWatched}manga{chaptersRead}}}}""";
-  static initToken(String token) {
+  static initToken() {
+    final token = MiruStorage.getSetting(SettingKey.aniListToken);
     anilistToken = token;
     userid = MiruStorage.getSetting(SettingKey.aniListUserId);
   }
 
   static Future<void> authenticate() async {
     // Windows needs some callback URL on localhost
-    final callbackUrlScheme = (Platform.isWindows || Platform.isLinux)
-        ? 'http://localhost:43824'
-        : 'miruapp';
+    const callbackUrlScheme = 'miruapp';
     final clientId = Platform.isAndroid ? '15748' : '15782';
     try {
       final result = await FlutterWebAuth2.authenticate(
@@ -52,17 +40,15 @@ class AniList {
       // print("result: $result");
       saveAuthToken(result);
     } on PlatformException catch (e) {
-      print("${e.message}");
+      debugPrint("${e.message}");
     }
   }
 
   static void saveAuthToken(String result) {
     RegExp tokenRegex = RegExp(r'(?<=access_token=).+(?=&token_type)');
     Match? re = tokenRegex.firstMatch(result);
-    print("$re");
     if (re != null) {
       String token = re.group(0)!;
-      print(token);
       anilistToken = token;
       final c = Get.put(SyncPageController());
       c.updateAniListToken(token);
@@ -82,7 +68,7 @@ class AniList {
       return response.data;
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response);
+        debugPrint("${e.response}");
       }
     }
   }
@@ -90,7 +76,6 @@ class AniList {
   static Future<Map<String, String>> getuserData() async {
     final response = await postRequest(queryString: userDataQuery);
     final userId = response["data"]["Viewer"]["id"].toString();
-    print(userId);
     MiruStorage.setSetting(SettingKey.aniListUserId, userId);
     userid = userId;
     return {
@@ -121,12 +106,6 @@ class AniList {
     return collectionData;
   }
 
-  static query() async {
-    final res =
-        await postRequest(varibale: {"id": 15125}, queryString: graphiQuery);
-    print("$res");
-  }
-
   //use their name to query anime or manga id
   //save anilist: use mediaQueryPage to get id then go to editlist
   static Future<List<dynamic>> mediaQuerypage(
@@ -135,6 +114,21 @@ class AniList {
     media(search:"$searchString",type:$type){
         id
         type
+        seasonYear
+        isAdult
+        description
+        status
+        season
+        startDate{
+            year
+            month
+            day
+        }
+        endDate{
+            year
+            month
+            day
+        }
         coverImage{
             large
         }
@@ -149,41 +143,68 @@ class AniList {
 """;
     final res = await postRequest(queryString: nameQuery);
     final data = res["data"]["Page"]["media"];
-    print("$data");
     return res["data"]["Page"]["media"];
   }
 
-  static editList(
-      {int? mediaId,
-      int? id,
-      required String status,
-      required int score,
-      required int progress,
-      required int startyear,
-      required int startmonth,
-      required int startday,
-      required int endmonth,
-      required int endyear,
-      bool? isPrivate,
-      required int endday}) async {
+  static Future<String> editList({
+    String? mediaId,
+    String? id,
+    required String status,
+    String? progress,
+    String? score,
+    DateTime? startDate,
+    DateTime? endDate,
+    bool? isPrivate,
+  }) async {
     late String query;
-    if (id == null) {
-      query = """mutation{
-    SaveMediaListEntry(mediaId:$mediaId,status:$status,startedAt:{year:$startyear,month:$startmonth,day:$startday},score:$score,progress:$progress,private:${isPrivate ?? false},completedAt:{year:$endyear,month:$endmonth,day:$endday}){
-        score
+    query = """mutation{
+    SaveMediaListEntry(status:$status,private:${isPrivate ?? false},queryId,startedAt,score,progress,completedAt){
         id
     }
 }""";
-      debugPrint(query);
-    } else {
-      query = """mutation{
-    SaveMediaListEntry(id:$id,status:$status,startedAt:{year:$startyear,month:$startmonth,day:$startday},score:$score,progress:$progress,private:${isPrivate ?? false},completedAt:{year:$endyear,month:$endmonth,day:$endday}){
-        score
-        id
+//     if (id == null) {
+
+//     } else {
+//       query = """mutation{
+//     SaveMediaListEntry(id:$id,status:$status,private:${isPrivate ?? false},startedAt,score,progress,completedAt){
+//         id
+//     }
+// }""";
+//     }
+    final queryString = query
+        .replaceFirst(
+            "startedAt,",
+            (startDate == null)
+                ? ""
+                : "startedAt:{year:${startDate.year},month:${startDate.month},day:${startDate.day}},")
+        .replaceFirst("score,", (score == null) ? "" : "score:$score,")
+        .replaceFirst(
+            "progress,", (progress == null) ? "" : "progress:$progress,")
+        .replaceFirst(
+            "completedAt",
+            (endDate == null)
+                ? ""
+                : "completedAt:{year:${endDate.year},month:${endDate.month},day:${endDate.day}}")
+        .replaceFirst("queryId,", id == "" ? "mediaId:$mediaId," : "id:$id,");
+    debugPrint("$queryString");
+    final res = await postRequest(queryString: queryString);
+    // debugPrint("${res["data"]["SaveMediaListEntry"]["id"]}");
+    return res["data"]["SaveMediaListEntry"]["id"].toString();
+  }
+
+  static Future<bool> deleteList({required String id}) async {
+    final String deleteMutation = """
+mutation{
+    DeleteMediaListEntry(id:$id){
+        deleted
     }
-}""";
-    }
-    final res = await postRequest(queryString: query);
+
+}
+""";
+
+    debugPrint("$deleteMutation");
+    final res = await postRequest(queryString: deleteMutation);
     debugPrint("$res");
+    return res["data"]["DeleteMediaListEntry"]["deleted"];
   }
 }

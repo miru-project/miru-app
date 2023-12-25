@@ -43,6 +43,8 @@ class DetailPageController extends GetxController {
   final RxString error = ''.obs;
   final RxBool isLoading = true.obs;
   final RxInt selectEpGroup = 0.obs;
+  final RxString aniListID = ''.obs;
+  final RxBool hasmediaListId = false.obs;
   final Rx<TMDBDetail?> tmdb = Rx(null);
   final Rx<ExtensionService?> runtime = Rx(null);
   ExtensionType get type =>
@@ -68,6 +70,7 @@ class DetailPageController extends GetxController {
   MiruDetail? _miruDetail;
 
   int _tmdbID = -1;
+  String _aniListIDs = "";
 
   final _flyoutController = fluent.FlyoutController();
 
@@ -136,10 +139,13 @@ class DetailPageController extends GetxController {
     try {
       _miruDetail = await DatabaseService.getMiruDetail(package, url);
       _tmdbID = _miruDetail?.tmdbID ?? -1;
+      _aniListIDs = _miruDetail?.aniListID ?? "";
+      hasmediaListId.value = _aniListIDs.isNotEmpty;
       await getDetail();
       await getTMDBDetail();
       await getHistory();
       isLoading.value = false;
+      aniListID.value = _aniListIDs;
     } catch (e) {
       error.value = e.toString();
       rethrow;
@@ -194,7 +200,7 @@ class DetailPageController extends GetxController {
     try {
       detail = await runtime.value!.detail(url);
       await DatabaseService.putMiruDetail(package, url, detail!,
-          tmdbID: _tmdbID);
+          tmdbID: _tmdbID, listID: _aniListIDs);
     } catch (e) {
       // 弹出错误信息
       if (runtime.value == null) {
@@ -258,6 +264,15 @@ class DetailPageController extends GetxController {
       url,
       detail!,
       tmdbID: _tmdbID,
+    );
+  }
+
+  getAniListIds(String aniListId) async {
+    await DatabaseService.putMiruDetail(
+      package,
+      url,
+      detail!,
+      listID: aniListId,
     );
   }
 

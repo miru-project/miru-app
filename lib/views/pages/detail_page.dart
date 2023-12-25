@@ -523,12 +523,10 @@ class _DetailPageState extends State<DetailPage> {
                                 'tmdb.runtime'.i18n,
                                 c.tmdbDetail!.runtime.toString(),
                               ),
-                            ]
-                                .map((e) => SizedBox(
-                                      width: 200,
-                                      child: e,
-                                    ))
-                                ,
+                            ].map((e) => SizedBox(
+                                  width: 200,
+                                  child: e,
+                                )),
                           ]),
                         );
                       },

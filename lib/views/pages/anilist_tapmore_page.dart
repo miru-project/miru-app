@@ -88,8 +88,8 @@ class _AnilistMorePageState extends fluent.State<AnilistMorePage> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+    return const Padding(
+      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -102,10 +102,10 @@ class _AnilistMorePageState extends fluent.State<AnilistMorePage> {
               //   //   style: fluent.FluentTheme.of(context).typography.subtitle,
               //   // ),
               // ),
-              const Spacer(),
+              Spacer(),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           // Expanded(
           //   child: FutureBuilder(
           //     future: DatabaseService.getFavoritesByType(type: widget.type),
