@@ -47,7 +47,7 @@ Miru App
 
 ### Ўстаноўка Flutter
 
-参考 [Flutter Official Documentation](https://flutter.dev/docs/get-started/install)
+Калі ласка, звярніцеся да [Flutter Official Documentation](https://flutter.dev/docs/get-started/install)
 
 ### Ўстаноўка залежнасцяў
 
