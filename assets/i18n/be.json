@@ -122,7 +122,20 @@
     "subtitle": "Субтытры",
     "subtitle-change": "Рэдагаваць субтытры {title}",
     "subtitle-file": "Файл субтытраў",
-    "torrent-downloading": "Торэнт запампоўка"
+    "torrent-downloading": "Торэнт-запампоўка",
+    "tooltip": {
+      "close": "Закрыць",
+      "subtitle": "Субтытры",
+      "play-list": "Спіс прайгравання",
+      "quality": "Якасць",
+      "speed": "Хуткасць",
+      "play": "Прайграваць",
+      "play-or-pause": "Паўза",
+      "previous": "Папярэдні",
+      "next": "Наступны",
+      "full-screen": "Поўнаэкранны рэжым",
+      "volume": "Гучнасць",
+      "torrent-file-list": "Спіс торэнт-файлаў"
   },
 
   "comic-settings": {
