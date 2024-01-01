@@ -47,7 +47,7 @@ Miru App
 
 ### Встановлення Flutter
 
-参考 [Flutter Official Documentation](https://flutter.dev/docs/get-started/install)
+Будь ласка, зверніться до [Flutter Official Documentation](https://flutter.dev/docs/get-started/install)
 
 ### Встановлення залежностей
 

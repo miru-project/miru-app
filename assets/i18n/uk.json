@@ -122,7 +122,20 @@
     "subtitle": "Субтитри",
     "subtitle-change": "Редагувати субтитри {title}",
     "subtitle-file": "Файл субтитрів",
-    "torrent-downloading": "Торрент скачування"
+    "torrent-downloading": "Торрент-скачування",
+    "tooltip": {
+      "close": "Закрити",
+      "subtitle": "Субтитри",
+      "play-list": "Список відтворення",
+      "quality": "Якасць",
+      "speed": "Швидкість",
+      "play": "Відтворювати",
+      "play-or-pause": "Пауза",
+      "previous": "Попередній",
+      "next": "Наступний",
+      "full-screen": "Повноекранний режим",
+      "volume": "Гучність",
+      "torrent-file-list": "Список торрент-файлів"
   },
 
   "comic-settings": {
