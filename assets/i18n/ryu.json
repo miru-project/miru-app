@@ -25,20 +25,17 @@
     "delete": "さちゅるじょ",
     "delete-all": "まじりさちゅるじょ"
   },
-
   "home": {
     "continue-watching": "ちづきーん",
     "favorite": "うきーがいー",
     "no-record": "うきーにいりてぃがろーいちらんきるこーあいびらん",
     "watched": "しちょうじみ {ep}"
   },
-
   "search": {
     "hint-text": "きんさくちかてぃくぃみそーれー～！",
     "all": "まじり",
     "filter": "フィルター"
   },
-
   "extension": {
     "import": {
       "title": "かくはべるちぬーインポート",
@@ -51,14 +48,12 @@
     "installed": "インストールじみ",
     "edit-code": "コードへんしゅう"
   },
-
   "extension-repo": {
     "error": "エラーぬはっせいさびたん！",
     "error-tips": "ネットワークしちずいちゅんかくにんすがリポジトリぬアドレスかくにんしみそーれー",
     "empty": "リポジトリぬからやいびーん",
     "upgrade": "こうしん"
   },
-
   "settings": {
     "repo-url": "かくはべるちぬーリポジトリぬURL",
     "repo-url-subtitle": "かくはべるちぬーリポジトリぬURLしーゅとぅくしーん",
@@ -78,6 +73,7 @@
     "theme-system": "システム",
     "theme-light": "ライト",
     "theme-dark": "ダーク",
+    "theme-black": "ブラック",
     "nsfw": "NSFW",
     "nsfw-subtitle": "NSFWコンテンツひょうじさびーん",
     "external-player": "ゆうさんしーんビデオプレーヤー",
@@ -86,6 +82,9 @@
     "language-subtitle": "ソフトウェアぬぎんぐへいるかんさびーん",
     "extension-log": "かくはべるちぬーログウィンドウ",
     "extension-log-subtitle": "かくはべるちぬーぬデバッグなしようさびーん",
+    "skip-interval": "スキップかんかく",
+    "skip-interval-subtitle": "ねーんぞうビデオプレーヤーぬスキップかんかく",
+    "default-reader-mode": "デフォルトぬリーダーモード",
     "about": "しょうさい",
     "official-site": "こうしきウェブサイト",
     "official-site-training": "ほうむんすん",
@@ -94,9 +93,7 @@
     "license": "ライセンス",
     "license-subtitle": "ライセンス"
   },
-
   "external-player-launching": "{player}きどう",
-
   "detail": {
     "favorite": "うきーがいー",
     "favorited": "うきーがいー",
@@ -110,7 +107,6 @@
     "no-tmdb-data": "TMDBデーターいっちさびらん。じぶんっしデータバインドしみそーれー",
     "tmdb-key-missing": "TMDB APIキーぬあいびらん、しっていからんかいゅうりょくしみそーれー"
   },
-
   "video": {
     "episodes": "エピソード",
     "watch-now": "なまちゃーきしちょうすん",
@@ -122,25 +118,35 @@
     "subtitle-change": "じまちゅんへいるかん {title}",
     "subtitle-file": "じまちゅるファイル",
     "torrent-downloading": "Torrentっしダウンロード"
+    "tooltip": {
+      "close": "くーいん",
+      "subtitle": "じまちゅん",
+      "play-list": "プレイリスト",
+      "quality": "がしーち",
+      "speed": "すくどぅ",
+      "play": "さいせい",
+      "play-or-pause": "いちじていし",
+      "previous": "まい",
+      "next": "ちぎ",
+      "full-screen": "フルスクリーン",
+      "volume": "うんりょう",
+      "torrent-file-list": "Torrentファイルリスト"   
+    }
   },
-
   "comic-settings": {
     "read-mode": "どぅくさモード",
     "standard": "ひょうじゅん",
     "right-to-left": "みぎからふぃだり",
     "web-tonn": "ウェブトゥーン"
   },
-
   "novel-settings": {
     "font-size": "フォントぬサイズ"
   },
-
   "reader": {
     "chapters": "チャプター",
     "read-now": "なまちゃーきゆむん",
     "no-chapters": "チャプターぬあいびらん"
   },
-
   "upgrade": {
     "check-update": "こうしんかくにん",
     "new-version": "みーさるバージョン {version} がみちかやびたん",
@@ -149,15 +155,12 @@
     "not-now": "なまーさん",
     "error": "こうしんぬかくにんんかいしっぺーさびたん。ネットワークエラーぬはっせいさびたん"
   },
-
   "extension-install-error": "かくはべるちぬーぬインストールんかいしっぺーさびたん",
-
   "extension-type": {
     "video": "ビデオ",
     "novel": "しょうしち",
     "comic": "まんが"
   },
-
   "extension-info": {
     "author": "さくしゃ",
     "description": "しちめい",
@@ -168,14 +171,12 @@
     "license": "ライセンス",
     "title": "かくはべるちぬーぬじょうほう"
   },
-
   "cookie-clean": {
     "title": "クッキークリーン",
     "subtitle": "クリーンアップぐにさいログインぬふぃちようないーあいぬあいびーん",
     "success": "クリーンんかいせいこうさびたん",
     "clean": "クリーン"
   },
-
   "tmdb": {
     "backdrops": "はいけい",
     "status": "ステータス",
@@ -185,12 +186,14 @@
     "runtime": "じっこうじがん",
     "languages": "ぎんぐ"
   },
-
   "bt-server": {
     "not-installed": "BTサーバーぬインストールさりやびらん",
     "running": "BTサーバーやんじゅちょーいびーん",
     "stopped": "BTサーバーやていしそーいびーん",
     "version": "バージョン {version}",
+    "remote-version": "リモートバージョン {version}",
+    "stop": "ていし",
+    "upgrade": "アップグレード",
     "start": "かいし"
   }
 }
