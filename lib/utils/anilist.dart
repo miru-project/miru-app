@@ -5,13 +5,11 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/sync_page_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:miru_app/models/anilist.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
 class AniList {
   static late String anilistToken;
   static late String userid;
-  // static late final authheaders;
   static const headers = <String, String>{
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -142,7 +140,6 @@ class AniList {
 }}
 """;
     final res = await postRequest(queryString: nameQuery);
-    final data = res["data"]["Page"]["media"];
     return res["data"]["Page"]["media"];
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/detail_controller.dart';
-import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/views/widgets/detail/detail_continue_play.dart';
 import 'package:miru_app/views/widgets/detail/detail_extension_tile.dart';
 import 'package:miru_app/views/widgets/detail/detail_favorite_button.dart';
@@ -27,10 +26,11 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
   late DetailPageController c = Get.find(tag: widget.tag);
 
   double _offset = 1;
-  static const anlistExtensionMap = <ExtensionType, String>{
-    ExtensionType.bangumi: "ANIME",
-    ExtensionType.manga: "MANGA",
-  };
+  // static const anlistExtensionMap = <ExtensionType, String>{
+  //   ExtensionType.bangumi: "ANIME",
+  //   ExtensionType.manga: "MANGA",
+  // };
+
   @override
   void initState() {
     c.scrollController.addListener(() {
@@ -160,9 +160,9 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                   if (AniList.anilistToken != "")
                     Expanded(
                       flex: 3,
-                      child: DetailTrackButton(
+                      child: DetailTrackButtonAndroid(
                           tag: widget.tag,
-                          anilistType: anlistExtensionMap[c.type] ?? "ANIME"),
+                          anilistType: c.anlistExtensionMap[c.type] ?? "ANIME"),
                     ),
                   const SizedBox(
                     width: 10,

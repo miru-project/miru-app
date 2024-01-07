@@ -67,6 +67,10 @@ class DetailPageController extends GetxController {
     return bg;
   }
 
+  final anlistExtensionMap = <ExtensionType, String>{
+    ExtensionType.bangumi: "ANIME",
+    ExtensionType.manga: "MANGA",
+  };
   MiruDetail? _miruDetail;
 
   int _tmdbID = -1;

@@ -5,15 +5,17 @@ import 'package:get/get.dart';
 import 'package:miru_app/utils/anilist.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 
-class DetailTrackButton extends StatefulWidget {
-  const DetailTrackButton({super.key, this.tag, required this.anilistType});
+class DetailTrackButtonAndroid extends StatefulWidget {
+  const DetailTrackButtonAndroid(
+      {super.key, this.tag, required this.anilistType});
   final String? tag;
   final String anilistType;
   @override
-  State<DetailTrackButton> createState() => _DetailTrackButtonState();
+  State<DetailTrackButtonAndroid> createState() =>
+      _DetailTrackButtonAndroidState();
 }
 
-class _DetailTrackButtonState extends State<DetailTrackButton> {
+class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
   bool isFavorite = false;
   String status = "CURRENT";
   RxString startDateText = "Start Date".obs;
@@ -98,8 +100,8 @@ class _DetailTrackButtonState extends State<DetailTrackButton> {
                           return ListView.builder(
                               itemCount: data.length,
                               itemBuilder: (context, index) {
-                                final String description =
-                                    data[index]["description"] ?? "";
+                                // final String description =
+                                //     data[index]["description"] ?? "";
                                 return Card(
                                     clipBehavior: Clip.hardEdge,
                                     child: InkWell(

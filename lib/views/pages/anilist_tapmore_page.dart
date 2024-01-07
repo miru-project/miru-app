@@ -8,17 +8,17 @@ import 'package:get/get.dart';
 import 'package:miru_app/controllers/search_controller.dart';
 import 'package:miru_app/views/widgets/grid_item_tile.dart';
 
-class AnilistMorePage extends fluent.StatefulWidget {
+class AnilistMorePage extends StatefulWidget {
   const AnilistMorePage(
       {super.key, required this.anilistType, required this.data});
   final AnilistType anilistType;
   final Map<String, dynamic> data;
 
   @override
-  fluent.State<AnilistMorePage> createState() => _AnilistMorePageState();
+  State<AnilistMorePage> createState() => _AnilistMorePageState();
 }
 
-class _AnilistMorePageState extends fluent.State<AnilistMorePage> {
+class _AnilistMorePageState extends State<AnilistMorePage> {
   Widget _buildAndroid(BuildContext context) {
     final List<Tab> tabs = [
       if (widget.anilistType == AnilistType.manga)
@@ -88,78 +88,78 @@ class _AnilistMorePageState extends fluent.State<AnilistMorePage> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              // Expanded(
-              //   flex: 2,
-              //   // child: Text(
-              //   //   "${ExtensionUtils.typeToString(widget.type)}${"home.favorite".i18n}",
-              //   //   style: fluent.FluentTheme.of(context).typography.subtitle,
-              //   // ),
-              // ),
-              Spacer(),
-            ],
-          ),
-          SizedBox(height: 16),
-          // Expanded(
-          //   child: FutureBuilder(
-          //     future: DatabaseService.getFavoritesByType(type: widget.type),
-          //     builder: ((context, snapshot) {
-          //       if (snapshot.hasError) {
-          //         return Center(
-          //           child: Text(
-          //             snapshot.error.toString(),
-          //           ),
-          //         );
-          //       }
+    final data = widget.data;
+    final index = 0.obs;
 
-          //       if (!snapshot.hasData) {
-          //         return const Center(
-          //           child: CircularProgressIndicator(),
-          //         );
-          //       }
-
-          //       final data = snapshot.data;
-
-          //       if (data == null) {
-          //         return const Center(
-          //           child: Text('No data'),
-          //         );
-          //       }
-
-          //       return LayoutBuilder(
-          //         builder: ((context, constraints) => GridView.builder(
-          //               padding:
-          //                   const EdgeInsets.only(right: 8, bottom: 8, top: 8),
-          //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //                 crossAxisCount: constraints.maxWidth ~/ 160,
-          //                 childAspectRatio: 0.6,
-          //                 crossAxisSpacing: 16,
-          //                 mainAxisSpacing: 16,
-          //               ),
-          //               itemCount: data.length,
-          //               itemBuilder: (context, index) {
-          //                 final item = data[index];
-          //                 return ExtensionItemCard(
-          //                   title: item.title,
-          //                   url: item.url,
-          //                   package: item.package,
-          //                   cover: item.cover,
-          //                 );
-          //               },
-          //             )),
-          //       );
-          //     }),
-          //   ),
-          // )
-        ],
-      ),
+    return Obx(
+      () => (fluent.TabView(
+          closeButtonVisibility: fluent.CloseButtonVisibilityMode.never,
+          currentIndex: index.value,
+          showScrollButtons: true,
+          tabWidthBehavior: fluent.TabWidthBehavior.equal,
+          onChanged: (ind) {
+            index.value = ind;
+          },
+          tabs: [
+            // if (widget.anilistType == AnilistType.manga)
+            // fluent.Tab(text: fluent.Text("Reading"), body: Container())
+            //   _desktopTab(context, data, "Reading")
+            // else
+            _desktopTab(context, data, "Watching"),
+            _desktopTab(context, data, "Completed"),
+            _desktopTab(context, data, "Planning"),
+          ])),
     );
+  }
+
+  fluent.Tab _desktopTab(BuildContext context, data, String status) {
+    if (data[status] == null) {
+      return fluent.Tab(
+          text: fluent.Text(status),
+          body: Center(
+            child: Text("Not found".i18n),
+          ));
+    }
+    return fluent.Tab(
+        text: fluent.Text(status),
+        body: fluent.LayoutBuilder(
+            builder: (context, constraints) => GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: constraints.maxWidth ~/ 160,
+                    childAspectRatio: 0.6,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: (widget.anilistType == AnilistType.anime)
+                      ? data[status].length
+                      : data[status].length,
+                  itemBuilder: (context, index) {
+                    return GridItemTile(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            fluent.FluentPageRoute(
+                                builder: (context) => const SearchPage()));
+                        final c = Get.put(SearchPageController());
+                        c.search.value =
+                            (widget.anilistType == AnilistType.anime)
+                                ? data[status][index]["media"]["title"]
+                                    ["userPreferred"]
+                                : data[status][index]["media"]["title"]
+                                    ["userPreferred"];
+                      },
+                      title: (widget.anilistType == AnilistType.anime)
+                          ? data[status][index]["media"]["title"]
+                              ["userPreferred"]
+                          : data[status][index]["media"]["title"]
+                              ["userPreferred"],
+                      cover: (widget.anilistType == AnilistType.anime)
+                          ? data[status][index]["media"]["coverImage"]["large"]
+                          : data[status][index]["media"]["coverImage"]["large"],
+                    );
+                  },
+                )));
   }
 
   @override

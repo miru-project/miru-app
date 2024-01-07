@@ -17,7 +17,6 @@ class SyncPageController extends GetxController {
     if (token != "") {
       anilistIsLogin.value = true;
       AniList.initToken();
-      print("user regeistered");
     }
 
     super.onInit();
