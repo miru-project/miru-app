@@ -4,6 +4,7 @@ import 'package:miru_app/controllers/detail_controller.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/utils/anilist.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
+import 'package:miru_app/views/widgets/messenger.dart';
 
 class DetailTrackButtonAndroid extends StatefulWidget {
   const DetailTrackButtonAndroid(
@@ -55,7 +56,7 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
   Widget build(BuildContext context) {
     final DetailPageController c =
         Get.find<DetailPageController>(tag: widget.tag);
-    return OutlinedButton.icon(
+    return IconButton(
       onPressed: () {
         if (aniListMediaId == null && c.aniListID.value == "") {
           final extensionDetail = c.data.value;
@@ -176,7 +177,7 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      const Text('Edit Anilist'),
+                      Text("Save to anilist?".i18n),
                       Row(
                           // mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -190,7 +191,6 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                                 hintText: "Status",
                                 initialSelection: "CURRENT",
                                 onSelected: (String? value) {
-                                  print('Selected value: $value');
                                   status = value ?? "CURRENT";
                                 },
                                 dropdownMenuEntries: const [
@@ -234,11 +234,7 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                                           borderRadius:
                                               BorderRadius.circular(10.0)),
                                       labelText: 'Score',
-                                    )
-                                    // inputFormatters: <TextInputFormatter>[
-                                    //   FilteringTextInputFormatter.digitsOnly
-                                    // ], // Only numbers can be entered
-                                    ))
+                                    )))
                           ]),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -306,33 +302,58 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                             ElevatedButton(
                               child: const Text('delete'),
                               onPressed: () async {
-                                final result = await AniList.deleteList(
-                                    id: c.aniListID.value);
+                                try {
+                                  final result = await AniList.deleteList(
+                                      id: c.aniListID.value);
+                                  debugPrint("$result");
+                                  if (!context.mounted) return;
+                                  showPlatformSnackbar(
+                                      context: context,
+                                      content: "delete success");
+                                } catch (e) {
+                                  if (!context.mounted) return;
+                                  showPlatformSnackbar(
+                                      title: "delete failed",
+                                      context: context,
+                                      content: "$e");
+                                }
+
                                 c.aniListID.value = "";
                                 c.getAniListIds("");
                                 aniListMediaId = null;
-                                debugPrint("$result");
-                                // Navigator.pop(context);
+
+                                Navigator.pop(context);
                               },
                             ),
                             FilledButton(
-                              child: const Text('save'),
+                              child: Text('confirm'.i18n),
                               onPressed: () async {
                                 debugPrint(
                                     "$episodes $score $status $startDate $endDate");
                                 debugPrint(aniListMediaId);
                                 debugPrint(c.aniListID.value);
-                                final listid = await AniList.editList(
-                                    status: status,
-                                    score: score,
-                                    startDate: startDate,
-                                    mediaId: aniListMediaId,
-                                    endDate: endDate,
-                                    progress: episodes,
-                                    id: c.aniListID.value);
-                                debugPrint(listid);
-                                c.aniListID.value = listid;
-                                c.getAniListIds(listid);
+                                try {
+                                  final listid = await AniList.editList(
+                                      status: status,
+                                      score: score,
+                                      startDate: startDate,
+                                      mediaId: aniListMediaId,
+                                      endDate: endDate,
+                                      progress: episodes,
+                                      id: c.aniListID.value);
+                                  if (!context.mounted) return;
+                                  debugPrint(listid);
+                                  c.aniListID.value = listid;
+                                  c.getAniListIds(listid);
+                                  showPlatformSnackbar(
+                                      context: context,
+                                      content: "Anilist saved".i18n);
+                                } catch (e) {
+                                  if (!context.mounted) return;
+                                  showPlatformSnackbar(
+                                      context: context, content: e.toString());
+                                }
+                                Navigator.pop(context);
                               },
                             )
                           ]),
@@ -345,11 +366,8 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
         }
       },
       icon: const Icon(Icons.sync_rounded),
-      label: Text("detail.tracker".i18n),
+      // label: Text("detail.tracker".i18n),
       style: ButtonStyle(
-        minimumSize: MaterialStateProperty.all(
-          const Size(double.infinity, 50),
-        ),
         backgroundColor: isFavorite
             ? MaterialStateProperty.all(Theme.of(context).colorScheme.primary)
             : null,

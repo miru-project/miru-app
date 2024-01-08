@@ -6,8 +6,6 @@ import 'package:miru_app/views/widgets/detail/detail_extension_tile.dart';
 import 'package:miru_app/views/widgets/detail/detail_favorite_button.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/cover.dart';
-import 'package:miru_app/views/widgets/detail/detail_tracker_button.dart';
-import 'package:miru_app/utils/anilist.dart';
 
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
@@ -149,26 +147,14 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 4,
                     child: DetailContinuePlay(
                       tag: widget.tag,
                     ),
                   ),
                   const SizedBox(
-                    width: 10,
-                  ),
-                  if (AniList.anilistToken != "")
-                    Expanded(
-                      flex: 3,
-                      child: DetailTrackButtonAndroid(
-                          tag: widget.tag,
-                          anilistType: c.anlistExtensionMap[c.type] ?? "ANIME"),
-                    ),
-                  const SizedBox(
-                    width: 10,
+                    width: 20,
                   ),
                   Expanded(
-                    flex: 3,
                     child: DetailFavoriteButton(
                       tag: widget.tag,
                     ),

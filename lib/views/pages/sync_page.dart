@@ -27,13 +27,7 @@ class _SyncPageState extends State<SyncPage> {
           crossPlatform: InAppWebViewOptions(javaScriptEnabled: true)));
   final SyncPageController c = Get.put(SyncPageController());
   late Future<Map<String, String>> userValue;
-
-  @override
-  void initState() {
-    // userValues.value =  AniList.getuserData();
-    userValue = AniList.getuserData();
-    super.initState();
-  }
+  final isRefreshing = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -68,14 +62,13 @@ class _SyncPageState extends State<SyncPage> {
       ),
       body: RefreshIndicator(
           onRefresh: () async {
-            Future(() {
-              setState(() {});
-            });
+            isRefreshing.value = true;
           },
           child: Center(
             child: Obx(() => ListView(children: [
                   if (!c.anilistIsLogin.value)
-                    SettingsTile(
+                    Card(
+                        child: SettingsTile(
                       title: "Seems you haven't login into AniList yet".i18n,
                       buildSubtitle: () =>
                           "Please login into AniList first".i18n,
@@ -85,35 +78,42 @@ class _SyncPageState extends State<SyncPage> {
                         },
                         child: Text("Login".i18n),
                       ),
-                    )
+                    ))
                   else
                     Column(children: [
                       FutureBuilder(
-                          future: userValue,
+                          future: AniList.getuserData(),
                           builder: (context, snapshot) {
                             final data = snapshot.data;
                             if (snapshot.hasData) {
                               return Column(children: [
-                                ListTile(
-                                  leading: ClipOval(
-                                      child: CacheNetWorkImagePic(
-                                    data!["UserAvatar"]!,
-                                    fit: BoxFit.fitHeight,
-                                    width: 64,
-                                    height: 64,
-                                  )),
-                                  title: Text(data['User']!),
-                                ),
-                                SettingsTile(
-                                  title: "Manga Watched".i18n,
-                                  buildSubtitle: () =>
-                                      "${"Total".i18n} : ${data['MangaChapterRead']}",
-                                ),
-                                SettingsTile(
-                                  title: "Amime Episodes Watched".i18n,
-                                  buildSubtitle: () =>
-                                      "${"Total".i18n} : ${data['AnimeEpWatched']}",
-                                )
+                                Card(
+                                    child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 10, 0, 10),
+                                        child: ListTile(
+                                          leading: ClipOval(
+                                              child: CacheNetWorkImagePic(
+                                            data!["UserAvatar"]!,
+                                            fit: BoxFit.fitHeight,
+                                            width: 64,
+                                            height: 64,
+                                          )),
+                                          title: Text(data['User']!),
+                                        ))),
+                                Card(
+                                    child: Column(children: [
+                                  SettingsTile(
+                                    title: "Manga Watched".i18n,
+                                    buildSubtitle: () =>
+                                        "${"Total".i18n} : ${data['MangaChapterRead']}",
+                                  ),
+                                  SettingsTile(
+                                    title: "Amime Episodes Watched".i18n,
+                                    buildSubtitle: () =>
+                                        "${"Total".i18n} : ${data['AnimeEpWatched']}",
+                                  )
+                                ]))
                               ]);
                             } else if ((snapshot.hasError)) {
                               return SettingsTile(
@@ -123,44 +123,36 @@ class _SyncPageState extends State<SyncPage> {
                               return const CircularProgressIndicator();
                             }
                           }),
-                      const AnilistHorizontalList(
-                          anilistType: AnilistType.anime),
-                      const AnilistHorizontalList(
-                        anilistType: AnilistType.manga,
-                      )
+                      const Card(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: AnilistHorizontalList(
+                                anilistType: AnilistType.anime,
+                              ))),
+                      const Card(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: AnilistHorizontalList(
+                                anilistType: AnilistType.manga,
+                              )))
                     ]),
                   const SizedBox(height: 8),
-                  // FilledButton(
-                  //   onPressed: () async {
-                  //     AniList.authenticate();
-                  //     // Get.to(() => AnilistWebViewPage(url: anilsitUrl));
-                  //   },
-                  //   child: Text("Login".i18n),
-                  // ),
-                  // ElevatedButton(
-                  //     onPressed: () {
-                  //       // AniList.query();
-                  //       // AniList.getuserData();
-                  //       AniList.mediaQuerypage(
-                  //           searchString: "konosuba", type: "ANIME", page: 1);
-                  //     },
-                  //     child: const Text("testing button")),
                 ])),
           )),
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // Get.back();
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return const AlertDialog();
-                });
-          },
-          icon: SvgPicture.asset(
-            "assets/icon/anilist_black_white.svg",
-            color: Colors.white,
-          ),
-          label: const Text("Anilist")),
+      // floatingActionButton: FloatingActionButton.extended(
+      //     onPressed: () {
+      //       // Get.back();
+      //       showDialog(
+      //           context: context,
+      //           builder: (context) {
+      //             return const AlertDialog();
+      //           });
+      //     },
+      //     icon: SvgPicture.asset(
+      //       "assets/icon/anilist_black_white.svg",
+      //       color: Colors.white,
+      //     ),
+      //     label: const Text("Anilist")),
     );
   }
 
@@ -210,7 +202,7 @@ class _SyncPageState extends State<SyncPage> {
             else
               Column(children: [
                 FutureBuilder(
-                    future: userValue,
+                    future: AniList.getuserData(),
                     builder: (context, snapshot) {
                       final data = snapshot.data;
                       if (snapshot.hasData) {
@@ -253,15 +245,6 @@ class _SyncPageState extends State<SyncPage> {
                 )
               ]),
             const SizedBox(height: 8),
-            //測試API用
-            ElevatedButton(
-                onPressed: () {
-                  // AniList.query();
-                  // AniList.getuserData();
-                  AniList.mediaQuerypage(
-                      searchString: "konosuba", type: "ANIME", page: 1);
-                },
-                child: const Text("testing buttons")),
           ])),
     );
   }

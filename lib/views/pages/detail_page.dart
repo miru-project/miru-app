@@ -23,6 +23,7 @@ import 'package:miru_app/views/widgets/progress.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:miru_app/utils/anilist.dart';
 import 'package:miru_app/views/widgets/detail/detail_tracker_button_desktop.dart';
+import 'package:miru_app/views/widgets/detail/detail_tracker_button.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({
@@ -107,6 +108,10 @@ class _DetailPageState extends State<DetailPage> {
                     tabs: tabs,
                   ),
                   actions: [
+                    if (AniList.anilistToken != "")
+                      DetailTrackButtonAndroid(
+                          tag: widget.tag,
+                          anilistType: c.anlistExtensionMap[c.type] ?? "ANIME"),
                     IconButton(
                       onPressed: () {
                         Get.to(

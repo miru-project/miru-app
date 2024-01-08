@@ -311,17 +311,19 @@ class _DetailTrackButtonDesktopState extends State<DetailTrackButtonDesktop> {
                                         : null,
                                     progress: episodes.toString(),
                                     id: c.aniListID.value);
+                                if (!context.mounted) return;
                                 debugPrint(listid);
                                 c.aniListID.value = listid;
                                 c.getAniListIds(listid);
                                 showPlatformSnackbar(
-                                    context: context, content: "success");
-                              } catch (e) {
-                                showPlatformSnackbar(
                                     context: context,
-                                    content: "anilist id not found");
-                                debugPrint("$e");
+                                    content: "Anilist saved".i18n);
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                showPlatformSnackbar(
+                                    context: context, content: e.toString());
                               }
+                              Navigator.pop(context);
                             },
                             child: Text('Confirm'.i18n),
                           ),
@@ -340,17 +342,23 @@ class _DetailTrackButtonDesktopState extends State<DetailTrackButtonDesktop> {
                                 final result = await AniList.deleteList(
                                     id: c.aniListID.value);
                                 debugPrint("$result");
-                              } catch (e) {
+                                if (!context.mounted) return;
                                 showPlatformSnackbar(
                                     context: context,
-                                    content: "anilist id not found");
-                                debugPrint("$e");
+                                    content: "delete success");
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                showPlatformSnackbar(
+                                    title: "delete failed",
+                                    context: context,
+                                    content: "$e");
                               }
+
                               c.aniListID.value = "";
                               c.getAniListIds("");
                               aniListMediaId = null;
 
-                              // Navigator.pop(context);
+                              Navigator.pop(context);
                             },
                             child: Text('delete'.i18n),
                           )

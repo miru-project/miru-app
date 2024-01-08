@@ -27,10 +27,13 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
         const Tab(text: "Watching"),
       const Tab(text: "Completed"),
       const Tab(text: "Planning"),
+      const Tab(text: "Dropped"),
+      const Tab(text: "Paused"),
+      const Tab(text: "Rewatching"),
     ];
     final data = widget.data;
     return DefaultTabController(
-        length: 3,
+        length: 6,
         child: Scaffold(
             appBar: AppBar(
                 bottom: TabBar(
@@ -108,6 +111,9 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
             _desktopTab(context, data, "Watching"),
             _desktopTab(context, data, "Completed"),
             _desktopTab(context, data, "Planning"),
+            _desktopTab(context, data, "Dropped"),
+            _desktopTab(context, data, "Paused"),
+            _desktopTab(context, data, "Rewatching"),
           ])),
     );
   }
