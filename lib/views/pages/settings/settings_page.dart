@@ -52,8 +52,8 @@ class _SettingsPageState extends State<SettingsPage> {
       SettingsExpanderTile(
         icon: fluent.FluentIcons.developer_tools,
         androidIcon: Icons.construction,
-        title: "常规设置",
-        subTitle: "TMDB、语言、主题、检查更新",
+        title: 'settings.general'.i18n,
+        subTitle: 'settings.general-subtitle'.i18n,
         content: Column(
           children: [
             // TMDB KEY 设置
@@ -174,8 +174,8 @@ class _SettingsPageState extends State<SettingsPage> {
       SettingsExpanderTile(
         icon: fluent.FluentIcons.repo,
         androidIcon: Icons.extension,
-        title: "扩展仓库",
-        subTitle: "多仓库、自动更新扩展",
+        title: 'settings.extension'.i18n,
+        subTitle: 'settings.extension-subtitle'.i18n,
         content: Column(
           children: [
             SettingsIntpuTile(
@@ -201,8 +201,8 @@ class _SettingsPageState extends State<SettingsPage> {
       SettingsExpanderTile(
         icon: fluent.FluentIcons.play,
         androidIcon: Icons.play_arrow,
-        title: "视频播放器",
-        subTitle: "快进、BT播放支持、第三方播放器",
+        title: 'settings.video-player'.i18n,
+        subTitle: 'settings.video-player-subtitle'.i18n,
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -342,8 +342,8 @@ class _SettingsPageState extends State<SettingsPage> {
       SettingsExpanderTile(
         icon: fluent.FluentIcons.reading_mode,
         androidIcon: Icons.image,
-        title: "漫画阅读器",
-        subTitle: "默认阅读模式",
+        title: 'settings.comic-reader'.i18n,
+        subTitle: 'settings.comic-reader-subtitle'.i18n,
         content: Column(
           children: [
             SettingsRadiosTile(
@@ -370,12 +370,12 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       const SizedBox(height: 10),
       // 同步数据
-      const SettingsExpanderTile(
+      SettingsExpanderTile(
         icon: fluent.FluentIcons.sync,
         androidIcon: Icons.sync,
-        content: SizedBox.shrink(),
-        title: "同步",
-        subTitle: "AniList...",
+        content: const SizedBox.shrink(),
+        title: 'settings.sync'.i18n,
+        subTitle: 'settings.sync-subtitle'.i18n,
       ),
       const SizedBox(height: 10),
       // Debug
@@ -418,8 +418,8 @@ class _SettingsPageState extends State<SettingsPage> {
               "🎉 A versatile application that is free, open-source, and supports extension sources for videos, comics, and novels, available on Android, Windows, and Web platforms.",
             ),
             const SizedBox(height: 20),
-            const Text(
-              "Links",
+            Text(
+              'settings.links'.i18n,
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -448,8 +448,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
             const SizedBox(height: 10),
-            const Text(
-              "Contributors",
+            Text(
+              'settings.contributors'.i18n,
             ),
             const SizedBox(height: 8),
             Obx(
