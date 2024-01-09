@@ -116,7 +116,20 @@
     "subtitle": "Субтитры",
     "subtitle-change": "Редактировать субтитры {title}",
     "subtitle-file": "Файл субтитров",
-    "torrent-downloading": "Торрент скачивание"
+    "torrent-downloading": "Торрент-скачивание",
+    "tooltip": {
+      "close": "Закрыть",
+      "subtitle": "Субтитры",
+      "play-list": "Список воспроизведения",
+      "quality": "Качество",
+      "speed": "Скорость",
+      "play": "Играть",
+      "play-or-pause": "Пауза",
+      "previous": "Предыдущий",
+      "next": "Следующий",
+      "full-screen": "Полноэкранный режим",
+      "volume": "Громкость",
+      "torrent-file-list": "Список торрент-файлов"
   },
 
   "comic-settings": {

@@ -25,20 +25,17 @@
     "delete": "削除",
     "delete-all": "全て削除"
   },
-
   "home": {
     "continue-watching": "続ける",
     "favorite": "お気に入り",
     "no-record": "お気に入りや閲覧記録はありません",
     "watched": "視聴済み {ep}"
   },
-
   "search": {
     "hint-text": "検索を使ってください～！",
     "all": "全て",
     "filter": "フィルター"
   },
-
   "extension": {
     "import": {
       "title": "拡張機能をインポート",
@@ -51,14 +48,12 @@
     "installed": "インストール済み",
     "edit-code": "コードを編集"
   },
-
   "extension-repo": {
     "error": "エラーが発生しました！",
     "error-tips": "ネットワーク接続を確認するかリポジトリのアドレスを確認してください",
     "empty": "リポジトリが空です",
     "upgrade": "更新"
   },
-
   "settings": {
     "repo-url": "拡張機能リポジトリのURL",
     "repo-url-subtitle": "拡張機能リポジトリのURLを取得する",
@@ -78,6 +73,7 @@
     "theme-system": "システム",
     "theme-light": "ライト",
     "theme-dark": "ダーク",
+    "theme-black": "ブラック",
     "nsfw": "NSFW",
     "nsfw-subtitle": "NSFWコンテンツを表示します",
     "external-player": "優先するビデオプレーヤー",
@@ -86,11 +82,12 @@
     "language-subtitle": "ソフトウェアの言語を変更します",
     "extension-log": "拡張機能ログウィンドウ",
     "extension-log-subtitle": "拡張機能のデバッグに使用します",
-    "about": "詳細"
+    "about": "詳細",
+    "skip-interval": "スキップ間隔",
+    "skip-interval-subtitle": "内蔵ビデオプレーヤーのスキップ間隔",
+    "default-reader-mode": "デフォルトのリーダーモード"
   },
-
   "external-player-launching": "{player}を起動",
-
   "detail": {
     "favorite": "お気に入り",
     "favorited": "お気に入り",
@@ -104,7 +101,6 @@
     "no-tmdb-data": "TMDBデータは一致していません。自分でデータをバインドしてください",
     "tmdb-key-missing": "TMDB APIキーがありません、設定から入力してください"
   },
-
   "video": {
     "episodes": "エピソード",
     "watch-now": "今すぐ視聴する",
@@ -116,25 +112,35 @@
     "subtitle-change": "字幕を変更 {title}",
     "subtitle-file": "字幕ファイル",
     "torrent-downloading": "Torrentでダウンロード"
+    "tooltip": {
+      "close": "閉じる",
+      "subtitle": "字幕",
+      "play-list": "プレイリスト",
+      "quality": "画質",
+      "speed": "速度",
+      "play": "再生",
+      "play-or-pause": "一時停止",
+      "previous": "前",
+      "next": "次",
+      "full-screen": "フルスクリーン",
+      "volume": "音量",
+      "torrent-file-list": "Torrentファイルリスト"
+    }
   },
-
   "comic-settings": {
     "read-mode": "読書モード",
     "standard": "標準",
     "right-to-left": "右から左",
     "web-tonn": "ウェブトゥーン"
   },
-
   "novel-settings": {
     "font-size": "フォントのサイズ"
   },
-
   "reader": {
     "chapters": "チャプター",
     "read-now": "今すぐ読む",
     "no-chapters": "チャプターがありません"
   },
-
   "upgrade": {
     "check-update": "更新を確認",
     "new-version": "新しいバージョン {version} が見つかりました",
@@ -143,15 +149,12 @@
     "not-now": "今はしない",
     "error": "更新の確認に失敗しました。ネットワークエラーが発生しました"
   },
-
   "extension-install-error": "拡張機能のインストールに失敗しました",
-
   "extension-type": {
     "video": "ビデオ",
     "novel": "小説",
     "comic": "漫画"
   },
-
   "extension-info": {
     "author": "作者",
     "description": "説明",
@@ -162,14 +165,12 @@
     "license": "ライセンス",
     "title": "拡張機能の情報"
   },
-
   "cookie-clean": {
     "title": "クッキーをクリーン",
     "subtitle": "クリーンアップ後に再ログインが必要になる場合があります",
     "success": "クリーンに成功しました",
     "clean": "クリーン"
   },
-
   "tmdb": {
     "backdrops": "背景",
     "status": "ステータス",
@@ -179,12 +180,14 @@
     "runtime": "実行時間",
     "languages": "言語"
   },
-
   "bt-server": {
     "not-installed": "BTサーバーがインストールされていません",
     "running": "BTサーバーは動いています",
     "stopped": "BTサーバーは停止しています",
     "version": "バージョン {version}",
+    "remote-version": "リモートバージョン {version}",
+    "stop": "停止",
+    "upgrade": "アップグレード",
     "start": "開始"
   }
 }
