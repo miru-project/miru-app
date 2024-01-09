@@ -85,13 +85,7 @@
     "skip-interval": "スキップかんかく",
     "skip-interval-subtitle": "ねーんぞうビデオプレーヤーぬスキップかんかく",
     "default-reader-mode": "デフォルトぬリーダーモード",
-    "about": "しょうさい",
-    "official-site": "こうしきウェブサイト",
-    "official-site-training": "ほうむんすん",
-    "source-code": "オープンソース",
-    "source-code-training": "スター",
-    "license": "ライセンス",
-    "license-subtitle": "ライセンス"
+    "about": "しょうさい"
   },
   "external-player-launching": "{player}きどう",
   "detail": {
@@ -117,7 +111,7 @@
     "subtitle": "じまちゅん",
     "subtitle-change": "じまちゅんへいるかん {title}",
     "subtitle-file": "じまちゅるファイル",
-    "torrent-downloading": "Torrentっしダウンロード"
+    "torrent-downloading": "Torrentっしダウンロード",
     "tooltip": {
       "close": "くーいん",
       "subtitle": "じまちゅん",
@@ -130,7 +124,7 @@
       "next": "ちぎ",
       "full-screen": "フルスクリーン",
       "volume": "うんりょう",
-      "torrent-file-list": "Torrentファイルリスト"   
+      "torrent-file-list": "Torrentファイルリスト"
     }
   },
   "comic-settings": {

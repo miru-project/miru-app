@@ -18,10 +18,10 @@ import 'package:miru_app/views/widgets/card_tile.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
-import 'package:miru_app/views/widgets/settings_input_tile.dart';
-import 'package:miru_app/views/widgets/settings_radios_tile.dart';
-import 'package:miru_app/views/widgets/settings_switch_tile.dart';
-import 'package:miru_app/views/widgets/settings_tile.dart';
+import 'package:miru_app/views/widgets/settings/settings_input_tile.dart';
+import 'package:miru_app/views/widgets/settings/settings_radios_tile.dart';
+import 'package:miru_app/views/widgets/settings/settings_switch_tile.dart';
+import 'package:miru_app/views/widgets/settings/settings_tile.dart';
 
 class ExtensionSettingsPage extends StatefulWidget {
   const ExtensionSettingsPage({
@@ -58,6 +58,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
     for (final setting in c.settings) {
       if (setting.type == ExtensionSettingType.input) {
         list.add(SettingsIntpuTile(
+          isCard: true,
           title: setting.title,
           onChanged: (value) async {
             await DatabaseService.putExtensionSetting(
@@ -83,6 +84,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
       if (setting.type == ExtensionSettingType.radio) {
         final map = Map<String, String>.from(jsonDecode(setting.options!));
         list.add(SettingsRadiosTile(
+          isCard: true,
           title: setting.title,
           itemNameValue: () {
             return map;
@@ -102,6 +104,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
       }
       if (setting.type == ExtensionSettingType.toggle) {
         list.add(SettingsSwitchTile(
+          isCard: true,
           title: setting.title,
           onChanged: (value) {
             DatabaseService.putExtensionSetting(
@@ -220,6 +223,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
             if (!LayoutUtils.isTablet) ...[
               const Divider(),
               SettingsTile(
+                isCard: true,
                 title: 'cookie-clean.title'.i18n,
                 buildSubtitle: () => 'cookie-clean.subtitle'.i18n,
                 trailing: TextButton(
@@ -253,6 +257,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                       child: Column(
                         children: [
                           SettingsTile(
+                            isCard: true,
                             title: 'cookie-clean.title'.i18n,
                             buildSubtitle: () => 'cookie-clean.subtitle'.i18n,
                             trailing: TextButton(
@@ -408,6 +413,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                         ),
                         const SizedBox(height: 16),
                         SettingsTile(
+                          isCard: true,
                           title: 'cookie-clean.title'.i18n,
                           buildSubtitle: () => 'cookie-clean.subtitle'.i18n,
                           trailing: fluent.FilledButton(

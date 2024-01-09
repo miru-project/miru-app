@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
-import 'package:miru_app/views/widgets/settings_tile.dart';
+import 'package:miru_app/views/widgets/settings/settings_tile.dart';
 
 class SettingsIntpuTile extends fluent.StatefulWidget {
   const SettingsIntpuTile({
@@ -13,6 +13,7 @@ class SettingsIntpuTile extends fluent.StatefulWidget {
     required this.text,
     required this.buildSubtitle,
     this.trailing = const Icon(Icons.chevron_right),
+    this.isCard = false,
   });
   final Widget? icon;
   final String title;
@@ -20,6 +21,7 @@ class SettingsIntpuTile extends fluent.StatefulWidget {
   final String text;
   final Widget trailing;
   final Function(String) onChanged;
+  final bool isCard;
 
   @override
   fluent.State<SettingsIntpuTile> createState() => _SettingsIntpuTileState();
@@ -62,6 +64,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
 
   Widget _buildDesktop(BuildContext context) {
     return SettingsTile(
+      isCard: widget.isCard,
       icon: widget.icon,
       title: widget.title,
       buildSubtitle: widget.buildSubtitle,

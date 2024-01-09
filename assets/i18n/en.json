@@ -67,6 +67,19 @@
     "upgrade": "Update"
   },
   "settings": {
+    "general": "General",
+    "general-subtitle": "TMDB, Language, Theme, check for updates...",
+    "extension": "Extensions",
+    "extension-subtitle": "Extension repository",
+    "video-player": "Video Player",
+    "video-player-subtitle": "BT Server, External Player...",
+    "comic-reader": "Comic Reader",
+    "comic-reader-subtitle": "Default reader mode...",
+    "tracking": "Tracking",
+    "tracking-subtitle": "AniList...",
+    "about": "About",
+    "links": "Links",
+    "contributors": "Contributors",
     "repo-url": "Extension Repository URL",
     "repo-url-subtitle": "Get the repository URL for extensions",
     "tmdb-key": "TMDB API Key",
@@ -96,14 +109,7 @@
     "extension-log-subtitle": "Used for debugging extensions",
     "skip-interval": "Skip Interval",
     "skip-interval-subtitle": "Skipping interval for builtin video player",
-    "default-reader-mode": "Default reader mode",
-    "about": "About",
-    "official-site": "Official Website",
-    "official-site-training": "Visit",
-    "source-code": "Open Source",
-    "source-code-training": "Give Star",
-    "license": "License",
-    "license-subtitle": "License"
+    "default-reader-mode": "Default reader mode"
   },
   "external-player-launching": "Launching {player}",
   "detail": {

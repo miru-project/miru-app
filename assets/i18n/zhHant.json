@@ -87,13 +87,7 @@
     "language-subtitle": "選擇軟體的語言",
     "extension-log": "擴充套件日誌視窗",
     "extension-log-subtitle": "擴充套件除錯視窗",
-    "about": "關於",
-    "official-site": "官網",
-    "official-site-training": "前往官網",
-    "source-code": "原始碼",
-    "source-code-training": "前往 Star",
-    "license": "許可證",
-    "license-subtitle": "許可證"
+    "about": "關於"
   },
 
   "external-player-launching": "正在啟動 {player}",
