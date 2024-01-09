@@ -60,7 +60,6 @@ class SettingsExpanderTile extends StatelessWidget {
       icon: iconWidget,
       title: title,
       buildSubtitle: () => subTitle,
-      trailing: const Icon(Icons.chevron_right),
       onTap: () {
         Get.to(
           Scaffold(
