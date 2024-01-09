@@ -41,7 +41,8 @@
     "continue-watching": "Continue",
     "favorite": "Favorite",
     "no-record": "No favorites or viewing records",
-    "watched": "Watched {ep}"
+    "watched": "Watched {ep}",
+    "favorite-all": "All {type} favourites"
   },
   "search": {
     "hint-text": "Please use search wisely!~",

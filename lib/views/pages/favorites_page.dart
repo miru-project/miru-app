@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/utils/extension.dart';
@@ -20,9 +21,16 @@ class _FavoritesPageState extends fluent.State<FavoritesPage> {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-        "${ExtensionUtils.typeToString(widget.type)}${"home.favorite".i18n}",
-      )),
+        title: Text(
+          FlutterI18n.translate(
+            context,
+            "home.favorite-all",
+            translationParams: {
+              "type": ExtensionUtils.typeToString(widget.type),
+            },
+          ),
+        ),
+      ),
       body: FutureBuilder(
         future: DatabaseService.getFavoritesByType(type: widget.type),
         builder: ((context, snapshot) {
@@ -84,7 +92,13 @@ class _FavoritesPageState extends fluent.State<FavoritesPage> {
               Expanded(
                 flex: 2,
                 child: Text(
-                  "${ExtensionUtils.typeToString(widget.type)}${"home.favorite".i18n}",
+                  FlutterI18n.translate(
+                    context,
+                    "home.favorite-all",
+                    translationParams: {
+                      "type": ExtensionUtils.typeToString(widget.type),
+                    },
+                  ),
                   style: fluent.FluentTheme.of(context).typography.subtitle,
                 ),
               ),
