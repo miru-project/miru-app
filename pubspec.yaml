@@ -59,7 +59,6 @@ dependencies:
   # oauth2_client: ^3.2.2
   flutter_inappwebview: ^5.8.0
   flutter_web_auth_2: ^2.2.1
-  flutter_svg: ^2.0.9
   # webview_flutter: ^4.4.2
 dev_dependencies:
   flutter_test:
@@ -74,5 +73,5 @@ flutter:
   assets:
     - assets/i18n/
     - assets/icon/logo.png
+    - assets/icon/anilist.jpg
     - assets/js/
-    - assets/icon/anilist_black_white.svg

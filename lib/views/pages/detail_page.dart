@@ -21,7 +21,7 @@ import 'package:miru_app/views/widgets/cover.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:miru_app/utils/anilist.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/views/widgets/detail/detail_tracker_button_desktop.dart';
 import 'package:miru_app/views/widgets/detail/detail_tracker_button.dart';
 
@@ -108,7 +108,7 @@ class _DetailPageState extends State<DetailPage> {
                     tabs: tabs,
                   ),
                   actions: [
-                    if (AniList.anilistToken != "")
+                    if (AniListProvider.anilistToken != "")
                       DetailTrackButtonAndroid(
                           tag: widget.tag,
                           anilistType: c.anlistExtensionMap[c.type] ?? "ANIME"),
@@ -324,7 +324,7 @@ class _DetailPageState extends State<DetailPage> {
                                   // 收藏按钮
                                   const DetailFavoriteButton(),
                                   const SizedBox(width: 8),
-                                  if (AniList.anilistToken != "")
+                                  if (AniListProvider.anilistToken != "")
                                     const DetailTrackButtonDesktop(),
                                   const SizedBox(width: 8),
                                   if (c.tmdbDetail != null)

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/controllers/detail_controller.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/utils/anilist.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 
@@ -91,7 +91,7 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                       icon: const Icon(Icons.close))
                 ])),
                 body: Obx(() => FutureBuilder(
-                      future: AniList.mediaQuerypage(
+                      future: AniListProvider.mediaQuerypage(
                           searchString: searchString.value,
                           type: widget.anilistType,
                           page: 1),
@@ -335,8 +335,9 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                               child: const Text('delete'),
                               onPressed: () async {
                                 try {
-                                  final result = await AniList.deleteList(
-                                      id: c.aniListID.value);
+                                  final result =
+                                      await AniListProvider.deleteList(
+                                          id: c.aniListID.value);
                                   debugPrint("$result");
                                   if (!context.mounted) return;
                                   showPlatformSnackbar(
@@ -387,7 +388,7 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                                 debugPrint(aniListMediaId);
                                 debugPrint(c.aniListID.value);
                                 try {
-                                  final listid = await AniList.editList(
+                                  final listid = await AniListProvider.editList(
                                       status: status,
                                       score: score,
                                       startDate: (isStartDateChecked.value)

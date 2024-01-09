@@ -6,9 +6,11 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/tmdb_provider.dart';
 import 'package:miru_app/controllers/application_controller.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/views/dialogs/bt_dialog.dart';
 import 'package:miru_app/controllers/extension/extension_repo_controller.dart';
 import 'package:miru_app/controllers/settings_controller.dart';
+import 'package:miru_app/views/pages/tracking/anilist_tracking_page.dart';
 import 'package:miru_app/views/widgets/settings/settings_expander_tile.dart';
 import 'package:miru_app/views/widgets/settings/settings_input_tile.dart';
 import 'package:miru_app/views/widgets/settings/settings_radios_tile.dart';
@@ -64,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   return 'settings.tmdb-key-subtitle'.i18n;
                 }
                 final key =
-                    MiruStorage.getSetting(SettingKey.tmdbKay) as String;
+                    MiruStorage.getSetting(SettingKey.tmdbKey) as String;
                 if (key.isEmpty) {
                   return 'common.unset'.i18n;
                 }
@@ -72,13 +74,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 return key.replaceAll(RegExp(r"."), '*');
               },
               onChanged: (value) {
-                MiruStorage.setSetting(SettingKey.tmdbKay, value);
+                MiruStorage.setSetting(SettingKey.tmdbKey, value);
                 TmdbApi.tmdb = TMDB(
                   ApiKeys(value, ''),
                   defaultLanguage: MiruStorage.getSetting(SettingKey.language),
                 );
               },
-              text: MiruStorage.getSetting(SettingKey.tmdbKay),
+              text: MiruStorage.getSetting(SettingKey.tmdbKey),
             ),
             // 语言设置
             SettingsRadiosTile(
@@ -354,7 +356,32 @@ class _SettingsPageState extends State<SettingsPage> {
       SettingsExpanderTile(
         icon: fluent.FluentIcons.sync,
         androidIcon: Icons.sync,
-        content: const SizedBox.shrink(),
+        content: Column(
+          children: [
+            SettingsTile(
+              isCard: true,
+              icon: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                    image: AssetImage('assets/icon/anilist.jpg'),
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              title: 'AniList'.i18n,
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                if (!Platform.isAndroid) {
+                  router.push('/settings/anilist');
+                } else {
+                  Get.to(() => const AniListTrackingPage());
+                }
+              },
+            ),
+          ],
+        ),
         title: 'settings.tracking'.i18n,
         subTitle: 'settings.tracking-subtitle'.i18n,
       ),

@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
-import 'package:miru_app/utils/anilist.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
-class SyncPageController extends GetxController {
+class TrackingPageController extends GetxController {
   final anilistIsLogin = false.obs;
   final anilistOauthUrl = "".obs;
   updateAniListToken(String accessToken) {
     MiruStorage.setSetting(SettingKey.aniListToken, accessToken);
-    AniList.initToken();
+    AniListProvider.initToken();
     anilistIsLogin.value = true;
   }
 
@@ -16,10 +16,9 @@ class SyncPageController extends GetxController {
     final token = MiruStorage.getSetting(SettingKey.aniListToken);
     if (token != "") {
       anilistIsLogin.value = true;
-      AniList.initToken();
+      AniListProvider.initToken();
     }
 
     super.onInit();
   }
 }
-// SyncPageController c = SyncPageController();

@@ -3,11 +3,11 @@ import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:get/get.dart';
-import 'package:miru_app/controllers/sync_page_controller.dart';
+import 'package:miru_app/controllers/tracking_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
-class AniList {
+class AniListProvider {
   static late String anilistToken;
   static late String userid;
   static const headers = <String, String>{
@@ -48,7 +48,7 @@ class AniList {
     if (re != null) {
       String token = re.group(0)!;
       anilistToken = token;
-      final c = Get.put(SyncPageController());
+      final c = Get.put(TrackingPageController());
       c.updateAniListToken(token);
     }
   }
@@ -183,7 +183,7 @@ class AniList {
                 ? ""
                 : "completedAt:{year:${endDate.year},month:${endDate.month},day:${endDate.day}}")
         .replaceFirst("queryId,", id == "" ? "mediaId:$mediaId," : "id:$id,");
-    debugPrint("$queryString");
+    debugPrint(queryString);
     final res = await postRequest(queryString: queryString);
     // debugPrint("${res["data"]["SaveMediaListEntry"]["id"]}");
     return res["data"]["SaveMediaListEntry"]["id"].toString();
@@ -199,7 +199,7 @@ mutation{
 }
 """;
 
-    debugPrint("$deleteMutation");
+    debugPrint(deleteMutation);
     final res = await postRequest(queryString: deleteMutation);
     debugPrint("$res");
     return res["data"]["DeleteMediaListEntry"]["deleted"];

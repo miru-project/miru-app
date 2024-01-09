@@ -1,7 +1,7 @@
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/controllers/detail_controller.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/utils/anilist.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
@@ -105,7 +105,7 @@ class _DetailTrackButtonDesktopState extends State<DetailTrackButtonDesktop> {
                               expands: false,
                             )),
                         content: Obx(() => FutureBuilder(
-                            future: AniList.mediaQuerypage(
+                            future: AniListProvider.mediaQuerypage(
                                 searchString: searchString.value,
                                 type: anilistType,
                                 page: 1),
@@ -305,7 +305,7 @@ class _DetailTrackButtonDesktopState extends State<DetailTrackButtonDesktop> {
                                     (states) => Colors.red)),
                             onPressed: () async {
                               try {
-                                final result = await AniList.deleteList(
+                                final result = await AniListProvider.deleteList(
                                     id: c.aniListID.value);
                                 debugPrint("$result");
                                 if (!context.mounted) return;
@@ -334,7 +334,7 @@ class _DetailTrackButtonDesktopState extends State<DetailTrackButtonDesktop> {
                               debugPrint(
                                   "$episodes $score $status $startDate $endDate");
                               try {
-                                final listid = await AniList.editList(
+                                final listid = await AniListProvider.editList(
                                     status: status.value,
                                     score: score.toString(),
                                     startDate: (showStartDate.value)

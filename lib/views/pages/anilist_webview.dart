@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/utils/anilist.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
 class AnilistWebViewPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
           onLoadStart: (controller, url) async {
             if (url != null && url.path != "/login") {
               debugPrint(url.host);
-              AniList.saveAuthToken(url.toString());
+              AniListProvider.saveAuthToken(url.toString());
               Get.back();
             }
           }),
