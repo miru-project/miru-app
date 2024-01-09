@@ -29,7 +29,8 @@
     "continue-watching": "继续观看",
     "favorite": "收藏",
     "no-record": "暂无收藏和观看记录",
-    "watched": "看到 {ep}"
+    "watched": "看到 {ep}",
+    "favorite-all": "所有{type}收藏"
   },
   "search": {
     "hint-text": "请善用搜索哦!~",
