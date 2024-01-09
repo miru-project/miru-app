@@ -87,13 +87,7 @@
     "language-subtitle": "Змяніць мову праграмы",
     "extension-log": "Акно часопіса пашырэнняў",
     "extension-log-subtitle": "Выкарыстоўваецца для адладкі пашырэнняў",
-    "about": "Аб праграме",
-    "official-site": "Афіцыйны вэб-сайт",
-    "official-site-training": "Наведайце афіцыйны сайт",
-    "source-code": "Адкрыты зыходны код",
-    "source-code-training": "Пастаўце зорку",
-    "license": "Ліцэнзія",
-    "license-subtitle": "Ліцэнзія"
+    "about": "Аб праграме"
   },
 
   "external-player-launching": "Запуск {player}",

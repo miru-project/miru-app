@@ -25,20 +25,17 @@
     "delete": "删除",
     "delete-all": "删除全部"
   },
-
   "home": {
     "continue-watching": "继续观看",
     "favorite": "收藏",
     "no-record": "暂无收藏和观看记录",
     "watched": "看到 {ep}"
   },
-
   "search": {
     "hint-text": "请善用搜索哦!~",
     "all": "全部",
     "filter": "筛选"
   },
-
   "extension": {
     "import": {
       "title": "导入扩展",
@@ -51,14 +48,12 @@
     "installed": "已安装",
     "edit-code": "编辑代码"
   },
-
   "extension-repo": {
     "error": "发生错误了!",
     "error-tips": "请检查网络连接或者仓库地址是否正确",
     "empty": "仓库为空",
     "upgrade": "更新"
   },
-
   "settings": {
     "general": "常规",
     "general-subtitle": "TMDB、语言、主题、检查更新...",
@@ -68,8 +63,8 @@
     "video-player-subtitle": "BT Server、外部播放器...",
     "comic-reader": "漫画阅读器",
     "comic-reader-subtitle": "默认阅读模式...",
-    "sync": "同步",
-    "sync-subtitle": "AniList...",
+    "tracking": "追踪",
+    "tracking-subtitle": "AniList...",
     "about": "关于",
     "links": "链接",
     "contributors": "贡献者",
@@ -102,9 +97,7 @@
     "extension-log-subtitle": "用于调试扩展",
     "default-reader-mode": "默认漫画阅读模式"
   },
-
   "external-player-launching": "正在启动 {player}",
-
   "detail": {
     "favorite": "收藏",
     "favorited": "已收藏",
@@ -118,7 +111,6 @@
     "no-tmdb-data": "未匹配到 TMDB 数据，请自行绑定数据",
     "tmdb-key-missing": "TMDB API Key 丢失，请前往设置填写"
   },
-
   "video": {
     "episodes": "剧集",
     "watch-now": "立即观看",
@@ -131,24 +123,20 @@
     "subtitle-file": "选择字幕文件",
     "torrent-downloading": "正在下载种子"
   },
-
   "reader": {
     "chapters": "章节",
     "read-now": "立即阅读",
     "no-chapters": "暂无章节"
   },
-
   "comic-settings": {
     "read-mode": "漫画阅读模式",
     "standard": "标准",
     "right-to-left": "从右到左",
     "web-tonn": "条漫"
   },
-
   "novel-settings": {
     "font-size": "字体大小"
   },
-
   "upgrade": {
     "check-update": "检查更新",
     "new-version": "检测到新版本 {version}",
@@ -157,15 +145,12 @@
     "not-now": "暂不更新",
     "error": "检查更新失败,网络出现异常"
   },
-
   "extension-install-error": "扩展安装错误",
-
   "extension-type": {
     "video": "影视",
     "novel": "小说",
     "comic": "漫画"
   },
-
   "extension-info": {
     "author": "作者",
     "description": "描述",
@@ -176,14 +161,12 @@
     "license": "许可",
     "title": "扩展详情"
   },
-
   "cookie-clean": {
     "title": "清除 Cookie",
     "subtitle": "清理后可能需要重新登录",
     "success": "清除成功",
     "clean": "清除"
   },
-
   "tmdb": {
     "backdrops": "剧照",
     "status": "状态",
@@ -193,7 +176,6 @@
     "runtime": "时长",
     "languages": "语言"
   },
-
   "bt-server": {
     "not-installed": "BT-Server 未安装",
     "running": "BT-Server 正在运行",

@@ -87,13 +87,7 @@
     "language-subtitle": "Змінити мову додатка",
     "extension-log": "Вікно журналу розширень",
     "extension-log-subtitle": "Використовується для налагодження розширень",
-    "about": "Про додаток",
-    "official-site": "Офіційний веб-сайт",
-    "official-site-training": "Завітайте на офіційний сайт",
-    "source-code": "Відкритий вихідний код",
-    "source-code-training": "Поставте зірку",
-    "license": "Ліцензія",
-    "license-subtitle": "Ліцензія"
+    "about": "Про додаток"
   },
 
   "external-player-launching": "Запуск {player}",

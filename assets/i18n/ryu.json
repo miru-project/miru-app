@@ -86,13 +86,7 @@
     "language-subtitle": "ソフトウェアぬぎんぐへいるかんさびーん",
     "extension-log": "かくはべるちぬーログウィンドウ",
     "extension-log-subtitle": "かくはべるちぬーぬデバッグなしようさびーん",
-    "about": "しょうさい",
-    "official-site": "こうしきウェブサイト",
-    "official-site-training": "ほうむんすん",
-    "source-code": "オープンソース",
-    "source-code-training": "スター",
-    "license": "ライセンス",
-    "license-subtitle": "ライセンス"
+    "about": "しょうさい"
   },
 
   "external-player-launching": "{player}きどう",

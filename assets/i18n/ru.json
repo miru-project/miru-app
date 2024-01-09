@@ -87,13 +87,7 @@
     "language-subtitle": "Изменить язык приложения",
     "extension-log": "Окно журнала расширений",
     "extension-log-subtitle": "Используется для отладки расширений",
-    "about": "О приложении",
-    "official-site": "Официальный веб-сайт",
-    "official-site-training": "Посетите официальный сайт",
-    "source-code": "Открытый исходный код",
-    "source-code-training": "Поставьте звезду",
-    "license": "Лицензия",
-    "license-subtitle": "Лицензия"
+    "about": "О приложении"
   },
 
   "external-player-launching": "Запуск {player}",

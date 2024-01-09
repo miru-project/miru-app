@@ -104,6 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 return MiruStorage.getSetting(SettingKey.language);
               },
             ),
+            // 主题设置
             SettingsRadiosTile(
               title: 'settings.theme'.i18n,
               itemNameValue: () {
@@ -125,35 +126,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 return Get.find<ApplicationController>().themeText.value;
               },
             ),
-            SettingsTile(
-              title: 'settings.upgrade'.i18n,
-              buildSubtitle: () => FlutterI18n.translate(
-                context,
-                'settings.upgrade-subtitle',
-                translationParams: {
-                  'version': packageInfo.version,
-                },
-              ),
-              trailing: PlatformWidget(
-                androidWidget: TextButton(
-                  onPressed: () {
-                    ApplicationUtils.checkUpdate(
-                      context,
-                      showSnackbar: true,
-                    );
-                  },
-                  child: Text('settings.upgrade-training'.i18n),
-                ),
-                desktopWidget: fluent.FilledButton(
-                  onPressed: () {
-                    ApplicationUtils.checkUpdate(
-                      context,
-                      showSnackbar: true,
-                    );
-                  },
-                  child: Text('settings.upgrade-training'.i18n),
-                ),
-              ),
+            // 启动检查更新
+            SettingsSwitchTile(
+              title: 'settings.auto-check-update'.i18n,
+              buildSubtitle: () => 'settings.auto-check-update-subtitle'.i18n,
+              buildValue: () =>
+                  MiruStorage.getSetting(SettingKey.autoCheckUpdate),
+              onChanged: (value) {
+                MiruStorage.setSetting(SettingKey.autoCheckUpdate, value);
+              },
             ),
             // NSFW
             SettingsSwitchTile(
@@ -374,8 +355,8 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: fluent.FluentIcons.sync,
         androidIcon: Icons.sync,
         content: const SizedBox.shrink(),
-        title: 'settings.sync'.i18n,
-        subTitle: 'settings.sync-subtitle'.i18n,
+        title: 'settings.tracking'.i18n,
+        subTitle: 'settings.tracking-subtitle'.i18n,
       ),
       const SizedBox(height: 10),
       // Debug
@@ -398,8 +379,45 @@ class _SettingsPageState extends State<SettingsPage> {
             );
           },
         ),
-      const SizedBox(height: 10),
+      // 关于
+      const SizedBox(height: 20),
       ListTitle(title: 'settings.about'.i18n),
+      const SizedBox(height: 20),
+      SettingsTile(
+        isCard: true,
+        icon: const PlatformWidget(
+          androidWidget: Icon(Icons.update),
+          desktopWidget: Icon(fluent.FluentIcons.update_restore, size: 24),
+        ),
+        title: 'settings.upgrade'.i18n,
+        buildSubtitle: () => FlutterI18n.translate(
+          context,
+          'settings.upgrade-subtitle',
+          translationParams: {
+            'version': packageInfo.version,
+          },
+        ),
+        trailing: PlatformWidget(
+          androidWidget: TextButton(
+            onPressed: () {
+              ApplicationUtils.checkUpdate(
+                context,
+                showSnackbar: true,
+              );
+            },
+            child: Text('settings.upgrade-training'.i18n),
+          ),
+          desktopWidget: fluent.FilledButton(
+            onPressed: () {
+              ApplicationUtils.checkUpdate(
+                context,
+                showSnackbar: true,
+              );
+            },
+            child: Text('settings.upgrade-training'.i18n),
+          ),
+        ),
+      ),
       const SizedBox(height: 10),
       SettingsExpanderTile(
         leading: const Image(
@@ -408,7 +426,7 @@ class _SettingsPageState extends State<SettingsPage> {
           height: 24,
         ),
         title: "Miru",
-        subTitle: packageInfo.version,
+        subTitle: "AGPL-3.0 License",
         open: true,
         noPage: true,
         content: Column(
@@ -503,7 +521,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return PlatformBuildWidget(
       androidBuilder: _buildAndroid,
       desktopBuilder: (context) => ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         children: _buildContent(),
       ),
     );
