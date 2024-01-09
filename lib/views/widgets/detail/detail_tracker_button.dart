@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/controllers/detail_controller.dart';
@@ -26,6 +27,8 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
   String? score;
   String? episodes;
   String? aniListMediaId;
+  final RxBool isStartDateChecked = false.obs;
+  final RxBool isEndDateChecked = false.obs;
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _episodeTextController = TextEditingController();
   final TextEditingController _scoreTextController = TextEditingController();
@@ -168,138 +171,167 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
               ));
         } else {
           showModalBottomSheet<void>(
+            isScrollControlled: true,
             context: context,
             builder: (BuildContext context) {
               return SizedBox(
-                height: 200,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
+                height: 600,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: (Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("Save to anilist?".i18n),
-                      Row(
-                          // mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            DropdownMenu<String>(
-                                inputDecorationTheme: InputDecorationTheme(
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                ),
-                                hintText: "Status",
-                                initialSelection: "CURRENT",
-                                onSelected: (String? value) {
-                                  status = value ?? "CURRENT";
-                                },
-                                dropdownMenuEntries: const [
-                                  DropdownMenuEntry(
-                                      value: "CURRENT", label: "Current"),
-                                  DropdownMenuEntry(
-                                      value: "PLANNING", label: "Planning"),
-                                  DropdownMenuEntry(
-                                      value: "COMPLETED", label: "Completed"),
-                                  DropdownMenuEntry(
-                                      value: "DROPPED", label: "Dropped"),
-                                  DropdownMenuEntry(
-                                      value: "PAUSED", label: "Paused"),
-                                  DropdownMenuEntry(
-                                      value: "REPEATING", label: "Rewatching"),
-                                ]),
-                            Expanded(
-                                child: TextField(
-                                    onChanged: (value) {
-                                      episodes = value;
-                                      _episodeTextController.text = value;
-                                    },
-                                    controller: _episodeTextController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      labelText: 'Episode',
-                                    ))),
-                            Expanded(
-                                child: TextField(
-                                    onChanged: (value) {
-                                      score = value;
-                                      _scoreTextController.text = value;
-                                    },
-                                    keyboardType: TextInputType.number,
-                                    controller: _scoreTextController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      labelText: 'Score',
-                                    )))
-                          ]),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Expanded(
-                              child: TextButton(
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.outline),
-                              ),
-                              padding: const EdgeInsets.all(16.0),
-                            ),
-                            child: Obx(() => Text(startDateText.value,
-                                style: const TextStyle(fontSize: 20))),
-                            onPressed: () async {
-                              final result = await showDatePicker(
-                                  context: context,
-                                  initialDate: startDate,
-                                  firstDate: DateTime(2020, 01),
-                                  lastDate: DateTime(2100, 12));
-                              debugPrint("$result");
-                              if (result != null) {
-                                startDate = result;
-                                startDateText.value =
-                                    "${result.year}/${result.month}/${result.day}";
-                              }
-                            },
+                      Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Save to anilist?".i18n,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
                           )),
-                          Expanded(
-                              child: TextButton(
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.outline),
-                              ),
-                              padding: const EdgeInsets.all(16.0),
-                            ),
-                            child: Obx(() => Text(endDateText.value,
-                                style: const TextStyle(fontSize: 20))),
-                            onPressed: () async {
-                              final result = await showDatePicker(
-                                  context: context,
-                                  initialDate: endDate,
-                                  firstDate: DateTime(2020, 01),
-                                  lastDate: DateTime(2100, 12));
-                              debugPrint("$result");
-                              if (result != null) {
-                                endDate = result;
-                                endDateText.value =
-                                    "${result.year}/${result.month}/${result.day}";
-                              }
-                            },
-                          )),
-                        ],
+                      Text(
+                        "Status:".i18n,
+                        textAlign: TextAlign.left,
                       ),
+                      DropdownMenu<String>(
+                          inputDecorationTheme: InputDecorationTheme(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                          ),
+                          initialSelection: "CURRENT",
+                          onSelected: (String? value) {
+                            status = value ?? "CURRENT";
+                          },
+                          dropdownMenuEntries: const [
+                            DropdownMenuEntry(
+                                value: "CURRENT", label: "Current"),
+                            DropdownMenuEntry(
+                                value: "PLANNING", label: "Planning"),
+                            DropdownMenuEntry(
+                                value: "COMPLETED", label: "Completed"),
+                            DropdownMenuEntry(
+                                value: "DROPPED", label: "Dropped"),
+                            DropdownMenuEntry(value: "PAUSED", label: "Paused"),
+                            DropdownMenuEntry(
+                                value: "REPEATING", label: "Rewatching"),
+                          ]),
+                      const Spacer(),
+                      Text("Watch to:".i18n),
+                      TextField(
+                          onChanged: (value) {
+                            episodes = value;
+                            _episodeTextController.text = value;
+                          },
+                          controller: _episodeTextController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            labelText: 'Episode',
+                          )),
+                      const Spacer(),
+                      Text("Score:".i18n),
+                      TextField(
+                          onChanged: (value) {
+                            score = value;
+                            _scoreTextController.text = value;
+                          },
+                          keyboardType: TextInputType.number,
+                          controller: _scoreTextController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            labelText: 'Score',
+                          )),
+                      const Spacer(),
+                      Text("Start at:".i18n),
+                      Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.outline,
+                              )),
+                          child: Row(children: [
+                            Obx(() => Checkbox(
+                                value: isStartDateChecked.value,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    isStartDateChecked.value = value;
+                                  }
+                                })),
+                            Expanded(
+                                child: Obx(() => RichText(
+                                    text: (TextSpan(
+                                        text: startDateText.value,
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            final result = await showDatePicker(
+                                                context: context,
+                                                initialDate: startDate,
+                                                firstDate: DateTime(1980, 01),
+                                                lastDate: DateTime(2100, 12));
+                                            debugPrint("$result");
+                                            if (result != null) {
+                                              startDate = result;
+                                              startDateText.value =
+                                                  "${result.year}/${result.month}/${result.day}";
+                                            }
+                                          })))))
+                          ])),
+                      const Spacer(),
+                      Text("End at:".i18n),
+                      Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.outline,
+                              )),
+                          child: Row(children: [
+                            Obx(() => Checkbox(
+                                value: isEndDateChecked.value,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    isEndDateChecked.value = value;
+                                  }
+                                })),
+                            Expanded(
+                                child: Obx(() => RichText(
+                                        text: TextSpan(
+                                      text: endDateText.value,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          final result = await showDatePicker(
+                                              context: context,
+                                              initialDate: endDate,
+                                              firstDate: DateTime(1980, 01),
+                                              lastDate: DateTime(2100, 12));
+                                          debugPrint("$result");
+                                          if (result != null) {
+                                            endDate = result;
+                                            endDateText.value =
+                                                "${result.year}/${result.month}/${result.day}";
+                                          }
+                                        },
+                                    ))))
+                          ])),
+                      const Spacer(),
                       Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .outline,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(40.0)))),
                               child: const Text('delete'),
                               onPressed: () async {
                                 try {
@@ -325,6 +357,28 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                                 Navigator.pop(context);
                               },
                             ),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .outline,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(40.0)))),
+                                onPressed: () {
+                                  c.aniListID.value = "";
+                                  c.getAniListIds("");
+                                  aniListMediaId = null;
+                                  showPlatformSnackbar(
+                                      context: context,
+                                      content: "Unbinded".i18n);
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Unbind'.i18n)),
                             FilledButton(
                               child: Text('confirm'.i18n),
                               onPressed: () async {
@@ -336,9 +390,13 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                                   final listid = await AniList.editList(
                                       status: status,
                                       score: score,
-                                      startDate: startDate,
+                                      startDate: (isStartDateChecked.value)
+                                          ? startDate
+                                          : null,
                                       mediaId: aniListMediaId,
-                                      endDate: endDate,
+                                      endDate: (isEndDateChecked.value)
+                                          ? endDate
+                                          : null,
                                       progress: episodes,
                                       id: c.aniListID.value);
                                   if (!context.mounted) return;
@@ -358,7 +416,7 @@ class _DetailTrackButtonAndroidState extends State<DetailTrackButtonAndroid> {
                             )
                           ]),
                     ],
-                  ),
+                  )),
                 ),
               );
             },

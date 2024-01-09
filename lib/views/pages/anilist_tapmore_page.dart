@@ -37,57 +37,60 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
         child: Scaffold(
             appBar: AppBar(
                 bottom: TabBar(
+                  isScrollable: true,
                   tabs: tabs,
                 ),
                 title: const Text(
                   "",
                 )),
             body: TabBarView(
+                clipBehavior: Clip.none,
                 children: tabs.map((Tab tab) {
-              final status = tab.text;
-              if (data[status] == null) {
-                return Center(
-                  child: Text("Not found".i18n),
-                );
-              }
-              return LayoutBuilder(
-                  builder: (context, constraints) => GridView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: constraints.maxWidth ~/ 120,
-                          childAspectRatio: 0.7,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: (widget.anilistType == AnilistType.anime)
-                            ? data[status].length
-                            : data[status].length,
-                        itemBuilder: (context, index) {
-                          return GridItemTile(
-                            onTap: () {
-                              Get.to(() => const SearchPage());
-                              final c = Get.put(SearchPageController());
-                              c.search.value =
-                                  (widget.anilistType == AnilistType.anime)
-                                      ? data[status][index]["media"]["title"]
-                                          ["userPreferred"]
-                                      : data[status][index]["media"]["title"]
-                                          ["userPreferred"];
+                  final status = tab.text;
+                  if (data[status] == null) {
+                    return Center(
+                      child: Text("Not found".i18n),
+                    );
+                  }
+                  return LayoutBuilder(
+                      builder: (context, constraints) => GridView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: constraints.maxWidth ~/ 120,
+                              childAspectRatio: 0.7,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                            ),
+                            itemCount: (widget.anilistType == AnilistType.anime)
+                                ? data[status].length
+                                : data[status].length,
+                            itemBuilder: (context, index) {
+                              return GridItemTile(
+                                onTap: () {
+                                  Get.to(() => const SearchPage());
+                                  final c = Get.put(SearchPageController());
+                                  c.search.value =
+                                      (widget.anilistType == AnilistType.anime)
+                                          ? data[status][index]["media"]
+                                              ["title"]["userPreferred"]
+                                          : data[status][index]["media"]
+                                              ["title"]["userPreferred"];
+                                },
+                                title: (widget.anilistType == AnilistType.anime)
+                                    ? data[status][index]["media"]["title"]
+                                        ["userPreferred"]
+                                    : data[status][index]["media"]["title"]
+                                        ["userPreferred"],
+                                cover: (widget.anilistType == AnilistType.anime)
+                                    ? data[status][index]["media"]["coverImage"]
+                                        ["large"]
+                                    : data[status][index]["media"]["coverImage"]
+                                        ["large"],
+                              );
                             },
-                            title: (widget.anilistType == AnilistType.anime)
-                                ? data[status][index]["media"]["title"]
-                                    ["userPreferred"]
-                                : data[status][index]["media"]["title"]
-                                    ["userPreferred"],
-                            cover: (widget.anilistType == AnilistType.anime)
-                                ? data[status][index]["media"]["coverImage"]
-                                    ["large"]
-                                : data[status][index]["media"]["coverImage"]
-                                    ["large"],
-                          );
-                        },
-                      ));
-            }).toList())));
+                          ));
+                }).toList())));
   }
 
   Widget _buildDesktop(BuildContext context) {

@@ -293,40 +293,6 @@ class _DetailTrackButtonDesktopState extends State<DetailTrackButtonDesktop> {
                           ],
                         ),
                         actions: [
-                          FilledButton(
-                            onPressed: () async {
-                              // Delete file here
-                              debugPrint(
-                                  "$episodes $score $status $startDate $endDate");
-                              try {
-                                final listid = await AniList.editList(
-                                    status: status.value,
-                                    score: score.toString(),
-                                    startDate: (showStartDate.value)
-                                        ? startDate.value
-                                        : null,
-                                    mediaId: aniListMediaId,
-                                    endDate: (showEndDate.value)
-                                        ? endDate.value
-                                        : null,
-                                    progress: episodes.toString(),
-                                    id: c.aniListID.value);
-                                if (!context.mounted) return;
-                                debugPrint(listid);
-                                c.aniListID.value = listid;
-                                c.getAniListIds(listid);
-                                showPlatformSnackbar(
-                                    context: context,
-                                    content: "Anilist saved".i18n);
-                              } catch (e) {
-                                if (!context.mounted) return;
-                                showPlatformSnackbar(
-                                    context: context, content: e.toString());
-                              }
-                              Navigator.pop(context);
-                            },
-                            child: Text('Confirm'.i18n),
-                          ),
                           Button(
                             onPressed: () => Navigator.pop(context),
                             child: Text('Cancel'.i18n),
@@ -361,6 +327,40 @@ class _DetailTrackButtonDesktopState extends State<DetailTrackButtonDesktop> {
                               Navigator.pop(context);
                             },
                             child: Text('delete'.i18n),
+                          ),
+                          FilledButton(
+                            onPressed: () async {
+                              // Delete file here
+                              debugPrint(
+                                  "$episodes $score $status $startDate $endDate");
+                              try {
+                                final listid = await AniList.editList(
+                                    status: status.value,
+                                    score: score.toString(),
+                                    startDate: (showStartDate.value)
+                                        ? startDate.value
+                                        : null,
+                                    mediaId: aniListMediaId,
+                                    endDate: (showEndDate.value)
+                                        ? endDate.value
+                                        : null,
+                                    progress: episodes.toString(),
+                                    id: c.aniListID.value);
+                                if (!context.mounted) return;
+                                debugPrint(listid);
+                                c.aniListID.value = listid;
+                                c.getAniListIds(listid);
+                                showPlatformSnackbar(
+                                    context: context,
+                                    content: "Anilist saved".i18n);
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                showPlatformSnackbar(
+                                    context: context, content: e.toString());
+                              }
+                              Navigator.pop(context);
+                            },
+                            child: Text('Confirm'.i18n),
                           )
                         ],
                       )));
