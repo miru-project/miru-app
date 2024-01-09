@@ -25,20 +25,17 @@
     "delete": "Удалить",
     "delete-all": "Удалить всё"
   },
-
   "home": {
     "continue-watching": "Продолжить",
     "favorite": "Избранное",
     "no-record": "Нет избранного или просмотра записей",
     "watched": "Просмотрен {ep}"
   },
-
   "search": {
     "hint-text": "Пожалуйста, используйте поиск с умом!~",
     "all": "Все",
     "filter": "Фильтр"
   },
-
   "extension": {
     "import": {
       "title": "Импорт расширения",
@@ -51,14 +48,12 @@
     "installed": "Установлено",
     "edit-code": "Редактировать код"
   },
-
   "extension-repo": {
     "error": "Произошла ошибка!",
     "error-tips": "Пожалуйста, проверьте подключение к сети или адрес репозитория",
     "empty": "Репозиторий пуст",
     "upgrade": "Обновление"
   },
-
   "settings": {
     "repo-url": "URL репозитория расширений",
     "repo-url-subtitle": "Получить URL репозитория для расширений",
@@ -87,17 +82,9 @@
     "language-subtitle": "Изменить язык приложения",
     "extension-log": "Окно журнала расширений",
     "extension-log-subtitle": "Используется для отладки расширений",
-    "about": "О приложении",
-    "official-site": "Официальный веб-сайт",
-    "official-site-training": "Посетите официальный сайт",
-    "source-code": "Открытый исходный код",
-    "source-code-training": "Поставьте звезду",
-    "license": "Лицензия",
-    "license-subtitle": "Лицензия"
+    "about": "О приложении"
   },
-
   "external-player-launching": "Запуск {player}",
-
   "detail": {
     "favorite": "Избранное",
     "favorited": "В избранных",
@@ -111,7 +98,6 @@
     "no-tmdb-data": "Данные TMDB не совпадают, привяжите данные самостоятельно",
     "tmdb-key-missing": "Ключ API TMDB отсутствует, заполните настройки"
   },
-
   "video": {
     "episodes": "Эпизоды",
     "watch-now": "Начать просмотр",
@@ -122,26 +108,36 @@
     "subtitle": "Субтитры",
     "subtitle-change": "Редактировать субтитры {title}",
     "subtitle-file": "Файл субтитров",
-    "torrent-downloading": "Торрент скачивание"
+    "torrent-downloading": "Торрент-скачивание",
+    "tooltip": {
+      "close": "Закрыть",
+      "subtitle": "Субтитры",
+      "play-list": "Список воспроизведения",
+      "quality": "Качество",
+      "speed": "Скорость",
+      "play": "Играть",
+      "play-or-pause": "Пауза",
+      "previous": "Предыдущий",
+      "next": "Следующий",
+      "full-screen": "Полноэкранный режим",
+      "volume": "Громкость",
+      "torrent-file-list": "Список торрент-файлов"
+    }
   },
-
   "comic-settings": {
     "read-mode": "Режим чтения",
     "standard": "Стандарт",
     "right-to-left": "Справа налево",
     "web-tonn": "Манхва"
   },
-
   "novel-settings": {
     "font-size": "Размер текста"
   },
-
   "reader": {
     "chapters": "Главы",
     "read-now": "Начать чтение",
     "no-chapters": "Нет глав"
   },
-
   "upgrade": {
     "check-update": "Проверить наличие обновлений",
     "new-version": "Новая версия {version} найдена",
@@ -150,15 +146,12 @@
     "not-now": "Не сейчас",
     "error": "Не удалось проверить наличие обновлений, произошла сетевая ошибка"
   },
-
   "extension-install-error": "Не удалось установить расширение",
-
   "extension-type": {
     "video": "Видео",
     "novel": "Новелла",
     "comic": "Комикс"
   },
-
   "extension-info": {
     "author": "Автор",
     "description": "Описание",
@@ -169,14 +162,12 @@
     "license": "Лицензия",
     "title": "Информация о расширении"
   },
-
   "cookie-clean": {
     "title": "Очистка файлов cookie",
     "subtitle": "Возможно, вам придётся снова войти в систему после очистки",
     "success": "Очистка завершена",
     "clean": "Чисто"
   },
-
   "tmdb": {
     "backdrops": "Фоны",
     "status": "Состояние",
@@ -186,7 +177,6 @@
     "runtime": "Время выполнения",
     "languages": "Языки"
   },
-
   "bt-server": {
     "not-installed": "BT-Сервер не установлен",
     "running": "BT-Сервер работает",

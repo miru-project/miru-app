@@ -25,20 +25,17 @@
     "delete": "Выдаліць",
     "delete-all": "Выдаліць усё"
   },
-
   "home": {
     "continue-watching": "Працягнуць",
     "favorite": "Выбранае",
     "no-record": "Няма выбранага або прагляду запісаў",
     "watched": "Прагледжаны {ep}"
   },
-
   "search": {
     "hint-text": "Калі ласка, выкарыстоўвайце пошук з розумам!~",
     "all": "Усё",
     "filter": "Фільтр"
   },
-
   "extension": {
     "import": {
       "title": "Імпарт пашырэння",
@@ -51,14 +48,12 @@
     "installed": "Устаноўлена",
     "edit-code": "Рэдагаваць код"
   },
-
   "extension-repo": {
     "error": "Адбылася памылка!",
     "error-tips": "Калі ласка, праверце падлучэнне да сеткі або адрас рэпазітара",
     "empty": "Рэпазітар пусты",
     "upgrade": "Абнаўленне"
   },
-
   "settings": {
     "repo-url": "URL рэпазітара пашырэнняў",
     "repo-url-subtitle": "Атрымаць URL рэпазітара для пашырэнняў",
@@ -87,17 +82,9 @@
     "language-subtitle": "Змяніць мову праграмы",
     "extension-log": "Акно часопіса пашырэнняў",
     "extension-log-subtitle": "Выкарыстоўваецца для адладкі пашырэнняў",
-    "about": "Аб праграме",
-    "official-site": "Афіцыйны вэб-сайт",
-    "official-site-training": "Наведайце афіцыйны сайт",
-    "source-code": "Адкрыты зыходны код",
-    "source-code-training": "Пастаўце зорку",
-    "license": "Ліцэнзія",
-    "license-subtitle": "Ліцэнзія"
+    "about": "Аб праграме"
   },
-
   "external-player-launching": "Запуск {player}",
-
   "detail": {
     "favorite": "Выбранае",
     "favorited": "У выбраных",
@@ -111,7 +98,6 @@
     "no-tmdb-data": "Дадзеныя TMDB не супадаюць, прывяжыце дадзеныя самастойна",
     "tmdb-key-missing": "Ключ API TMDB адсутнічае, запоўніце наладкі"
   },
-
   "video": {
     "episodes": "Эпізоды",
     "watch-now": "Пачаць прагляд",
@@ -122,26 +108,36 @@
     "subtitle": "Субтытры",
     "subtitle-change": "Рэдагаваць субтытры {title}",
     "subtitle-file": "Файл субтытраў",
-    "torrent-downloading": "Торэнт запампоўка"
+    "torrent-downloading": "Торэнт-запампоўка",
+    "tooltip": {
+      "close": "Закрыць",
+      "subtitle": "Субтытры",
+      "play-list": "Спіс прайгравання",
+      "quality": "Якасць",
+      "speed": "Хуткасць",
+      "play": "Прайграваць",
+      "play-or-pause": "Паўза",
+      "previous": "Папярэдні",
+      "next": "Наступны",
+      "full-screen": "Поўнаэкранны рэжым",
+      "volume": "Гучнасць",
+      "torrent-file-list": "Спіс торэнт-файлаў"
+    }
   },
-
   "comic-settings": {
     "read-mode": "Рэжым чытання",
     "standard": "Стандарт",
     "right-to-left": "Справа налева",
     "web-tonn": "Манхва"
   },
-
   "novel-settings": {
     "font-size": "Памер тэксту"
   },
-
   "reader": {
     "chapters": "Раздзелы",
     "read-now": "Пачаць чытанне",
     "no-chapters": "Няма раздзелаў"
   },
-
   "upgrade": {
     "check-update": "Праверыць наяўнасць абнаўленняў",
     "new-version": "Новая версія {version} знойдзена",
@@ -150,15 +146,12 @@
     "not-now": "Не цяпер",
     "error": "Не ўдалося праверыць наяўнасць абнаўленняў, адбылася сеткавая памылка"
   },
-
   "extension-install-error": "Не атрымалася ўсталяваць пашырэнне",
-
   "extension-type": {
     "video": "Відэа",
     "novel": "Навэла",
     "comic": "Комікс"
   },
-
   "extension-info": {
     "author": "Аўтар",
     "description": "Апісанне",
@@ -169,14 +162,12 @@
     "license": "Ліцэнзія",
     "title": "Інфармацыя аб пашырэнні"
   },
-
   "cookie-clean": {
     "title": "Ачыстка файлаў cookie",
     "subtitle": "Магчыма, вам давядзецца зноў увайсці ў сістэму пасля ачысткі",
     "success": "Ачыстка завершана",
     "clean": "Чыста"
   },
-
   "tmdb": {
     "backdrops": "Фоны",
     "status": "Стан",
@@ -186,7 +177,6 @@
     "runtime": "Час выканання",
     "languages": "Мовы"
   },
-
   "bt-server": {
     "not-installed": "BT-Сервер не ўсталяваны",
     "running": "BT-Сервер запушчаны",

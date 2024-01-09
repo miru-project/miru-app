@@ -81,13 +81,7 @@
     "language-subtitle": "सॉफ़्टवेयर की भाषा बदलें",
     "extension-log": "एक्सटेंशन लॉग विंडो",
     "extension-log-subtitle": "एक्सटेंशन्स को डिबग करने के लिए प्रयुक्त होता है",
-    "about": "जानकारी",
-    "official-site": "आधिकारिक वेबसाइट",
-    "official-site-training": "यात्रा करें",
-    "source-code": "ओपन सोर्स",
-    "source-code-training": "स्टार दें",
-    "license": "लाइसेंस",
-    "license-subtitle": "लाइसेंस"
+    "about": "जानकारी"
   },
   "external-player-launching": "{player} को चालना",
 

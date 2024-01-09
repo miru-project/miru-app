@@ -149,71 +149,76 @@ class _DetailPageState extends State<DetailPage> {
             },
             body: Padding(
               padding: const EdgeInsets.all(8),
-              child: TabBarView(
-                children: [
-                  if (!LayoutUtils.isTablet)
-                    DetailEpisodes(
+              child: SafeArea(
+                top: false,
+                child: TabBarView(
+                  children: [
+                    if (!LayoutUtils.isTablet)
+                      DetailEpisodes(
+                        tag: widget.tag,
+                      ),
+                    DetailOverView(
                       tag: widget.tag,
                     ),
-                  DetailOverView(
-                    tag: widget.tag,
-                  ),
-                  if (c.type == ExtensionType.bangumi)
-                    Obx(() {
-                      if (c.tmdbDetail == null || c.tmdbDetail!.casts.isEmpty) {
-                        return Column(
-                          children: [
-                            const SizedBox(height: 100),
-                            Text('detail.no-tmdb-data'.i18n),
-                            const SizedBox(height: 8),
-                            FilledButton(
-                              onPressed: () {
-                                c.modifyTMDBBinding();
-                              },
-                              child: Text(
-                                'detail.modify-tmdb-binding'.i18n,
-                              ),
-                            )
-                          ],
-                        );
-                      }
-                      return ListView.builder(
-                        padding: const EdgeInsets.all(0),
-                        itemBuilder: (context, index) {
-                          final cast = c.tmdbDetail!.casts[index];
-                          late String url = '';
-                          if (cast.profilePath != null) {
-                            url = TmdbApi.getImageUrl(cast.profilePath!) ?? '';
-                          }
-
-                          return ListTile(
-                            leading: Container(
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              child: CacheNetWorkImagePic(
-                                url,
-                                width: 50,
-                                height: 50,
-                                headers: c.detail?.headers,
-                              ),
-                            ),
-                            title: Text(cast.name),
-                            subtitle: Text(cast.character),
-                            onTap: () {
-                              launchUrl(
-                                Uri.parse(
-                                  "https://www.themoviedb.org/person/${cast.id}",
+                    if (c.type == ExtensionType.bangumi)
+                      Obx(() {
+                        if (c.tmdbDetail == null ||
+                            c.tmdbDetail!.casts.isEmpty) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 100),
+                              Text('detail.no-tmdb-data'.i18n),
+                              const SizedBox(height: 8),
+                              FilledButton(
+                                onPressed: () {
+                                  c.modifyTMDBBinding();
+                                },
+                                child: Text(
+                                  'detail.modify-tmdb-binding'.i18n,
                                 ),
-                              );
-                            },
+                              )
+                            ],
                           );
-                        },
-                        itemCount: c.tmdbDetail!.casts.length,
-                      );
-                    }),
-                ],
+                        }
+                        return ListView.builder(
+                          padding: const EdgeInsets.all(0),
+                          itemBuilder: (context, index) {
+                            final cast = c.tmdbDetail!.casts[index];
+                            late String url = '';
+                            if (cast.profilePath != null) {
+                              url =
+                                  TmdbApi.getImageUrl(cast.profilePath!) ?? '';
+                            }
+
+                            return ListTile(
+                              leading: Container(
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: CacheNetWorkImagePic(
+                                  url,
+                                  width: 50,
+                                  height: 50,
+                                  headers: c.detail?.headers,
+                                ),
+                              ),
+                              title: Text(cast.name),
+                              subtitle: Text(cast.character),
+                              onTap: () {
+                                launchUrl(
+                                  Uri.parse(
+                                    "https://www.themoviedb.org/person/${cast.id}",
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          itemCount: c.tmdbDetail!.casts.length,
+                        );
+                      }),
+                  ],
+                ),
               ),
             ),
           ),

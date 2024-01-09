@@ -6,7 +6,7 @@ import 'package:miru_app/views/pages/extension/extension_page.dart';
 import 'package:miru_app/views/pages/home_page.dart';
 import 'package:miru_app/controllers/main_controller.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
-import 'package:miru_app/views/pages/settings_page.dart';
+import 'package:miru_app/views/pages/settings/settings_page.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/utils/i18n.dart';
