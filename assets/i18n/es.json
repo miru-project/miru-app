@@ -87,13 +87,7 @@
     "language-subtitle": "Cambia el idioma de la aplicación",
     "extension-log": "Ventana de registro de extensiones",
     "extension-log-subtitle": "Usado para depurar extensiones",
-    "about": "Acerca de",
-    "official-site": "Sitio web oficial",
-    "official-site-training": "Visitar",
-    "source-code": "Código abierto",
-    "source-code-training": "Dar estrella",
-    "license": "Licencia",
-    "license-subtitle": "Licencia"
+    "about": "Acerca de"
   },
 
   "external-player-launching": "Lanzando {player}",

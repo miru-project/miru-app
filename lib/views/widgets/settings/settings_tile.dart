@@ -10,12 +10,14 @@ class SettingsTile extends StatefulWidget {
     this.trailing,
     this.buildSubtitle,
     this.onTap,
+    this.isCard = false,
   });
   final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;
   final Function()? onTap;
   final Widget? trailing;
+  final bool isCard;
 
   @override
   State<SettingsTile> createState() => _SettingsTileState();
@@ -33,8 +35,7 @@ class _SettingsTileState extends State<SettingsTile> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return fluent.Card(
-        child: Row(
+    Widget content = Row(
       children: [
         if (widget.icon != null) ...[
           widget.icon!,
@@ -53,7 +54,16 @@ class _SettingsTileState extends State<SettingsTile> {
         const Spacer(),
         widget.trailing ?? const SizedBox(),
       ],
-    ));
+    );
+    if (widget.isCard) {
+      return fluent.Card(
+        child: content,
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: content,
+    );
   }
 
   @override

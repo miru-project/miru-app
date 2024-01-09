@@ -82,16 +82,10 @@
     "language-subtitle": "ソフトウェアの言語を変更します",
     "extension-log": "拡張機能ログウィンドウ",
     "extension-log-subtitle": "拡張機能のデバッグに使用します",
+    "about": "詳細",
     "skip-interval": "スキップ間隔",
     "skip-interval-subtitle": "内蔵ビデオプレーヤーのスキップ間隔",
-    "default-reader-mode": "デフォルトのリーダーモード",
-    "about": "詳細",
-    "official-site": "公式ウェブサイト",
-    "official-site-training": "訪問する",
-    "source-code": "オープンソース",
-    "source-code-training": "スター",
-    "license": "ライセンス",
-    "license-subtitle": "ライセンス"
+    "default-reader-mode": "デフォルトのリーダーモード"
   },
   "external-player-launching": "{player}を起動",
   "detail": {
@@ -117,7 +111,7 @@
     "subtitle": "字幕",
     "subtitle-change": "字幕を変更 {title}",
     "subtitle-file": "字幕ファイル",
-    "torrent-downloading": "Torrentでダウンロード"
+    "torrent-downloading": "Torrentでダウンロード",
     "tooltip": {
       "close": "閉じる",
       "subtitle": "字幕",
