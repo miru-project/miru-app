@@ -111,7 +111,7 @@
     "subtitle": "じまちゅん",
     "subtitle-change": "じまちゅんへいるかん {title}",
     "subtitle-file": "じまちゅるファイル",
-    "torrent-downloading": "Torrentっしダウンロード"
+    "torrent-downloading": "Torrentっしダウンロード",
     "tooltip": {
       "close": "くーいん",
       "subtitle": "じまちゅん",
@@ -124,7 +124,7 @@
       "next": "ちぎ",
       "full-screen": "フルスクリーン",
       "volume": "うんりょう",
-      "torrent-file-list": "Torrentファイルリスト"   
+      "torrent-file-list": "Torrentファイルリスト"
     }
   },
   "comic-settings": {

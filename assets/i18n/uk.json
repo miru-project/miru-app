@@ -25,20 +25,17 @@
     "delete": "Видалити",
     "delete-all": "Видалити все"
   },
-
   "home": {
     "continue-watching": "Продовжити",
     "favorite": "Вибране",
     "no-record": "Немає вибраного або перегляду записів",
     "watched": "Переглянуто {ep}"
   },
-
   "search": {
     "hint-text": "Будь ласка, використовуйте пошук з розумом!~",
     "all": "Усе",
     "filter": "Фільтр"
   },
-
   "extension": {
     "import": {
       "title": "Імпорт розширення",
@@ -51,14 +48,12 @@
     "installed": "Встановлено",
     "edit-code": "Редагувати код"
   },
-
   "extension-repo": {
     "error": "Виникла помилка!",
     "error-tips": "Будь ласка, перевірте підключення до мережі або адреса репозиторію",
     "empty": "Репозиторій порожній",
     "upgrade": "Оновлення"
   },
-
   "settings": {
     "repo-url": "URL репозиторія розширень",
     "repo-url-subtitle": "Отримати URL репозиторія для розширень",
@@ -89,9 +84,7 @@
     "extension-log-subtitle": "Використовується для налагодження розширень",
     "about": "Про додаток"
   },
-
   "external-player-launching": "Запуск {player}",
-
   "detail": {
     "favorite": "Вибране",
     "favorited": "В обраних",
@@ -105,7 +98,6 @@
     "no-tmdb-data": "Дані TMDB не збігаються, прив'яжіть дані самостійно",
     "tmdb-key-missing": "Ключ API TMDB відсутній, заповніть налаштування"
   },
-
   "video": {
     "episodes": "Епізоди",
     "watch-now": "Почати перегляд",
@@ -130,25 +122,22 @@
       "full-screen": "Повноекранний режим",
       "volume": "Гучність",
       "torrent-file-list": "Список торрент-файлів"
+    }
   },
-
   "comic-settings": {
     "read-mode": "Режим читання",
     "standard": "Стандарт",
     "right-to-left": "Справа наліво",
     "web-tonn": "Манхва"
   },
-
   "novel-settings": {
     "font-size": "Розмір тексту"
   },
-
   "reader": {
     "chapters": "Глави",
     "read-now": "Почати читання",
     "no-chapters": "Немає глав"
   },
-
   "upgrade": {
     "check-update": "Перевірити наявність оновлень",
     "new-version": "Нову версію {version} знайдено",
@@ -157,15 +146,12 @@
     "not-now": "Не зараз",
     "error": "Не вдалося перевірити наявність оновлень, відбулася мережева помилка"
   },
-
   "extension-install-error": "Не вдалося встановити розширення",
-
   "extension-type": {
     "video": "Відео",
     "novel": "Новела",
     "comic": "Комікс"
   },
-
   "extension-info": {
     "author": "Автор",
     "description": "Опис",
@@ -176,14 +162,12 @@
     "license": "Ліцензія",
     "title": "Інформація про розширення"
   },
-
   "cookie-clean": {
     "title": "Очищення файлів cookie",
     "subtitle": "Можливо, вам доведеться знову увійти до системи після очищення",
     "success": "Очищення завершено",
     "clean": "Чисто"
   },
-
   "tmdb": {
     "backdrops": "Фони",
     "status": "Стан",
@@ -193,7 +177,6 @@
     "runtime": "Час виконання",
     "languages": "Мови"
   },
-
   "bt-server": {
     "not-installed": "BT-Сервер не встановлено",
     "running": "BT-Сервер працює",
