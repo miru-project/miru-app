@@ -26,7 +26,7 @@ class _FavoritesPageState extends fluent.State<FavoritesPage> {
             context,
             "home.favorite-all",
             translationParams: {
-              "type": ExtensionUtils.typeToString(widget.type),
+              "type": ExtensionUtils.typeToString(widget.type).toLowerCase(),
             },
           ),
         ),
@@ -96,7 +96,8 @@ class _FavoritesPageState extends fluent.State<FavoritesPage> {
                     context,
                     "home.favorite-all",
                     translationParams: {
-                      "type": ExtensionUtils.typeToString(widget.type),
+                      "type": ExtensionUtils.typeToString(widget.type)
+                          .toLowerCase(),
                     },
                   ),
                   style: fluent.FluentTheme.of(context).typography.subtitle,
