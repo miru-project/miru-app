@@ -1,15 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
-import 'package:flutter/services.dart';
-import 'dart:io';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/tracking_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 
+enum AnilistType { anime, manga }
+
 class AniListProvider {
-  static late String anilistToken;
-  static late String userid;
+  static String get anilistToken =>
+      MiruStorage.getSetting(SettingKey.aniListToken);
+  static String get userid => MiruStorage.getSetting(SettingKey.aniListUserId);
+
   static const headers = <String, String>{
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -19,53 +20,37 @@ class AniListProvider {
 
   static const String userDataQuery =
       """{Viewer {name  id avatar{medium} statistics{anime{episodesWatched}manga{chaptersRead}}}}""";
-  static initToken() {
-    final token = MiruStorage.getSetting(SettingKey.aniListToken);
-    anilistToken = token;
-    userid = MiruStorage.getSetting(SettingKey.aniListUserId);
-  }
-
-  static Future<void> authenticate() async {
-    // Windows needs some callback URL on localhost
-    const callbackUrlScheme = 'miruapp';
-    final clientId = Platform.isAndroid ? '15748' : '15782';
-    try {
-      final result = await FlutterWebAuth2.authenticate(
-        url:
-            "https://anilist.co/api/v2/oauth/authorize?client_id=$clientId&response_type=token",
-        callbackUrlScheme: callbackUrlScheme,
-      );
-      // print("result: $result");
-      saveAuthToken(result);
-    } on PlatformException catch (e) {
-      debugPrint("${e.message}");
-    }
-  }
 
   static void saveAuthToken(String result) {
     RegExp tokenRegex = RegExp(r'(?<=access_token=).+(?=&token_type)');
     Match? re = tokenRegex.firstMatch(result);
     if (re != null) {
       String token = re.group(0)!;
-      anilistToken = token;
-      final c = Get.put(TrackingPageController());
+      final c = Get.find<TrackingPageController>();
       c.updateAniListToken(token);
     }
   }
 
-  static postRequest(
-      {Map<String, dynamic>? varibale, required String queryString}) async {
+  static postRequest({
+    Map<String, dynamic>? varibale,
+    required String queryString,
+  }) async {
     try {
-      final response = await Dio().post(apiUrl,
-          options: Options(headers: {
-            "Authorization": "Bearer $anilistToken",
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          }),
-          data: {"query": queryString});
+      final response = await Dio().post(
+        apiUrl,
+        options: Options(headers: {
+          "Authorization": "Bearer $anilistToken",
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }),
+        data: {"query": queryString},
+      );
       return response.data;
     } on DioException catch (e) {
       if (e.response != null) {
+        if (e.response!.statusCode == 400) {
+          Get.find<TrackingPageController>().anilistIsLogin.value = false;
+        }
         debugPrint("${e.response}");
       }
     }
@@ -75,7 +60,6 @@ class AniListProvider {
     final response = await postRequest(queryString: userDataQuery);
     final userId = response["data"]["Viewer"]["id"].toString();
     MiruStorage.setSetting(SettingKey.aniListUserId, userId);
-    userid = userId;
     return {
       "UserAvatar": response["data"]["Viewer"]["avatar"]["medium"],
       "User": response["data"]["Viewer"]["name"],
@@ -106,8 +90,11 @@ class AniListProvider {
 
   //use their name to query anime or manga id
   //save anilist: use mediaQueryPage to get id then go to editlist
-  static Future<List<dynamic>> mediaQuerypage(
-      {required String searchString, required String type, int? page}) async {
+  static Future<List<dynamic>> mediaQuerypage({
+    required String searchString,
+    required String type,
+    int? page,
+  }) async {
     final String nameQuery = """{Page(page:${page ?? 1}){
     media(search:"$searchString",type:$type){
         id

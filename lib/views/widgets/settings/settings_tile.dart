@@ -28,7 +28,9 @@ class _SettingsTileState extends State<SettingsTile> {
     return ListTile(
       leading: widget.icon,
       title: Text(widget.title),
-      subtitle: Text(widget.buildSubtitle?.call() ?? ""),
+      subtitle: widget.buildSubtitle != null
+          ? Text(widget.buildSubtitle!.call())
+          : null,
       trailing: widget.trailing,
       onTap: widget.onTap,
     );

@@ -504,22 +504,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_web_auth_2:
-    dependency: "direct main"
-    description:
-      name: flutter_web_auth_2
-      sha256: "0da41e631a368e02366fc1a9b79dd8da191e700a836878bc54466fff51c07df2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.1"
-  flutter_web_auth_2_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_web_auth_2_platform_interface
-      sha256: f6fa7059ff3428c19cd756c02fef8eb0147131c7e64591f9060c90b5ab84f094
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.4"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1474,14 +1458,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.7"
-  window_to_front:
-    dependency: transitive
-    description:
-      name: window_to_front
-      sha256: "7aef379752b7190c10479e12b5fd7c0b9d92adc96817d9e96c59937929512aee"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   xdg_directories:
     dependency: transitive
     description:

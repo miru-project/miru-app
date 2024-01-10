@@ -394,7 +394,8 @@ class _ExtensionFilterWidgetState extends State<_ExtensionFilterWidget> {
     }
     // 再请求一次 _filters
     final filters = Map<String, ExtensionFilter>.from(
-        await _runtime.createFilter(filter: selectedFilters));
+      await _runtime.createFilter(filter: selectedFilters),
+    );
 
     // 剔除 _filters 中不能存在的选项
     selectedFilters.forEach((key, value) {

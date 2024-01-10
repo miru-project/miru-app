@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/utils/i18n.dart';
-import 'package:miru_app/views/widgets/anilist_horizontal_list.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,7 @@ class AnilistMorePage extends StatefulWidget {
   const AnilistMorePage(
       {super.key, required this.anilistType, required this.data});
   final AnilistType anilistType;
-  final Map<String, dynamic> data;
+  final Map<dynamic, dynamic> data;
 
   @override
   State<AnilistMorePage> createState() => _AnilistMorePageState();

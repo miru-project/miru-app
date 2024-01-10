@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
-import 'package:miru_app/views/widgets/progress.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/views/widgets/horizontal_list.dart';
@@ -16,92 +15,76 @@ class AnilistHorizontalList extends StatefulWidget {
   const AnilistHorizontalList({
     super.key,
     required this.anilistType,
+    required this.data,
   });
   final AnilistType anilistType;
+  final Map<dynamic, dynamic> data;
+
   @override
   State<AnilistHorizontalList> createState() => _AnilistHorizontalListState();
 }
 
 class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
-  Map<AnilistType, String> anilistTypeMap = {
-    AnilistType.anime: "ANIME",
-    AnilistType.manga: "MANGA"
-  };
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future:
-            AniListProvider.getCollection(anilistTypeMap[widget.anilistType]!),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (!snapshot.hasData) {
-            return const Center(
-              child: ProgressRing(),
-            );
-          }
-          final data = snapshot.data;
-          return HorizontalList(
-            title: (widget.anilistType == AnilistType.anime)
-                ? "Anime".i18n
-                : "Manga".i18n,
-            itemBuilder: (context, index) {
-              return GridItemTile(
-                onTap: () {
-                  if (Platform.isAndroid) {
-                    Get.to(() => const SearchPage());
-                  } else {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SearchPage()));
-                  }
+    final data = widget.data;
+    final count = ((widget.anilistType == AnilistType.anime)
+            ? data["Watching"]?.length
+            : data["Reading"]?.length) ??
+        0;
 
-                  final c = Get.put(SearchPageController());
-                  c.search.value = (widget.anilistType == AnilistType.anime)
-                      ? data["Watching"][index]["media"]["title"]
-                          ["userPreferred"]
-                      : data["Reading"][index]["media"]["title"]
-                          ["userPreferred"];
-                },
-                title: (widget.anilistType == AnilistType.anime)
-                    ? data!["Watching"][index]["media"]["title"]
-                        ["userPreferred"]
-                    : data!["Reading"][index]["media"]["title"]
-                        ["userPreferred"],
-                cover: (widget.anilistType == AnilistType.anime)
-                    ? data["Watching"][index]["media"]["coverImage"]["large"]
-                    : data["Reading"][index]["media"]["coverImage"]["large"],
+    return HorizontalList(
+      title: (widget.anilistType == AnilistType.anime)
+          ? "Anime".i18n
+          : "Manga".i18n,
+      itemBuilder: (context, index) {
+        final itemData = (widget.anilistType == AnilistType.anime)
+            ? data["Watching"][index]
+            : data["Reading"][index];
+
+        final title = itemData["media"]["title"]["userPreferred"];
+        final cover = itemData["media"]["coverImage"]["large"];
+
+        return GridItemTile(
+          onTap: () {
+            if (Platform.isAndroid) {
+              Get.to(() => const SearchPage());
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchPage(),
+                ),
               );
-            },
-            itemCount: (widget.anilistType == AnilistType.anime)
-                ? snapshot.data!["Watching"].length
-                : snapshot.data!["Reading"].length,
-            onClickMore: () {
-              debugPrint("click more");
-              if (Platform.isAndroid) {
-                Get.to(
-                  () => AnilistMorePage(
-                    anilistType: AnilistType.anime,
-                    data: data!,
-                  ),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  fluent.FluentPageRoute(
-                    builder: (context) => AnilistMorePage(
-                      anilistType: AnilistType.anime,
-                      data: data!,
-                    ),
-                  ),
-                );
-              }
-            },
+            }
+            final c = Get.put(SearchPageController());
+            c.search.value = title;
+          },
+          title: title,
+          cover: cover,
+        );
+      },
+      itemCount: count,
+      onClickMore: () {
+        if (Platform.isAndroid) {
+          Get.to(
+            () => AnilistMorePage(
+              anilistType: AnilistType.anime,
+              data: data,
+            ),
           );
-        });
+        } else {
+          Navigator.push(
+            context,
+            fluent.FluentPageRoute(
+              builder: (context) => AnilistMorePage(
+                anilistType: AnilistType.anime,
+                data: data,
+              ),
+            ),
+          );
+        }
+      },
+    );
   }
 }
-
-enum AnilistType { anime, manga }

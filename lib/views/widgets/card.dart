@@ -11,7 +11,10 @@ class PlatformCard extends StatelessWidget {
 
   Widget _buildAndroid(BuildContext context) {
     return Card(
-      child: child,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: child,
+      ),
     );
   }
 
