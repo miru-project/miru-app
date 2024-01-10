@@ -130,7 +130,17 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
         builder: (context, snapshot) {
           final data = snapshot.data;
           if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
+            return Column(
+              children: [
+                Text(snapshot.error.toString()),
+                PlatformButton(
+                  child: const Text("Retry"),
+                  onPressed: () {
+                    setState(() {});
+                  },
+                )
+              ],
+            );
           }
           if (!snapshot.hasData) {
             return const Center(
@@ -189,7 +199,7 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
                         PlatformButton(
                           child: const Text("Logout"),
                           onPressed: () {
-                            c.anilistIsLogin.value = false;
+                            c.logoutAniList();
                           },
                         ),
                     ],
