@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/views/widgets/horizontal_list.dart';
 import 'package:miru_app/views/widgets/grid_item_tile.dart';
 import 'package:get/get.dart';
-import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:miru_app/controllers/search_controller.dart';
-import 'package:miru_app/views/pages/anilist_tapmore_page.dart';
+import 'package:miru_app/views/pages/tracking/anilist_more_page.dart';
 
 class AnilistHorizontalList extends StatefulWidget {
   const AnilistHorizontalList({
@@ -28,17 +28,16 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
   @override
   Widget build(BuildContext context) {
     final data = widget.data;
-    final count = ((widget.anilistType == AnilistType.anime)
+    final type = widget.anilistType;
+    final count = ((type == AnilistType.anime)
             ? data["Watching"]?.length
             : data["Reading"]?.length) ??
         0;
 
     return HorizontalList(
-      title: (widget.anilistType == AnilistType.anime)
-          ? "Anime".i18n
-          : "Manga".i18n,
+      title: (type == AnilistType.anime) ? "Anime".i18n : "Manga".i18n,
       itemBuilder: (context, index) {
-        final itemData = (widget.anilistType == AnilistType.anime)
+        final itemData = (type == AnilistType.anime)
             ? data["Watching"][index]
             : data["Reading"][index];
 
@@ -50,12 +49,7 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
             if (Platform.isAndroid) {
               Get.to(() => const SearchPage());
             } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SearchPage(),
-                ),
-              );
+              router.push("/search");
             }
             final c = Get.put(SearchPageController());
             c.search.value = title;
@@ -69,20 +63,16 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
         if (Platform.isAndroid) {
           Get.to(
             () => AnilistMorePage(
-              anilistType: AnilistType.anime,
-              data: data,
+              anilistType: type,
             ),
           );
         } else {
-          Navigator.push(
-            context,
-            fluent.FluentPageRoute(
-              builder: (context) => AnilistMorePage(
-                anilistType: AnilistType.anime,
-                data: data,
-              ),
-            ),
-          );
+          router.push(Uri(
+            path: '/settings/anilist_more',
+            queryParameters: {
+              'type': type.index.toString(),
+            },
+          ).toString());
         }
       },
     );

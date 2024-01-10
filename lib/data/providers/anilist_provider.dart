@@ -72,7 +72,9 @@ class AniListProvider {
     };
   }
 
-  static Future<Map<String, dynamic>> getCollection(String type) async {
+  static Future<Map<String, dynamic>> getCollection(
+      AnilistType anilistType) async {
+    final type = (anilistType == AnilistType.anime) ? "ANIME" : "MANGA";
     final query =
         """{MediaListCollection(userId: $userid, type: $type) { lists { name entries { status progress score(format:POINT_100) media { id status chapters episodes   meanScore isFavourite coverImage{large} title {userPreferred } } } }  } }""";
     final res = await postRequest(queryString: query);

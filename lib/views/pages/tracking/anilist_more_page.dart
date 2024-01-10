@@ -1,0 +1,208 @@
+import 'dart:io';
+
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter/material.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
+import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/layout.dart';
+import 'package:miru_app/views/pages/search/search_page.dart';
+import 'package:miru_app/views/widgets/platform_widget.dart';
+import 'package:get/get.dart';
+import 'package:miru_app/controllers/search_controller.dart';
+import 'package:miru_app/views/widgets/grid_item_tile.dart';
+import 'package:miru_app/views/widgets/progress.dart';
+
+class AnilistMorePage extends StatefulWidget {
+  const AnilistMorePage({super.key, required this.anilistType});
+  final AnilistType anilistType;
+
+  @override
+  State<AnilistMorePage> createState() => _AnilistMorePageState();
+}
+
+class _AnilistMorePageState extends State<AnilistMorePage> {
+  late final tabs = [
+    if (widget.anilistType == AnilistType.manga) "Reading" else "Watching",
+    "Completed",
+    "Planning",
+    "Dropped",
+    "Paused",
+    "Rewatching",
+  ];
+  int index = 0;
+
+  Widget _buildAndroid(BuildContext context) {
+    final List<Tab> tabs = [
+      for (int i = 0; i < this.tabs.length; i++)
+        Tab(
+          text: this.tabs[i],
+        )
+    ];
+    return DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: tabs,
+            indicatorSize: TabBarIndicatorSize.label,
+          ),
+          title: Text(
+            "AniList ${widget.anilistType.toString().split(".")[1]}",
+          ),
+        ),
+        body: FutureBuilder(
+            future: AniListProvider.getCollection(widget.anilistType),
+            builder: (context, snapshot) {
+              final data = snapshot.data;
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: ProgressRing(),
+                );
+              }
+
+              if (data == null) {
+                return const Center(
+                  child: Text("No data"),
+                );
+              }
+
+              return TabBarView(
+                  children: tabs.map((Tab tab) {
+                final status = tab.text;
+                final count = data[status]?.length ?? 0;
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: LayoutUtils.width ~/ 120,
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: count,
+                  itemBuilder: (context, index) {
+                    final item = data[status][index]["media"];
+                    final title = (widget.anilistType == AnilistType.anime)
+                        ? item["title"]["userPreferred"]
+                        : item["title"]["userPreferred"];
+                    final cover = (widget.anilistType == AnilistType.anime)
+                        ? item["coverImage"]["large"]
+                        : item["coverImage"]["large"];
+                    return GridItemTile(
+                      onTap: () {
+                        if (Platform.isAndroid) {
+                          Get.to(() => const SearchPage());
+                        } else {
+                          router.push("/search");
+                        }
+                        final c = Get.put(SearchPageController());
+                        c.search.value = title;
+                      },
+                      title: title,
+                      cover: cover,
+                    );
+                  },
+                );
+              }).toList());
+            }),
+      ),
+    );
+  }
+
+  Widget _buildDesktop(BuildContext context) {
+    return FutureBuilder(
+      future: AniListProvider.getCollection(widget.anilistType),
+      builder: (context, snapshot) {
+        final data = snapshot.data;
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        if (!snapshot.hasData) {
+          return const Center(
+            child: ProgressRing(),
+          );
+        }
+
+        if (data == null) {
+          return const Center(
+            child: Text("No data"),
+          );
+        }
+        final status = tabs[index];
+        final count = data[status]?.length ?? 0;
+
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          children: [
+            Text(
+              "AniList ${widget.anilistType.toString().split(".")[1]}",
+              style: fluent.FluentTheme.of(context).typography.subtitle,
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              children: [
+                for (int i = 0; i < tabs.length; i++) ...[
+                  fluent.ToggleButton(
+                    checked: index == i,
+                    onChanged: (value) {
+                      setState(() {
+                        index = i;
+                      });
+                    },
+                    child: Text(tabs[i]),
+                  ),
+                  const SizedBox(width: 10),
+                ]
+              ],
+            ),
+            const SizedBox(height: 20),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: LayoutUtils.width ~/ 160,
+                childAspectRatio: 0.6,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: count,
+              itemBuilder: (context, index) {
+                final item = data[status][index]["media"];
+                final title = (widget.anilistType == AnilistType.anime)
+                    ? item["title"]["userPreferred"]
+                    : item["title"]["userPreferred"];
+                final cover = (widget.anilistType == AnilistType.anime)
+                    ? item["coverImage"]["large"]
+                    : item["coverImage"]["large"];
+                return GridItemTile(
+                  onTap: () {
+                    if (Platform.isAndroid) {
+                      Get.to(() => const SearchPage());
+                    } else {
+                      router.push("/search");
+                    }
+                    final c = Get.put(SearchPageController());
+                    c.search.value = title;
+                  },
+                  title: title,
+                  cover: cover,
+                );
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformBuildWidget(
+      androidBuilder: _buildAndroid,
+      desktopBuilder: _buildDesktop,
+    );
+  }
+}

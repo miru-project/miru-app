@@ -4,7 +4,7 @@ import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/utils/miru_storage.dart';
-import 'package:miru_app/views/pages/anilist_webview.dart';
+import 'package:miru_app/views/pages/tracking/anilist_webview.dart';
 
 class TrackingPageController extends GetxController {
   final anilistIsLogin = false.obs;
@@ -14,8 +14,10 @@ class TrackingPageController extends GetxController {
   Future<Map<String, dynamic>> initAnilistData() async {
     final Map<String, dynamic> result = {};
     result["userData"] = await AniListProvider.getuserData();
-    result["animeData"] = await AniListProvider.getCollection("ANIME");
-    result["mangaData"] = await AniListProvider.getCollection("MANGA");
+    result["animeData"] =
+        await AniListProvider.getCollection(AnilistType.anime);
+    result["mangaData"] =
+        await AniListProvider.getCollection(AnilistType.manga);
     return result;
   }
 

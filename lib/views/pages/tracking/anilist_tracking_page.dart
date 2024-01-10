@@ -185,12 +185,13 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
                         ],
                       ),
                       const Spacer(),
-                      PlatformButton(
-                        child: const Text("Logout"),
-                        onPressed: () {
-                          c.anilistIsLogin.value = false;
-                        },
-                      ),
+                      if (!Platform.isAndroid)
+                        PlatformButton(
+                          child: const Text("Logout"),
+                          onPressed: () {
+                            c.anilistIsLogin.value = false;
+                          },
+                        ),
                     ],
                   ),
                 ),
