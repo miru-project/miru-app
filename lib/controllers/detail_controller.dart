@@ -8,6 +8,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/data/providers/tmdb_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/views/dialogs/tmdb_binding.dart';
@@ -43,7 +44,8 @@ class DetailPageController extends GetxController {
   final RxString error = ''.obs;
   final RxBool isLoading = true.obs;
   final RxInt selectEpGroup = 0.obs;
-  final RxString aniListID = ''.obs;
+  // final RxString aniListID = ''.obs;
+  // final RxString aniListMediaId = ''.obs;
   final Rx<TMDBDetail?> tmdb = Rx(null);
   final Rx<ExtensionService?> runtime = Rx(null);
   ExtensionType get type =>
@@ -141,7 +143,7 @@ class DetailPageController extends GetxController {
     try {
       _miruDetail = await DatabaseService.getMiruDetail(package, url);
       _tmdbID = _miruDetail?.tmdbID ?? -1;
-      aniListID.value = _miruDetail?.aniListID ?? "";
+      AniListProvider.userVal["id"] = _miruDetail?.aniListID ?? "";
       await getDetail();
       await getTMDBDetail();
       await getHistory();
@@ -204,7 +206,7 @@ class DetailPageController extends GetxController {
         url,
         detail!,
         tmdbID: _tmdbID,
-        anilistID: aniListID.value,
+        anilistID: AniListProvider.userVal["id"],
       );
     } catch (e) {
       // 弹出错误信息
@@ -277,7 +279,7 @@ class DetailPageController extends GetxController {
       package,
       url,
       detail!,
-      anilistID: aniListID.value,
+      anilistID: AniListProvider.userVal["id"],
     );
   }
 
@@ -405,6 +407,7 @@ class DetailPageController extends GetxController {
               ),
             ),
             child: WatchPage(
+              anilistId: AniListProvider.userVal["id"],
               cover: detail!.cover,
               playList: urls,
               package: package,

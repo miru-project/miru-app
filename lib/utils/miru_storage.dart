@@ -120,6 +120,7 @@ class MiruStorage {
     await _initSetting(SettingKey.readingMode, "standard");
     await _initSetting(SettingKey.aniListToken, '');
     await _initSetting(SettingKey.aniListUserId, '');
+    await _initSetting(SettingKey.autoUpdateProgress, false);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -155,4 +156,5 @@ class SettingKey {
   static String readingMode = 'ReadingMode';
   static String aniListToken = 'AniListToken';
   static String aniListUserId = 'AniListUserId';
+  static String autoUpdateProgress = 'AutoUpdateProgress';
 }

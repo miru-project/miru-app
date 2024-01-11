@@ -34,7 +34,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late SettingsController c;
-
+  final RxDouble trackerUpdateprocess = 0.0.obs;
   @override
   void initState() {
     c = Get.put(SettingsController());
@@ -358,6 +358,17 @@ class _SettingsPageState extends State<SettingsPage> {
         androidIcon: Icons.sync,
         content: Column(
           children: [
+            SettingsSwitchTile(
+              title: 'tracker-setting.auto-update-progress'.i18n,
+              buildSubtitle: () =>
+                  'tracker-setting.auto-update-progress-subtitle'.i18n,
+              buildValue: () =>
+                  MiruStorage.getSetting(SettingKey.autoUpdateProgress),
+              onChanged: (val) {
+                MiruStorage.setSetting(SettingKey.autoUpdateProgress, val);
+              },
+            ),
+            const SizedBox(height: 8),
             SettingsTile(
               isCard: true,
               icon: Container(

@@ -15,6 +15,11 @@ class AniListProvider {
     return MiruStorage.getSetting(SettingKey.aniListUserId);
   }
 
+  static final userVal = <String, dynamic>{
+    "mediaId": "",
+    "id": "",
+  };
+
   static const headers = <String, String>{
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -149,55 +154,49 @@ class AniListProvider {
     DateTime? endDate,
     bool? isPrivate,
   }) async {
-    buildIdQuery() {
-      if (id == null) {
-        return "mediaId:$mediaId";
-      } else {
-        return "id:$id";
-      }
+    final queryList = [];
+    switch (id) {
+      case null:
+        queryList.add("mediaId:$mediaId");
+        break;
+      case "":
+        queryList.add("mediaId:$mediaId");
+        break;
+      default:
+        queryList.add("id:$id");
+        break;
     }
-
-    buildScoreQuery() {
-      if (score == null) {
-        return "";
-      } else {
-        return "score:$score";
-      }
+    switch (score) {
+      case null:
+        break;
+      default:
+        queryList.add("score:$score");
+        break;
     }
-
-    buildProgressQuery() {
-      if (progress == null) {
-        return "";
-      } else {
-        return "progress:$progress";
-      }
+    switch (progress) {
+      case null:
+        break;
+      default:
+        queryList.add("progress:$progress");
+        break;
     }
-
-    buildStartDateQuery() {
-      if (startDate == null) {
-        return "";
-      } else {
-        return "startedAt:{year:${startDate.year},month:${startDate.month},day:${startDate.day}}";
-      }
+    switch (startDate) {
+      case null:
+        break;
+      default:
+        queryList.add(
+            "startedAt:{year:${startDate.year},month:${startDate.month},day:${startDate.day}}");
+        break;
     }
-
-    buildCompletedAtQuery() {
-      if (endDate == null) {
-        return "";
-      } else {
-        return "completedAt:{year:${endDate.year},month:${endDate.month},day:${endDate.day}}";
-      }
+    switch (endDate) {
+      case null:
+        break;
+      default:
+        queryList.add(
+            "completedAt:{year:${endDate.year},month:${endDate.month},day:${endDate.day}}");
+        break;
     }
-
-    final queryStr = [
-      buildIdQuery(),
-      buildScoreQuery(),
-      buildProgressQuery(),
-      buildStartDateQuery(),
-      buildCompletedAtQuery()
-    ]
-      ..removeWhere((element) => element == "")
-      ..join(",");
+    final String queryStr = queryList.join(",");
 
     final queryString = """mutation{
     SaveMediaListEntry(status:$status,private:${isPrivate ?? false},$queryStr){
