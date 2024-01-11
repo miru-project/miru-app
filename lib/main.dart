@@ -50,14 +50,27 @@ void main(List<String> args) async {
 
   if (!Platform.isAndroid) {
     await windowManager.ensureInitialized();
-    WindowOptions windowOptions = const WindowOptions(
-      size: Size(1280, 720),
-      minimumSize: Size(600, 500),
+    final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
+    final size = Size(double.parse(sizeArr[0]), double.parse(sizeArr[1]));
+    WindowOptions windowOptions = WindowOptions(
+      size: size,
       center: true,
+      minimumSize: const Size(600, 500),
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.hidden,
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {
+      final position = MiruStorage.getSetting(SettingKey.windowPosition);
+      if (position != null) {
+        final offsetArr = position.split(",");
+        final offset = Offset(
+          double.parse(offsetArr[0]),
+          double.parse(offsetArr[1]),
+        );
+        await windowManager.setPosition(
+          offset,
+        );
+      }
       await windowManager.show();
       await windowManager.focus();
     });
