@@ -118,6 +118,7 @@ class MiruStorage {
     await _initSetting(SettingKey.arrowLeft, -2.0);
     await _initSetting(SettingKey.arrowRight, 2.0);
     await _initSetting(SettingKey.readingMode, "standard");
+    await _initSetting(SettingKey.windowSize, "1280,720");
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -151,4 +152,6 @@ class SettingKey {
   static String arrowLeft = 'Arrowleft';
   static String arrowRight = 'Arrowright';
   static String readingMode = 'ReadingMode';
+  static String windowSize = 'WindowsSize';
+  static String windowPosition = 'WindowsPosition';
 }
