@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
 import 'package:miru_app/data/services/extension_service.dart';
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 
 class WebViewPage extends StatefulWidget {
   const WebViewPage({
@@ -17,26 +19,45 @@ class WebViewPage extends StatefulWidget {
 
 class _WebViewPageState extends State<WebViewPage> {
   late String url = widget.extensionRuntime.extension.webSite + widget.url;
+  final cookieManager = WebviewCookieManager();
+  bool isByPassCloudFlare = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(url),
+        actions: [
+          if (isByPassCloudFlare)
+            IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: const Icon(Icons.check),
+            ),
+        ],
       ),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(url),
         ),
         onLoadStop: (controller, url) async {
-          if (url!.host !=
-              Uri.parse(widget.extensionRuntime.extension.webSite).host) {
+          if (url!.host != Uri.parse(this.url).host) {
             return;
           }
-          final cookies = await controller.evaluateJavascript(
-            source: 'document.cookie',
-          );
-          widget.extensionRuntime.setCookie(cookies);
+          cookieManager.getCookies(url.toString()).then((cookies) {
+            final cookieString =
+                cookies.map((e) => '${e.name}=${e.value}').toList().join(';');
+            debugPrint('$url $cookieString');
+            if (cookieString.contains('cf_clearance')) {
+              setState(() {
+                isByPassCloudFlare = true;
+              });
+            }
+            widget.extensionRuntime.setCookie(
+              cookieString,
+            );
+          });
         },
       ),
     );

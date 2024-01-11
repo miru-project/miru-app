@@ -49,6 +49,7 @@ dependencies:
   cookie_jar: ^4.0.8
   flutter_inappwebview: ^5.7.2+3
   desktop_webview_window: ^0.2.1
+  webview_cookie_manager: ^2.0.6
   http_parser: ^4.0.2
   html: ^0.15.4
   xpath_selector_html_parser: ^3.0.1

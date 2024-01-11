@@ -5,7 +5,6 @@ import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/application_controller.dart';
@@ -82,7 +81,6 @@ void main(List<String> args) async {
       statusBarIconBrightness: Brightness.dark,
     );
     SystemChrome.setSystemUIOverlayStyle(style);
-    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
   runApp(const MainApp());
 }
