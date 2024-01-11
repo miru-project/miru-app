@@ -15,6 +15,7 @@ class ExtensionCard extends StatefulWidget {
     required this.version,
     required this.icon,
     required this.package,
+    required this.lang,
     required this.nsfw,
     required this.type,
   });
@@ -22,6 +23,7 @@ class ExtensionCard extends StatefulWidget {
   final String name;
   final String version;
   final String package;
+  final String lang;
   final ExtensionType type;
   final bool nsfw;
 
@@ -86,6 +88,13 @@ class _ExtensionCardState extends State<ExtensionCard> {
             padding: const EdgeInsets.only(right: 8),
             child: Text(
               widget.version,
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              widget.lang,
               style: const TextStyle(fontSize: 12),
             ),
           ),
@@ -178,6 +187,13 @@ class _ExtensionCardState extends State<ExtensionCard> {
                 padding: const EdgeInsets.only(right: 8),
                 child: Text(
                   ExtensionUtils.typeToString(widget.type),
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(
+                  widget.lang,
                   style: const TextStyle(fontSize: 12),
                 ),
               ),
