@@ -221,4 +221,37 @@ class AniListProvider {
     final res = await postRequest(queryString: deleteMutation);
     return res["data"]["DeleteMediaListEntry"]["deleted"];
   }
+
+  static Future<dynamic> getMediaList(String id) async {
+    final query = """
+{
+    MediaList(id:$id ){
+        score
+        mediaId
+        status
+        progress
+        id
+        media{
+            title{
+                userPreferred
+            }
+        }
+        startedAt{
+            year
+            month
+            day
+        }
+        completedAt{
+            year
+            month
+            day
+        }
+    }
+}
+""";
+    // debugPrint(query);
+    final res = await postRequest(queryString: query);
+    debugPrint(res.toString());
+    return res["data"]["MediaList"];
+  }
 }
