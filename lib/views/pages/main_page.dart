@@ -30,7 +30,7 @@ class DesktopMainPage extends StatefulWidget {
   State<DesktopMainPage> createState() => _DesktopMainPageState();
 }
 
-class _DesktopMainPageState extends State<DesktopMainPage> {
+class _DesktopMainPageState extends State<DesktopMainPage> with WindowListener {
   late MainController c;
 
   @override
@@ -39,7 +39,14 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
     if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
       ApplicationUtils.checkUpdate(context);
     }
+    windowManager.addListener(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
   }
 
   Widget _title() {
@@ -146,6 +153,26 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void onWindowResize() {
+    WindowManager.instance.getSize().then((value) {
+      MiruStorage.setSetting(
+        SettingKey.windowSize,
+        "${value.width},${value.height}",
+      );
+    });
+  }
+
+  @override
+  void onWindowMove() {
+    WindowManager.instance.getPosition().then((value) {
+      MiruStorage.setSetting(
+        SettingKey.windowPosition,
+        "${value.dx},${value.dy}",
+      );
+    });
   }
 }
 

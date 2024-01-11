@@ -121,6 +121,7 @@ class MiruStorage {
     await _initSetting(SettingKey.aniListToken, '');
     await _initSetting(SettingKey.aniListUserId, '');
     await _initSetting(SettingKey.autoUpdateProgress, false);
+    await _initSetting(SettingKey.windowSize, "1280,720");
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -157,4 +158,6 @@ class SettingKey {
   static String aniListToken = 'AniListToken';
   static String aniListUserId = 'AniListUserId';
   static String autoUpdateProgress = 'AutoUpdateProgress';
+  static String windowSize = 'WindowsSize';
+  static String windowPosition = 'WindowsPosition';
 }
