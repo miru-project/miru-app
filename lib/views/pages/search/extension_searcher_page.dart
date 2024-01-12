@@ -237,6 +237,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
                 package: widget.package,
                 cover: item.cover,
                 update: item.update,
+                headers: item.headers,
               );
             },
           ),
@@ -316,6 +317,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
                         package: widget.package,
                         cover: item.cover,
                         update: item.update,
+                        headers: item.headers,
                       );
                     },
                   )),

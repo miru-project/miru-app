@@ -8,10 +8,12 @@ class Cover extends StatelessWidget {
     required this.alt,
     this.url,
     this.noText = false,
+    required this.headers,
   });
   final String? url;
   final String alt;
   final bool noText;
+  final Map<String, String>? headers;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class Cover extends StatelessWidget {
         url!,
         width: double.infinity,
         height: double.infinity,
+        headers: headers,
       );
     }
 

@@ -78,6 +78,7 @@ class DetailPageController extends GetxController {
         icon: const Icon(fluent.FluentIcons.pop_expand),
         onPressed: () async {
           final webview = FlutterWindowsWebview();
+          await webview.setUA(MiruStorage.getUASetting());
           webview.launchWebview(
             extension!.webSite + url,
             WebviewOptions(

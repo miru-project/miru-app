@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/services/extension_service.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 
 class WebViewPage extends StatefulWidget {
@@ -40,6 +41,9 @@ class _WebViewPageState extends State<WebViewPage> {
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(url),
+          headers: {
+            'User-Agent': MiruStorage.getUASetting(),
+          },
         ),
         onLoadStop: (controller, url) async {
           if (url!.host != Uri.parse(this.url).host) {

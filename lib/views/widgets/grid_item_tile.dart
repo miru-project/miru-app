@@ -9,11 +9,13 @@ class GridItemTile extends StatefulWidget {
     this.cover,
     this.subtitle,
     this.onTap,
+    this.headers,
   });
   final String title;
   final String? cover;
   final String? subtitle;
   final Function()? onTap;
+  final Map<String, String>? headers;
 
   @override
   State<GridItemTile> createState() => _GridItemTileState();
@@ -33,6 +35,7 @@ class _GridItemTileState extends State<GridItemTile> {
           child: Cover(
             alt: widget.title,
             url: widget.cover,
+            headers: widget.headers,
           ),
         ),
         Positioned(
@@ -134,6 +137,7 @@ class _GridItemTileState extends State<GridItemTile> {
                     child: Cover(
                       alt: widget.title,
                       url: widget.cover,
+                      headers: widget.headers,
                     ),
                   )),
             ),
