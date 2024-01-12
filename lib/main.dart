@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,10 +19,6 @@ import 'package:window_manager/window_manager.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  if (runWebViewTitleBarWidget(args)) {
-    return;
-  }
 
   // 多窗口
   if (args.firstOrNull == 'multi_window') {
