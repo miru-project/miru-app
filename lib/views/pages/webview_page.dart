@@ -24,6 +24,11 @@ class _WebViewPageState extends State<WebViewPage> {
   bool isByPassCloudFlare = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -41,9 +46,11 @@ class _WebViewPageState extends State<WebViewPage> {
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(url),
-          headers: {
-            'User-Agent': MiruStorage.getUASetting(),
-          },
+        ),
+        initialOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(
+            userAgent: MiruStorage.getUASetting(),
+          ),
         ),
         onLoadStop: (controller, url) async {
           if (url!.host != Uri.parse(this.url).host) {
