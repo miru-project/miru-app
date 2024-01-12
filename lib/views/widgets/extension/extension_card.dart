@@ -94,14 +94,14 @@ class _ExtensionCardState extends State<ExtensionCard> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Text(
-              widget.lang,
+              ExtensionUtils.typeToString(widget.type),
               style: const TextStyle(fontSize: 12),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Text(
-              ExtensionUtils.typeToString(widget.type),
+              widget.lang,
               style: const TextStyle(fontSize: 12),
             ),
           ),
