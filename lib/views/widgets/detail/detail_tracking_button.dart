@@ -25,8 +25,7 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   late final c = Get.find<DetailPageController>(tag: widget.tag);
 
   _showTrackingDialog() async {
-    if (AniListProvider.userVal["id"].isEmpty &&
-        AniListProvider.userVal["mediaId"].isEmpty) {
+    if (c.aniListID.value.isEmpty) {
       dynamic data;
       if (Platform.isAndroid) {
         data = await Get.to(
@@ -47,8 +46,8 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
       if (data == null) {
         return;
       }
-      AniListProvider.userVal["mediaId"] = data["id"].toString();
-      // c.saveAniListIds();
+      c.aniListID.value = data["id"].toString();
+      c.saveAniListIds();
     }
   }
 

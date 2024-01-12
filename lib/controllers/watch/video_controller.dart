@@ -13,7 +13,6 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:miru_app/controllers/detail_controller.dart';
 import 'package:miru_app/data/providers/bt_server_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/views/dialogs/bt_dialog.dart';
@@ -32,8 +31,6 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:crypto/crypto.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
-import 'package:miru_app/views/widgets/messenger.dart';
-import 'package:miru_app/data/providers/anilist_provider.dart';
 
 class VideoPlayerController extends GetxController {
   final String title;
@@ -42,7 +39,7 @@ class VideoPlayerController extends GetxController {
   final int playIndex;
   final int episodeGroupId;
   final ExtensionService runtime;
-  final String anilistId;
+
   VideoPlayerController({
     required this.title,
     required this.playList,
@@ -50,7 +47,6 @@ class VideoPlayerController extends GetxController {
     required this.playIndex,
     required this.episodeGroupId,
     required this.runtime,
-    required this.anilistId,
   });
 
   final player = Player();
@@ -75,8 +71,7 @@ class VideoPlayerController extends GetxController {
 
   final torrentMediaFileList = <String>[].obs;
   final currentTorrentFile = ''.obs;
-  bool _isAutoUpdateProgress =
-      MiruStorage.getSetting(SettingKey.autoUpdateProgress);
+
   String _torrenHash = "";
   final ReceivePort qualityRereceivePort = ReceivePort();
   Isolate? qualityReceiver;
@@ -90,11 +85,7 @@ class VideoPlayerController extends GetxController {
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     }
-    if (_isAutoSeekPosition) {
-      _isAutoSeekPosition = false;
-      // showPlatformSnackbar(context: , content: content)
-    }
-    // final _c = Get.find<DetailPageController>(tag: title);
+
     if (player.platform is NativePlayer) {
       await (player.platform as dynamic).setProperty('cache', 'yes');
       await (player.platform as dynamic)
@@ -278,31 +269,6 @@ class VideoPlayerController extends GetxController {
         player.setVolume(volume.clamp(0.0, 100.0));
       },
     });
-  }
-
-  updateProgress(BuildContext context) async {
-    if (_isAutoUpdateProgress &&
-        AniListProvider.anilistToken.isNotEmpty &&
-        AniListProvider.userVal['mediaId'].isNotEmpty) {
-      _isAutoUpdateProgress = false;
-      debugPrint(anilistId);
-      try {
-        final res = await AniListProvider.editList(
-            status: "CURRENT",
-            id: AniListProvider.userVal['id'],
-            mediaId: AniListProvider.userVal['mediaId'],
-            progress: (playIndex + 1).toString());
-        showPlatformSnackbar(
-            context: context,
-            content: "anilist set to progress ${playIndex + 1}");
-
-        AniListProvider.userVal["id"] = res;
-        debugPrint("save to $res");
-        await Get.find<DetailPageController>().saveAniListIds();
-      } catch (e) {
-        showPlatformSnackbar(context: context, content: e.toString());
-      }
-    }
   }
 
   play() async {

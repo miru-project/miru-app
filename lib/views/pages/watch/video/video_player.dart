@@ -17,13 +17,11 @@ class VideoPlayer extends StatefulWidget {
     required this.playerIndex,
     required this.title,
     required this.detailUrl,
-    required this.anilistId,
   });
 
   final String title;
   final List<ExtensionEpisode> playList;
   final String detailUrl;
-  final String anilistId;
   final int playerIndex;
   final int episodeGroupId;
   final ExtensionService runtime;
@@ -38,7 +36,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
   void initState() {
     _c = Get.put(
       VideoPlayerController(
-        anilistId: widget.anilistId,
         title: widget.title,
         playList: widget.playList,
         detailUrl: widget.detailUrl,
@@ -59,7 +56,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
   }
 
   _buildContent() {
-    // _c.updateProgress(context);
     return Obx(() {
       final maxWidth = MediaQuery.of(context).size.width;
       return PopScope(
@@ -128,7 +124,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    _c.updateProgress(context);
     return PlatformBuildWidget(
       androidBuilder: (context) => Scaffold(body: _buildContent()),
       desktopBuilder: ((context) => _buildContent()),

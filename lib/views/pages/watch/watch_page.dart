@@ -15,7 +15,6 @@ class WatchPage extends StatelessWidget {
     required this.episodeGroupId,
     required this.detailUrl,
     this.cover,
-    required this.anilistId,
   });
   final List<ExtensionEpisode> playList;
   final int playerIndex;
@@ -24,7 +23,7 @@ class WatchPage extends StatelessWidget {
   final String detailUrl;
   final int episodeGroupId;
   final String? cover;
-  final String anilistId;
+
   @override
   Widget build(BuildContext context) {
     final runtime = ExtensionUtils.runtimes[package]!;
@@ -35,7 +34,6 @@ class WatchPage extends StatelessWidget {
           playList: playList,
           runtime: runtime,
           playerIndex: playerIndex,
-          anilistId: anilistId,
           // 用来存储历史记录了
           episodeGroupId: episodeGroupId,
           detailUrl: detailUrl,

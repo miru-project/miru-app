@@ -124,7 +124,7 @@ class _AnilistBindingDialogState extends State<AnilistBindingDialog> {
                 onTap: () {
                   Get.back(
                     result: {
-                      'mediaId': item['id'],
+                      'id': item['id'],
                     },
                   );
                 },
@@ -208,10 +208,9 @@ class _AnilistBindingDialogState extends State<AnilistBindingDialog> {
                           title: title,
                           cover: cover,
                           onTap: () {
-                            AniListProvider.userVal["mediaId"] =
-                                item['id'].toString();
-                            // debugPrint(${AniListProvider.userVal});
-                            router.pop();
+                            router.pop({
+                              'id': item['id'],
+                            });
                           },
                         );
                       },

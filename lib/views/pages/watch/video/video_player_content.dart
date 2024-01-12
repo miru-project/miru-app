@@ -22,10 +22,6 @@ class VideoPlayerConten extends StatefulWidget {
 
 class _VideoPlayerContenState extends State<VideoPlayerConten> {
   late final _c = Get.find<VideoPlayerController>(tag: widget.tag);
-  @override
-  void initState() {
-    super.initState();
-  }
 
   final speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
   late final topButtonBar = Row(
@@ -493,7 +489,6 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
 
   @override
   Widget build(BuildContext context) {
-    // _c.updateProgress(context);
     return PlatformBuildWidget(
       androidBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
