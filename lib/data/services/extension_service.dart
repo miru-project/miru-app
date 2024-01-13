@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 import 'package:xpath_selector_html_parser/xpath_selector_html_parser.dart';
 import 'dart:io';
 
@@ -58,12 +59,16 @@ class ExtensionService {
         "Request: ${args[0]} , ${args[1]}",
       );
       _cuurentRequestUrl = args[0];
+      final headers = args[1]['headers'] ?? {};
+      if (headers['User-Agent'] == null) {
+        headers['User-Agent'] = MiruStorage.getUASetting();
+      }
       return (await _dio.request<String>(
         args[0],
         data: args[1]['data'],
         queryParameters: args[1]['queryParameters'] ?? {},
         options: Options(
-          headers: args[1]['headers'] ?? {},
+          headers: headers,
           method: args[1]['method'] ?? 'get',
         ),
       ))
@@ -386,11 +391,11 @@ class ExtensionService {
   }
 
   // 列出所有的 cookie
-  // Future<String> listCookie() async {
-  //   final cookies =
-  //       await _cookieJar.loadForRequest(Uri.parse(extension.webSite));
-  //   return cookies.map((e) => e.toString()).join(';');
-  // }
+  Future<String> listCookie() async {
+    final cookies =
+        await _cookieJar.loadForRequest(Uri.parse(extension.webSite));
+    return cookies.map((e) => e.toString()).join(';');
+  }
 
   Future<T> _runExtension<T>(Future<T> Function() fun) async {
     try {
@@ -405,6 +410,14 @@ class ExtensionService {
     }
   }
 
+  Future<Map<String, String>> get _defaultHeaders async {
+    return {
+      "Referer": _cuurentRequestUrl,
+      "User-Agent": MiruStorage.getUASetting(),
+      "Cookie": await listCookie(),
+    };
+  }
+
   Future<List<ExtensionListItem>> latest(int page) async {
     return _runExtension(() async {
       final jsResult = await runtime.handlePromise(
@@ -415,9 +428,7 @@ class ExtensionService {
         return ExtensionListItem.fromJson(e);
       }).toList();
       for (var element in result) {
-        element.headers ??= {
-          "Referer": _cuurentRequestUrl,
-        };
+        element.headers ??= await _defaultHeaders;
       }
       return result;
     });
@@ -438,9 +449,7 @@ class ExtensionService {
         return ExtensionListItem.fromJson(e);
       }).toList();
       for (var element in result) {
-        element.headers ??= {
-          "Referer": _cuurentRequestUrl,
-        };
+        element.headers ??= await _defaultHeaders;
       }
       return result;
     });
@@ -477,9 +486,7 @@ class ExtensionService {
       );
       final result =
           ExtensionDetail.fromJson(jsonDecode(jsResult.stringResult));
-      result.headers ??= {
-        "Referer": _cuurentRequestUrl,
-      };
+      result.headers ??= await _defaultHeaders;
       return result;
     });
   }
@@ -494,15 +501,11 @@ class ExtensionService {
       switch (extension.type) {
         case ExtensionType.bangumi:
           final result = ExtensionBangumiWatch.fromJson(data);
-          result.headers ??= {
-            "Referer": _cuurentRequestUrl,
-          };
+          result.headers ??= await _defaultHeaders;
           return result;
         case ExtensionType.manga:
           final result = ExtensionMangaWatch.fromJson(data);
-          result.headers ??= {
-            "Referer": _cuurentRequestUrl,
-          };
+          result.headers ??= await _defaultHeaders;
           return result;
         default:
           return ExtensionFikushonWatch.fromJson(data);

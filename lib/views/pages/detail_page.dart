@@ -255,6 +255,7 @@ class _DetailPageState extends State<DetailPage> {
               alt: c.detail?.title ?? '',
               url: c.backgorund,
               noText: true,
+              headers: c.detail?.headers,
             ),
           ).blur(
             begin: const Offset(10, 10),

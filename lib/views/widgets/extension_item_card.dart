@@ -13,12 +13,14 @@ class ExtensionItemCard extends StatefulWidget {
     required this.package,
     this.cover,
     this.update,
+    this.headers,
   });
   final String title;
   final String? cover;
   final String? update;
   final String url;
   final String package;
+  final Map<String, String>? headers;
 
   @override
   State<ExtensionItemCard> createState() => _ExtensionItemCardState();
@@ -32,6 +34,7 @@ class _ExtensionItemCardState extends State<ExtensionItemCard> {
         title: widget.title,
         cover: widget.cover,
         subtitle: widget.update,
+        headers: widget.headers,
         onTap: () {
           Get.to(DetailPage(
             url: widget.url,
@@ -48,6 +51,7 @@ class _ExtensionItemCardState extends State<ExtensionItemCard> {
       title: widget.title,
       cover: widget.cover,
       subtitle: widget.update,
+      headers: widget.headers,
       onTap: () {
         router.push(
           Uri(

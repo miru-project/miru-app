@@ -90,6 +90,8 @@
     "theme-black": "黑色",
     "nsfw": "NSFW",
     "nsfw-subtitle": "显示 NSFW 内容",
+    "webview-ua": "Webview User-Agent",
+    "webview-ua-subtitle": "修改 Webview 和扩展的请求头的 User-Agent",
     "external-player": "优先使用的视频播放器",
     "external-player-subtitle": "当前优先使用的是 {player}",
     "external-player-builtin": "内置播放器",
