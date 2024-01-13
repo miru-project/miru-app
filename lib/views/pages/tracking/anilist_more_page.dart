@@ -143,6 +143,8 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
             ),
             const SizedBox(height: 16),
             Wrap(
+              spacing: 10,
+              runSpacing: 10,
               children: [
                 for (int i = 0; i < tabs.length; i++) ...[
                   fluent.ToggleButton(
@@ -154,44 +156,45 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
                     },
                     child: Text(tabs[i]),
                   ),
-                  const SizedBox(width: 10),
                 ]
               ],
             ),
             const SizedBox(height: 20),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: LayoutUtils.width ~/ 160,
-                childAspectRatio: 0.6,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: count,
-              itemBuilder: (context, index) {
-                final item = data[status][index]["media"];
-                final title = (widget.anilistType == AnilistType.anime)
-                    ? item["title"]["userPreferred"]
-                    : item["title"]["userPreferred"];
-                final cover = (widget.anilistType == AnilistType.anime)
-                    ? item["coverImage"]["large"]
-                    : item["coverImage"]["large"];
-                return GridItemTile(
-                  onTap: () {
-                    if (Platform.isAndroid) {
-                      Get.to(() => const SearchPage());
-                    } else {
-                      router.push("/search");
-                    }
-                    final c = Get.put(SearchPageController());
-                    c.search.value = title;
-                  },
-                  title: title,
-                  cover: cover,
-                );
-              },
-            )
+            LayoutBuilder(builder: (context, constraints) {
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: constraints.maxWidth ~/ 160,
+                  childAspectRatio: 0.6,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: count,
+                itemBuilder: (context, index) {
+                  final item = data[status][index]["media"];
+                  final title = (widget.anilistType == AnilistType.anime)
+                      ? item["title"]["userPreferred"]
+                      : item["title"]["userPreferred"];
+                  final cover = (widget.anilistType == AnilistType.anime)
+                      ? item["coverImage"]["large"]
+                      : item["coverImage"]["large"];
+                  return GridItemTile(
+                    onTap: () {
+                      if (Platform.isAndroid) {
+                        Get.to(() => const SearchPage());
+                      } else {
+                        router.push("/search");
+                      }
+                      final c = Get.put(SearchPageController());
+                      c.search.value = title;
+                    },
+                    title: title,
+                    cover: cover,
+                  );
+                },
+              );
+            }),
           ],
         );
       },

@@ -26,16 +26,6 @@ class AniListProvider {
     return (type == AnilistType.anime) ? "ANIME" : "MANGA";
   }
 
-  static void saveAuthToken(String result) {
-    RegExp tokenRegex = RegExp(r'(?<=access_token=).+(?=&token_type)');
-    Match? re = tokenRegex.firstMatch(result);
-    if (re != null) {
-      String token = re.group(0)!;
-      final c = Get.find<TrackingPageController>();
-      c.updateAniListToken(token);
-    }
-  }
-
   static postRequest({
     Map<String, dynamic>? varibale,
     required String queryString,
@@ -61,11 +51,12 @@ class AniListProvider {
           Get.find<TrackingPageController>().anilistIsLogin.value = false;
         }
         debugPrint("${e.response}");
+        rethrow;
       }
     }
   }
 
-  static Future<Map<String, String>> getuserData() async {
+  static Future<Map<String, dynamic>> getuserData() async {
     const userDataQuery =
         """{Viewer {name  id avatar{medium} statistics{anime{episodesWatched}manga{chaptersRead}}}}""";
 
@@ -143,61 +134,40 @@ class AniListProvider {
     required String status,
     String? mediaId,
     String? id,
-    String? progress,
-    String? score,
+    int? progress,
+    double? score,
     DateTime? startDate,
     DateTime? endDate,
     bool? isPrivate,
   }) async {
-    buildIdQuery() {
-      if (id == null) {
-        return "mediaId:$mediaId";
-      } else {
-        return "id:$id";
-      }
+    final queryList = [];
+    if (id == null) {
+      queryList.add("mediaId:$mediaId");
+    } else {
+      queryList.add("id:$id");
     }
 
-    buildScoreQuery() {
-      if (score == null) {
-        return "";
-      } else {
-        return "score:$score";
-      }
+    if (score != null) {
+      queryList.add("score:$score");
     }
 
-    buildProgressQuery() {
-      if (progress == null) {
-        return "";
-      } else {
-        return "progress:$progress";
-      }
+    if (progress != null) {
+      queryList.add("progress:$progress");
     }
 
-    buildStartDateQuery() {
-      if (startDate == null) {
-        return "";
-      } else {
-        return "startedAt:{year:${startDate.year},month:${startDate.month},day:${startDate.day}}";
-      }
+    if (startDate != null) {
+      queryList.add(
+        "startedAt:{year:${startDate.year},month:${startDate.month},day:${startDate.day}}",
+      );
     }
 
-    buildCompletedAtQuery() {
-      if (endDate == null) {
-        return "";
-      } else {
-        return "completedAt:{year:${endDate.year},month:${endDate.month},day:${endDate.day}}";
-      }
+    if (endDate != null) {
+      queryList.add(
+        "completedAt:{year:${endDate.year},month:${endDate.month},day:${endDate.day}}",
+      );
     }
 
-    final queryStr = [
-      buildIdQuery(),
-      buildScoreQuery(),
-      buildProgressQuery(),
-      buildStartDateQuery(),
-      buildCompletedAtQuery()
-    ]
-      ..removeWhere((element) => element == "")
-      ..join(",");
+    final queryStr = queryList.join(",");
 
     final queryString = """mutation{
     SaveMediaListEntry(status:$status,private:${isPrivate ?? false},$queryStr){
@@ -225,33 +195,57 @@ class AniListProvider {
   static Future<dynamic> getMediaList(String id) async {
     final query = """
 {
-    MediaList(id:$id ){
-        score
-        mediaId
-        status
-        progress
-        id
-        media{
-            title{
-                userPreferred
-            }
-        }
-        startedAt{
-            year
-            month
-            day
-        }
-        completedAt{
-            year
-            month
-            day
-        }
+   Media(id: $id) {
+    id
+    title {
+      userPreferred
     }
+    coverImage {
+      large
+    }
+    bannerImage
+    type
+    status
+    episodes
+    chapters
+    volumes
+    isFavourite
+    mediaListEntry {
+      id
+      mediaId
+      status
+      score
+      advancedScores
+      progress
+      progressVolumes
+      repeat
+      priority
+      private
+      hiddenFromStatusLists
+      customLists
+      notes
+      updatedAt
+      startedAt {
+        year
+        month
+        day
+      }
+      completedAt {
+        year
+        month
+        day
+      }
+      user {
+        id
+        name
+      }
+    }
+  }
 }
 """;
     // debugPrint(query);
     final res = await postRequest(queryString: query);
     debugPrint(res.toString());
-    return res["data"]["MediaList"];
+    return res["data"]["Media"];
   }
 }

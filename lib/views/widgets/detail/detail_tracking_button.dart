@@ -7,6 +7,7 @@ import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/views/dialogs/anilist_binding_dialog.dart';
+import 'package:miru_app/views/dialogs/anilist_tracking_dialog.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 
@@ -23,6 +24,10 @@ class DetailTrackingButton extends StatefulWidget {
 
 class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   late final c = Get.find<DetailPageController>(tag: widget.tag);
+  final anlistExtensionMap = <ExtensionType, AnilistType>{
+    ExtensionType.bangumi: AnilistType.anime,
+    ExtensionType.manga: AnilistType.manga,
+  };
 
   _showTrackingDialog() async {
     if (c.aniListID.value.isEmpty) {
@@ -46,9 +51,34 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
       if (data == null) {
         return;
       }
-      c.aniListID.value = data["id"].toString();
+      final mediaID = data["id"].toString();
+      c.aniListID.value = mediaID;
       c.saveAniListIds();
     }
+
+    debugPrint("Anilist ID: ${c.aniListID.value}");
+
+    if (!mounted) {
+      return;
+    }
+
+    if (Platform.isAndroid) {
+      showBottomSheet(
+        context: context,
+        builder: (context) => AnilistTrackingDialog(
+          anilistType: anlistExtensionMap[c.extension?.type]!,
+          tag: widget.tag,
+        ),
+      );
+    }
+
+    fluent.showDialog(
+      context: context,
+      builder: (context) => AnilistTrackingDialog(
+        anilistType: anlistExtensionMap[c.extension?.type]!,
+        tag: widget.tag,
+      ),
+    );
   }
 
   Widget _buildAndroid(BuildContext context) {
@@ -77,8 +107,7 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   }
 
   Widget _buildShow(Widget widget) {
-    if ((c.type == ExtensionType.bangumi || c.type == ExtensionType.manga) &&
-        AniListProvider.anilistToken != "") {
+    if (anlistExtensionMap.containsKey(c.extension?.type)) {
       return widget;
     }
     return const SizedBox.shrink();

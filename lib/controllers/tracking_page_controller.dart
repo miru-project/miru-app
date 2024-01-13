@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:desktop_webview_window/desktop_webview_window.dart';
+import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/utils/miru_storage.dart';
@@ -21,6 +21,15 @@ class TrackingPageController extends GetxController {
     return result;
   }
 
+  _saveAnilistToken(String result) {
+    RegExp tokenRegex = RegExp(r'(?<=access_token=).+(?=&token_type)');
+    Match? re = tokenRegex.firstMatch(result);
+    if (re != null) {
+      String token = re.group(0)!;
+      updateAniListToken(token);
+    }
+  }
+
   updateAniListToken(String accessToken) {
     MiruStorage.setSetting(SettingKey.aniListToken, accessToken);
     anilistIsLogin.value = true;
@@ -36,24 +45,22 @@ class TrackingPageController extends GetxController {
     const loginUrl =
         "https://anilist.co/api/v2/oauth/authorize?client_id=16214&response_type=token";
     if (Platform.isAndroid) {
-      Get.to(
-        () => const AnilistWebViewPage(
-          url: loginUrl,
-        ),
+      final result = await Get.to(
+        () => const AnilistWebViewPage(url: loginUrl),
       );
+      _saveAnilistToken(result);
       return;
     }
-    final webview = await WebviewWindow.create();
-    webview
-      ..launch(
-        loginUrl,
-      )
-      ..addOnUrlRequestCallback((url) {
+    final webview = FlutterWindowsWebview();
+    webview.launchWebview(loginUrl, WebviewOptions(
+      onNavigation: (url) {
         if (url.contains("miru-app")) {
-          AniListProvider.saveAuthToken(url);
+          _saveAnilistToken(url);
           webview.close();
         }
-      });
+        return false;
+      },
+    ));
   }
 
   @override

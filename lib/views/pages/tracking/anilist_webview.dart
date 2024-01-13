@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/data/providers/anilist_provider.dart';
 
 class AnilistWebViewPage extends StatefulWidget {
   const AnilistWebViewPage({
@@ -16,6 +15,13 @@ class AnilistWebViewPage extends StatefulWidget {
 
 class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
   late String url = widget.url;
+
+  @override
+  void dispose() {
+    CookieManager.instance().deleteCookies(url: Uri.parse(widget.url));
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,13 +35,8 @@ class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
         onLoadStart: (controller, url) async {
           if (url != null && url.path != "/login") {
             debugPrint(url.host);
-            AniListProvider.saveAuthToken(url.toString());
-            Get.back();
+            Get.back(result: url.toString());
           }
-        },
-        // 不存储 cookie
-        onCloseWindow: (controller) {
-          controller.clearCache();
         },
       ),
     );
