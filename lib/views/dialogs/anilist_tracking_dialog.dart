@@ -410,9 +410,11 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                 content: e.toString(),
                 severity: fluent.InfoBarSeverity.error,
               );
-              Navigator.of(context).pop();
               return;
             }
+          }
+          if (mounted) {
+            Navigator.of(context).pop();
           }
         },
       ),
