@@ -75,6 +75,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                       alt: c.data.value?.title ?? '',
                       url: c.backgorund,
                       noText: true,
+                      headers: c.detail?.headers,
                     ),
             ),
             Positioned.fill(

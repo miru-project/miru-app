@@ -55,6 +55,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
                   width: Platform.isAndroid ? 110 : 170,
                   margin: const EdgeInsets.only(right: 16),
                   child: ExtensionItemCard(
+                    headers: data[index].headers,
                     key: ValueKey(data[index].url),
                     title: data[index].title,
                     url: data[index].url,

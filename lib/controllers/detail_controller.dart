@@ -3,10 +3,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/tmdb_provider.dart';
 import 'package:miru_app/models/index.dart';
@@ -20,7 +20,6 @@ import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/utils/external_player.dart';
 import 'package:miru_app/utils/i18n.dart';
-import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 
@@ -83,23 +82,31 @@ class DetailPageController extends GetxController {
       fluent.IconButton(
         icon: const Icon(fluent.FluentIcons.pop_expand),
         onPressed: () async {
-          final webview = await WebviewWindow.create(
-            configuration: CreateConfiguration(
-              userDataFolderWindows: await MiruDirectory.getDirectory,
-              title: detail!.title,
+          final webview = FlutterWindowsWebview();
+          await webview.setUA(MiruStorage.getUASetting());
+          webview.launchWebview(
+            extension!.webSite + url,
+            WebviewOptions(
+              onNavigation: (url) {
+                if (Uri.parse(url).host != Uri.parse(extension!.webSite).host) {
+                  return false;
+                }
+                webview.getCookies(url).then((value) async {
+                  if (value.containsKey("cf_clearance")) {
+                    debugPrint("验证通过");
+                  }
+                  runtime.value!.setCookie(
+                    value.entries
+                        .map((e) => '${e.key}=${e.value}')
+                        .toList()
+                        .join(';'),
+                  );
+                });
+
+                return false;
+              },
             ),
           );
-          webview
-            ..addOnUrlRequestCallback((url) async {
-              if (Uri.parse(url).host != Uri.parse(extension!.webSite).host) {
-                return;
-              }
-              final cookies = await webview.evaluateJavaScript(
-                'document.cookie',
-              );
-              runtime.value?.setCookie(cookies!.split("\"")[1]);
-            })
-            ..launch(extension!.webSite + url);
         },
       ),
       fluent.FlyoutTarget(

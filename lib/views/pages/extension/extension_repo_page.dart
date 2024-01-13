@@ -62,6 +62,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
             icon: e['icon'],
             version: e['version'],
             package: e['package'],
+            lang: e['lang'],
             nsfw: e['nsfw'] == 'true',
             type: ExtensionType.values.firstWhere(
               (element) => element.toString() == 'ExtensionType.${e['type']}',

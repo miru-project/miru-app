@@ -149,6 +149,20 @@ class _SettingsPageState extends State<SettingsPage> {
                 MiruStorage.setSetting(SettingKey.enableNSFW, value);
               },
             ),
+            // UA
+            SettingsIntpuTile(
+              title: 'settings.webview-ua'.i18n,
+              buildSubtitle: () {
+                if (!Platform.isAndroid) {
+                  return 'settings.webview-ua-subtitle'.i18n;
+                }
+                return MiruStorage.getUASetting();
+              },
+              onChanged: (value) {
+                MiruStorage.setUASetting(value);
+              },
+              text: MiruStorage.getUASetting(),
+            ),
           ],
         ),
       ),

@@ -102,6 +102,8 @@
     "theme-black": "Black",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Show NSFW content",
+    "webview-ua": "Webview User-Agent",
+    "webview-ua-subtitle": "Modify the User-Agent in the request header for Webviews and extensions.",
     "external-player": "Preferred video player",
     "external-player-subtitle": "Currently, the preferred player is {player}",
     "external-player-builtin": "Built-in",
