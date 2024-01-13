@@ -124,51 +124,64 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
               //zooming is inspired by: https://github.com/flutter/flutter/issues/86531
               if (Platform.isAndroid) {
                 return InteractiveViewer(
-                  minScale: minScaleValue,
-                  transformationController: transformationController,
-                  onInteractionEnd: (ScaleEndDetails endDetails) {
-                    setState(() {
-                      isZoomed = false;
-                    });
-                  },
-                  onInteractionUpdate: (x) {
-                    double correctScaleValue =
-                        transformationController.value.getMaxScaleOnAxis();
-                    if (x.scale == correctScaleValue) {
-                      setState(() {
-                        isZoomed = false;
-                      });
-                    }
-                    setState(() {
-                      isZoomed = true;
-                    });
-                    debugPrint("${x.scale}");
-                  },
-                  child: ScrollablePositionedList.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: viewPadding,
-                    ),
-                    initialScrollIndex: cuurentPage,
-                    itemScrollController: _c.itemScrollController,
-                    itemPositionsListener: _c.itemPositionsListener,
-                    scrollOffsetController: _c.scrollOffsetController,
-                    scrollOffsetListener: _c.scrolloffsetListener,
-                    physics: isZoomed
-                        ? const NeverScrollableScrollPhysics()
-                        : const ScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final url = images[index];
-                      return Obx(
-                        () => CacheNetWorkImagePic(
-                          url,
-                          fit: BoxFit.cover,
-                          headers: _c.watchData.value?.headers,
-                        ),
-                      );
-                    },
-                    itemCount: images.length,
-                  ),
-                );
+                    constrained: false,
+                    minScale: 0.5,
+                    child: Column(
+                      children: [
+                        for (int col = 0; col < images.length; col++)
+                          CacheNetWorkImagePic(
+                            images[col],
+                            fit: BoxFit.cover,
+                            headers: _c.watchData.value?.headers,
+                          )
+                      ],
+                    ));
+                // InteractiveViewer(
+                //   minScale: minScaleValue,
+                //   transformationController: transformationController,
+                //   onInteractionEnd: (ScaleEndDetails endDetails) {
+                //     setState(() {
+                //       isZoomed = false;
+                //     });
+                //   },
+                //   onInteractionUpdate: (x) {
+                //     double correctScaleValue =
+                //         transformationController.value.getMaxScaleOnAxis();
+                //     if (x.scale == correctScaleValue) {
+                //       setState(() {
+                //         isZoomed = false;
+                //       });
+                //     }
+                //     setState(() {
+                //       isZoomed = true;
+                //     });
+                //     debugPrint("${x.scale}");
+                //   },
+                //   child: ScrollablePositionedList.builder(
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: viewPadding,
+                //     ),
+                //     initialScrollIndex: cuurentPage,
+                //     itemScrollController: _c.itemScrollController,
+                //     itemPositionsListener: _c.itemPositionsListener,
+                //     scrollOffsetController: _c.scrollOffsetController,
+                //     scrollOffsetListener: _c.scrolloffsetListener,
+                //     physics: isZoomed
+                //         ? const NeverScrollableScrollPhysics()
+                //         : const ScrollPhysics(),
+                //     itemBuilder: (context, index) {
+                //       final url = images[index];
+                //       return Obx(
+                //         () => CacheNetWorkImagePic(
+                //           url,
+                //           fit: BoxFit.cover,
+                //           headers: _c.watchData.value?.headers,
+                //         ),
+                //       );
+                //     },
+                //     itemCount: images.length,
+                //   ),
+                // );
               }
               return ScrollablePositionedList.builder(
                 padding: EdgeInsets.symmetric(
