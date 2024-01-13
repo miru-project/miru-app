@@ -106,6 +106,12 @@ class _DetailPageState extends State<DetailPage> {
                     tabs: tabs,
                   ),
                   actions: [
+                    // DetailTrackingButton
+                    DetailTrackingButton(
+                      tag: widget.tag,
+                    ),
+
+                    // webview
                     IconButton(
                       onPressed: () {
                         Get.to(

@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/tracking_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:miru_app/views/widgets/messenger.dart';
 
 enum AnilistType { anime, manga }
 
@@ -48,7 +50,12 @@ class AniListProvider {
                 .toString()
                 .toLowerCase()
                 .contains("invalid token")) {
-          Get.find<TrackingPageController>().anilistIsLogin.value = false;
+          Get.put(TrackingPageController()).anilistIsLogin.value = false;
+          // ignore: use_build_context_synchronously
+          showPlatformSnackbar(
+            context: currentContext,
+            content: "Not login",
+          );
         }
         debugPrint("${e.response}");
         rethrow;

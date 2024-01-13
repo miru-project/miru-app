@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/detail_controller.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
-import 'package:miru_app/router/router.dart';
+import 'package:miru_app/views/dialogs/date_tile_dialog.dart';
+import 'package:miru_app/views/dialogs/number_tile_dialog.dart';
+import 'package:miru_app/views/dialogs/switch_tile_dialog.dart';
 import 'package:miru_app/views/widgets/button.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
@@ -100,9 +102,167 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
   }
 
   Widget _buildAndroidContent(BuildContext context) {
-    return const Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [],
+    if (loading) {
+      return const SizedBox(
+        height: 100,
+        child: Center(
+          child: ProgressRing(),
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Anilist Tracking",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            elevation: 0,
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: SwitchTileDialog(
+                          title: "Status",
+                          value: selectStatus,
+                          buildOptions: {
+                            for (final child in status)
+                              child: child.toUpperCase(),
+                          },
+                          onSelected: (value) {
+                            setState(() {
+                              selectStatus = value;
+                            });
+                          },
+                          onClear: () {
+                            setState(() {
+                              selectStatus = "CURRENT";
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: NumberTileDialog(
+                          title: "Episodes",
+                          value: episodes,
+                          max: maxEpisodes,
+                          min: 0,
+                          onChange: (value) {
+                            setState(() {
+                              episodes = value.toInt();
+                            });
+                          },
+                          onClear: () {
+                            setState(() {
+                              episodes = 0;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: NumberTileDialog(
+                          title: "Score",
+                          value: score,
+                          max: 10,
+                          min: 0,
+                          onChange: (value) {
+                            setState(() {
+                              score = value;
+                            });
+                          },
+                          onClear: () {
+                            setState(() {
+                              score = 0;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: DateTileDialog(
+                          title: "Start Date",
+                          value: startDate,
+                          onChange: (value) {
+                            setState(() {
+                              startDate = value;
+                            });
+                          },
+                          onClear: () {
+                            setState(() {
+                              startDate = null;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: DateTileDialog(
+                          title: "End Date",
+                          value: endDate,
+                          onChange: (value) {
+                            setState(() {
+                              endDate = value;
+                            });
+                          },
+                          onClear: () {
+                            setState(() {
+                              endDate = null;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              for (final child in _buildAction(context)) ...[
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: child,
+                )
+              ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -219,19 +379,19 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
 
   List<Widget> _buildAction(BuildContext context) {
     return [
-      PlatformButton(
+      PlatformTextButton(
         child: const Text('Cancel'),
-        onPressed: () => router.pop(),
+        onPressed: () => Navigator.of(context).pop(),
       ),
-      PlatformButton(
+      PlatformTextButton(
         child: const Text('UnBind'),
         onPressed: () {
           c.aniListID.value = "";
           c.saveAniListIds();
-          router.pop();
+          Navigator.of(context).pop();
         },
       ),
-      PlatformButton(
+      PlatformFilledButton(
         child: const Text('Confirm'),
         onPressed: () async {
           try {
@@ -250,21 +410,17 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                 content: e.toString(),
                 severity: fluent.InfoBarSeverity.error,
               );
+              Navigator.of(context).pop();
               return;
             }
           }
-          router.pop();
         },
       ),
     ];
   }
 
   Widget _buildAndroid(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Anilist Tracking'),
-      content: _buildAndroidContent(context),
-      actions: _buildAction(context),
-    );
+    return _buildAndroidContent(context);
   }
 
   Widget _buildDesktop(BuildContext context) {

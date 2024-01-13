@@ -71,6 +71,7 @@ class _AnilistBindingDialogState extends State<AnilistBindingDialog> {
           severity: fluent.InfoBarSeverity.error,
         );
       }
+      rethrow;
     } finally {
       _isLoading = false;
       if (mounted) {

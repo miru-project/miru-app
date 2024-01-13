@@ -63,13 +63,16 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
     }
 
     if (Platform.isAndroid) {
-      showBottomSheet(
+      showModalBottomSheet(
         context: context,
+        showDragHandle: true,
+        constraints: const BoxConstraints(maxWidth: 640),
         builder: (context) => AnilistTrackingDialog(
           anilistType: anlistExtensionMap[c.extension?.type]!,
           tag: widget.tag,
         ),
       );
+      return;
     }
 
     fluent.showDialog(
@@ -82,7 +85,14 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   }
 
   Widget _buildAndroid(BuildContext context) {
-    return Container();
+    return _buildShow(
+      IconButton(
+        onPressed: () {
+          _showTrackingDialog();
+        },
+        icon: const Icon(Icons.sync),
+      ),
+    );
   }
 
   Widget _buildDeskltop(BuildContext context) {
@@ -107,7 +117,8 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   }
 
   Widget _buildShow(Widget widget) {
-    if (anlistExtensionMap.containsKey(c.extension?.type)) {
+    if (anlistExtensionMap.containsKey(c.extension?.type) ||
+        AniListProvider.anilistToken != "") {
       return widget;
     }
     return const SizedBox.shrink();
