@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -247,7 +248,7 @@ class _DetailPageState extends State<DetailPage> {
           child: ProgressRing(),
         );
       }
-
+      final isThumbnailHover = false.obs;
       return Stack(
         children: [
           Animate(
@@ -280,20 +281,47 @@ class _DetailPageState extends State<DetailPage> {
                         children: [
                           if (c.detail!.cover != null)
                             if (constraints.maxWidth > 600) ...[
-                              Hero(
-                                tag: c.heroTag ?? '',
-                                child: Container(
-                                  width: 230,
-                                  height: double.infinity,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: CacheNetWorkImagePic(
-                                    c.detail?.cover ?? '',
-                                    headers: c.detail?.headers,
-                                  ),
+                              Container(
+                                width: 230,
+                                height: double.infinity,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
+                                child: Material(
+                                    child: InkWell(
+                                  child: Obx(() => Hero(
+                                      tag: "cover",
+                                      child: Transform.scale(
+                                          scale:
+                                              isThumbnailHover.value ? 1.1 : 1,
+                                          child: CacheNetWorkImagePic(
+                                            c.detail?.cover ?? '',
+                                            headers: c.detail?.headers,
+                                          )))),
+                                  onHover: (val) {
+                                    debugPrint("onhover");
+                                    isThumbnailHover.value = val;
+                                  },
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        fluent.PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              FadeTransition(
+                                                  opacity: animation,
+                                                  child: Scaffold(
+                                                    body: ThumnailPage(
+                                                      url:
+                                                          c.detail?.cover ?? '',
+                                                      headers:
+                                                          c.detail?.headers,
+                                                    ),
+                                                  )),
+                                        ));
+                                  },
+                                )),
                               ),
                               const SizedBox(width: 30),
                             ],
@@ -573,4 +601,50 @@ _buildInfoTile(BuildContext context, String title, String value) {
       const SizedBox(height: 16)
     ],
   );
+}
+
+class ThumnailPage extends StatelessWidget {
+  const ThumnailPage({super.key, required this.url, required this.headers});
+  final String url;
+  final Map<String, String>? headers;
+  // final String tag;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      Center(
+          child: Hero(
+              tag: "cover",
+              child: ExtendedImageSlidePage(
+                slideAxis: SlideAxis.both,
+                slideType: SlideType.onlyImage,
+                child: ExtendedImage.network(
+                  url,
+                  headers: headers,
+                  fit: BoxFit.contain,
+                  mode: ExtendedImageMode.gesture,
+                  initGestureConfigHandler: (state) {
+                    return GestureConfig(
+                      minScale: 0.9,
+                      animationMinScale: 0.7,
+                      maxScale: 3.0,
+                      animationMaxScale: 3.5,
+                      speed: 1.0,
+                      inertialSpeed: 100.0,
+                      initialScale: 1.0,
+                      inPageView: false,
+                      reverseMousePointerScrollDirection: true,
+                      initialAlignment: InitialAlignment.center,
+                    );
+                  },
+                ),
+              ))),
+      GestureDetector(
+        onTap: () {
+          debugPrint("tapped");
+          Navigator.pop(context);
+        },
+      )
+    ]);
+  }
 }
