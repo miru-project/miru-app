@@ -53,6 +53,7 @@ dependencies:
       url: https://github.com/MiaoMint/flutter_windows_webview
       ref: master
   webview_cookie_manager: ^2.0.6
+  visibility_detector: ^0.4.0+2
   http_parser: ^4.0.2
   html: ^0.15.4
   xpath_selector_html_parser: ^3.0.1

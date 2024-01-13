@@ -13,6 +13,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class ComicReaderContent extends StatefulWidget {
   const ComicReaderContent(this.tag, {super.key});
@@ -23,6 +24,15 @@ class ComicReaderContent extends StatefulWidget {
 }
 
 class _ComicReaderContentState extends State<ComicReaderContent> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // This code will be executed after the widget has been built and rendered.
+      debugPrint('Column has been rendered');
+    });
+  }
+
   late final _c = Get.find<ComicController>(tag: widget.tag);
   final zoomScale = 1.0.obs;
   bool isZoomed = false;
@@ -129,11 +139,21 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                     child: Column(
                       children: [
                         for (int col = 0; col < images.length; col++)
-                          CacheNetWorkImagePic(
-                            images[col],
-                            fit: BoxFit.cover,
-                            headers: _c.watchData.value?.headers,
-                          )
+                          VisibilityDetector(
+                              key: Key(col.toString()),
+                              child: CacheNetWorkImagePic(
+                                images[col],
+                                fit: BoxFit.cover,
+                                headers: _c.watchData.value?.headers,
+                              ),
+                              onVisibilityChanged: (info) {
+                                final visiblePercentage =
+                                    info.visibleFraction * 100;
+                                debugPrint("$col, $visiblePercentage");
+                                if (visiblePercentage > 50) {
+                                  _c.currentPage.value = col;
+                                }
+                              })
                       ],
                     ));
                 // InteractiveViewer(
@@ -248,5 +268,25 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
         _buildContent(),
       ),
     );
+  }
+}
+
+class RenderNotifier extends StatelessWidget {
+  RenderNotifier(
+      {super.key,
+      required this.index,
+      required this.onBuild,
+      required this.child});
+  final int index;
+  final VoidCallback onBuild;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onBuild();
+    });
+
+    return child;
   }
 }
