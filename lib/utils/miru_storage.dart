@@ -119,6 +119,10 @@ class MiruStorage {
     await _initSetting(SettingKey.arrowRight, 2.0);
     await _initSetting(SettingKey.readingMode, "standard");
     await _initSetting(SettingKey.windowSize, "1280,720");
+    await _initSetting(SettingKey.androidWebviewUA,
+        "Mozilla/5.0 (Linux; Android 13; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.43 Mobile Safari/537.36");
+    await _initSetting(SettingKey.windowsWebviewUA,
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0");
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -133,6 +137,21 @@ class MiruStorage {
 
   static getSetting(String key) {
     return settings.get(key);
+  }
+
+  static getUASetting() {
+    if (Platform.isAndroid) {
+      return settings.get(SettingKey.androidWebviewUA);
+    }
+    return settings.get(SettingKey.windowsWebviewUA);
+  }
+
+  static setUASetting(String value) async {
+    if (Platform.isAndroid) {
+      setSetting(SettingKey.androidWebviewUA, value);
+    } else {
+      setSetting(SettingKey.windowsWebviewUA, value);
+    }
   }
 }
 
@@ -154,4 +173,6 @@ class SettingKey {
   static String readingMode = 'ReadingMode';
   static String windowSize = 'WindowsSize';
   static String windowPosition = 'WindowsPosition';
+  static String androidWebviewUA = "AndroidWebviewUA";
+  static String windowsWebviewUA = "WindowsWebviewUA";
 }
