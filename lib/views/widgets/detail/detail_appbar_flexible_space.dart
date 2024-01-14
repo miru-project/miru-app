@@ -98,60 +98,20 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                   if (needShowCover())
                     Hero(
                       tag: c.heroTag ?? '',
-                      child: InkWell(
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          child: SizedBox(
-                            height: 150,
-                            width: 100,
-                            child: c.isLoading.value
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : CacheNetWorkImagePic(
-                                    c.data.value?.cover ?? '',
-                                    fit: BoxFit.cover,
-                                    headers: c.detail?.headers,
-                                  ),
-                          ),
+                      child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: SizedBox(
+                          height: 150,
+                          width: 100,
+                          child: c.isLoading.value
+                              ? const Center(child: CircularProgressIndicator())
+                              : CacheNetWorkImagePic(
+                                  c.data.value?.cover ?? '',
+                                  fit: BoxFit.cover,
+                                  headers: c.detail?.headers,
+                                  canFullScreen: true,
+                                ),
                         ),
-                        onTap: () {
-                          debugPrint("tapped");
-                          showGeneralDialog(
-                            context: context,
-                            transitionBuilder: (BuildContext context,
-                                Animation animation,
-                                Animation secondaryAnimation,
-                                Widget child) {
-                              return FadeTransition(
-                                opacity: animation as Animation<double>,
-                                child: child,
-                              );
-                            },
-                            pageBuilder: (BuildContext buildContext,
-                                    Animation animation,
-                                    Animation secondaryAnimation) =>
-                                Center(
-                              child: Hero(
-                                  tag: c.heroTag ?? '',
-                                  child: Stack(children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        // debugPrint("exit");
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    Center(
-                                        child: InteractiveViewer(
-                                            clipBehavior: Clip.none,
-                                            child: CacheNetWorkImagePic(
-                                              c.data.value?.cover ?? '',
-                                              fit: BoxFit.cover,
-                                              headers: c.detail?.headers,
-                                            )))
-                                  ])),
-                            ),
-                          );
-                        },
                       ),
                     ),
                   Expanded(
