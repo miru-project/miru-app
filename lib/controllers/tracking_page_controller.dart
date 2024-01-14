@@ -68,7 +68,6 @@ class TrackingPageController extends GetxController {
     final token = MiruStorage.getSetting(SettingKey.aniListToken);
     if (token != "") {
       anilistIsLogin.value = true;
-      initAnilistData();
     }
     super.onInit();
   }

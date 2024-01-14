@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/detail_controller.dart';
+import 'package:miru_app/controllers/tracking_page_controller.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/router/router.dart';
@@ -117,8 +118,9 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   }
 
   Widget _buildShow(Widget widget) {
-    if (anlistExtensionMap.containsKey(c.extension?.type) ||
-        AniListProvider.anilistToken != "") {
+    final trackingPageController = Get.put(TrackingPageController());
+    if (anlistExtensionMap.containsKey(c.extension?.type) &&
+        trackingPageController.anilistIsLogin.value) {
       return widget;
     }
     return const SizedBox.shrink();
