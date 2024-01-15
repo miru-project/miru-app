@@ -36,7 +36,9 @@
     "previous": "Previous",
     "show-all": "Show all",
     "delete": "Delete",
-    "delete-all": "Delete all"
+    "delete-all": "Delete all",
+    "save": "Save",
+    "save-success": "Save success"
   },
   "home": {
     "continue-watching": "Continue",
