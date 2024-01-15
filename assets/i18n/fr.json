@@ -1,0 +1,231 @@
+{
+    "common": {
+      "home": "Accueil",
+      "search": "Recherche",
+      "extension": "Extensions",
+      "extension-repo": "Dépôt d'Extensions",
+      "settings": "Paramètres",
+      "no-extension": "Aucune extension installée",
+      "no-result": "Aucun résultat pertinent",
+      "no-more-data": "Aucune donnée",
+      "cancel": "Fermer",
+      "confirm": "Confirmer",
+      "close": "Fermer",
+      "copied": "Copié dans le presse-papier",
+      "uninstall": "Désinstaller",
+      "install": "Installer",
+      "repo": "Dépôt",
+      "unset": "Non défini",
+      "extension-missing": "Extension {package} manquante",
+      "error": "Erreur",
+      "retry": "Réessayer",
+      "next": "Prochain",
+      "previous": "Précédent",
+      "show-all": "Tout afficher",
+      "delete": "Supprimer",
+      "delete-all": "Supprimer tout"
+    },
+  
+    "home": {
+      "continue-watching": "Reprendre",
+      "favorite": "Favoris",
+      "favorite-all": "Tous {type} favoris",
+      "no-record": "Pas de favoris ou de visionnage en cours",
+      "watched": "Regardé {ep}"
+    },
+  
+    "search": {
+      "hint-text": "Utilisez la recherche à bon escient!~",
+      "all": "Tout",
+      "filter": "Filtre"
+    },
+  
+    "extension": {
+      "import": {
+        "title": "Importer des Extension",
+        "url-label": "Extension URL",
+        "tips": "Tu peux importer des extensions avec un lien,ou un clic sur le Dépôt d'Extensions ci-dessous et y placer le fichier d'extension.",
+        "extension-dir": "Dépôt d'Extensions",
+        "import-by-url": "Importer avec un URL"
+      },
+      "error-dialog": "Message d'Erreur",
+      "installed": "Installé",
+      "edit-code": "Editer le Code"
+    },
+  
+    "extension-repo": {
+      "error": "Une erreur est survenue!",
+      "error-tips": "Veuillez vérifier votre connexion réseau ou l'adresse du dépôt.",
+      "empty": "Dépôt vide",
+      "upgrade": "Mettre à jour"
+    },
+  
+    "settings": {
+      "extension": "Extensions",
+      "extension-subtitle": "Dépôt d'Extensions",
+      "links": "Liens",
+      "contributors": "Contributeurs",
+      "default-reader-mode": "Mode de lecture par défaut",
+      "repo-url": "URL du Dépôt d'Extensions",
+      "repo-url-subtitle": "Obtenir l'URL du Dépôt d'Extensions",
+      "tmdb-key": "Clé API TMDB",
+      "tmdb-key-subtitle": "Obtenir la clé API TMDB",
+      "bt-server": "Serveur BT",
+      "bt-server-subtitle": "Le serveur BT est un composant nécessaire à la lecture en ligne des torrents.",
+      "bt-server-manager": "Gérer",
+      "upgrade": "Mise à jour de l'application",
+      "comic-reader": "Lecteur de Bande Dessinée",
+      "comic-reader-subtitle": "Mode de lecture par défaut...",
+      "tracking": "Suivi",
+      "tracking-subtitle": "AniList...",
+      "general": "Général",
+      "general-subtitle": "TMDB, Langage, Thème, Mise à jour...",
+      "skip-interval": "Intervalle de Saut",
+      "skip-interval-subtitle": "Intervalle de Saut pour le lecteur vidéo intégré",
+      "upgrade-subtitle": "version: {version}",
+      "upgrade-training": "Vérifier",
+      "auto-check-update": "Vérifier automatiquement les mises à jour",
+      "auto-check-update-subtitle": "Vérifier les mises à jour à chaque démarrage",
+      "language": "Langage",
+      "theme": "Thème",
+      "theme-subtitle": "Changer le thème de l'application",
+      "theme-system": "Système",
+      "theme-light": "Clair",
+      "theme-dark": "Sombre",
+      "theme-black": "Nuit",
+      "nsfw": "NSFW",
+      "nsfw-subtitle": "Afficher le contenu NSFW",
+      "video-player": "Lecteur Vidéo",
+      "video-player-subtitle": "Serveur BT, Lecteur Externe...",
+      "webview-ua": "Webview User-Agent",
+      "webview-ua-subtitle": "Modifier le User-Agent dans l'en-tête de la requête pour les Webviews et les extensions.",
+      "external-player": "Lecteur vidéo préféré",
+      "external-player-subtitle": "Actuellement, le lecteur préféré est {player}",
+      "external-player-builtin": "Intégré",
+      "language-subtitle": "Changer le langage de l'application",
+      "extension-log": "Fenêtre du journal d'extension",
+      "extension-log-subtitle": "Utilisé pour le débogage des extensions",
+      "about": "À propos",
+      "official-site": "Site Officiel",
+      "official-site-training": "Visiter",
+      "source-code": "Open Source",
+      "source-code-training": "Donner une Etoile",
+      "license": "Licence",
+      "license-subtitle": "Licence"
+    },
+    "external-player-launching": "Lancement du {player}",
+    "detail": {
+      "favorite": "Favoris",
+      "favorited": "Favorisé",
+      "continue-watching": "Continuer {episode}",
+      "total-episodes": "Total {total}",
+      "overview": "Aperçu",
+      "cast": "Cast",
+      "additional-info": "Informations additionnelles",
+      "get-lastest-data-error": "Échec de l'obtention des dernières données",
+      "modify-tmdb-binding": "Modifier la liaison BDMT",
+      "no-tmdb-data": "Aucune donnée TMDB ne correspond, veuillez lier les données vous-même.",
+      "tmdb-key-missing": "Clé API TMDB manquante, veuillez compléter les paramètres"
+    },
+  
+    "video": {
+      "episodes": "Episodes",
+      "watch-now": "Regarder Maintenant",
+      "no-episodes": "Aucun episode",
+      "play-complete": "Lecture terminée",
+      "resume-last-playback": "Reprendre la dernière lecture",
+      "subtitle-none": "Aucun Sous-titre",
+      "subtitle": "Sous-titre",
+      "subtitle-change": "Changer le sous-titre {title}",
+      "subtitle-file": "Fichier Sous-titre",
+      "torrent-downloading": "Téléchargement du torrent",
+      "tooltip": {
+        "close": "Fermer",
+        "full-screen": "Plein écran",
+        "next": "Suivant",
+        "play": "Lecture",
+        "play-list": "Liste de lecture",
+        "play-or-pause": "Pause",
+        "previous": "Précédent",
+        "quality": "Qualité",
+        "speed": "Vitesse",
+        "subtitle": "Sous-titre",
+        "torrent-file-list": "Liste des fichiers torrent",
+        "volume": "Volume"
+      }
+    },
+  
+    "comic-settings": {
+      "read-mode": "Mode lecture",
+      "standard": "Standard",
+      "right-to-left": "Droite to Gauche",
+      "web-tonn": "Webtoon"
+    },
+  
+    "novel-settings": {
+      "font-size": "Taille de la police"
+    },
+  
+    "reader": {
+      "chapters": "Chapitres",
+      "read-now": "Lire Maintenant",
+      "no-chapters": "Aucun chapitre"
+    },
+  
+    "upgrade": {
+      "check-update": "Vérifier les mises à jour",
+      "new-version": "Nouvelle version {version} détectée",
+      "download": "Aller à Mise à jour",
+      "no-update": "Déjà à jour",
+      "not-now": "Pas maintenant",
+      "error": "La vérification des mises à jour a échoué, une erreur de réseau s'est produite"
+    },
+  
+    "extension-install-error": "Échec de l'installation de l'extension",
+  
+    "extension-type": {
+      "video": "Vidéo",
+      "novel": "Novel",
+      "comic": "Bande dessinée"
+    },
+  
+    "extension-info": {
+      "author": "Auteur",
+      "description": "Description",
+      "version": "Version",
+      "language": "Langage",
+      "original-site": "Site original",
+      "other-infomation": "Autres Informations",
+      "license": "Licence",
+      "title": "Informations d'Extension"
+    },
+  
+    "cookie-clean": {
+      "title": "Effacer les cookies",
+      "subtitle": "Il se peut que vous deviez vous reconnecter après le nettoyage",
+      "success": "Cookies effacés",
+      "clean": "Effacer"
+    },
+  
+    "tmdb": {
+      "backdrops": "Contexte",
+      "status": "Statut",
+      "original-title": "Titre Original",
+      "release-date": "Date de sortie",
+      "genres": "Genres",
+      "runtime": "Temps d'exécution",
+      "languages": "Langages"
+    },
+  
+    "bt-server": {
+      "not-installed": "BT-Server n'est pas installé",
+      "running": "BT-Server est en cours d'exécution",
+      "stopped": "BT-Server est arrêté",
+      "version": "Version {version}",
+      "remote-version": "Version Distante {version}",
+      "stop": "Arrêter",
+      "upgrade": "Mettre à jour",
+      "start": "Démarrer"
+    }
+  }
+  
