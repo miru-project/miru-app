@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class CacheNetWorkImagePic extends StatelessWidget {
@@ -77,13 +81,61 @@ class _ThumnailPage extends StatefulWidget {
   const _ThumnailPage({
     required this.image,
   });
-  final ImageProvider<Object> image;
+  final CachedNetworkImageProvider image;
 
   @override
   State<_ThumnailPage> createState() => _ThumnailPageState();
 }
 
 class _ThumnailPageState extends State<_ThumnailPage> {
+  final menuController = fluent.FlyoutController();
+  final contextAttachKey = GlobalKey();
+
+  @override
+  dispose() {
+    menuController.dispose();
+    super.dispose();
+  }
+
+  _saveImage() async {
+    final url = widget.image.url;
+    final fileName = url.split('/').last;
+    final res = await Dio().get(
+      url,
+      options: Options(
+        responseType: ResponseType.bytes,
+        headers: widget.image.headers,
+      ),
+    );
+    if (Platform.isAndroid) {
+      final result = await ImageGallerySaver.saveImage(
+        res.data,
+        name: fileName,
+      );
+      if (mounted) {
+        final msg = result['isSuccess'] == true
+            ? "Save image success"
+            : result['errorMessage'];
+        showPlatformSnackbar(
+          context: context,
+          content: msg,
+        );
+      }
+      return;
+    }
+    // 打开目录选择对话框file_picker
+
+    final path = await FilePicker.platform.saveFile(
+      type: FileType.image,
+      fileName: fileName,
+    );
+    if (path == null) {
+      return;
+    }
+    // 保存
+    File(path).writeAsBytesSync(res.data);
+  }
+
   Widget _buildContent(BuildContext context) {
     return Center(
       child: ExtendedImageSlidePage(
@@ -121,20 +173,65 @@ class _ThumnailPageState extends State<_ThumnailPage> {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: _buildContent(context),
+      body: GestureDetector(
+        child: _buildContent(context),
+        onLongPress: () {
+          showModalBottomSheet(
+            context: context,
+            showDragHandle: true,
+            useSafeArea: true,
+            builder: (_) => SizedBox(
+              height: 100,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.save),
+                    title: const Text('Save image'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _saveImage();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return Stack(
-      children: [
-        _buildContent(context),
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
+    return GestureDetector(
+      onSecondaryTapUp: (d) {
+        final targetContext = contextAttachKey.currentContext;
+        if (targetContext == null) return;
+        final box = targetContext.findRenderObject() as RenderBox;
+        final position = box.localToGlobal(
+          d.localPosition,
+          ancestor: Navigator.of(context).context.findRenderObject(),
+        );
+        menuController.showFlyout(
+          position: position,
+          builder: (context) {
+            return fluent.MenuFlyout(items: [
+              fluent.MenuFlyoutItem(
+                leading: const Icon(fluent.FluentIcons.save),
+                text: const Text('Save image'),
+                onPressed: () {
+                  fluent.Flyout.of(context).close();
+                  _saveImage();
+                },
+              ),
+            ]);
           },
-        )
-      ],
+        );
+      },
+      child: fluent.FlyoutTarget(
+        key: contextAttachKey,
+        controller: menuController,
+        child: _buildContent(context),
+      ),
     );
   }
 
