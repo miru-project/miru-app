@@ -33,6 +33,7 @@ void main(List<String> args) async {
       ),
     };
     runApp(windows[arguments["name"]]);
+
     return;
   }
 
@@ -41,7 +42,16 @@ void main(List<String> args) async {
   await ApplicationUtils.ensureInitialized();
   ExtensionUtils.ensureInitialized();
   MediaKit.ensureInitialized();
-
+  //Error handler
+  FlutterError.onError = (details) {
+    if (details.stack == null) {
+      _onError(details.context.toString(), StackTrace.current.toString(),
+          details.exceptionAsString());
+    } else {
+      _onError(details.context.toString(), details.stack.toString(),
+          details.exceptionAsString());
+    }
+  };
   if (!Platform.isAndroid) {
     await windowManager.ensureInitialized();
     final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
@@ -78,6 +88,21 @@ void main(List<String> args) async {
     SystemChrome.setSystemUIOverlayStyle(style);
   }
   runApp(const MainApp());
+}
+
+_onError(String errorContext, String stackTrace, String exception) {
+  debugPrint("error logging \r\n");
+  debugPrint(errorContext.toString());
+  debugPrint(exception.toString());
+  debugPrint(stackTrace.toString());
+  final List errorlog = MiruStorage.getSetting(SettingKey.errorMessage);
+  errorlog.add({
+    "context": errorContext,
+    "exception": exception,
+    "stackTrace": stackTrace
+  });
+  MiruStorage.setSetting(SettingKey.errorMessage, errorlog);
+  // showDialog(context: context, builder: builder)
 }
 
 class MainApp extends fluent.StatefulWidget {

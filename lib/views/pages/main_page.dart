@@ -39,6 +39,11 @@ class _DesktopMainPageState extends State<DesktopMainPage> with WindowListener {
     if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
       ApplicationUtils.checkUpdate(context);
     }
+    debugPrint("init");
+    if (MiruStorage.getSetting(SettingKey.errorMessage).length != 0 &&
+        MiruStorage.getSetting(SettingKey.showBugReport)) {
+      ApplicationUtils.feedbackDialog(context);
+    }
     windowManager.addListener(this);
     super.initState();
   }
@@ -196,10 +201,19 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
   @override
   void initState() {
     c = Get.put(MainController());
+    debugPrint("init");
+
     if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
       ApplicationUtils.checkUpdate(context);
     }
+
     super.initState();
+
+    if (MiruStorage.getSetting(SettingKey.errorMessage).length != 0 &&
+        MiruStorage.getSetting(SettingKey.showBugReport)) {
+      ApplicationUtils.feedbackDialog(context);
+      // ApplicationUtils.checkUpdate(context);
+    }
   }
 
   @override

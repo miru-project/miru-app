@@ -374,7 +374,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       const SizedBox(height: 10),
       // Debug
-      if (!Platform.isAndroid)
+      if (!Platform.isAndroid) ...[
         Obx(
           () {
             final value = c.extensionLogWindowId.value != -1;
@@ -393,6 +393,26 @@ class _SettingsPageState extends State<SettingsPage> {
             );
           },
         ),
+        const SizedBox(height: 10),
+      ],
+
+      SettingsExpanderTile(
+        icon: fluent.FluentIcons.bug,
+        androidIcon: Icons.bug_report_rounded,
+        title: 'settings.bug-report'.i18n,
+        subTitle: 'bugreport-setting.show-report-dialog'.i18n,
+        content: Column(children: [
+          SettingsSwitchTile(
+              title: 'bugreport-setting.show-report-dialog'.i18n,
+              buildSubtitle: () =>
+                  'bugreport-setting.show-report-dialog-subtitle'.i18n,
+              buildValue: () =>
+                  MiruStorage.getSetting(SettingKey.showBugReport),
+              onChanged: (val) {
+                MiruStorage.setSetting(SettingKey.showBugReport, val);
+              }),
+        ]),
+      ),
       // 关于
       const SizedBox(height: 20),
       ListTitle(title: 'settings.about'.i18n),

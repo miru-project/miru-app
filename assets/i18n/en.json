@@ -112,7 +112,9 @@
     "extension-log-subtitle": "Used for debugging extensions",
     "skip-interval": "Skip Interval",
     "skip-interval-subtitle": "Skipping interval for builtin video player",
-    "default-reader-mode": "Default reader mode"
+    "default-reader-mode": "Default reader mode",
+    "bug-report": "Bug Report"
+
   },
   "external-player-launching": "Launching {player}",
   "detail": {
@@ -162,6 +164,10 @@
   },
   "novel-settings": {
     "font-size": "Font size"
+  },
+  "bugreport-setting":{
+    "show-report-dialog": "Show Report Dialog",
+    "show-report-dialog-subtitle": "Show error report dialog when app starts"
   },
   "reader": {
     "chapters": "Chapters",
@@ -216,5 +222,12 @@
     "stop": "Stop",
     "upgrade": "Upgrade",
     "start": "Start"
+  },
+  "report":{
+    "copied":"Copied to clipboard",
+    "github-bug-report":"Report to Github issue",
+    "title":"Bug Report",
+    "copy-message":"Copy error message",
+    "show-report-checkbox":"Show report dialog when app starts"
   }
 }

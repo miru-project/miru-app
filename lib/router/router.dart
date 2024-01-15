@@ -15,6 +15,7 @@ import 'package:miru_app/views/pages/main_page.dart';
 import 'package:miru_app/views/pages/search/extension_searcher_page.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
 import 'package:miru_app/views/pages/settings/settings_page.dart';
+import 'package:miru_app/views/widgets/error_dialog.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -95,6 +96,11 @@ final router = GoRouter(
             ),
           ),
         ),
+        GoRoute(
+            path: '/bug-report',
+            builder: (context, state) => _animation(
+                  const ErrorPageDesktop(),
+                )),
       ],
     )
   ],

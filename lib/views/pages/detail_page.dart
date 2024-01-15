@@ -318,6 +318,47 @@ class _DetailPageState extends State<DetailPage> {
                                   // 收藏按钮
                                   const DetailFavoriteButton(),
                                   const SizedBox(width: 8),
+                                  //delete after merged
+                                  Row(children: [
+                                    ElevatedButton(
+                                        child: const Text("Custom error"),
+                                        onPressed: () {
+                                          throw Exception('BugWidget');
+                                        }),
+                                    ElevatedButton(
+                                      child: const Text("Render overflow"),
+                                      onPressed: () {
+                                        // showDialog(context: context, builder: (context) => ));
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => Row(
+                                                  children: [
+                                                    const Icon(Icons.message),
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text('Title',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headlineMedium),
+                                                        const Text(
+                                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed'
+                                                            ' do eiusmod tempor incididunt ut labore et dolore magna '
+                                                            'aliqua. Ut enim ad minim veniam, quis nostrud '
+                                                            'exercitation ullamco laboris nisi ut aliquip ex ea '
+                                                            'commodo consequat.'),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ));
+                                      },
+                                    )
+                                  ]),
                                   if (c.tmdbDetail != null)
                                     fluent.Button(
                                       child: const Padding(

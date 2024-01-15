@@ -1,3 +1,4 @@
+// import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
@@ -73,7 +74,46 @@ class _HomePageState extends State<HomePage> {
                     type: ExtensionType.fikushon,
                     data: c.favorites[ExtensionType.fikushon]!,
                   ),
-                ]
+                ],
+                //need to be deleted before merged
+                const Text("Trouble maker:"),
+                Row(children: [
+                  ElevatedButton(
+                      child: const Text("Custom error"),
+                      onPressed: () {
+                        throw Exception('BugWidget');
+                      }),
+                  ElevatedButton(
+                    child: const Text("Render overflow"),
+                    onPressed: () {
+                      // showDialog(context: context, builder: (context) => ));
+                      showDialog(
+                          context: context,
+                          builder: (context) => Row(
+                                children: [
+                                  const Icon(Icons.message),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Title',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium),
+                                      const Text(
+                                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed'
+                                          ' do eiusmod tempor incididunt ut labore et dolore magna '
+                                          'aliqua. Ut enim ad minim veniam, quis nostrud '
+                                          'exercitation ullamco laboris nisi ut aliquip ex ea '
+                                          'commodo consequat.'),
+                                    ],
+                                  ),
+                                ],
+                              ));
+                    },
+                  )
+                ])
               ],
             ),
           ),
