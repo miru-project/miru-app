@@ -26,19 +26,18 @@ class AnilistTrackingDialog extends StatefulWidget {
 
 class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
   late final DetailPageController c = Get.find(tag: widget.tag);
-  late final status = [
-    "Current",
-    "Completed",
-    "Planning",
-    "Dropped",
-    "Paused",
-    "Rewatching",
-  ];
+  late final status = {
+    for (final child in AnilistMediaListStatus.values)
+      AniListProvider.mediaListStatusToTranslate(
+        child,
+        widget.anilistType,
+      ): child,
+  };
 
   // media list id
   int id = 0;
 
-  String selectStatus = "CURRENT";
+  AnilistMediaListStatus selectStatus = AnilistMediaListStatus.current;
   int? episodes = 0;
   int? maxEpisodes = 0;
   double? score = 0;
@@ -70,7 +69,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
       final data = res['mediaListEntry'];
       setState(() {
         id = data["id"];
-        selectStatus = data["status"];
+        selectStatus = AniListProvider.stringToMediaListStatus(data["status"]);
         episodes = data["progress"];
         score = data["score"].toDouble();
         if (_dateIsNotNull(data["startedAt"])) {
@@ -139,19 +138,18 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                         child: SwitchTileDialog(
                           title: "Status",
                           value: selectStatus,
-                          buildOptions: {
-                            for (final child in status)
-                              child: child.toUpperCase(),
-                          },
+                          buildOptions: status,
                           onSelected: (value) {
                             setState(() {
                               selectStatus = value;
                             });
                           },
                           onClear: () {
-                            setState(() {
-                              selectStatus = "CURRENT";
-                            });
+                            setState(
+                              () {
+                                selectStatus = AnilistMediaListStatus.current;
+                              },
+                            );
                           },
                         ),
                       ),
@@ -281,13 +279,13 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
       children: [
         const Text("Status"),
         const SizedBox(height: 8),
-        fluent.ComboBox<String>(
+        fluent.ComboBox<AnilistMediaListStatus>(
           value: selectStatus,
           items: [
-            for (final child in status)
+            for (final child in status.entries)
               fluent.ComboBoxItem(
-                value: child.toUpperCase(),
-                child: Text(child),
+                value: child.value,
+                child: Text(child.key),
               ),
           ],
           onChanged: (value) {

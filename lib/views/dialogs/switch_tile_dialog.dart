@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SwitchTileDialog extends StatefulWidget {
+class SwitchTileDialog<T> extends StatefulWidget {
   const SwitchTileDialog({
     super.key,
     required this.title,
@@ -10,18 +10,18 @@ class SwitchTileDialog extends StatefulWidget {
     required this.onClear,
   });
   final String title;
-  final String? value;
-  final Map<String, String> buildOptions;
-  final Function(String) onSelected;
+  final T? value;
+  final Map<String, T> buildOptions;
+  final Function(T) onSelected;
   final Function onClear;
 
   @override
-  State<SwitchTileDialog> createState() => _SwitchTileDialogState();
+  State<SwitchTileDialog<T>> createState() => _SwitchTileDialogState<T>();
 }
 
-class _SwitchTileDialogState extends State<SwitchTileDialog> {
+class _SwitchTileDialogState<T> extends State<SwitchTileDialog<T>> {
   _selectOption(String key) {
-    widget.onSelected(widget.buildOptions[key]!);
+    widget.onSelected(widget.buildOptions[key] as T);
     Navigator.pop(context);
   }
 

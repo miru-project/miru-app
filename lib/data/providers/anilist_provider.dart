@@ -8,6 +8,15 @@ import 'package:miru_app/views/widgets/messenger.dart';
 
 enum AnilistType { anime, manga }
 
+enum AnilistMediaListStatus {
+  current,
+  completed,
+  planning,
+  paused,
+  dropped,
+  repeating,
+}
+
 class AniListProvider {
   static String get anilistToken {
     return MiruStorage.getSetting(SettingKey.aniListToken);
@@ -24,8 +33,67 @@ class AniListProvider {
 
   static const String apiUrl = 'https://graphql.anilist.co';
 
-  static String _anilistTypeToQuery(AnilistType type) {
+  static String _typeToQuery(AnilistType type) {
     return (type == AnilistType.anime) ? "ANIME" : "MANGA";
+  }
+
+  static String mediaListStatusToQuery(
+    AnilistMediaListStatus status, {
+    bool firstLetterUpperCase = false,
+  }) {
+    switch (status) {
+      case AnilistMediaListStatus.current:
+        return "CURRENT";
+      case AnilistMediaListStatus.completed:
+        return "COMPLETED";
+      case AnilistMediaListStatus.planning:
+        return "PLANNING";
+      case AnilistMediaListStatus.paused:
+        return "PAUSED";
+      case AnilistMediaListStatus.dropped:
+        return "DROPPED";
+      case AnilistMediaListStatus.repeating:
+        return "REPEATING";
+    }
+  }
+
+  static String mediaListStatusToTranslate(
+    AnilistMediaListStatus status,
+    AnilistType type,
+  ) {
+    switch (status) {
+      case AnilistMediaListStatus.current:
+        return (type == AnilistType.anime) ? "Watching" : "Reading";
+      case AnilistMediaListStatus.completed:
+        return "Completed";
+      case AnilistMediaListStatus.planning:
+        return "Planning";
+      case AnilistMediaListStatus.paused:
+        return "Hold on";
+      case AnilistMediaListStatus.dropped:
+        return "Dropped";
+      case AnilistMediaListStatus.repeating:
+        return (type == AnilistType.anime) ? "Re-watching" : "Re-reading";
+    }
+  }
+
+  static AnilistMediaListStatus stringToMediaListStatus(String status) {
+    switch (status) {
+      case "CURRENT":
+        return AnilistMediaListStatus.current;
+      case "COMPLETED":
+        return AnilistMediaListStatus.completed;
+      case "PLANNING":
+        return AnilistMediaListStatus.planning;
+      case "PAUSED":
+        return AnilistMediaListStatus.paused;
+      case "DROPPED":
+        return AnilistMediaListStatus.dropped;
+      case "REPEATING":
+        return AnilistMediaListStatus.repeating;
+      default:
+        return AnilistMediaListStatus.current;
+    }
   }
 
   static postRequest({
@@ -54,7 +122,7 @@ class AniListProvider {
           // ignore: use_build_context_synchronously
           showPlatformSnackbar(
             context: currentContext,
-            content: "Not login",
+            content: "Anilist not login",
           );
         }
         debugPrint("${e.response}");
@@ -81,16 +149,48 @@ class AniListProvider {
   }
 
   static Future<Map<String, dynamic>> getCollection(
-      AnilistType anilistType) async {
-    final query =
-        """{MediaListCollection(userId: $userid, type: ${_anilistTypeToQuery(anilistType)}) { lists { name entries { status progress score(format:POINT_100) media { id status chapters episodes   meanScore isFavourite coverImage{large} title {userPreferred } } } }  } }""";
+    AnilistType anilistType,
+  ) async {
+    final query = """
+      {
+        MediaListCollection(userId: $userid, type : ${_typeToQuery(anilistType)}) {
+          lists {
+            status
+            entries {
+              status
+              progress
+              score
+              media {
+                id
+                status
+                chapters
+                episodes
+                meanScore
+                isFavourite
+                coverImage {
+                  large
+                }
+                title {
+                  userPreferred
+                }
+              }
+            }
+          }
+        }
+      }
+
+      """;
     final res = await postRequest(queryString: query);
     final collectionData = <String, List>{};
-    int length = res["data"]["MediaListCollection"]["lists"].length;
+    final lists = res["data"]["MediaListCollection"]["lists"];
+    int length = lists.length;
     for (int i = 0; i < length; i++) {
-      String key = res["data"]["MediaListCollection"]["lists"][i]["name"];
-      collectionData[key] =
-          res["data"]["MediaListCollection"]["lists"][i]["entries"];
+      String key = lists[i]["status"];
+      if (collectionData.containsKey(key)) {
+        collectionData[key]!.addAll(lists[i]["entries"]);
+      } else {
+        collectionData[key] = lists[i]["entries"];
+      }
     }
     return collectionData;
   }
@@ -103,7 +203,7 @@ class AniListProvider {
     int? page,
   }) async {
     final String nameQuery = """{Page(page:${page ?? 1}){
-    media(search:"$searchString",type:${_anilistTypeToQuery(type)}){
+    media(search:"$searchString",type:${_typeToQuery(type)}){
         id
         type
         seasonYear
@@ -138,7 +238,7 @@ class AniListProvider {
   }
 
   static Future<String> editList({
-    required String status,
+    required AnilistMediaListStatus status,
     String? mediaId,
     String? id,
     int? progress,
@@ -177,7 +277,7 @@ class AniListProvider {
     final queryStr = queryList.join(",");
 
     final queryString = """mutation{
-    SaveMediaListEntry(status:$status,private:${isPrivate ?? false},$queryStr){
+    SaveMediaListEntry(status:${mediaListStatusToQuery(status)},private:${isPrivate ?? false},$queryStr){
         id
       }
     }""";

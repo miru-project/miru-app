@@ -29,17 +29,12 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
   Widget build(BuildContext context) {
     final data = widget.data;
     final type = widget.anilistType;
-    final count = ((type == AnilistType.anime)
-            ? data["Watching"]?.length
-            : data["Reading"]?.length) ??
-        0;
+    final count = data["CURRENT"]?.length ?? 0;
 
     return HorizontalList(
       title: (type == AnilistType.anime) ? "Anime".i18n : "Manga".i18n,
       itemBuilder: (context, index) {
-        final itemData = (type == AnilistType.anime)
-            ? data["Watching"][index]
-            : data["Reading"][index];
+        final itemData = data["CURRENT"][index];
 
         final title = itemData["media"]["title"]["userPreferred"];
         final cover = itemData["media"]["coverImage"]["large"];

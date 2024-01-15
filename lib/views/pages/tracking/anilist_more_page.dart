@@ -21,22 +21,19 @@ class AnilistMorePage extends StatefulWidget {
 }
 
 class _AnilistMorePageState extends State<AnilistMorePage> {
-  late final tabs = [
-    if (widget.anilistType == AnilistType.manga) "Reading" else "Watching",
-    "Completed",
-    "Planning",
-    "Dropped",
-    "Paused",
-    "Rewatching",
-  ];
-  int index = 0;
+  late final anilistStatusMap = {
+    for (final child in AnilistMediaListStatus.values)
+      AniListProvider.mediaListStatusToTranslate(
+        child,
+        widget.anilistType,
+      ): child,
+  };
+
+  String currentStatus = "CURRENT";
 
   Widget _buildAndroid(BuildContext context) {
     final List<Tab> tabs = [
-      for (int i = 0; i < this.tabs.length; i++)
-        Tab(
-          text: this.tabs[i],
-        )
+      for (final child in anilistStatusMap.keys) Tab(text: child),
     ];
     return DefaultTabController(
       length: tabs.length,
@@ -71,8 +68,11 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
               }
 
               return TabBarView(
-                  children: tabs.map((Tab tab) {
-                final status = tab.text;
+                  children: anilistStatusMap.values.map(((e) {
+                final status = AniListProvider.mediaListStatusToQuery(
+                  e,
+                  firstLetterUpperCase: true,
+                );
                 final count = data[status]?.length ?? 0;
                 return GridView.builder(
                   padding: const EdgeInsets.all(16),
@@ -106,7 +106,7 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
                     );
                   },
                 );
-              }).toList());
+              })).toList());
             }),
       ),
     );
@@ -131,8 +131,8 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
             child: Text("No data"),
           );
         }
-        final status = tabs[index];
-        final count = data[status]?.length ?? 0;
+
+        final count = data[currentStatus]?.length ?? 0;
 
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -146,15 +146,18 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
               spacing: 10,
               runSpacing: 10,
               children: [
-                for (int i = 0; i < tabs.length; i++) ...[
+                for (final child in anilistStatusMap.entries) ...[
                   fluent.ToggleButton(
-                    checked: index == i,
+                    checked: currentStatus ==
+                        AniListProvider.mediaListStatusToQuery(child.value),
                     onChanged: (value) {
                       setState(() {
-                        index = i;
+                        currentStatus = AniListProvider.mediaListStatusToQuery(
+                          child.value,
+                        );
                       });
                     },
-                    child: Text(tabs[i]),
+                    child: Text(child.key),
                   ),
                 ]
               ],
@@ -172,7 +175,7 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
                 ),
                 itemCount: count,
                 itemBuilder: (context, index) {
-                  final item = data[status][index]["media"];
+                  final item = data[currentStatus][index]["media"];
                   final title = (widget.anilistType == AnilistType.anime)
                       ? item["title"]["userPreferred"]
                       : item["title"]["userPreferred"];

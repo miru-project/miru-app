@@ -272,6 +272,7 @@ class DetailPageController extends GetxController {
       url,
       detail!,
       tmdbID: _tmdbID,
+      anilistID: aniListID.value,
     );
   }
 
