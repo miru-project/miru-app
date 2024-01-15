@@ -114,6 +114,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                                   c.data.value?.cover ?? '',
                                   fit: BoxFit.cover,
                                   headers: c.detail?.headers,
+                                  canFullScreen: true,
                                 ),
                         ),
                       ),

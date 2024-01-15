@@ -254,7 +254,6 @@ class _DetailPageState extends State<DetailPage> {
           child: ProgressRing(),
         );
       }
-
       return Stack(
         children: [
           Animate(
@@ -288,19 +287,17 @@ class _DetailPageState extends State<DetailPage> {
                         children: [
                           if (c.detail!.cover != null)
                             if (constraints.maxWidth > 600) ...[
-                              Hero(
-                                tag: c.heroTag ?? '',
-                                child: Container(
-                                  width: 230,
-                                  height: double.infinity,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: CacheNetWorkImagePic(
-                                    c.detail?.cover ?? '',
-                                    headers: c.detail?.headers,
-                                  ),
+                              Container(
+                                width: 230,
+                                height: double.infinity,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: CacheNetWorkImagePic(
+                                  c.detail?.cover ?? '',
+                                  headers: c.detail?.headers,
+                                  canFullScreen: true,
                                 ),
                               ),
                               const SizedBox(width: 30),
@@ -397,6 +394,7 @@ class _DetailPageState extends State<DetailPage> {
                                     child: CacheNetWorkImagePic(
                                       url,
                                       height: 200,
+                                      canFullScreen: true,
                                     ),
                                   );
                                 },
