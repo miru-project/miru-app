@@ -8,6 +8,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
@@ -114,7 +115,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
       );
       if (mounted) {
         final msg = result['isSuccess'] == true
-            ? "Save image success"
+            ? "common.save-success"
             : result['errorMessage'];
         showPlatformSnackbar(
           context: context,
@@ -186,7 +187,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.save),
-                    title: const Text('Save image'),
+                    title: Text('common.save'.i18n),
                     onTap: () {
                       Navigator.of(context).pop();
                       _saveImage();
@@ -217,7 +218,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
             return fluent.MenuFlyout(items: [
               fluent.MenuFlyoutItem(
                 leading: const Icon(fluent.FluentIcons.save),
-                text: const Text('Save image'),
+                text: Text('common.save'.i18n),
                 onPressed: () {
                   fluent.Flyout.of(context).close();
                   _saveImage();

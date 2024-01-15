@@ -23,7 +23,9 @@
     "previous": "上一个",
     "show-all": "显示全部",
     "delete": "删除",
-    "delete-all": "删除全部"
+    "delete-all": "删除全部",
+    "save": "保存",
+    "save-success": "保存成功"
   },
   "home": {
     "continue-watching": "继续观看",
