@@ -31,13 +31,14 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   };
 
   _showTrackingDialog() async {
+    final anilistType = anlistExtensionMap[c.extension?.type]!;
     if (c.aniListID.value.isEmpty) {
       dynamic data;
       if (Platform.isAndroid) {
         data = await Get.to(
           AnilistBindingDialog(
             title: c.detail!.title,
-            type: AnilistType.anime,
+            type: anilistType,
           ),
         );
       } else {
@@ -45,7 +46,7 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
           context: currentContext,
           builder: (context) => AnilistBindingDialog(
             title: c.detail!.title,
-            type: AnilistType.anime,
+            type: anilistType,
           ),
         );
       }
@@ -69,7 +70,7 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
         showDragHandle: true,
         constraints: const BoxConstraints(maxWidth: 640),
         builder: (context) => AnilistTrackingDialog(
-          anilistType: anlistExtensionMap[c.extension?.type]!,
+          anilistType: anilistType,
           tag: widget.tag,
         ),
       );
@@ -79,7 +80,7 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
     fluent.showDialog(
       context: context,
       builder: (context) => AnilistTrackingDialog(
-        anilistType: anlistExtensionMap[c.extension?.type]!,
+        anilistType: anilistType,
         tag: widget.tag,
       ),
     );
