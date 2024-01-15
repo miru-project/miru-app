@@ -416,6 +416,7 @@ class DetailPageController extends GetxController {
               title: detail!.title,
               episodeGroupId: selectEpGroup,
               detailUrl: url,
+              anilistID: aniListID.value,
             ),
           );
         }),

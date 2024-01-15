@@ -17,6 +17,7 @@ class VideoPlayer extends StatefulWidget {
     required this.playerIndex,
     required this.title,
     required this.detailUrl,
+    required this.anilistID,
   });
 
   final String title;
@@ -25,6 +26,8 @@ class VideoPlayer extends StatefulWidget {
   final int playerIndex;
   final int episodeGroupId;
   final ExtensionService runtime;
+  final String anilistID;
+
   @override
   State<VideoPlayer> createState() => _VideoPlayerState();
 }
@@ -42,6 +45,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         playIndex: widget.playerIndex,
         episodeGroupId: widget.episodeGroupId,
         runtime: widget.runtime,
+        anilistID: widget.anilistID,
       ),
       tag: widget.title,
     );

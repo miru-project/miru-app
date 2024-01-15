@@ -81,6 +81,8 @@
     "comic-reader-subtitle": "Default reader mode...",
     "tracking": "Tracking",
     "tracking-subtitle": "AniList...",
+    "auto-tracking": "Auto Tracking",
+    "auto-tracking-subtitle": "Automatically sync progress when finished watching / reading",
     "about": "About",
     "links": "Links",
     "contributors": "Contributors",

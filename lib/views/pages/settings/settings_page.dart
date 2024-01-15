@@ -373,6 +373,17 @@ class _SettingsPageState extends State<SettingsPage> {
         androidIcon: Icons.sync,
         content: Column(
           children: [
+            SettingsSwitchTile(
+              title: 'settings.auto-tracking'.i18n,
+              buildSubtitle: () => 'settings.auto-tracking-subtitle'.i18n,
+              buildValue: () {
+                return MiruStorage.getSetting(SettingKey.autoTracking);
+              },
+              onChanged: (value) {
+                MiruStorage.setSetting(SettingKey.autoTracking, value);
+              },
+            ),
+            const SizedBox(height: 10),
             SettingsTile(
               isCard: true,
               icon: Container(
@@ -385,7 +396,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
-              title: 'AniList'.i18n,
+              title: 'Anilist',
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 if (!Platform.isAndroid) {

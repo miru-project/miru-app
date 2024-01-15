@@ -68,6 +68,8 @@
     "comic-reader-subtitle": "默认阅读模式...",
     "tracking": "追踪",
     "tracking-subtitle": "AniList...",
+    "auto-tracking": "自动追踪观看/阅读进度",
+    "auto-tracking-subtitle": "结束观看/阅读后自动更新进度",
     "about": "关于",
     "links": "链接",
     "contributors": "贡献者",

@@ -120,6 +120,7 @@ class MiruStorage {
     await _initSetting(SettingKey.readingMode, "standard");
     await _initSetting(SettingKey.aniListToken, '');
     await _initSetting(SettingKey.aniListUserId, '');
+    await _initSetting(SettingKey.autoTracking, true);
     await _initSetting(SettingKey.windowSize, "1280,720");
     await _initSetting(SettingKey.androidWebviewUA,
         "Mozilla/5.0 (Linux; Android 13; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.43 Mobile Safari/537.36");
@@ -175,6 +176,7 @@ class SettingKey {
   static String readingMode = 'ReadingMode';
   static String aniListToken = 'AniListToken';
   static String aniListUserId = 'AniListUserId';
+  static String autoTracking = 'AutoTracking';
   static String windowSize = 'WindowsSize';
   static String windowPosition = 'WindowsPosition';
   static String androidWebviewUA = "AndroidWebviewUA";
