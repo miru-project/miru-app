@@ -47,7 +47,7 @@ dependencies:
   url_launcher: ^6.1.11
   window_manager: ^0.3.7
   cookie_jar: ^4.0.8
-  flutter_inappwebview: ^5.7.2+3
+  flutter_inappwebview: ^5.8.0
   flutter_windows_webview:
     git:
       url: https://github.com/MiaoMint/flutter_windows_webview
@@ -76,4 +76,5 @@ flutter:
   assets:
     - assets/i18n/
     - assets/icon/logo.png
+    - assets/icon/anilist.jpg
     - assets/js/

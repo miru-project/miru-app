@@ -24,6 +24,10 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
   late DetailPageController c = Get.find(tag: widget.tag);
 
   double _offset = 1;
+  // static const anlistExtensionMap = <ExtensionType, String>{
+  //   ExtensionType.bangumi: "ANIME",
+  //   ExtensionType.manga: "MANGA",
+  // };
 
   @override
   void initState() {
@@ -145,16 +149,14 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 4,
                     child: DetailContinuePlay(
                       tag: widget.tag,
                     ),
                   ),
                   const SizedBox(
-                    width: 10,
+                    width: 20,
                   ),
                   Expanded(
-                    flex: 3,
                     child: DetailFavoriteButton(
                       tag: widget.tag,
                     ),

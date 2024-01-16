@@ -13,6 +13,8 @@
     "hi": "हिंदी"
   },
   "common": {
+    "anime": "Anime",
+    "manga": "Manga",
     "home": "Home",
     "search": "Search",
     "extension": "Extensions",
@@ -38,7 +40,11 @@
     "delete": "Delete",
     "delete-all": "Delete all",
     "save": "Save",
-    "save-success": "Save success"
+    "save-success": "Save success",
+    "logout": "Logout",
+    "login": "Login",
+    "no-data": "No data",
+    "clear": "Clear"
   },
   "home": {
     "continue-watching": "Continue",
@@ -81,6 +87,8 @@
     "comic-reader-subtitle": "Default reader mode...",
     "tracking": "Tracking",
     "tracking-subtitle": "AniList...",
+    "auto-tracking": "Auto Tracking",
+    "auto-tracking-subtitle": "Automatically sync progress when finished watching / reading",
     "about": "About",
     "links": "Links",
     "contributors": "Contributors",
@@ -119,6 +127,7 @@
   },
   "external-player-launching": "Launching {player}",
   "detail": {
+    "tracking": "Tracking",
     "favorite": "Favorite",
     "favorited": "Favorited",
     "continue-watching": "Continue {episode}",
@@ -129,7 +138,8 @@
     "get-lastest-data-error": "Failed to get latest data",
     "modify-tmdb-binding": "Modify TMDB Binding",
     "no-tmdb-data": "No TMDB data matched, please bind the data yourself",
-    "tmdb-key-missing": "TMDB API Key missing, please fill in the settings"
+    "tmdb-key-missing": "TMDB API Key missing, please fill in the settings",
+    "tracker": "Tracking"
   },
   "video": {
     "episodes": "Episodes",
@@ -219,5 +229,27 @@
     "stop": "Stop",
     "upgrade": "Upgrade",
     "start": "Start"
+  },
+  "anilist":{
+    "title":"Anilist Tracking",
+    "login-hint-1": "Seems you haven't login into AniList yet",
+    "login-hint-2": "Please login into AniList first",
+    "status": "Status",
+    "score": "Score",
+    "watching": "Watching",
+    "reading": "reading",
+    "completed": "Completed",
+    "paused": "Paused",
+    "dropped": "Dropped",
+    "planning": "Planning",
+    "hold-on": "Hold on",
+    "re-watching": "Re-watching",
+    "re-reading": "Re-reading",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "unbind":"Unbind",
+    "episodes":"Episodes",
+    "manga-chaper-read":"Manga Chaper Read: {chapters}",
+    "anime-episode-watch":"Anime Episode Watched: {episodes}"
   }
 }

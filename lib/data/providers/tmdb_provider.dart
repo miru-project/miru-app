@@ -4,7 +4,7 @@ import 'package:tmdb_api/tmdb_api.dart';
 
 class TmdbApi {
   static TMDB tmdb = TMDB(
-    ApiKeys(MiruStorage.getSetting(SettingKey.tmdbKay), ''),
+    ApiKeys(MiruStorage.getSetting(SettingKey.tmdbKey), ''),
     defaultLanguage: MiruStorage.getSetting(SettingKey.language),
   );
 
