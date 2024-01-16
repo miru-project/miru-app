@@ -133,7 +133,6 @@ class ExtensionUtils {
       return;
     }
     final windowId = Get.find<SettingsController>().extensionLogWindowId.value;
-
     if (windowId == -1) {
       return;
     }
@@ -149,6 +148,31 @@ class ExtensionUtils {
             level: level,
           ).toJson(),
         ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static addNetworkLog(
+    String key,
+    ExtensionNetworkLog log,
+  ) {
+    if (!Get.isRegistered<SettingsController>()) {
+      return;
+    }
+    final windowId = Get.find<SettingsController>().extensionLogWindowId.value;
+    if (windowId == -1) {
+      return;
+    }
+    try {
+      DesktopMultiWindow.invokeMethod(
+        windowId,
+        "addNetworkLog",
+        jsonEncode({
+          'key': key,
+          'log': log.toJson(),
+        }),
       );
     } catch (e) {
       debugPrint(e.toString());

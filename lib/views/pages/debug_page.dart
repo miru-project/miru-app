@@ -44,6 +44,7 @@ class ExtensionDebugWindow extends StatefulWidget {
 
 class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
   final List<ExtensionLog> _logs = [];
+  final Map<String, ExtensionNetworkLog> _networkLogs = {};
 
   // tab 列表
   final List<String> _tabs = [
@@ -78,6 +79,24 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
           });
         }
       }
+
+      if (call.method == "addNetworkLog") {
+        final args = jsonDecode(call.arguments);
+        final key = args["key"];
+        final log = ExtensionNetworkLog.fromJson(args["log"]);
+        if (_selectedExtension == null) {
+          setState(() {
+            _networkLogs[key] = log;
+          });
+          return null;
+        }
+        if (_selectedExtension!.package == log.extension.package) {
+          setState(() {
+            _networkLogs[key] = log;
+          });
+        }
+      }
+
       if (call.method == "state") {
         return "yes";
       }
@@ -101,12 +120,12 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
         }
       }
     });
-    getInstalledExtensions();
+    _getInstalledExtensions();
     super.initState();
   }
 
   // 获取已安装扩展列表
-  getInstalledExtensions() async {
+  _getInstalledExtensions() async {
     final extensions = await callMethod("getInstalledExtensions");
     debugPrint(extensions.toString());
     List<dynamic> list = List<dynamic>.from(extensions);
@@ -130,7 +149,14 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
           });
         },
       ),
-      const SizedBox(),
+      NetworkView(
+        logs: _networkLogs,
+        onClear: () {
+          setState(() {
+            _networkLogs.clear();
+          });
+        },
+      ),
       DebugView(
         selectedExtension: _selectedExtension,
       ),
@@ -170,7 +196,7 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
                   ),
                   // 获取扩展列表
                   Button(
-                    onPressed: getInstalledExtensions,
+                    onPressed: _getInstalledExtensions,
                     child: const Text("Refresh"),
                   ),
                   const SizedBox(width: 8),
@@ -284,6 +310,11 @@ class _ConsoleViewState extends State<ConsoleView> {
 
   @override
   Widget build(BuildContext context) {
+    if (logs.isEmpty) {
+      return const Center(
+        child: Text("No log"),
+      );
+    }
     return Column(
       children: [
         Padding(
@@ -315,13 +346,156 @@ class _ConsoleViewState extends State<ConsoleView> {
             controller: _controller,
             padding: const EdgeInsets.all(10),
             children: [
-              if (logs.isEmpty)
-                const Center(
-                  child: Text("No log"),
+              for (var log in logs) ExtensionLogTile(log: log),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class NetworkView extends StatefulWidget {
+  const NetworkView({
+    super.key,
+    required this.logs,
+    required this.onClear,
+  });
+  final Map<String, ExtensionNetworkLog> logs;
+  final VoidCallback? onClear;
+
+  @override
+  State<NetworkView> createState() => _NetworkViewState();
+}
+
+class _NetworkViewState extends State<NetworkView> {
+  String _selectLogKey = "";
+  ExtensionNetworkLog? get _selectLog => widget.logs[_selectLogKey];
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.logs.isEmpty) {
+      return const Center(
+        child: Text("No log"),
+      );
+    }
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Button(
+                onPressed: widget.onClear,
+                child: const Text("Clear"),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(10),
+                  children: [
+                    for (var log in widget.logs.entries)
+                      ListTile.selectable(
+                        selectionMode: ListTileSelectionMode.none,
+                        subtitle: Text(
+                          log.value.url,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        selected: _selectLogKey == log.key,
+                        title: Text(
+                          log.value.url.split('/').last,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (_selectLogKey == log.key) {
+                              _selectLogKey = "";
+                              return;
+                            }
+                            _selectLogKey = log.key;
+                          });
+                        },
+                      ),
+                  ],
+                ),
+              ),
+              if (_selectLogKey.isNotEmpty && _selectLog != null)
+                Expanded(
+                  flex: 2,
+                  child: ListView(
+                    children: [
+                      ListTile(
+                        title: const Text("URL"),
+                        subtitle: SelectableText(
+                          _selectLog!.url,
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text("Method"),
+                        subtitle: SelectableText(
+                          _selectLog!.method,
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text("Status Code"),
+                        subtitle: SelectableText(
+                          _selectLog!.statusCode.toString(),
+                        ),
+                      ),
+                      if (_selectLog!.requestHeaders != null)
+                        ListTile(
+                          title: const Text("Request Headers"),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (var header
+                                  in _selectLog!.requestHeaders!.entries)
+                                SelectableText(
+                                  "${header.key}: ${header.value}",
+                                ),
+                            ],
+                          ),
+                        ),
+                      ListTile(
+                        title: const Text("Request Body"),
+                        subtitle: SelectableText(
+                          _selectLog!.requestBody.toString(),
+                        ),
+                      ),
+                      if (_selectLog!.responseHeaders != null)
+                        ListTile(
+                          title: const Text("Response Headers"),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (var header
+                                  in _selectLog!.responseHeaders!.entries)
+                                SelectableText(
+                                  "${header.key}: ${header.value}",
+                                ),
+                            ],
+                          ),
+                        ),
+                      ListTile(
+                        title: const Text("Response Body"),
+                        subtitle: TextBox(
+                          readOnly: true,
+                          maxLines: 100,
+                          controller: TextEditingController(
+                            text: _selectLog!.responseBody,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
-              else ...[
-                for (var log in logs) ExtensionLogTile(log: log),
-              ]
             ],
           ),
         )

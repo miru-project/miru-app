@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
@@ -53,26 +54,52 @@ class ExtensionService {
     });
     // 请求
     runtime.onMessage('request', (dynamic args) async {
-      ExtensionUtils.addLog(
-        extension,
-        ExtensionLogLevel.info,
-        "Request: ${args[0]} , ${args[1]}",
-      );
       _cuurentRequestUrl = args[0];
       final headers = args[1]['headers'] ?? {};
       if (headers['User-Agent'] == null) {
         headers['User-Agent'] = MiruStorage.getUASetting();
       }
-      return (await _dio.request<String>(
-        args[0],
-        data: args[1]['data'],
+
+      final url = args[0];
+      final method = args[1]['method'] ?? 'get';
+      final requestBody = args[1]['data'];
+
+      final log = ExtensionNetworkLog(
+        extension: extension,
+        url: args[0],
+        method: method,
+        requestHeaders: headers,
+      );
+      final key = UniqueKey().toString();
+      ExtensionUtils.addNetworkLog(
+        key,
+        log,
+      );
+
+      final res = await _dio.request<String>(
+        url,
+        data: requestBody,
         queryParameters: args[1]['queryParameters'] ?? {},
         options: Options(
           headers: headers,
-          method: args[1]['method'] ?? 'get',
+          method: method,
         ),
-      ))
-          .data;
+      );
+      log.requestHeaders = res.requestOptions.headers;
+      log.responseBody = res.data;
+      log.responseHeaders = res.headers.map.map(
+        (key, value) => MapEntry(
+          key,
+          value.join(';'),
+        ),
+      );
+      log.statusCode = res.statusCode;
+
+      ExtensionUtils.addNetworkLog(
+        key,
+        log,
+      );
+      return res.data;
     });
 
     // 设置
