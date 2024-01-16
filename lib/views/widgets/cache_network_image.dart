@@ -115,7 +115,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
       );
       if (mounted) {
         final msg = result['isSuccess'] == true
-            ? "common.save-success"
+            ? 'common.save-success'.i18n
             : result['errorMessage'];
         showPlatformSnackbar(
           context: context,
