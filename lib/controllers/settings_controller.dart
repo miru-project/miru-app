@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_js/flutter_js.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/utils/extension.dart';
 
@@ -52,18 +53,7 @@ class SettingsController extends GetxController {
           timer.cancel();
           return;
         }
-        final methods = await _getMethods();
-        for (final call in methods) {
-          if (call["method"] == "getInstalledExtensions") {
-            _invokeMethod(
-              call["key"],
-              ExtensionUtils.runtimes.values
-                  .toList()
-                  .map((e) => e.extension.toJson())
-                  .toList(),
-            );
-          }
-        }
+        await _handleMethods();
       });
 
       return;
@@ -73,7 +63,7 @@ class SettingsController extends GetxController {
   }
 
   // 返回执行结果
-  _invokeMethod(String methodKey, dynamic result) async {
+  _invokeMethodResult(String methodKey, dynamic result) async {
     await DesktopMultiWindow.invokeMethod(
       extensionLogWindowId.value,
       "result",
@@ -94,6 +84,39 @@ class SettingsController extends GetxController {
     return List<dynamic>.from(methods)
         .map((e) => Map<String, dynamic>.from(e))
         .toList();
+  }
+
+  // 处理待执行的方法
+  Future<void> _handleMethods() async {
+    final methods = await _getMethods();
+    for (final call in methods) {
+      if (call["method"] == "getInstalledExtensions") {
+        _invokeMethodResult(
+          call["key"],
+          ExtensionUtils.runtimes.values
+              .toList()
+              .map((e) => e.extension.toJson())
+              .toList(),
+        );
+      }
+
+      if (call["method"] == "debugExecute") {
+        final arguments = call["arguments"];
+        final extension = ExtensionUtils.runtimes[arguments["package"]];
+        final method = arguments["method"];
+        final runtime = extension!.runtime;
+        final result = await extension.runExtension(() async {
+          final jsResult = await runtime.handlePromise(
+            await runtime.evaluateAsync('stringify(()=>{return $method})'),
+          );
+          return jsResult.stringResult;
+        });
+        _invokeMethodResult(
+          call["key"],
+          result,
+        );
+      }
+    }
   }
 
   _getContributors() async {

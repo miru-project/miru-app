@@ -3,8 +3,30 @@ import 'dart:convert';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_json_view/flutter_json_view.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/views/widgets/debug/extension_log_tile.dart';
+
+// 待执行的方法
+final List<Map<String, dynamic>> _methodList = [];
+// 执行结果 key 和 completer
+final Map<String, Completer> _resultMap = {};
+
+// 调用方法 往方法列表里添加方法
+Future<dynamic> callMethod(String method, [dynamic arguments]) async {
+  final key = UniqueKey().toString();
+  _methodList.add({
+    "key": key,
+    "method": method,
+    "arguments": arguments,
+  });
+  // 等待结果
+  final completer = Completer();
+  _resultMap[key] = completer;
+  final result = await completer.future;
+  _resultMap.remove(key);
+  return result;
+}
 
 class ExtensionDebugWindow extends StatefulWidget {
   const ExtensionDebugWindow({
@@ -19,10 +41,7 @@ class ExtensionDebugWindow extends StatefulWidget {
 
 class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
   final List<ExtensionLog> _logs = [];
-  // 待执行的方法
-  final List<Map<String, dynamic>> _methodList = [];
-  // 执行结果 key 和 completer
-  final Map<String, Completer> _resultMap = {};
+
   // tab 列表
   final List<String> _tabs = [
     "Log",
@@ -83,22 +102,6 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
     super.initState();
   }
 
-  // 调用方法 往方法列表里添加方法
-  Future<dynamic> callMethod(String method, [dynamic arguments]) async {
-    final key = UniqueKey().toString();
-    _methodList.add({
-      "key": key,
-      "method": method,
-      "arguments": arguments,
-    });
-    // 等待结果
-    final completer = Completer();
-    _resultMap[key] = completer;
-    final result = await completer.future;
-    _resultMap.remove(key);
-    return result;
-  }
-
   // 获取已安装扩展列表
   getInstalledExtensions() async {
     final extensions = await callMethod("getInstalledExtensions");
@@ -115,6 +118,21 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
 
   @override
   Widget build(BuildContext context) {
+    final views = [
+      ConsoleView(
+        logs: _logs,
+        onClear: () {
+          setState(() {
+            _logs.clear();
+          });
+        },
+      ),
+      const SizedBox(),
+      DebugView(
+        selectedExtension: _selectedExtension,
+      ),
+    ];
+
     return FluentApp(
       debugShowCheckedModeBanner: false,
       theme: FluentThemeData.dark(),
@@ -197,17 +215,9 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
               ),
             ),
             const SizedBox(height: 10),
-            if (_currentTab == "Log")
-              Expanded(
-                child: ConsolePage(
-                  logs: _logs,
-                  onClear: () {
-                    setState(() {
-                      _logs.clear();
-                    });
-                  },
-                ),
-              )
+            Expanded(
+              child: views[_tabs.indexOf(_currentTab)],
+            ),
           ],
         ),
       ),
@@ -215,8 +225,8 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
   }
 }
 
-class ConsolePage extends StatefulWidget {
-  const ConsolePage({
+class ConsoleView extends StatefulWidget {
+  const ConsoleView({
     super.key,
     required this.logs,
     this.onClear,
@@ -225,10 +235,10 @@ class ConsolePage extends StatefulWidget {
   final VoidCallback? onClear;
 
   @override
-  State<ConsolePage> createState() => _ConsolePageState();
+  State<ConsoleView> createState() => _ConsoleViewState();
 }
 
-class _ConsolePageState extends State<ConsolePage> {
+class _ConsoleViewState extends State<ConsoleView> {
   final ScrollController _controller = ScrollController();
 
   List<ExtensionLog> get logs => widget.logs;
@@ -244,7 +254,7 @@ class _ConsolePageState extends State<ConsolePage> {
   }
 
   @override
-  void didUpdateWidget(covariant ConsolePage oldWidget) {
+  void didUpdateWidget(covariant ConsoleView oldWidget) {
     super.didUpdateWidget(oldWidget);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!_isScrollToBottom) {
@@ -312,6 +322,146 @@ class _ConsolePageState extends State<ConsolePage> {
             ],
           ),
         )
+      ],
+    );
+  }
+}
+
+class DebugView extends StatefulWidget {
+  const DebugView({
+    super.key,
+    required this.selectedExtension,
+  });
+  final Extension? selectedExtension;
+
+  @override
+  State<DebugView> createState() => _DebugViewState();
+}
+
+class _DebugViewState extends State<DebugView> {
+  // 方法列表
+  final Map<String, String> _methods = {
+    "latest(page: number)": "Get latest data form search page",
+    "search(keyword: string, page: number, filter: map)":
+        "Search data by keyword",
+    "detail(url: string)": "Get detail data by url",
+    "createFilter(filter: map)": "Create filter by url",
+    "watch(url: string)": "Watch data by url",
+  };
+
+  final _controller = TextEditingController();
+
+  final _resultController = TextEditingController();
+
+  String _result = "";
+  bool _resultIsJson = false;
+
+  // 执行方法
+  void execute() async {
+    final method = _controller.text;
+    if (method.isEmpty) {
+      return;
+    }
+    final result = await callMethod("debugExecute", {
+      "method": method,
+      "package": widget.selectedExtension!.package,
+    });
+    debugPrint(result.toString());
+    _result = result.toString();
+    _resultController.text = _result;
+    // 判断是否是 json
+    try {
+      jsonDecode(_result);
+      _resultIsJson = true;
+    } catch (e) {
+      _resultIsJson = false;
+    } finally {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _resultController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.selectedExtension == null) {
+      return const Center(
+        child: Text("No extension selected, please select an extension first"),
+      );
+    }
+
+    return Row(
+      children: [
+        Expanded(
+          child: ListView(
+            children: [
+              for (var method in _methods.entries)
+                ListTile.selectable(
+                  title: Text(
+                    method.key,
+                  ),
+                  subtitle: Text(method.value),
+                  onSelectionChange: (value) {
+                    if (!value) {
+                      return;
+                    }
+                    setState(() {
+                      _controller.text = 'extension.${method.key}';
+                    });
+                  },
+                )
+            ],
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          flex: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextBox(
+                        placeholder: "call method",
+                        controller: _controller,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Button(
+                      onPressed: () {
+                        execute();
+                      },
+                      child: const Text("Execute"),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Text("Result"),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: _resultIsJson
+                      ? JsonView.string(
+                          _result,
+                        )
+                      : TextBox(
+                          controller: _resultController,
+                          expands: true,
+                          maxLines: null,
+                          readOnly: true,
+                        ),
+                )
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
