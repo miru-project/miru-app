@@ -245,7 +245,10 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
             ),
             const SizedBox(height: 10),
             Expanded(
-              child: views[_tabs.indexOf(_currentTab)],
+              child: IndexedStack(
+                index: _tabs.indexOf(_currentTab),
+                children: views,
+              ),
             ),
           ],
         ),
