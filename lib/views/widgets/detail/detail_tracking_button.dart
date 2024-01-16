@@ -7,6 +7,7 @@ import 'package:miru_app/controllers/tracking_page_controller.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/dialogs/anilist_binding_dialog.dart';
 import 'package:miru_app/views/dialogs/anilist_tracking_dialog.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
@@ -100,14 +101,15 @@ class _DetailTrackingButtonState extends State<DetailTrackingButton> {
   Widget _buildDeskltop(BuildContext context) {
     return _buildShow(
       fluent.Button(
-        child: const Padding(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Tracking"),
-              SizedBox(width: 8),
-              Icon(fluent.FluentIcons.sync)
+              Text('detail.tracking'.i18n),
+              const SizedBox(width: 8),
+              const Icon(fluent.FluentIcons.sync)
             ],
           ),
         ),

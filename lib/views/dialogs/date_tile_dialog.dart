@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miru_app/utils/i18n.dart';
 
 class DateTileDialog extends StatefulWidget {
   const DateTileDialog({
@@ -36,7 +37,7 @@ class _DateTileDialogState extends State<DateTileDialog> {
           initialDate: widget.value,
           firstDate: DateTime(1900),
           lastDate: DateTime(2100),
-          cancelText: 'clear',
+          cancelText: 'common.clear'.i18n,
         );
         if (value != null) {
           widget.onChange(value);

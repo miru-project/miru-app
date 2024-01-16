@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
@@ -52,7 +53,7 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
             indicatorSize: TabBarIndicatorSize.label,
           ),
           title: Text(
-            "AniList ${widget.anilistType.toString().split(".")[1]}",
+            "AniList ${'common.${widget.anilistType.toString().split(".")[1]}'.i18n}",
           ),
         ),
         body: FutureBuilder(
@@ -149,7 +150,7 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           children: [
             Text(
-              "AniList ${widget.anilistType.toString().split(".")[1]}",
+              "AniList ${'common.${widget.anilistType.toString().split(".")[1]}'.i18n}",
               style: fluent.FluentTheme.of(context).typography.subtitle,
             ),
             const SizedBox(height: 16),

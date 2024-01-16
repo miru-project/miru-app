@@ -1,5 +1,7 @@
 {
   "common": {
+    "anime": "动漫",
+    "manga": "漫画",
     "home": "首页",
     "search": "搜索",
     "extension": "扩展",
@@ -25,7 +27,9 @@
     "delete": "删除",
     "delete-all": "删除全部",
     "save": "保存",
-    "save-success": "保存成功"
+    "save-success": "保存成功",
+    "logout": "登出",
+    "clear": "清除"
   },
   "home": {
     "continue-watching": "继续观看",
@@ -106,6 +110,7 @@
   },
   "external-player-launching": "正在启动 {player}",
   "detail": {
+    "tracking": "追踪",
     "favorite": "收藏",
     "favorited": "已收藏",
     "continue-watching": "继续 {episode}",
@@ -192,5 +197,26 @@
     "stop": "停止",
     "upgrade": "升级",
     "start": "启动"
+  },
+  "anilist": {
+    "title": "Anilist 追踪",
+    "login-hint-1": "你需要登录 AniList 才能使用此功能",
+    "login-hint-2": "请登录后重试",
+    "status": "状态",
+    "score": "评分",
+    "watching": "观看中",
+    "reading": "阅读中",
+    "completed": "已完成",
+    "dropped": "已放弃",
+    "planning": "计划中",
+    "hold-on": "搁置中",
+    "re-watching": "重看中",
+    "re-reading": "重读中",
+    "start-date": "开始日期",
+    "end-date": "结束日期",
+    "unbind": "取消绑定",
+    "episodes": "进度",
+    "manga-chaper-read": "看过的漫画章节: {chapters}",
+    "anime-episode-watch": "看过的动画剧集: {episodes}"
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miru_app/utils/i18n.dart';
 
 class NumberTileDialog extends StatefulWidget {
   const NumberTileDialog({
@@ -71,6 +72,7 @@ class _NumberTileDialogState extends State<NumberTileDialog> {
                       Expanded(
                         child: TextField(
                           controller: _controller,
+                          autofocus: true,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             labelText: "Number",
@@ -99,14 +101,14 @@ class _NumberTileDialogState extends State<NumberTileDialog> {
                           widget.onClear();
                           Navigator.pop(context);
                         },
-                        child: const Text("Clear"),
+                        child: Text('common.clear'.i18n),
                       ),
                       FilledButton(
                         onPressed: () {
                           widget.onChange(double.parse(_controller.text));
                           Navigator.pop(context);
                         },
-                        child: const Text("Confirm"),
+                        child: Text("common.confirm".i18n),
                       )
                     ],
                   ),

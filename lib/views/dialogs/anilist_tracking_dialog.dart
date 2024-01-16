@@ -160,7 +160,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                         width: double.infinity,
                         height: 60,
                         child: NumberTileDialog(
-                          title: "Episodes",
+                          title: "anilist.episodes".i18n,
                           value: episodes,
                           max: maxEpisodes,
                           min: 0,
@@ -286,7 +286,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
             for (final child in status.entries)
               fluent.ComboBoxItem(
                 value: child.value,
-                child: Text("anilist.${child.key}".i18n),
+                child: Text(child.key),
               ),
           ],
           onChanged: (value) {

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/controllers/tracking_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 
@@ -63,17 +64,21 @@ class AniListProvider {
   ) {
     switch (status) {
       case AnilistMediaListStatus.current:
-        return (type == AnilistType.anime) ? "Watching" : "Reading";
+        return (type == AnilistType.anime)
+            ? "anilist.watching".i18n
+            : "anilist.reading".i18n;
       case AnilistMediaListStatus.completed:
-        return "Completed";
+        return "anilist.completed".i18n;
       case AnilistMediaListStatus.planning:
-        return "Planning";
+        return "anilist.planning".i18n;
       case AnilistMediaListStatus.paused:
-        return "Hold-on";
+        return "anilist.hold-on".i18n;
       case AnilistMediaListStatus.dropped:
-        return "Dropped";
+        return "anilist.dropped".i18n;
       case AnilistMediaListStatus.repeating:
-        return (type == AnilistType.anime) ? "Re-watching" : "Re-reading";
+        return (type == AnilistType.anime)
+            ? "anilist.re-watching".i18n
+            : "anilist.re-reading".i18n;
     }
   }
 

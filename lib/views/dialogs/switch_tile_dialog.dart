@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miru_app/utils/i18n.dart';
 
 class SwitchTileDialog<T> extends StatefulWidget {
   const SwitchTileDialog({
@@ -75,7 +76,7 @@ class _SwitchTileDialogState<T> extends State<SwitchTileDialog<T>> {
                         widget.onClear();
                         Navigator.pop(context);
                       },
-                      child: const Text("Clear"),
+                      child: Text("common.clear".i18n),
                     ),
                   ],
                 ),

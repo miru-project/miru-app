@@ -43,7 +43,8 @@
     "save-success": "Save success",
     "logout": "Logout",
     "login": "Login",
-    "no-data": "No data"
+    "no-data": "No data",
+    "clear": "Clear"
   },
   "home": {
     "continue-watching": "Continue",
@@ -126,6 +127,7 @@
   },
   "external-player-launching": "Launching {player}",
   "detail": {
+    "tracking": "Tracking",
     "favorite": "Favorite",
     "favorited": "Favorited",
     "continue-watching": "Continue {episode}",
@@ -234,19 +236,20 @@
     "login-hint-2": "Please login into AniList first",
     "status": "Status",
     "score": "Score",
-    "Watching": "Watching",
-    "Completed": "Completed",
-    "Paused": "Paused",
-    "Dropped": "Dropped",
-    "Planning": "Planning",
-    "Hold-on": "Hold on",
-    "Re-watching": "Re-watching",
+    "watching": "Watching",
+    "reading": "reading",
+    "completed": "Completed",
+    "paused": "Paused",
+    "dropped": "Dropped",
+    "planning": "Planning",
+    "hold-on": "Hold on",
+    "re-watching": "Re-watching",
+    "re-reading": "Re-reading",
     "start-date": "Start Date",
     "end-date": "End Date",
-    "completed": "Completed",
     "unbind":"Unbind",
     "episodes":"Episodes",
-    "manga-chaper-read":"Manga Chaper Read:",
-    "anime-episode-watch":"Anime Episode Watched:"
+    "manga-chaper-read":"Manga Chaper Read: {chapters}",
+    "anime-episode-watch":"Anime Episode Watched: {episodes}"
   }
 }

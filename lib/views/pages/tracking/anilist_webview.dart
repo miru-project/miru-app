@@ -26,7 +26,7 @@ class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.url),
+        title: const Text("Anilist Login"),
       ),
       body: InAppWebView(
         initialUrlRequest: URLRequest(

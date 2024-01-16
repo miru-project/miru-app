@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/tracking_page_controller.dart';
 import 'package:miru_app/views/widgets/anilist_horizontal_list.dart';
@@ -26,7 +27,7 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('anilist.title'),
+        title: Text('anilist.title'.i18n),
         actions: [
           Obx(
             () {
@@ -120,7 +121,7 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
     return [
       if (!Platform.isAndroid) ...[
         Text(
-          "AniList Tracking",
+          'anilist.title'.i18n,
           style: fluent.FluentTheme.of(context).typography.subtitle,
         ),
         const SizedBox(height: 20),
@@ -185,12 +186,22 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
                             ),
                           ),
                           Text(
-                            "${"anilist.manga-chaper-read".i18n} ${userData['MangaChapterRead']}"
-                                .i18n,
+                            FlutterI18n.translate(
+                              context,
+                              "anilist.manga-chaper-read",
+                              translationParams: {
+                                "chapters": userData['MangaChapterRead']
+                              },
+                            ),
                           ),
                           Text(
-                            "${"anilist.anime-episode-watch".i18n} ${userData['AnimeEpWatched']}"
-                                .i18n,
+                            FlutterI18n.translate(
+                              context,
+                              "anilist.anime-episode-watch",
+                              translationParams: {
+                                "episodes": userData['AnimeEpWatched']
+                              },
+                            ),
                           ),
                         ],
                       ),
