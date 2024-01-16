@@ -13,6 +13,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/data/providers/bt_server_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/views/dialogs/bt_dialog.dart';
@@ -39,6 +40,7 @@ class VideoPlayerController extends GetxController {
   final int playIndex;
   final int episodeGroupId;
   final ExtensionService runtime;
+  final String anilistID;
 
   VideoPlayerController({
     required this.title,
@@ -47,6 +49,7 @@ class VideoPlayerController extends GetxController {
     required this.playIndex,
     required this.episodeGroupId,
     required this.runtime,
+    required this.anilistID,
   });
 
   final player = Player();
@@ -492,6 +495,15 @@ class VideoPlayerController extends GetxController {
         DeviceOrientation.portraitDown,
       ]);
     }
+
+    if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
+      AniListProvider.editList(
+        status: AnilistMediaListStatus.current,
+        progress: playIndex + 1,
+        mediaId: anilistID,
+      );
+    }
+
     super.onClose();
   }
 }

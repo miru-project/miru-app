@@ -42,6 +42,7 @@ class DetailPageController extends GetxController {
   final RxString error = ''.obs;
   final RxBool isLoading = true.obs;
   final RxInt selectEpGroup = 0.obs;
+  final RxString aniListID = ''.obs;
   final Rx<TMDBDetail?> tmdb = Rx(null);
   final Rx<ExtensionService?> runtime = Rx(null);
   ExtensionType get type =>
@@ -143,6 +144,7 @@ class DetailPageController extends GetxController {
     try {
       _miruDetail = await DatabaseService.getMiruDetail(package, url);
       _tmdbID = _miruDetail?.tmdbID ?? -1;
+      aniListID.value = _miruDetail?.aniListID ?? "";
       await getDetail();
       await getTMDBDetail();
       await getHistory();
@@ -156,7 +158,7 @@ class DetailPageController extends GetxController {
   // 修改 tmdb 绑定
   modifyTMDBBinding() async {
     // 判断是否有 key
-    if (MiruStorage.getSetting(SettingKey.tmdbKay) == "") {
+    if (MiruStorage.getSetting(SettingKey.tmdbKey) == "") {
       showPlatformSnackbar(
         context: currentContext,
         content: 'detail.tmdb-key-missing'.i18n,
@@ -200,8 +202,13 @@ class DetailPageController extends GetxController {
   getRemoteDeatil() async {
     try {
       detail = await runtime.value!.detail(url);
-      await DatabaseService.putMiruDetail(package, url, detail!,
-          tmdbID: _tmdbID);
+      await DatabaseService.putMiruDetail(
+        package,
+        url,
+        detail!,
+        tmdbID: _tmdbID,
+        anilistID: aniListID.value,
+      );
     } catch (e) {
       // 弹出错误信息
       if (runtime.value == null) {
@@ -265,6 +272,16 @@ class DetailPageController extends GetxController {
       url,
       detail!,
       tmdbID: _tmdbID,
+      anilistID: aniListID.value,
+    );
+  }
+
+  saveAniListIds() async {
+    await DatabaseService.putMiruDetail(
+      package,
+      url,
+      detail!,
+      anilistID: aniListID.value,
     );
   }
 
@@ -284,8 +301,10 @@ class DetailPageController extends GetxController {
   }
 
   refreshFavorite() async {
-    isFavorite.value =
-        await DatabaseService.isFavorite(package: package, url: url);
+    isFavorite.value = await DatabaseService.isFavorite(
+      package: package,
+      url: url,
+    );
   }
 
   toggleFavorite() async {
@@ -397,6 +416,7 @@ class DetailPageController extends GetxController {
               title: detail!.title,
               episodeGroupId: selectEpGroup,
               detailUrl: url,
+              anilistID: aniListID.value,
             ),
           );
         }),

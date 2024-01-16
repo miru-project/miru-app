@@ -15,6 +15,7 @@ class ReaderController<T> extends GetxController {
   final int episodeGroupId;
   final ExtensionService runtime;
   final String? cover;
+  final String anilistID;
 
   ReaderController({
     required this.title,
@@ -23,6 +24,7 @@ class ReaderController<T> extends GetxController {
     required this.playIndex,
     required this.episodeGroupId,
     required this.runtime,
+    required this.anilistID,
     this.cover,
   });
 
