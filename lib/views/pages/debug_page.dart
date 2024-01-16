@@ -3,9 +3,12 @@ import 'dart:convert';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_json_view/flutter_json_view.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter_code_editor/flutter_code_editor.dart';
+import 'package:flutter_highlight/themes/monokai-sublime.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/views/widgets/debug/extension_log_tile.dart';
+import 'package:highlight/languages/json.dart';
 
 // 待执行的方法
 final List<Map<String, dynamic>> _methodList = [];
@@ -351,13 +354,16 @@ class _DebugViewState extends State<DebugView> {
 
   final _controller = TextEditingController();
 
-  final _resultController = TextEditingController();
+  final _resultController = CodeController(
+    language: json,
+  );
 
-  String _result = "";
-  bool _resultIsJson = false;
+  // 是否等待接收数据
+  bool _isLoading = false;
 
   // 执行方法
   void execute() async {
+    _isLoading = true;
     final method = _controller.text;
     if (method.isEmpty) {
       return;
@@ -367,17 +373,9 @@ class _DebugViewState extends State<DebugView> {
       "package": widget.selectedExtension!.package,
     });
     debugPrint(result.toString());
-    _result = result.toString();
-    _resultController.text = _result;
-    // 判断是否是 json
-    try {
-      jsonDecode(_result);
-      _resultIsJson = true;
-    } catch (e) {
-      _resultIsJson = false;
-    } finally {
-      setState(() {});
-    }
+    _resultController.text = result.toString();
+    _isLoading = false;
+    setState(() {});
   }
 
   @override
@@ -436,9 +434,11 @@ class _DebugViewState extends State<DebugView> {
                     ),
                     const SizedBox(width: 10),
                     Button(
-                      onPressed: () {
-                        execute();
-                      },
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              execute();
+                            },
                       child: const Text("Execute"),
                     ),
                   ],
@@ -447,16 +447,25 @@ class _DebugViewState extends State<DebugView> {
                 const Text("Result"),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: _resultIsJson
-                      ? JsonView.string(
-                          _result,
-                        )
-                      : TextBox(
-                          controller: _resultController,
-                          expands: true,
-                          maxLines: null,
-                          readOnly: true,
+                  child: material.MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    home: material.Scaffold(
+                      backgroundColor: Colors.transparent,
+                      body: CodeTheme(
+                        data: CodeThemeData(
+                          styles: monokaiSublimeTheme,
                         ),
+                        child: SingleChildScrollView(
+                          child: CodeField(
+                            controller: _resultController,
+                            textStyle: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),

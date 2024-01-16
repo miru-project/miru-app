@@ -105,16 +105,21 @@ class SettingsController extends GetxController {
         final extension = ExtensionUtils.runtimes[arguments["package"]];
         final method = arguments["method"];
         final runtime = extension!.runtime;
-        final result = await extension.runExtension(() async {
+        try {
           final jsResult = await runtime.handlePromise(
             await runtime.evaluateAsync('stringify(()=>{return $method})'),
           );
-          return jsResult.stringResult;
-        });
-        _invokeMethodResult(
-          call["key"],
-          result,
-        );
+          final result = jsResult.stringResult;
+          _invokeMethodResult(
+            call["key"],
+            result,
+          );
+        } catch (e) {
+          _invokeMethodResult(
+            call["key"],
+            e.toString(),
+          );
+        }
       }
     }
   }

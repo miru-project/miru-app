@@ -355,7 +355,7 @@ class ExtensionService {
 
           async function stringify(callback) {
             const data = await callback();
-            return typeof data === "object" ? JSON.stringify(data) : data;
+            return typeof data === "object" ? JSON.stringify(data,0,2) : data;
           }
 
     ''');
