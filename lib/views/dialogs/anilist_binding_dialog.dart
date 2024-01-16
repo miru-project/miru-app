@@ -4,7 +4,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:get/get.dart';
-import 'package:miru_app/data/providers/tmdb_provider.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/grid_item_tile.dart';
@@ -12,20 +12,21 @@ import 'package:miru_app/views/widgets/infinite_scroller.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/search_appbar.dart';
-import 'package:tmdb_api/tmdb_api.dart';
 
-class TMDBBinding extends StatefulWidget {
-  const TMDBBinding({
+class AnilistBindingDialog extends StatefulWidget {
+  const AnilistBindingDialog({
     super.key,
     required this.title,
+    required this.type,
   });
   final String title;
+  final AnilistType type;
 
   @override
-  State<TMDBBinding> createState() => _TMDBBindingState();
+  State<AnilistBindingDialog> createState() => _AnilistBindingDialogState();
 }
 
-class _TMDBBindingState extends State<TMDBBinding> {
+class _AnilistBindingDialogState extends State<AnilistBindingDialog> {
   late final TextEditingController _textEditingController =
       TextEditingController(text: widget.title);
   final EasyRefreshController _easyRefreshController = EasyRefreshController();
@@ -47,8 +48,12 @@ class _TMDBBindingState extends State<TMDBBinding> {
     try {
       _isLoading = true;
       setState(() {});
-      final data = await TmdbApi.search(_keyWord, page: _page);
-      final result = data["results"] as List;
+      final result = await AniListProvider.mediaQuerypage(
+        searchString: _keyWord,
+        type: widget.type,
+        page: _page,
+      );
+      debugPrint(result.toString());
       if (result.isEmpty && mounted) {
         showPlatformSnackbar(
           context: context,
@@ -66,6 +71,7 @@ class _TMDBBindingState extends State<TMDBBinding> {
           severity: fluent.InfoBarSeverity.error,
         );
       }
+      rethrow;
     } finally {
       _isLoading = false;
       if (mounted) {
@@ -86,7 +92,7 @@ class _TMDBBindingState extends State<TMDBBinding> {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: SearchAppBar(
-        title: 'detail.modify-tmdb-binding'.i18n,
+        title: 'Anilist binding'.i18n,
         onChanged: (value) {
           if (value.isEmpty) {
             _onSearch(value);
@@ -111,18 +117,15 @@ class _TMDBBindingState extends State<TMDBBinding> {
             itemCount: _data.length,
             itemBuilder: (context, index) {
               final item = _data[index];
+              final title = item["title"]["userPreferred"] ?? "None";
+              final cover = item["coverImage"]["large"];
               return GridItemTile(
-                title: item['name'] ?? item['original_title'],
-                cover: TmdbApi.getImageUrl(
-                      item['poster_path'],
-                      size: ImageSizes.POSTER_SIZE_HIGH,
-                    ) ??
-                    '',
+                title: title,
+                cover: cover,
                 onTap: () {
                   Get.back(
                     result: {
                       'id': item['id'],
-                      'media_type': item['media_type'],
                     },
                   );
                 },
@@ -163,7 +166,7 @@ class _TMDBBindingState extends State<TMDBBinding> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'detail.modify-tmdb-binding'.i18n,
+                  'Anilist binding'.i18n,
                   style: fluent.FluentTheme.of(context).typography.subtitle,
                 ),
                 const Spacer(),
@@ -200,17 +203,14 @@ class _TMDBBindingState extends State<TMDBBinding> {
                       itemCount: _data.length,
                       itemBuilder: (context, index) {
                         final item = _data[index];
+                        final title = item["title"]["userPreferred"] ?? "None";
+                        final cover = item["coverImage"]["large"];
                         return GridItemTile(
-                          title: item['name'] ?? item['original_title'],
-                          cover: TmdbApi.getImageUrl(
-                                item['poster_path'],
-                                size: ImageSizes.POSTER_SIZE_HIGH,
-                              ) ??
-                              '',
+                          title: title,
+                          cover: cover,
                           onTap: () {
                             router.pop({
                               'id': item['id'],
-                              'media_type': item['media_type'],
                             });
                           },
                         );

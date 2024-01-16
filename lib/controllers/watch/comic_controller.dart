@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
@@ -16,6 +17,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     required super.episodeGroupId,
     required super.runtime,
     required super.cover,
+    required super.anilistID,
   });
   Map<String, MangaReadMode> readmode = {
     'standard': MangaReadMode.standard,
@@ -159,6 +161,13 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     }
     pageController.value.dispose();
+    if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
+      AniListProvider.editList(
+        status: AnilistMediaListStatus.current,
+        progress: playIndex + 1,
+        mediaId: anilistID,
+      );
+    }
     super.onClose();
   }
 }
