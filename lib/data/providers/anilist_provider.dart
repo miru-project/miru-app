@@ -69,7 +69,7 @@ class AniListProvider {
       case AnilistMediaListStatus.planning:
         return "Planning";
       case AnilistMediaListStatus.paused:
-        return "Hold on";
+        return "Hold-on";
       case AnilistMediaListStatus.dropped:
         return "Dropped";
       case AnilistMediaListStatus.repeating:

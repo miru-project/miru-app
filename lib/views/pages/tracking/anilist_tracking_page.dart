@@ -26,7 +26,7 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Anilist Tracking'),
+        title: const Text('anilist.title'),
         actions: [
           Obx(
             () {
@@ -37,7 +37,7 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
-                      child: Text("Logout".i18n),
+                      child: Text("common.logout".i18n),
                       onTap: () {
                         c.logoutAniList();
                       },
@@ -101,18 +101,18 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
           ),
         ),
         const SizedBox(height: 20),
-        const Text("Seems you haven't login into AniList yet"),
+        Text("anilist.login-hint-1".i18n),
         const SizedBox(height: 20),
-        const Text(
-          "Please login into AniList first",
-          style: TextStyle(fontSize: 13),
+        Text(
+          "anilist.login-hint-2".i18n,
+          style: const TextStyle(fontSize: 13),
         ),
         const SizedBox(height: 20),
         PlatformFilledButton(
           onPressed: () {
             c.loginAniList();
           },
-          child: Text("Login".i18n),
+          child: Text("common.login".i18n),
         )
       ];
     }
@@ -134,7 +134,7 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
               children: [
                 Text(snapshot.error.toString()),
                 PlatformButton(
-                  child: const Text("Retry"),
+                  child: Text("common.retry".i18n),
                   onPressed: () {
                     setState(() {});
                   },
@@ -149,8 +149,8 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
           }
 
           if (data == null) {
-            return const Center(
-              child: Text("No data"),
+            return Center(
+              child: Text("common.no-data".i18n),
             );
           }
 
@@ -185,11 +185,11 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
                             ),
                           ),
                           Text(
-                            "Manga Watched: ${userData['MangaChapterRead']}"
+                            "${"anilist.manga-chaper-read".i18n} ${userData['MangaChapterRead']}"
                                 .i18n,
                           ),
                           Text(
-                            "Amime Episodes Watched: ${userData['AnimeEpWatched']}"
+                            "${"anilist.anime-episode-watch".i18n} ${userData['AnimeEpWatched']}"
                                 .i18n,
                           ),
                         ],
@@ -197,7 +197,7 @@ class _AniListTrackingPageState extends State<AniListTrackingPage> {
                       const Spacer(),
                       if (!Platform.isAndroid)
                         PlatformButton(
-                          child: const Text("Logout"),
+                          child: Text("common.logout".i18n),
                           onPressed: () {
                             c.logoutAniList();
                           },

@@ -10,6 +10,7 @@ import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:miru_app/views/widgets/progress.dart';
+import 'package:miru_app/utils/i18n.dart';
 
 class AnilistTrackingDialog extends StatefulWidget {
   const AnilistTrackingDialog({
@@ -115,9 +116,9 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Anilist Tracking",
-            style: TextStyle(
+          Text(
+            "anilist.title".i18n,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -136,7 +137,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                         width: double.infinity,
                         height: 60,
                         child: SwitchTileDialog(
-                          title: "Status",
+                          title: "anilist.status".i18n,
                           value: selectStatus,
                           buildOptions: status,
                           onSelected: (value) {
@@ -181,7 +182,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                         width: double.infinity,
                         height: 60,
                         child: NumberTileDialog(
-                          title: "Score",
+                          title: "anilist.score".i18n,
                           value: score,
                           max: 10,
                           min: 0,
@@ -207,7 +208,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                         width: double.infinity,
                         height: 60,
                         child: DateTileDialog(
-                          title: "Start Date",
+                          title: "anilist.start-date".i18n,
                           value: startDate,
                           onChange: (value) {
                             setState(() {
@@ -227,7 +228,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
                         width: double.infinity,
                         height: 60,
                         child: DateTileDialog(
-                          title: "End Date",
+                          title: "anilist.end-date".i18n,
                           value: endDate,
                           onChange: (value) {
                             setState(() {
@@ -277,7 +278,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text("Status"),
+        Text("anilist.status".i18n),
         const SizedBox(height: 8),
         fluent.ComboBox<AnilistMediaListStatus>(
           value: selectStatus,
@@ -285,7 +286,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
             for (final child in status.entries)
               fluent.ComboBoxItem(
                 value: child.value,
-                child: Text(child.key),
+                child: Text("anilist.${child.key}".i18n),
               ),
           ],
           onChanged: (value) {
@@ -295,7 +296,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
           },
         ),
         const SizedBox(height: 8),
-        const Text("Episodes"),
+        Text("anilist.episodes".i18n),
         const SizedBox(height: 8),
         fluent.NumberBox(
           min: 0,
@@ -309,7 +310,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
           mode: fluent.SpinButtonPlacementMode.inline,
         ),
         const SizedBox(height: 8),
-        const Text("Score"),
+        Text("anilist.score".i18n),
         const SizedBox(height: 8),
         fluent.NumberBox(
           min: 0,
@@ -324,7 +325,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
           mode: fluent.SpinButtonPlacementMode.inline,
         ),
         const SizedBox(height: 8),
-        const Text("Start Date"),
+        Text("anilist.start-date".i18n),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -348,7 +349,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
           ],
         ),
         const SizedBox(height: 8),
-        const Text("End Date"),
+        Text("anilist.end-date".i18n),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -378,11 +379,11 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
   List<Widget> _buildAction(BuildContext context) {
     return [
       PlatformTextButton(
-        child: const Text('Cancel'),
+        child: Text('common.cancel'.i18n),
         onPressed: () => Navigator.of(context).pop(),
       ),
       PlatformTextButton(
-        child: const Text('UnBind'),
+        child: Text('anilist.unbind'.i18n),
         onPressed: () {
           c.aniListID.value = "";
           c.saveAniListIds();
@@ -390,7 +391,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
         },
       ),
       PlatformFilledButton(
-        child: const Text('Confirm'),
+        child: Text('common.confirm'.i18n),
         onPressed: () async {
           try {
             await AniListProvider.editList(
@@ -425,7 +426,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
 
   Widget _buildDesktop(BuildContext context) {
     return fluent.ContentDialog(
-      title: const Text('Anilist Tracking'),
+      title: Text('anilist.title'.i18n),
       constraints: const BoxConstraints(maxWidth: 375),
       content: _buildDesktopContent(context),
       actions: _buildAction(context),

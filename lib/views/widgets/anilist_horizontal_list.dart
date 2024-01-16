@@ -32,7 +32,9 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
     final count = data["CURRENT"]?.length ?? 0;
 
     return HorizontalList(
-      title: (type == AnilistType.anime) ? "Anime".i18n : "Manga".i18n,
+      title: (type == AnilistType.anime)
+          ? "common.anime".i18n
+          : "common.manga".i18n,
       itemBuilder: (context, index) {
         final itemData = data["CURRENT"][index];
 

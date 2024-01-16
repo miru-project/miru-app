@@ -13,6 +13,8 @@
     "hi": "हिंदी"
   },
   "common": {
+    "anime": "Anime",
+    "manga": "Manga",
     "home": "Home",
     "search": "Search",
     "extension": "Extensions",
@@ -38,7 +40,10 @@
     "delete": "Delete",
     "delete-all": "Delete all",
     "save": "Save",
-    "save-success": "Save success"
+    "save-success": "Save success",
+    "logout": "Logout",
+    "login": "Login",
+    "no-data": "No data"
   },
   "home": {
     "continue-watching": "Continue",
@@ -222,5 +227,26 @@
     "stop": "Stop",
     "upgrade": "Upgrade",
     "start": "Start"
+  },
+  "anilist":{
+    "title":"Anilist Tracking",
+    "login-hint-1": "Seems you haven't login into AniList yet",
+    "login-hint-2": "Please login into AniList first",
+    "status": "Status",
+    "score": "Score",
+    "Watching": "Watching",
+    "Completed": "Completed",
+    "Paused": "Paused",
+    "Dropped": "Dropped",
+    "Planning": "Planning",
+    "Hold-on": "Hold on",
+    "Re-watching": "Re-watching",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "completed": "Completed",
+    "unbind":"Unbind",
+    "episodes":"Episodes",
+    "manga-chaper-read":"Manga Chaper Read:",
+    "anime-episode-watch":"Anime Episode Watched:"
   }
 }
