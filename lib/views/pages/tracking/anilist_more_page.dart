@@ -31,6 +31,13 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
 
   String currentStatus = "CURRENT";
 
+  dynamic data;
+
+  Future<Map<String, dynamic>> getData() {
+    data ??= AniListProvider.getCollection(widget.anilistType);
+    return data;
+  }
+
   Widget _buildAndroid(BuildContext context) {
     final List<Tab> tabs = [
       for (final child in anilistStatusMap.keys) Tab(text: child),
@@ -49,11 +56,13 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
           ),
         ),
         body: FutureBuilder(
-            future: AniListProvider.getCollection(widget.anilistType),
+            future: getData(),
             builder: (context, snapshot) {
               final data = snapshot.data;
               if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
               }
               if (!snapshot.hasData) {
                 return const Center(
@@ -114,11 +123,13 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
 
   Widget _buildDesktop(BuildContext context) {
     return FutureBuilder(
-      future: AniListProvider.getCollection(widget.anilistType),
+      future: getData(),
       builder: (context, snapshot) {
         final data = snapshot.data;
         if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
+          return Center(
+            child: Text(snapshot.error.toString()),
+          );
         }
         if (!snapshot.hasData) {
           return const Center(

@@ -126,8 +126,8 @@ class AniListProvider {
           );
         }
         debugPrint("${e.response}");
-        rethrow;
       }
+      rethrow;
     }
   }
 
