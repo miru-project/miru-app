@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/utils/extension.dart';
 
 class SettingsController extends GetxController {
   final contributors = [].obs;
@@ -25,12 +26,12 @@ class SettingsController extends GetxController {
   void toggleExtensionLogWindow(bool open) async {
     if (open && extensionLogWindowId.value == -1) {
       final window = await DesktopMultiWindow.createWindow(jsonEncode({
-        "name": 'log',
+        "name": 'debug',
       }));
       extensionLogWindowId.value = window.windowId;
       window
         ..center()
-        ..setTitle("miru extension log")
+        ..setTitle("miru extension debug")
         ..show();
 
       // 用于检测窗口是否关闭
@@ -45,10 +46,54 @@ class SettingsController extends GetxController {
           timer.cancel();
         }
       });
+      // 轮询带执行的方法并执行方法
+      Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+        if (extensionLogWindowId.value == -1) {
+          timer.cancel();
+          return;
+        }
+        final methods = await _getMethods();
+        for (final call in methods) {
+          if (call["method"] == "getInstalledExtensions") {
+            _invokeMethod(
+              call["key"],
+              ExtensionUtils.runtimes.values
+                  .toList()
+                  .map((e) => e.extension.toJson())
+                  .toList(),
+            );
+          }
+        }
+      });
+
       return;
     }
     WindowController.fromWindowId(extensionLogWindowId.value).close();
     extensionLogWindowId.value = -1;
+  }
+
+  // 返回执行结果
+  _invokeMethod(String methodKey, dynamic result) async {
+    await DesktopMultiWindow.invokeMethod(
+      extensionLogWindowId.value,
+      "result",
+      {
+        "key": methodKey,
+        "result": result,
+      },
+    );
+  }
+
+  // 获取方法列表
+  Future<List<Map<String, dynamic>>> _getMethods() async {
+    final methods = await DesktopMultiWindow.invokeMethod(
+      extensionLogWindowId.value,
+      "getMethods",
+    );
+
+    return List<dynamic>.from(methods)
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList();
   }
 
   _getContributors() async {
