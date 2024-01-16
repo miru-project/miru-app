@@ -506,7 +506,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "2ea8dd630da4530b632fc41aca50decef360e29a"
+      resolved-ref: a6309c3acf3d16bd4a24173949ff42a1204c5f48
       url: "https://github.com/MiaoMint/flutter_windows_webview"
     source: git
     version: "0.0.1"

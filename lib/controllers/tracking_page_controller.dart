@@ -56,7 +56,16 @@ class TrackingPageController extends GetxController {
       onNavigation: (url) {
         if (url.contains("miru-app")) {
           _saveAnilistToken(url);
-          webview.close();
+          webview.getCookies("https://anilist.co").then((cookies) async {
+            for (final cookie in cookies.entries) {
+              await webview.setCookie(
+                name: cookie.key,
+                value: "",
+                domain: "anilist.co",
+              );
+            }
+            webview.close();
+          });
         }
         return false;
       },
