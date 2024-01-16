@@ -61,6 +61,7 @@ class DetailOverView extends StatelessWidget {
                           child: CacheNetWorkImagePic(
                             url,
                             height: 160,
+                            canFullScreen: true,
                           ),
                         );
                       },

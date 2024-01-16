@@ -18,6 +18,7 @@ import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/card_tile.dart';
 import 'package:miru_app/views/widgets/cover.dart';
+import 'package:miru_app/views/widgets/detail/detail_tracking_button.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -105,6 +106,12 @@ class _DetailPageState extends State<DetailPage> {
                     tabs: tabs,
                   ),
                   actions: [
+                    // DetailTrackingButton
+                    DetailTrackingButton(
+                      tag: widget.tag,
+                    ),
+
+                    // webview
                     IconButton(
                       onPressed: () {
                         Get.to(
@@ -247,7 +254,6 @@ class _DetailPageState extends State<DetailPage> {
           child: ProgressRing(),
         );
       }
-
       return Stack(
         children: [
           Animate(
@@ -281,19 +287,17 @@ class _DetailPageState extends State<DetailPage> {
                         children: [
                           if (c.detail!.cover != null)
                             if (constraints.maxWidth > 600) ...[
-                              Hero(
-                                tag: c.heroTag ?? '',
-                                child: Container(
-                                  width: 230,
-                                  height: double.infinity,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: CacheNetWorkImagePic(
-                                    c.detail?.cover ?? '',
-                                    headers: c.detail?.headers,
-                                  ),
+                              Container(
+                                width: 230,
+                                height: double.infinity,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: CacheNetWorkImagePic(
+                                  c.detail?.cover ?? '',
+                                  headers: c.detail?.headers,
+                                  canFullScreen: true,
                                 ),
                               ),
                               const SizedBox(width: 30),
@@ -318,6 +322,7 @@ class _DetailPageState extends State<DetailPage> {
                                   // 收藏按钮
                                   const DetailFavoriteButton(),
                                   const SizedBox(width: 8),
+
                                   //delete after merged
                                   Row(children: [
                                     ElevatedButton(
@@ -359,6 +364,12 @@ class _DetailPageState extends State<DetailPage> {
                                       },
                                     )
                                   ]),
+
+                                  DetailTrackingButton(
+                                    tag: widget.tag,
+                                  ),
+                                  const SizedBox(width: 8),
+
                                   if (c.tmdbDetail != null)
                                     fluent.Button(
                                       child: const Padding(
@@ -427,6 +438,7 @@ class _DetailPageState extends State<DetailPage> {
                                     child: CacheNetWorkImagePic(
                                       url,
                                       height: 200,
+                                      canFullScreen: true,
                                     ),
                                   );
                                 },
