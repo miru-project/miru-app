@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/application_controller.dart';
-import 'package:miru_app/views/pages/log_page.dart';
+import 'package:miru_app/views/pages/debug_page.dart';
 import 'package:miru_app/views/pages/main_page.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
@@ -28,7 +28,7 @@ void main(List<String> args) async {
         : jsonDecode(args[2]) as Map<String, dynamic>;
 
     Map windows = {
-      "log": ExtensionLogWindow(
+      "debug": ExtensionDebugWindow(
         windowController: WindowController.fromWindowId(windowId),
       ),
     };
