@@ -18,7 +18,7 @@ class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
 
   @override
   void dispose() {
-    CookieManager.instance().deleteCookies(url: Uri.parse(widget.url));
+    CookieManager.instance().deleteCookies(url: WebUri(widget.url));
     super.dispose();
   }
 
@@ -30,7 +30,7 @@ class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
       ),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(widget.url),
+          url: WebUri(widget.url),
         ),
         onLoadStart: (controller, url) async {
           if (url != null && url.path != "/login") {
