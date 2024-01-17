@@ -297,6 +297,9 @@ class _ConsoleViewState extends State<ConsoleView> {
 
   // 滚动到底部
   void scrollToBottom() {
+    if (!_controller.hasClients) {
+      return;
+    }
     _controller.animateTo(
       _controller.position.maxScrollExtent,
       duration: const Duration(milliseconds: 300),
