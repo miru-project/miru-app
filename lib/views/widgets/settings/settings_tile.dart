@@ -28,7 +28,9 @@ class _SettingsTileState extends State<SettingsTile> {
     return ListTile(
       leading: widget.icon,
       title: Text(widget.title),
-      subtitle: Text(widget.buildSubtitle?.call() ?? ""),
+      subtitle: widget.buildSubtitle != null
+          ? Text(widget.buildSubtitle!.call())
+          : null,
       trailing: widget.trailing,
       onTap: widget.onTap,
     );
@@ -43,18 +45,32 @@ class _SettingsTileState extends State<SettingsTile> {
         ],
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(widget.title),
-            Text(
-              widget.buildSubtitle?.call() ?? "",
-              style: const TextStyle(fontSize: 12),
-            )
+            if (widget.buildSubtitle != null)
+              Text(
+                widget.buildSubtitle!.call(),
+                style: const TextStyle(fontSize: 12),
+              )
           ],
         ),
         const Spacer(),
         widget.trailing ?? const SizedBox(),
       ],
     );
+
+    if (widget.onTap != null) {
+      content = MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          behavior: HitTestBehavior.opaque,
+          child: content,
+        ),
+      );
+    }
+
     if (widget.isCard) {
       return fluent.Card(
         child: content,

@@ -19,6 +19,7 @@ class ComicReader extends StatefulWidget {
     required this.playerIndex,
     required this.episodeGroupId,
     required this.runtime,
+    required this.anilistID,
     this.cover,
   });
 
@@ -29,6 +30,7 @@ class ComicReader extends StatefulWidget {
   final int episodeGroupId;
   final ExtensionService runtime;
   final String? cover;
+  final String anilistID;
 
   @override
   State<ComicReader> createState() => _ComicReaderState();
@@ -46,6 +48,7 @@ class _ComicReaderState extends State<ComicReader> {
         episodeGroupId: widget.episodeGroupId,
         runtime: widget.runtime,
         cover: widget.cover,
+        anilistID: widget.anilistID,
       ),
       tag: widget.title,
     );
