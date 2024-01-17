@@ -26,23 +26,42 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   };
   final String setting = MiruStorage.getSetting(SettingKey.readingMode);
   final readType = MangaReadMode.standard.obs;
-
+  final currentScale = 1.0.obs;
   // MangaReadMode
   // 当前页码
   final currentPage = 0.obs;
   bool timerCancel = false;
+  Rx<AnimationController>? animationController;
   final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
   final scrolloffsetListener = ScrollOffsetListener.create();
+  final transformationController = TransformationController();
 
+  List columnKeys = [GlobalKey()];
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
-
+  double yPos = 0.0;
   @override
   void onInit() {
     _initSetting();
+    transformationController.addListener(() {
+      if (columnKeys[0].currentWidget == null) return;
+      final matrix = transformationController.value;
+      yPos = matrix.getTranslation().y;
+      final scale = matrix.getMaxScaleOnAxis();
+      final page = getYPage(columnKeys, yPos, scale);
+      currentPage.value = page;
+      // debugPrint("$page $yPos");
+    });
+    // transformationcontroller.addListener(() {
+    //   final matrix = transformationcontroller.value;
+    //   final scale = matrix.getMaxScaleOnAxis();
+    //   currentScale.value = scale;
+    //   final y_dir = matrix.getTranslation().y;
+    //   // print('Current scale: $scale y_dir: $y_dir');
+    // });
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -50,6 +69,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       currentPage.value = pos.index;
     });
+
     ever(readType, (callback) {
       _jumpPage(currentPage.value);
       // 保存设置
@@ -64,12 +84,15 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       if (isRecover.value || callback == null) {
         return;
       }
+      columnKeys =
+          List.generate(watchData.value!.urls.length, (index) => GlobalKey());
       isRecover.value = true;
       // 获取上次阅读的页码
       final history = await DatabaseService.getHistoryByPackageAndUrl(
         super.runtime.extension.package,
         super.detailUrl,
       );
+
       if (history == null ||
           history.progress.isEmpty ||
           episodeGroupId != history.episodeGroupId ||
@@ -88,18 +111,45 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         super.detailUrl, readType.value);
   }
 
-  // double mapValue(double value) {
-  //   double mappedValue = ((value - 0) * (1 - (-1))) / (2.5 - 0) + (-1);
-  //   return mappedValue;
-  // }
-
-  _jumpPage(int page) {
-    if (readType.value == MangaReadMode.webTonn) {
-      if (itemScrollController.isAttached) {
-        itemScrollController.jumpTo(
-          index: page,
-        );
+  //get the postion of  children border
+  List<double> childSepHeight(List columnKeys) {
+    {
+      final List<double> heights = [];
+      double seperator = 0;
+      for (int i = 0; i < columnKeys.length; i++) {
+        final RenderBox renderBox =
+            columnKeys[i].currentContext.findRenderObject();
+        seperator -= renderBox.size.height;
+        heights.add(seperator);
       }
+      return heights;
+    }
+  }
+
+  int getYPage(List columnKeys, double yPos, double scale) {
+    double seperator = -1.0;
+    int val = 0;
+    for (int i = 0; i < columnKeys.length; i++) {
+      final RenderBox renderBox =
+          columnKeys[i].currentContext.findRenderObject();
+
+      if (seperator * scale < yPos) {
+        val = i;
+        break;
+      }
+      seperator -= renderBox.size.height;
+    }
+    debugPrint("$yPos $val $seperator $scale");
+    return val;
+  }
+
+  _jumpPage(int page) async {
+    if (readType.value == MangaReadMode.webTonn) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (columnKeys[0].currentWidget == null) return;
+      final renderHeight = childSepHeight(columnKeys);
+      transformationController.value = Matrix4.identity()
+        ..translate(0.0, renderHeight[page - 1]); // translate(x,y);
       return;
     }
     if (pageController.value.hasClients) {
@@ -118,12 +168,35 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         curve: Curves.ease,
       );
     } else {
-      scrollOffsetController.animateScroll(
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.ease,
-        offset: 200.0,
-      );
+      if (currentPage.value == columnKeys.length - 1) return;
+      final offset = columnKeys[currentPage.value]
+          .currentContext
+          .findRenderObject()
+          .size
+          .height;
+      webtoonJumpWithOffset(offset);
     }
+  }
+
+  void webtoonJumpWithOffset(double yOffset) {
+    double endYPos = yPos - yOffset;
+    Tween(begin: yPos, end: endYPos)
+        .animate(
+      CurvedAnimation(
+        parent: animationController!.value,
+        curve: Curves.ease,
+      ),
+    )
+        .addListener(() {
+      transformationController.value = Matrix4.identity()
+        ..translate(0.0, endYPos); // translate(x,y);
+    });
+    animationController!.value.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        animationController!.value.reset();
+      }
+    });
+    animationController!.value.forward();
   }
 
   // 上一页
@@ -135,20 +208,15 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         curve: Curves.ease,
       );
     } else {
-      scrollOffsetController.animateScroll(
-        duration: const Duration(milliseconds: 10),
-        curve: Curves.linear,
-        offset: -200.0,
-      );
+      if (currentPage.value == 0) return;
+      final offset = columnKeys[currentPage.value - 1]
+          .currentContext
+          .findRenderObject()
+          .size
+          .height;
+      webtoonJumpWithOffset(-offset);
     }
   }
-
-  // void scrollWithOffset(double offset) {
-  //   scrollOffsetController.animateScroll(
-  //       duration: const Duration(milliseconds: 100),
-  //       curve: Curves.ease,
-  //       offset: offset);
-  // }
 
   @override
   void onClose() {
@@ -161,6 +229,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     }
     pageController.value.dispose();
+    animationController?.value.dispose();
+    transformationController.dispose();
     if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
       AniListProvider.editList(
         status: AnilistMediaListStatus.current,

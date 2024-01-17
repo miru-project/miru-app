@@ -13,7 +13,6 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class ComicReaderContent extends StatefulWidget {
   const ComicReaderContent(this.tag, {super.key});
@@ -23,22 +22,25 @@ class ComicReaderContent extends StatefulWidget {
   State<ComicReaderContent> createState() => _ComicReaderContentState();
 }
 
-class _ComicReaderContentState extends State<ComicReaderContent> {
+class _ComicReaderContentState extends State<ComicReaderContent>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
+    _c.animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    ).obs;
+
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // This code will be executed after the widget has been built and rendered.
-      debugPrint('Column has been rendered');
-    });
   }
 
   late final _c = Get.find<ComicController>(tag: widget.tag);
   final zoomScale = 1.0.obs;
   bool isZoomed = false;
+  // List<GlobalKey>? _columnKeys;
 
-  TransformationController transformationController =
-      TransformationController();
+  // TransformationController transformationController =
+  //     TransformationController();
   final double minScaleValue = 1.0;
 
   _buildDisplay(Widget child) {
@@ -131,77 +133,24 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             final cuurentPage = _c.currentPage.value;
 
             if (readerType == MangaReadMode.webTonn) {
-              //zooming is inspired by: https://github.com/flutter/flutter/issues/86531
+              final width = MediaQuery.of(context).size.width;
               if (Platform.isAndroid) {
-                return InteractiveViewer(
-                    constrained: false,
-                    minScale: 0.5,
-                    child: Column(
-                      children: [
-                        for (int col = 0; col < images.length; col++)
-                          VisibilityDetector(
-                              key: Key(col.toString()),
-                              child: CacheNetWorkImagePic(
+                return InteractiveViewer.builder(
+                    transformationController: _c.transformationController,
+                    minScale: 1,
+                    builder: (context, quad) => SizedBox(
+                        width: width,
+                        child: Column(
+                          children: [
+                            for (int col = 0; col < images.length; col++)
+                              CacheNetWorkImagePic(
                                 images[col],
+                                key: _c.columnKeys[col],
                                 fit: BoxFit.cover,
                                 headers: _c.watchData.value?.headers,
-                              ),
-                              onVisibilityChanged: (info) {
-                                final visiblePercentage =
-                                    info.visibleFraction * 100;
-                                debugPrint("$col, $visiblePercentage");
-                                if (visiblePercentage > 50) {
-                                  _c.currentPage.value = col;
-                                }
-                              })
-                      ],
-                    ));
-                // InteractiveViewer(
-                //   minScale: minScaleValue,
-                //   transformationController: transformationController,
-                //   onInteractionEnd: (ScaleEndDetails endDetails) {
-                //     setState(() {
-                //       isZoomed = false;
-                //     });
-                //   },
-                //   onInteractionUpdate: (x) {
-                //     double correctScaleValue =
-                //         transformationController.value.getMaxScaleOnAxis();
-                //     if (x.scale == correctScaleValue) {
-                //       setState(() {
-                //         isZoomed = false;
-                //       });
-                //     }
-                //     setState(() {
-                //       isZoomed = true;
-                //     });
-                //     debugPrint("${x.scale}");
-                //   },
-                //   child: ScrollablePositionedList.builder(
-                //     padding: EdgeInsets.symmetric(
-                //       horizontal: viewPadding,
-                //     ),
-                //     initialScrollIndex: cuurentPage,
-                //     itemScrollController: _c.itemScrollController,
-                //     itemPositionsListener: _c.itemPositionsListener,
-                //     scrollOffsetController: _c.scrollOffsetController,
-                //     scrollOffsetListener: _c.scrolloffsetListener,
-                //     physics: isZoomed
-                //         ? const NeverScrollableScrollPhysics()
-                //         : const ScrollPhysics(),
-                //     itemBuilder: (context, index) {
-                //       final url = images[index];
-                //       return Obx(
-                //         () => CacheNetWorkImagePic(
-                //           url,
-                //           fit: BoxFit.cover,
-                //           headers: _c.watchData.value?.headers,
-                //         ),
-                //       );
-                //     },
-                //     itemCount: images.length,
-                //   ),
-                // );
+                              )
+                          ],
+                        )));
               }
               return ScrollablePositionedList.builder(
                 padding: EdgeInsets.symmetric(
@@ -221,6 +170,30 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                 },
                 itemCount: images.length,
               );
+              // return InteractiveViewer.builder(
+              //     scaleEnabled: false,
+              //     transformationController: _c.transformationController,
+              //     minScale: 1,
+              //     onInteractionUpdate: (details) {
+              //       debugPrint(
+              //           "${details.scale} ${_c.yPos} ${details.pointerCount}");
+
+              //       // _c.transformationController.value = Matrix4.identity()
+              //       //   ..translate(0, _c.yPos - 100);
+              //     },
+              //     builder: (context, quad) => SizedBox(
+              //         width: width,
+              //         child: Column(
+              //           children: [
+              //             for (int col = 0; col < images.length; col++)
+              //               CacheNetWorkImagePic(
+              //                 images[col],
+              //                 key: _c.columnKeys[col],
+              //                 fit: BoxFit.cover,
+              //                 headers: _c.watchData.value?.headers,
+              //               )
+              //           ],
+              //         )));
             }
             //common mode and left to right mode
             return ExtendedImageGesturePageView.builder(
@@ -268,25 +241,5 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
         _buildContent(),
       ),
     );
-  }
-}
-
-class RenderNotifier extends StatelessWidget {
-  RenderNotifier(
-      {super.key,
-      required this.index,
-      required this.onBuild,
-      required this.child});
-  final int index;
-  final VoidCallback onBuild;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      onBuild();
-    });
-
-    return child;
   }
 }
