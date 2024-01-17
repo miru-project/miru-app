@@ -66,7 +66,6 @@ class _ExtensionDebugWindowState extends State<ExtensionDebugWindow> {
     DesktopMultiWindow.setMethodHandler((call, fromWindowId) async {
       if (call.method == "addLog") {
         final log = ExtensionLog.fromJson(jsonDecode(call.arguments));
-        debugPrint(_selectedExtension.toString());
         if (_selectedExtension == null) {
           setState(() {
             _logs.add(log);
@@ -406,6 +405,20 @@ class _NetworkViewState extends State<NetworkView> {
                   children: [
                     for (var log in widget.logs.entries)
                       ListTile.selectable(
+                        leading: Text(
+                          log.value.statusCode == null
+                              ? "waiting"
+                              : log.value.statusCode.toString(),
+                          style: TextStyle(
+                            color: log.value.statusCode != null
+                                ? (log.value.statusCode! >= 200 &&
+                                        log.value.statusCode! < 300
+                                    ? Colors.green
+                                    : Colors.red)
+                                : null,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         selectionMode: ListTileSelectionMode.none,
                         subtitle: Text(
                           log.value.url,

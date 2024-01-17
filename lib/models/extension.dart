@@ -243,21 +243,17 @@ class ExtensionNetworkLog {
   Map<String, dynamic>? responseHeaders;
   String url;
   String method;
-  bool error;
   int? statusCode;
-  bool isEnd;
 
   ExtensionNetworkLog({
     required this.extension,
     required this.url,
     required this.method,
-    this.error = false,
     this.statusCode,
     this.responseBody,
     this.requestBody,
     this.requestHeaders,
     this.responseHeaders,
-    this.isEnd = false,
   });
 
   factory ExtensionNetworkLog.fromJson(Map<String, dynamic> json) =>

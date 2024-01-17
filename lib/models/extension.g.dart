@@ -235,13 +235,11 @@ ExtensionNetworkLog _$ExtensionNetworkLogFromJson(Map<String, dynamic> json) =>
       extension: Extension.fromJson(json['extension'] as Map<String, dynamic>),
       url: json['url'] as String,
       method: json['method'] as String,
-      error: json['error'] as bool? ?? false,
       statusCode: json['statusCode'] as int?,
       responseBody: json['responseBody'] as String?,
       requestBody: json['requestBody'] as String?,
       requestHeaders: json['requestHeaders'] as Map<String, dynamic>?,
       responseHeaders: json['responseHeaders'] as Map<String, dynamic>?,
-      isEnd: json['isEnd'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$ExtensionNetworkLogToJson(
@@ -254,7 +252,5 @@ Map<String, dynamic> _$ExtensionNetworkLogToJson(
       'responseHeaders': instance.responseHeaders,
       'url': instance.url,
       'method': instance.method,
-      'error': instance.error,
       'statusCode': instance.statusCode,
-      'isEnd': instance.isEnd,
     };

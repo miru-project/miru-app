@@ -76,30 +76,48 @@ class ExtensionService {
         log,
       );
 
-      final res = await _dio.request<String>(
-        url,
-        data: requestBody,
-        queryParameters: args[1]['queryParameters'] ?? {},
-        options: Options(
-          headers: headers,
-          method: method,
-        ),
-      );
-      log.requestHeaders = res.requestOptions.headers;
-      log.responseBody = res.data;
-      log.responseHeaders = res.headers.map.map(
-        (key, value) => MapEntry(
-          key,
-          value.join(';'),
-        ),
-      );
-      log.statusCode = res.statusCode;
+      try {
+        final res = await _dio.request<String>(
+          url,
+          data: requestBody,
+          queryParameters: args[1]['queryParameters'] ?? {},
+          options: Options(
+            headers: headers,
+            method: method,
+          ),
+        );
+        log.requestHeaders = res.requestOptions.headers;
+        log.responseBody = res.data;
+        log.responseHeaders = res.headers.map.map(
+          (key, value) => MapEntry(
+            key,
+            value.join(';'),
+          ),
+        );
+        log.statusCode = res.statusCode;
 
-      ExtensionUtils.addNetworkLog(
-        key,
-        log,
-      );
-      return res.data;
+        ExtensionUtils.addNetworkLog(
+          key,
+          log,
+        );
+        return res.data;
+      } on DioException catch (e) {
+        log.url = e.requestOptions.uri.toString();
+        log.requestHeaders = e.requestOptions.headers;
+        log.responseBody = e.response?.data;
+        log.responseHeaders = e.response?.headers.map.map(
+          (key, value) => MapEntry(
+            key,
+            value.join(';'),
+          ),
+        );
+        log.statusCode = e.response?.statusCode;
+        ExtensionUtils.addNetworkLog(
+          key,
+          log,
+        );
+        rethrow;
+      }
     });
 
     // 设置
