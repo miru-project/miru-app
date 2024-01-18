@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
@@ -112,7 +113,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
   _saveImage() async {
     final url = widget.url;
     final fileName = url.split('/').last;
-    final res = await Dio().get(
+    final res = await dio.get(
       url,
       options: Options(
         responseType: ResponseType.bytes,

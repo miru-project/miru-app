@@ -61,6 +61,7 @@ dependencies:
   extended_image: ^8.2.0
   flutter_hls_parser: ^2.0.1
   image_gallery_saver: ^2.0.3
+  flutter_socks_proxy: ^0.0.3
 
 dev_dependencies:
   flutter_test:

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/data/providers/tmdb_provider.dart';
 import 'package:miru_app/controllers/application_controller.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/dialogs/bt_dialog.dart';
 import 'package:miru_app/controllers/extension/extension_repo_controller.dart';
 import 'package:miru_app/controllers/settings_controller.dart';
@@ -149,20 +150,6 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) {
                 MiruStorage.setSetting(SettingKey.enableNSFW, value);
               },
-            ),
-            // UA
-            SettingsIntpuTile(
-              title: 'settings.webview-ua'.i18n,
-              buildSubtitle: () {
-                if (!Platform.isAndroid) {
-                  return 'settings.webview-ua-subtitle'.i18n;
-                }
-                return MiruStorage.getUASetting();
-              },
-              onChanged: (value) {
-                MiruStorage.setUASetting(value);
-              },
-              text: MiruStorage.getUASetting(),
             ),
           ],
         ),
@@ -410,6 +397,59 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         title: 'settings.tracking'.i18n,
         subTitle: 'settings.tracking-subtitle'.i18n,
+      ),
+      const SizedBox(height: 10),
+      // 网络设置
+      SettingsExpanderTile(
+        content: Column(
+          children: [
+            // UA
+            SettingsIntpuTile(
+              title: 'settings.network-ua'.i18n,
+              buildSubtitle: () {
+                if (!Platform.isAndroid) {
+                  return 'settings.network-ua-subtitle'.i18n;
+                }
+                return MiruStorage.getUASetting();
+              },
+              onChanged: (value) {
+                MiruStorage.setUASetting(value);
+              },
+              text: MiruStorage.getUASetting(),
+            ),
+            SettingsRadiosTile(
+              title: 'settings.proxy-type'.i18n,
+              itemNameValue: {
+                'settings.proxy-type-direct'.i18n: 'DIRECT',
+                'settings.proxy-type-socks5'.i18n: 'SOCKS5',
+                'settings.proxy-type-socks4'.i18n: 'SOCKS4',
+                'settings.proxy-type-http'.i18n: 'PROXY',
+              },
+              buildSubtitle: () => 'settings.proxy-type-subtitle'.i18n,
+              applyValue: (value) {
+                MiruStorage.setSetting(SettingKey.proxyType, value);
+                MiruRequest.refreshProxy();
+              },
+              buildGroupValue: () {
+                return MiruStorage.getSetting(SettingKey.proxyType);
+              },
+            ),
+            const SizedBox(height: 10),
+            SettingsIntpuTile(
+              title: 'settings.proxy'.i18n,
+              buildSubtitle: () => 'settings.proxy-subtitle'.i18n,
+              onChanged: (value) {
+                MiruStorage.setSetting(SettingKey.proxy, value);
+                MiruRequest.refreshProxy();
+              },
+              text: MiruStorage.getSetting(SettingKey.proxy),
+            ),
+          ],
+        ),
+        title: "settings.network".i18n,
+        subTitle: "settings.network-subtitle".i18n,
+        icon: fluent.FluentIcons.globe,
+        androidIcon: Icons.network_wifi,
       ),
       const SizedBox(height: 10),
       // Debug

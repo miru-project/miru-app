@@ -4,23 +4,19 @@ import 'package:flutter/services.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:xpath_selector_html_parser/xpath_selector_html_parser.dart';
 import 'dart:io';
 
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/utils/extension.dart';
-import 'package:miru_app/utils/miru_directory.dart';
 
 class ExtensionService {
   late JavascriptRuntime runtime;
   late Extension extension;
-  late PersistCookieJar _cookieJar;
-  final _dio = Dio();
   String _cuurentRequestUrl = '';
 
   initRuntime(Extension ext) async {
@@ -32,15 +28,6 @@ class ExtensionService {
 
     // 初始化runtime
     runtime = getJavascriptRuntime();
-
-    // 添加 cookie manager
-    final appDocDir = await MiruDirectory.getDirectory;
-    _cookieJar = PersistCookieJar(
-      ignoreExpires: true,
-      storage: FileStorage("$appDocDir/.cookies/"),
-    );
-    final cookieManager = CookieManager(_cookieJar);
-    _dio.interceptors.add(cookieManager);
 
     // 注册方法
     // 日志
@@ -77,7 +64,7 @@ class ExtensionService {
       );
 
       try {
-        final res = await _dio.request<String>(
+        final res = await dio.request<String>(
           url,
           data: requestBody,
           queryParameters: args[1]['queryParameters'] ?? {},
@@ -420,26 +407,18 @@ class ExtensionService {
 
   // 清理 cookie
   cleanCookie() async {
-    await _cookieJar.delete(Uri.parse(extension.webSite));
+    await MiruRequest.cleanCookie(extension.webSite);
   }
 
   /// 添加 cookie
   /// key=value; key=value
   setCookie(String cookies) async {
-    final cookieList = cookies.split(';');
-    for (final cookie in cookieList) {
-      await _cookieJar.saveFromResponse(
-        Uri.parse(extension.webSite),
-        [Cookie.fromSetCookieValue(cookie)],
-      );
-    }
+    await MiruRequest.setCookie(cookies, extension.webSite);
   }
 
   // 列出所有的 cookie
   Future<String> listCookie() async {
-    final cookies =
-        await _cookieJar.loadForRequest(Uri.parse(extension.webSite));
-    return cookies.map((e) => e.toString()).join(';');
+    return await MiruRequest.getCookie(extension.webSite);
   }
 
   Future<T> runExtension<T>(Future<T> Function() fun) async {

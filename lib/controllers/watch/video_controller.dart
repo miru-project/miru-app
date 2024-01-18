@@ -5,8 +5,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -16,6 +16,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/data/providers/bt_server_provider.dart';
 import 'package:miru_app/models/index.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/dialogs/bt_dialog.dart';
 import 'package:miru_app/controllers/home_controller.dart';
 import 'package:miru_app/controllers/main_controller.dart';
@@ -298,10 +299,10 @@ class VideoPlayerController extends GetxController {
         );
         // 下载 torrent
         final torrentFile = path.join(
-          await MiruDirectory.getCacheDirectory,
+          MiruDirectory.getCacheDirectory,
           'temp.torrent',
         );
-        await dio.Dio().download(watchData.url, torrentFile);
+        await dio.download(watchData.url, torrentFile);
         final file = File(torrentFile);
         _torrenHash = await BTServerApi.addTorrent(file.readAsBytesSync());
 
@@ -325,11 +326,13 @@ class VideoPlayerController extends GetxController {
       } else {
         //背景取得畫質
         qualityReceiver = await Isolate.spawn((SendPort sendport) async {
-          dio.Dio dioReq = dio.Dio();
           try {
-            dio.Response response = await dioReq.get(watchData.url,
-                options: dio.Options(headers: watchData.headers));
-            debugPrint(response.data);
+            final response = await dio.get(
+              watchData.url,
+              options: Options(
+                headers: watchData.headers,
+              ),
+            );
             final playList = await HlsPlaylistParser.create().parseString(
                 Uri.parse(watchData.url), response.data) as HlsMasterPlaylist;
             List<String> urlList =
@@ -417,7 +420,7 @@ class VideoPlayerController extends GetxController {
       return;
     }
 
-    final tempDir = await MiruDirectory.getCacheDirectory;
+    final tempDir = MiruDirectory.getCacheDirectory;
     final coverDir = path.join(tempDir, 'history_cover');
     Directory(coverDir).createSync(recursive: true);
     final epName = playList[index.value].name;
