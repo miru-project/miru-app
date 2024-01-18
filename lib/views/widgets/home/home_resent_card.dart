@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -15,6 +15,7 @@ import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -37,6 +38,10 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
   // 主要颜色
   Color? primaryColor;
   late bool noCover = widget.history.cover == null;
+  late final provider = ExtendedNetworkImageProvider(
+    widget.history.cover!,
+    cache: true,
+  );
 
   @override
   void initState() {
@@ -65,7 +70,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
       return;
     }
     final paletteGenerator = await PaletteGenerator.fromImageProvider(
-      CachedNetworkImageProvider(widget.history.cover!),
+      provider,
       maximumColorCount: 2,
     );
 
@@ -177,7 +182,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
         image: noCover
             ? null
             : DecorationImage(
-                image: CachedNetworkImageProvider(widget.history.cover!),
+                image: provider,
                 fit: BoxFit.cover,
                 colorFilter: primaryColor != null
                     ? ColorFilter.mode(
@@ -209,8 +214,8 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: CachedNetworkImage(
-                  imageUrl: widget.history.cover!,
+                child: CacheNetWorkImagePic(
+                  widget.history.cover!,
                   width: 130,
                   height: double.infinity,
                   fit: BoxFit.cover,
