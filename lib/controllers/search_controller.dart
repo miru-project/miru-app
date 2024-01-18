@@ -6,7 +6,7 @@ import 'package:miru_app/utils/miru_storage.dart';
 
 class SearchPageController extends GetxController {
   Rx<ExtensionType?> cuurentExtensionType = Rx(null);
-  final keyword = ''.obs;
+  final search = ''.obs;
   final searchResultList = <SearchResult>[].obs;
   String _randomKey = "";
   int get finishCount =>
@@ -15,8 +15,13 @@ class SearchPageController extends GetxController {
   bool isPageOpen = false;
   // 是否打开了这个页面
 
-  search() {
-    getRuntime(type: cuurentExtensionType.value);
+  @override
+  void onInit() {
+    ever(search, (callback) {
+      _randomKey = DateTime.now().millisecondsSinceEpoch.toString();
+      getResult(_randomKey);
+    });
+    super.onInit();
   }
 
   getRuntime({ExtensionType? type}) {
@@ -48,10 +53,10 @@ class SearchPageController extends GetxController {
       element.error = null;
       Future<List<ExtensionListItem>> resultFuture;
 
-      if (keyword.value.isEmpty) {
+      if (search.value.isEmpty) {
         resultFuture = element.runitme.latest(1);
       } else {
-        resultFuture = element.runitme.search(keyword.value, 1);
+        resultFuture = element.runitme.search(search.value, 1);
       }
 
       futures.add(

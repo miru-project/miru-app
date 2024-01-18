@@ -42,14 +42,15 @@ class _SearchPageState extends State<SearchPage> {
       child: Scaffold(
         appBar: SearchAppBar(
           textEditingController: TextEditingController(
-            text: c.keyword.value,
+            text: c.search.value,
           ),
           onChanged: (value) {
-            c.keyword.value = value;
+            if (value.isEmpty) {
+              c.search.value = '';
+            }
           },
           onSubmitted: (value) {
-            c.keyword.value = value;
-            c.search();
+            c.search.value = value;
           },
           hintText: "search.hint-text".i18n,
           title: "common.search".i18n,
@@ -98,14 +99,14 @@ class _SearchPageState extends State<SearchPage> {
             final list = c.searchResultList.value;
             return SearchAllExtSearch(
               key: ValueKey(
-                c.keyword.value + c.cuurentExtensionType.value.toString(),
+                c.search.value + c.cuurentExtensionType.value.toString(),
               ),
-              kw: c.keyword.value,
+              kw: c.search.value,
               runtimeList: list,
               onClickMore: (index) {
                 Get.to(ExtensionSearcherPage(
                   package: c.getPackgeByIndex(index),
-                  keyWord: c.keyword.value,
+                  keyWord: c.search.value,
                 ));
               },
             );
@@ -116,21 +117,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildDesktopSearch(BuildContext context) {
-    final suffix = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: 2.0),
-          child: fluent.IconButton(
-            icon: const Icon(fluent.FluentIcons.chrome_close, size: 9.0),
-            onPressed: () {
-              c.keyword.value = '';
-              c.search();
-            },
-          ),
-        ),
-      ],
-    );
     return Obx(
       () => Column(
         children: [
@@ -221,20 +207,16 @@ class _SearchPageState extends State<SearchPage> {
                       SizedBox(
                         width: 300,
                         child: fluent.TextBox(
-                          controller: TextEditingController(
-                            text: c.keyword.value,
-                          ),
-                          onChanged: (value) {
-                            c.keyword.value = value;
-                          },
+                          controller:
+                              TextEditingController(text: c.search.value),
                           placeholder: "search.hint-text".i18n,
-                          suffix: Obx(
-                            () => c.keyword.value.isNotEmpty
-                                ? suffix
-                                : const SizedBox.shrink(),
-                          ),
+                          onChanged: (value) {
+                            if (value.isEmpty) {
+                              c.search.value = '';
+                            }
+                          },
                           onSubmitted: (value) {
-                            c.search();
+                            c.search.value = value;
                           },
                         ),
                       )
@@ -247,9 +229,9 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
             child: SearchAllExtSearch(
               key: ValueKey(
-                c.keyword.value + c.cuurentExtensionType.value.toString(),
+                c.search.value + c.cuurentExtensionType.value.toString(),
               ),
-              kw: c.keyword.value,
+              kw: c.search.value,
               // ignore: invalid_use_of_protected_member
               runtimeList: c.searchResultList.value,
               onClickMore: (index) {
@@ -257,7 +239,7 @@ class _SearchPageState extends State<SearchPage> {
                   path: "/search_extension",
                   queryParameters: {
                     "package": c.getPackgeByIndex(index),
-                    "keyWord": c.keyword.value,
+                    "keyWord": c.search.value,
                   },
                 ).toString());
               },

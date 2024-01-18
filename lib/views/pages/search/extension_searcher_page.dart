@@ -43,7 +43,6 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
   // 初始化一开始选择的选项
   Map<String, List<String>> _selectedFilters = {};
   // 缓存的选项
-  final _textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -51,13 +50,6 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _initFilters();
     });
-  }
-
-  @override
-  dispose() {
-    _easyRefreshController.dispose();
-    _textEditingController.dispose();
-    super.dispose();
   }
 
   _initFilters() async {
@@ -208,7 +200,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
     return Scaffold(
       appBar: SearchAppBar(
         title: _runtime.extension.name,
-        textEditingController: _textEditingController,
+        textEditingController: TextEditingController(text: _keyWord),
         onChanged: (value) {
           if (value.isEmpty) {
             _onSearch(value);
@@ -255,20 +247,6 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    final suffix = Row(mainAxisSize: MainAxisSize.min, children: [
-      if (_textEditingController.text.isNotEmpty)
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: 2.0),
-          child: fluent.IconButton(
-            icon: const Icon(fluent.FluentIcons.chrome_close, size: 9.0),
-            onPressed: () {
-              _textEditingController.clear();
-              _onSearch("");
-            },
-          ),
-        ),
-    ]);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -301,10 +279,13 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
               SizedBox(
                 width: 300,
                 child: fluent.TextBox(
-                  controller: _textEditingController,
-                  suffix: suffix,
+                  controller: TextEditingController(
+                    text: _keyWord,
+                  ),
                   onChanged: (value) {
-                    setState(() {});
+                    if (value.isEmpty) {
+                      _onSearch(value);
+                    }
                   },
                   onSubmitted: _onSearch,
                   placeholder: 'search.hint-text'.i18n,

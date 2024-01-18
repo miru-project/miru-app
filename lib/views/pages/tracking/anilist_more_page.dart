@@ -109,7 +109,7 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
                           router.push("/search");
                         }
                         final c = Get.put(SearchPageController());
-                        c.keyword.value = title;
+                        c.search.value = title;
                       },
                       title: title,
                       cover: cover,
@@ -202,7 +202,7 @@ class _AnilistMorePageState extends State<AnilistMorePage> {
                         router.push("/search");
                       }
                       final c = Get.put(SearchPageController());
-                      c.keyword.value = title;
+                      c.search.value = title;
                     },
                     title: title,
                     cover: cover,
