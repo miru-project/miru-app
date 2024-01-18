@@ -42,7 +42,8 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
   Map<String, ExtensionFilter>? _filters;
   // 初始化一开始选择的选项
   Map<String, List<String>> _selectedFilters = {};
-  // 缓存的选项
+
+  late final _textEditingController = TextEditingController(text: _keyWord);
 
   @override
   void initState() {
@@ -50,6 +51,12 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _initFilters();
     });
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 
   _initFilters() async {
@@ -200,7 +207,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
     return Scaffold(
       appBar: SearchAppBar(
         title: _runtime.extension.name,
-        textEditingController: TextEditingController(text: _keyWord),
+        textEditingController: _textEditingController,
         onChanged: (value) {
           if (value.isEmpty) {
             _onSearch(value);
@@ -247,6 +254,18 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
   }
 
   Widget _buildDesktop(BuildContext context) {
+    final suffix = Row(mainAxisSize: MainAxisSize.min, children: [
+      Padding(
+        padding: const EdgeInsetsDirectional.only(start: 2.0),
+        child: fluent.IconButton(
+          icon: const Icon(fluent.FluentIcons.chrome_close, size: 9.0),
+          onPressed: () {
+            _textEditingController.clear();
+            _onSearch("");
+          },
+        ),
+      ),
+    ]);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -287,6 +306,8 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
                       _onSearch(value);
                     }
                   },
+                  suffix: suffix,
+                  suffixMode: fluent.OverlayVisibilityMode.editing,
                   onSubmitted: _onSearch,
                   placeholder: 'search.hint-text'.i18n,
                 ),
