@@ -95,7 +95,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
           onPressed: () async {
             RouterUtils.pop();
             // 定位目录
-            final dir = await ExtensionUtils.getExtensionsDir;
+            final dir = ExtensionUtils.extensionsDir;
             if (Platform.isAndroid) {
               Clipboard.setData(ClipboardData(text: dir));
               if (!mounted) {
