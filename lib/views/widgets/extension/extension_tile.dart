@@ -164,18 +164,9 @@ class _ExtensionTileState extends State<ExtensionTile> {
                           text: Text('extension.edit-code'.i18n),
                           onPressed: () async {
                             fluent.Flyout.of(context).close();
-                            // final window =
-                            //     await DesktopMultiWindow.createWindow(jsonEncode({
-                            //   'name': 'code',
-                            //   'args1': 'args',
-                            // }));
-                            // window
-                            //   ..center()
-                            //   ..setTitle('code edit')
-                            //   ..show();
-
                             launchUrl(path.toUri(
-                                '${await ExtensionUtils.getExtensionsDir}/${widget.extension.package}.js'));
+                              '${ExtensionUtils.extensionsDir}/${widget.extension.package}.js',
+                            ));
                           },
                         ),
                         fluent.MenuFlyoutItem(
