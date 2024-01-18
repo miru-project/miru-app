@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/controllers/extension_controller.dart';
+import 'package:miru_app/controllers/extension/extension_controller.dart';
 import 'package:miru_app/views/widgets/extension/extension_tile.dart';
 import 'package:miru_app/views/pages/extension/extension_repo_page.dart';
 import 'package:miru_app/router/router.dart';
@@ -168,48 +168,43 @@ class _ExtensionPageState extends State<ExtensionPage> {
 
   Widget _buildAndroid(BuildContext context) {
     return Obx(() {
-      return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('common.extension'.i18n),
-            bottom: TabBar(
-              tabs: [
-                Tab(text: 'extension.installed'.i18n),
-                Tab(text: 'common.repo'.i18n),
-              ],
-            ),
-            actions: [
-              if (c.errors.isNotEmpty)
-                IconButton(
-                  icon: const Icon(Icons.error),
-                  onPressed: () => _loadErrorDialog(),
-                ),
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('common.extension'.i18n),
+          actions: [
+            if (c.errors.isNotEmpty)
               IconButton(
-                onPressed: () => _importDialog(),
-                icon: const Icon(Icons.add),
-              )
-            ],
-          ),
-          body: TabBarView(children: [
-            ListView(
-              children: [
-                if (c.runtimes.isEmpty)
-                  SizedBox(
-                    height: 300,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('common.no-extension'.i18n),
-                      ],
-                    ),
-                  ),
-                for (final ext in c.runtimes.values)
-                  ExtensionTile(ext.extension),
-              ],
+                icon: const Icon(Icons.error),
+                onPressed: () => _loadErrorDialog(),
+              ),
+            IconButton(
+              onPressed: () => _importDialog(),
+              icon: const Icon(Icons.add),
             ),
-            const ExtensionRepoPage()
-          ]),
+            IconButton(
+              onPressed: () {
+                Get.to(
+                  () => const ExtensionRepoPage(),
+                );
+              },
+              icon: const Icon(Icons.download),
+            )
+          ],
+        ),
+        body: ListView(
+          children: [
+            if (c.runtimes.isEmpty)
+              SizedBox(
+                height: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('common.no-extension'.i18n),
+                  ],
+                ),
+              ),
+            for (final ext in c.runtimes.values) ExtensionTile(ext.extension),
+          ],
         ),
       );
     });
