@@ -8,19 +8,18 @@ class ExtensionLogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? color;
+
+    if (log.level == ExtensionLogLevel.error) {
+      color = Colors.red;
+    }
+
     return Container(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(10),
+      color: color?.withAlpha(50),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(5),
-            color: log.level == ExtensionLogLevel.error
-                ? Colors.red
-                : Colors.green,
-            child: Text(log.time.toString()),
-          ),
-          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

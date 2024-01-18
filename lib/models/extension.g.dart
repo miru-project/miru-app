@@ -229,3 +229,28 @@ const _$ExtensionLogLevelEnumMap = {
   ExtensionLogLevel.info: 'info',
   ExtensionLogLevel.error: 'error',
 };
+
+ExtensionNetworkLog _$ExtensionNetworkLogFromJson(Map<String, dynamic> json) =>
+    ExtensionNetworkLog(
+      extension: Extension.fromJson(json['extension'] as Map<String, dynamic>),
+      url: json['url'] as String,
+      method: json['method'] as String,
+      statusCode: json['statusCode'] as int?,
+      responseBody: json['responseBody'] as String?,
+      requestBody: json['requestBody'] as String?,
+      requestHeaders: json['requestHeaders'] as Map<String, dynamic>?,
+      responseHeaders: json['responseHeaders'] as Map<String, dynamic>?,
+    );
+
+Map<String, dynamic> _$ExtensionNetworkLogToJson(
+        ExtensionNetworkLog instance) =>
+    <String, dynamic>{
+      'extension': instance.extension,
+      'responseBody': instance.responseBody,
+      'requestBody': instance.requestBody,
+      'requestHeaders': instance.requestHeaders,
+      'responseHeaders': instance.responseHeaders,
+      'url': instance.url,
+      'method': instance.method,
+      'statusCode': instance.statusCode,
+    };

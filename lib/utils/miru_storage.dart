@@ -15,7 +15,7 @@ class MiruStorage {
   static late String _path;
 
   static ensureInitialized() async {
-    _path = await MiruDirectory.getDirectory;
+    _path = MiruDirectory.getDirectory;
     // 初始化设置
     await Hive.initFlutter(_path);
     settings = await Hive.openBox("settings");
@@ -90,7 +90,7 @@ class MiruStorage {
     final version = await settings.get(SettingKey.databaseVersion);
     // 如果没有版本号，并且没有数据库文件说明是第一次使用，返回最新的数据库版本
     if (version == null) {
-      final path = await MiruDirectory.getDirectory;
+      final path = MiruDirectory.getDirectory;
       final dbPath = p.join(path, 'default.isar');
       if (File(dbPath).existsSync()) {
         return 1;
@@ -128,6 +128,8 @@ class MiruStorage {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0");
     await _initSetting(SettingKey.errorMessage, []);
     await _initSetting(SettingKey.logRemoveDateDiff, 7);
+    await _initSetting(SettingKey.proxy, '');
+    await _initSetting(SettingKey.proxyType, 'DIRECT');
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -185,4 +187,6 @@ class SettingKey {
   static String windowsWebviewUA = "WindowsWebviewUA";
   static String errorMessage = "ErrorMessage";
   static String logRemoveDateDiff = "LogRemoveDateDiff";
+  static String proxy = "Proxy";
+  static String proxyType = "ProxyType";
 }

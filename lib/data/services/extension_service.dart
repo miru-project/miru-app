@@ -1,25 +1,22 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:xpath_selector_html_parser/xpath_selector_html_parser.dart';
 import 'dart:io';
 
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/utils/extension.dart';
-import 'package:miru_app/utils/miru_directory.dart';
 
 class ExtensionService {
   late JavascriptRuntime runtime;
   late Extension extension;
-  late PersistCookieJar _cookieJar;
-  final _dio = Dio();
   String _cuurentRequestUrl = '';
 
   initRuntime(Extension ext) async {
@@ -31,15 +28,6 @@ class ExtensionService {
 
     // 初始化runtime
     runtime = getJavascriptRuntime();
-
-    // 添加 cookie manager
-    final appDocDir = await MiruDirectory.getDirectory;
-    _cookieJar = PersistCookieJar(
-      ignoreExpires: true,
-      storage: FileStorage("$appDocDir/.cookies/"),
-    );
-    final cookieManager = CookieManager(_cookieJar);
-    _dio.interceptors.add(cookieManager);
 
     // 注册方法
     // 日志
@@ -53,26 +41,70 @@ class ExtensionService {
     });
     // 请求
     runtime.onMessage('request', (dynamic args) async {
-      ExtensionUtils.addLog(
-        extension,
-        ExtensionLogLevel.info,
-        "Request: ${args[0]} , ${args[1]}",
-      );
       _cuurentRequestUrl = args[0];
       final headers = args[1]['headers'] ?? {};
       if (headers['User-Agent'] == null) {
         headers['User-Agent'] = MiruStorage.getUASetting();
       }
-      return (await _dio.request<String>(
-        args[0],
-        data: args[1]['data'],
-        queryParameters: args[1]['queryParameters'] ?? {},
-        options: Options(
-          headers: headers,
-          method: args[1]['method'] ?? 'get',
-        ),
-      ))
-          .data;
+
+      final url = args[0];
+      final method = args[1]['method'] ?? 'get';
+      final requestBody = args[1]['data'];
+
+      final log = ExtensionNetworkLog(
+        extension: extension,
+        url: args[0],
+        method: method,
+        requestHeaders: headers,
+      );
+      final key = UniqueKey().toString();
+      ExtensionUtils.addNetworkLog(
+        key,
+        log,
+      );
+
+      try {
+        final res = await dio.request<String>(
+          url,
+          data: requestBody,
+          queryParameters: args[1]['queryParameters'] ?? {},
+          options: Options(
+            headers: headers,
+            method: method,
+          ),
+        );
+        log.requestHeaders = res.requestOptions.headers;
+        log.responseBody = res.data;
+        log.responseHeaders = res.headers.map.map(
+          (key, value) => MapEntry(
+            key,
+            value.join(';'),
+          ),
+        );
+        log.statusCode = res.statusCode;
+
+        ExtensionUtils.addNetworkLog(
+          key,
+          log,
+        );
+        return res.data;
+      } on DioException catch (e) {
+        log.url = e.requestOptions.uri.toString();
+        log.requestHeaders = e.requestOptions.headers;
+        log.responseBody = e.response?.data;
+        log.responseHeaders = e.response?.headers.map.map(
+          (key, value) => MapEntry(
+            key,
+            value.join(';'),
+          ),
+        );
+        log.statusCode = e.response?.statusCode;
+        ExtensionUtils.addNetworkLog(
+          key,
+          log,
+        );
+        rethrow;
+      }
     });
 
     // 设置
@@ -355,7 +387,7 @@ class ExtensionService {
 
           async function stringify(callback) {
             const data = await callback();
-            return typeof data === "object" ? JSON.stringify(data) : data;
+            return typeof data === "object" ? JSON.stringify(data,0,2) : data;
           }
 
     ''');
@@ -365,9 +397,9 @@ class ExtensionService {
 
     JsEvalResult jsResult = await runtime.evaluateAsync('''
       $ext
-      var extenstion = new Ext();
-      extenstion.load().then(()=>{
-        sendMessage("cleanSettings", JSON.stringify([extenstion.settingKeys]));
+      var extension = new Ext();
+      extension.load().then(()=>{
+        sendMessage("cleanSettings", JSON.stringify([extension.settingKeys]));
       });
     ''');
     await runtime.handlePromise(jsResult);
@@ -375,29 +407,21 @@ class ExtensionService {
 
   // 清理 cookie
   cleanCookie() async {
-    await _cookieJar.delete(Uri.parse(extension.webSite));
+    await MiruRequest.cleanCookie(extension.webSite);
   }
 
   /// 添加 cookie
   /// key=value; key=value
   setCookie(String cookies) async {
-    final cookieList = cookies.split(';');
-    for (final cookie in cookieList) {
-      await _cookieJar.saveFromResponse(
-        Uri.parse(extension.webSite),
-        [Cookie.fromSetCookieValue(cookie)],
-      );
-    }
+    await MiruRequest.setCookie(cookies, extension.webSite);
   }
 
   // 列出所有的 cookie
   Future<String> listCookie() async {
-    final cookies =
-        await _cookieJar.loadForRequest(Uri.parse(extension.webSite));
-    return cookies.map((e) => e.toString()).join(';');
+    return await MiruRequest.getCookie(extension.webSite);
   }
 
-  Future<T> _runExtension<T>(Future<T> Function() fun) async {
+  Future<T> runExtension<T>(Future<T> Function() fun) async {
     try {
       return await fun();
     } catch (e) {
@@ -419,9 +443,9 @@ class ExtensionService {
   }
 
   Future<List<ExtensionListItem>> latest(int page) async {
-    return _runExtension(() async {
+    return runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync('stringify(()=>extenstion.latest($page))'),
+        await runtime.evaluateAsync('stringify(()=>extension.latest($page))'),
       );
       List<ExtensionListItem> result =
           jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
@@ -439,10 +463,10 @@ class ExtensionService {
     int page, {
     Map<String, List<String>>? filter,
   }) async {
-    return _runExtension(() async {
+    return runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync(
-            'stringify(()=>extenstion.search("$kw",$page,${filter == null ? null : jsonEncode(filter)}))'),
+            'stringify(()=>extension.search("$kw",$page,${filter == null ? null : jsonEncode(filter)}))'),
       );
       List<ExtensionListItem> result =
           jsonDecode(jsResult.stringResult).map<ExtensionListItem>((e) {
@@ -460,12 +484,12 @@ class ExtensionService {
   }) async {
     late String eval;
     if (filter == null) {
-      eval = 'stringify(()=>extenstion.createFilter())';
+      eval = 'stringify(()=>extension.createFilter())';
     } else {
       eval =
-          'stringify(()=>extenstion.createFilter(JSON.parse(\'${jsonEncode(filter)}\')))';
+          'stringify(()=>extension.createFilter(JSON.parse(\'${jsonEncode(filter)}\')))';
     }
-    return _runExtension(() async {
+    return runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync(eval),
       );
@@ -480,9 +504,9 @@ class ExtensionService {
   }
 
   Future<ExtensionDetail> detail(String url) async {
-    return _runExtension(() async {
+    return runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync('stringify(()=>extenstion.detail("$url"))'),
+        await runtime.evaluateAsync('stringify(()=>extension.detail("$url"))'),
       );
       final result =
           ExtensionDetail.fromJson(jsonDecode(jsResult.stringResult));
@@ -492,9 +516,9 @@ class ExtensionService {
   }
 
   Future<Object?> watch(String url) async {
-    return _runExtension(() async {
+    return runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync('stringify(()=>extenstion.watch("$url"))'),
+        await runtime.evaluateAsync('stringify(()=>extension.watch("$url"))'),
       );
       final data = jsonDecode(jsResult.stringResult);
 
@@ -514,10 +538,10 @@ class ExtensionService {
   }
 
   Future<String> checkUpdate(url) async {
-    return _runExtension(() async {
+    return runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime
-            .evaluateAsync('stringify(()=>extenstion.checkUpdate("$url"))'),
+            .evaluateAsync('stringify(()=>extension.checkUpdate("$url"))'),
       );
       return jsResult.stringResult;
     });

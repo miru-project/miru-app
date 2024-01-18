@@ -7,7 +7,6 @@ environment:
   sdk: ">=3.0.3 <4.0.0"
 
 dependencies:
-  cached_network_image: ^3.2.3
   desktop_multi_window: ^0.2.0
   dio: ^5.3.2
   dio_cookie_manager: ^3.1.0+1
@@ -53,6 +52,7 @@ dependencies:
       url: https://github.com/MiaoMint/flutter_windows_webview
       ref: master
   webview_cookie_manager: ^2.0.6
+  visibility_detector: ^0.4.0+2
   http_parser: ^4.0.2
   html: ^0.15.4
   xpath_selector_html_parser: ^3.0.1
@@ -62,6 +62,7 @@ dependencies:
   extended_image: ^8.2.0
   flutter_hls_parser: ^2.0.1
   image_gallery_saver: ^2.0.3
+  flutter_socks_proxy: ^0.0.3
 
 dev_dependencies:
   flutter_test:

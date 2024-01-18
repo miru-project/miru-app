@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:miru_app/models/index.dart';
@@ -23,13 +22,29 @@ class ComicReaderContent extends StatefulWidget {
 }
 
 class _ComicReaderContentState extends State<ComicReaderContent> {
-  late final _c = Get.find<ComicController>(tag: widget.tag);
-  final zoomScale = 1.0.obs;
-  bool isZoomed = false;
+  @override
+  void initState() {
+    super.initState();
+  }
 
-  TransformationController transformationController =
-      TransformationController();
-  final double minScaleValue = 1.0;
+  late final _c = Get.find<ComicController>(tag: widget.tag);
+
+  // 按下数量
+  final List<int> _pointer = [];
+
+  _buildPlaceholder(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return SizedBox(
+      width: width,
+      height: height,
+      child: const Center(
+        child: Center(
+          child: ProgressRing(),
+        ),
+      ),
+    );
+  }
 
   _buildDisplay(Widget child) {
     return Stack(
@@ -62,160 +77,116 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     return RawKeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
-      onKey: (event) {
-        // 上下
-        if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-          if (_c.readType.value == MangaReadMode.webTonn) {
-            return _c.previousPage();
-          }
-        }
-        if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-          if (_c.readType.value == MangaReadMode.webTonn) {
-            return _c.nextPage();
-          }
-        }
-
-        if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-          if (_c.readType.value == MangaReadMode.rightToLeft) {
-            return _c.nextPage();
-          }
-          _c.previousPage();
-        }
-
-        if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-          if (_c.readType.value == MangaReadMode.rightToLeft) {
-            return _c.previousPage();
-          }
-          _c.nextPage();
-        }
-      },
+      onKey: _c.onKey,
       child: Container(
         color: backgroundColor,
         width: double.infinity,
-        child: LayoutBuilder(builder: ((context, constraints) {
-          final maxWidth = constraints.maxWidth;
-          return Obx(() {
-            if (_c.error.value.isNotEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(_c.error.value),
-                  PlatformButton(
-                    child: Text('common.retry'.i18n),
-                    onPressed: () {
-                      _c.getContent();
+        child: LayoutBuilder(
+          builder: ((context, constraints) {
+            final maxWidth = constraints.maxWidth;
+            return Obx(() {
+              if (_c.error.value.isNotEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(_c.error.value),
+                    PlatformButton(
+                      child: Text('common.retry'.i18n),
+                      onPressed: () {
+                        _c.getContent();
+                      },
+                    )
+                  ],
+                );
+              }
+
+              // 加载中
+              if (_c.watchData.value == null) {
+                return const Center(child: ProgressRing());
+              }
+
+              final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
+              final images = _c.watchData.value!.urls;
+              final readerType = _c.readType.value;
+              final cuurentPage = _c.currentPage.value;
+
+              if (readerType == MangaReadMode.webTonn) {
+                final width = MediaQuery.of(context).size.width;
+                final height = MediaQuery.of(context).size.height;
+                return SizedBox(
+                  width: width,
+                  height: height,
+                  child: Listener(
+                    onPointerDown: (event) {
+                      _pointer.add(event.pointer);
+                      if (_pointer.length == 2) {
+                        _c.isZoom.value = true;
+                      }
                     },
-                  )
-                ],
-              );
-            }
-
-            // 加载中
-            if (_c.watchData.value == null) {
-              return const Center(child: ProgressRing());
-            }
-
-            final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
-            final images = _c.watchData.value!.urls;
-            final readerType = _c.readType.value;
-            final cuurentPage = _c.currentPage.value;
-
-            if (readerType == MangaReadMode.webTonn) {
-              //zooming is inspired by: https://github.com/flutter/flutter/issues/86531
-              if (Platform.isAndroid) {
-                return InteractiveViewer(
-                  minScale: minScaleValue,
-                  transformationController: transformationController,
-                  onInteractionEnd: (ScaleEndDetails endDetails) {
-                    setState(() {
-                      isZoomed = false;
-                    });
-                  },
-                  onInteractionUpdate: (x) {
-                    double correctScaleValue =
-                        transformationController.value.getMaxScaleOnAxis();
-                    if (x.scale == correctScaleValue) {
-                      setState(() {
-                        isZoomed = false;
-                      });
-                    }
-                    setState(() {
-                      isZoomed = true;
-                    });
-                    debugPrint("${x.scale}");
-                  },
-                  child: ScrollablePositionedList.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: viewPadding,
-                    ),
-                    initialScrollIndex: cuurentPage,
-                    itemScrollController: _c.itemScrollController,
-                    itemPositionsListener: _c.itemPositionsListener,
-                    scrollOffsetController: _c.scrollOffsetController,
-                    scrollOffsetListener: _c.scrolloffsetListener,
-                    physics: isZoomed
-                        ? const NeverScrollableScrollPhysics()
-                        : const ScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final url = images[index];
-                      return Obx(
-                        () => CacheNetWorkImagePic(
-                          url,
-                          fit: BoxFit.cover,
-                          headers: _c.watchData.value?.headers,
+                    onPointerUp: (event) {
+                      _pointer.remove(event.pointer);
+                      if (_pointer.length == 1) {
+                        _c.isZoom.value = false;
+                      }
+                    },
+                    child: InteractiveViewer(
+                      scaleEnabled: _c.isZoom.value,
+                      child: ScrollablePositionedList.builder(
+                        physics: _c.isZoom.value
+                            ? const NeverScrollableScrollPhysics()
+                            : null,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: viewPadding,
                         ),
-                      );
-                    },
-                    itemCount: images.length,
+                        initialScrollIndex: cuurentPage,
+                        itemScrollController: _c.itemScrollController,
+                        itemPositionsListener: _c.itemPositionsListener,
+                        scrollOffsetController: _c.scrollOffsetController,
+                        itemBuilder: (context, index) {
+                          final url = images[index];
+                          return CacheNetWorkImagePic(
+                            url,
+                            fit: BoxFit.fitWidth,
+                            placeholder: _buildPlaceholder(context),
+                            headers: _c.watchData.value?.headers,
+                          );
+                        },
+                        itemCount: images.length,
+                      ),
+                    ),
                   ),
                 );
               }
-              return ScrollablePositionedList.builder(
-                padding: EdgeInsets.symmetric(
-                  horizontal: viewPadding,
-                ),
-                initialScrollIndex: cuurentPage,
-                itemScrollController: _c.itemScrollController,
-                itemPositionsListener: _c.itemPositionsListener,
-                scrollOffsetController: _c.scrollOffsetController,
-                itemBuilder: (context, index) {
+
+              //common mode and left to right mode
+              return ExtendedImageGesturePageView.builder(
+                itemCount: images.length,
+                reverse: readerType == MangaReadMode.rightToLeft,
+                onPageChanged: (index) {
+                  _c.currentPage.value = index;
+                },
+                scrollDirection: Axis.horizontal,
+                controller: _c.pageController.value,
+                itemBuilder: (BuildContext context, int index) {
                   final url = images[index];
-                  return CacheNetWorkImagePic(
-                    url,
-                    fit: BoxFit.fitWidth,
-                    headers: _c.watchData.value?.headers,
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: viewPadding,
+                    ),
+                    child: CacheNetWorkImagePic(
+                      url,
+                      mode: ExtendedImageMode.gesture,
+                      key: ValueKey(url),
+                      fit: BoxFit.contain,
+                      placeholder: _buildPlaceholder(context),
+                      headers: _c.watchData.value?.headers,
+                    ),
                   );
                 },
-                itemCount: images.length,
               );
-            }
-            //common mode and left to right mode
-            return ExtendedImageGesturePageView.builder(
-              itemCount: images.length,
-              reverse: readerType == MangaReadMode.rightToLeft,
-              onPageChanged: (index) {
-                _c.currentPage.value = index;
-              },
-              scrollDirection: Axis.horizontal,
-              controller: _c.pageController.value,
-              itemBuilder: (BuildContext context, int index) {
-                final url = images[index];
-                return Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: viewPadding,
-                  ),
-                  child: ExtendedImage.network(
-                    url,
-                    mode: ExtendedImageMode.gesture,
-                    key: ValueKey(url),
-                    fit: BoxFit.contain,
-                    headers: _c.watchData.value?.headers,
-                  ),
-                );
-              },
-            );
-          });
-        })),
+            });
+          }),
+        ),
       ),
     );
   }

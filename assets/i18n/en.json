@@ -113,8 +113,6 @@
     "theme-black": "Black",
     "nsfw": "NSFW",
     "nsfw-subtitle": "Show NSFW content",
-    "webview-ua": "Webview User-Agent",
-    "webview-ua-subtitle": "Modify the User-Agent in the request header for Webviews and extensions.",
     "external-player": "Preferred video player",
     "external-player-subtitle": "Currently, the preferred player is {player}",
     "external-player-builtin": "Built-in",
@@ -124,8 +122,19 @@
     "skip-interval": "Skip Interval",
     "skip-interval-subtitle": "Skipping interval for builtin video player",
     "default-reader-mode": "Default reader mode",
-    "bug-report": "Bug Report"
-
+    "bug-report": "Bug Report",
+    "network": "Network",
+    "network-subtitle": "Proxy, User-Agent...",
+    "network-ua": "Webview User-Agent",
+    "network-ua-subtitle": "Modify the User-Agent in the request header for Webviews and extensions.",
+    "proxy-type": "Proxy Type",
+    "proxy-type-subtitle": "Proxy type for requests",
+    "proxy-type-direct": "Direct",
+    "proxy-type-socks4": "Socks4",
+    "proxy-type-socks5": "Socks5",
+    "proxy-type-http": "HTTP",
+    "proxy": "Proxy",
+    "proxy-subtitle": "Proxy address (e.g. username:password@host:port)"
   },
   "external-player-launching": "Launching {player}",
   "detail": {
@@ -237,7 +246,6 @@
     "upgrade": "Upgrade",
     "start": "Start"
   },
-
   "report":{
     "copied":"Copied to clipboard",
     "github-bug-report":"Report to Github issue",
@@ -245,9 +253,9 @@
     "copy-message":"Copy error message",
     "show-report-checkbox":"Show report dialog when app starts"
   },
-  
   "anilist":{
     "title":"Anilist Tracking",
+
     "login-hint-1": "Seems you haven't login into AniList yet",
     "login-hint-2": "Please login into AniList first",
     "status": "Status",
@@ -263,9 +271,9 @@
     "re-reading": "Re-reading",
     "start-date": "Start Date",
     "end-date": "End Date",
-    "unbind":"Unbind",
-    "episodes":"Episodes",
-    "manga-chaper-read":"Manga Chaper Read: {chapters}",
-    "anime-episode-watch":"Anime Episode Watched: {episodes}"
+    "unbind": "Unbind",
+    "episodes": "Episodes",
+    "manga-chaper-read": "Manga Chaper Read: {chapters}",
+    "anime-episode-watch": "Anime Episode Watched: {episodes}"
   }
 }

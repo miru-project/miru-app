@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
@@ -21,7 +21,9 @@ class CacheNetWorkImagePic extends StatelessWidget {
     this.height,
     this.fallback,
     this.headers,
+    this.placeholder,
     this.canFullScreen = false,
+    this.mode = ExtendedImageMode.none,
   });
   final String url;
   final BoxFit fit;
@@ -30,6 +32,8 @@ class CacheNetWorkImagePic extends StatelessWidget {
   final Widget? fallback;
   final Map<String, String>? headers;
   final bool canFullScreen;
+  final Widget? placeholder;
+  final ExtendedImageMode mode;
 
   _errorBuild() {
     if (fallback != null) {
@@ -40,13 +44,24 @@ class CacheNetWorkImagePic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = CachedNetworkImage(
-      imageUrl: url,
-      httpHeaders: headers,
+    final image = ExtendedImage.network(
+      url,
+      headers: headers,
       fit: fit,
       width: width,
       height: height,
-      errorWidget: (context, url, error) => _errorBuild(),
+      cache: true,
+      mode: mode,
+      loadStateChanged: (state) {
+        switch (state.extendedImageLoadState) {
+          case LoadState.loading:
+            return placeholder ?? const SizedBox();
+          case LoadState.completed:
+            return state.completedWidget;
+          case LoadState.failed:
+            return _errorBuild();
+        }
+      },
     );
 
     if (canFullScreen) {
@@ -55,10 +70,8 @@ class CacheNetWorkImagePic extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             final thumnailPage = _ThumnailPage(
-              image: CachedNetworkImageProvider(
-                url,
-                headers: headers,
-              ),
+              url: url,
+              headers: headers,
             );
             if (Platform.isAndroid) {
               Get.to(thumnailPage);
@@ -80,9 +93,11 @@ class CacheNetWorkImagePic extends StatelessWidget {
 
 class _ThumnailPage extends StatefulWidget {
   const _ThumnailPage({
-    required this.image,
+    required this.url,
+    required this.headers,
   });
-  final CachedNetworkImageProvider image;
+  final String url;
+  final Map<String, String>? headers;
 
   @override
   State<_ThumnailPage> createState() => _ThumnailPageState();
@@ -99,13 +114,13 @@ class _ThumnailPageState extends State<_ThumnailPage> {
   }
 
   _saveImage() async {
-    final url = widget.image.url;
+    final url = widget.url;
     final fileName = url.split('/').last;
-    final res = await Dio().get(
+    final res = await dio.get(
       url,
       options: Options(
         responseType: ResponseType.bytes,
-        headers: widget.image.headers,
+        headers: widget.headers,
       ),
     );
     if (Platform.isAndroid) {
@@ -138,35 +153,35 @@ class _ThumnailPageState extends State<_ThumnailPage> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return Center(
-      child: ExtendedImageSlidePage(
-        slideAxis: SlideAxis.both,
-        slideType: SlideType.onlyImage,
-        slidePageBackgroundHandler: (offset, pageSize) {
-          final color = Platform.isAndroid
-              ? Theme.of(context).scaffoldBackgroundColor
-              : fluent.FluentTheme.of(context).scaffoldBackgroundColor;
-          return color.withOpacity(0);
+    return ExtendedImageSlidePage(
+      slideAxis: SlideAxis.both,
+      slideType: SlideType.onlyImage,
+      slidePageBackgroundHandler: (offset, pageSize) {
+        final color = Platform.isAndroid
+            ? Theme.of(context).scaffoldBackgroundColor
+            : fluent.FluentTheme.of(context).scaffoldBackgroundColor;
+        return color.withOpacity(0);
+      },
+      child: ExtendedImage.network(
+        widget.url,
+        headers: widget.headers,
+        cache: true,
+        fit: BoxFit.contain,
+        mode: ExtendedImageMode.gesture,
+        initGestureConfigHandler: (state) {
+          return GestureConfig(
+            minScale: 0.9,
+            animationMinScale: 0.7,
+            maxScale: 3.0,
+            animationMaxScale: 3.5,
+            speed: 1.0,
+            inertialSpeed: 100.0,
+            initialScale: 1.0,
+            inPageView: true,
+            reverseMousePointerScrollDirection: true,
+            initialAlignment: InitialAlignment.center,
+          );
         },
-        child: ExtendedImage(
-          image: widget.image,
-          fit: BoxFit.contain,
-          mode: ExtendedImageMode.gesture,
-          initGestureConfigHandler: (state) {
-            return GestureConfig(
-              minScale: 0.9,
-              animationMinScale: 0.7,
-              maxScale: 3.0,
-              animationMaxScale: 3.5,
-              speed: 1.0,
-              inertialSpeed: 100.0,
-              initialScale: 1.0,
-              inPageView: true,
-              reverseMousePointerScrollDirection: true,
-              initialAlignment: InitialAlignment.center,
-            );
-          },
-        ),
       ),
     );
   }
