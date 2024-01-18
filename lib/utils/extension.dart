@@ -6,7 +6,7 @@ import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/controllers/extension_controller.dart';
+import 'package:miru_app/controllers/extension/extension_controller.dart';
 import 'package:miru_app/controllers/search_controller.dart';
 import 'package:miru_app/controllers/settings_controller.dart';
 import 'package:miru_app/data/services/extension_service.dart';
