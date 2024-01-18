@@ -1,9 +1,9 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/controllers/extension/extension_controller.dart';
@@ -21,64 +21,50 @@ import 'package:path/path.dart' as path;
 class ExtensionUtils {
   static Map<String, ExtensionService> runtimes = {};
   static Map<String, String> extensionErrorMap = {};
-  static Timer? _timer;
 
-  static Future<String> get getExtensionsDir async =>
-      path.join(MiruDirectory.getDirectory, 'extensions');
+  static String get extensionsDir => path.join(
+        MiruDirectory.getDirectory,
+        'extensions',
+      );
 
   // 初始化扩展
   static ensureInitialized() async {
     // 创建目录
-    Directory(await getExtensionsDir).createSync(recursive: true);
+    Directory(extensionsDir).createSync(recursive: true);
     await _loadExtensions();
     // 监听目录变化
-    Directory(await getExtensionsDir).watch().listen((event) {
-      _timer?.cancel();
-      _timer = Timer(const Duration(seconds: 1), () async {
-        await _loadExtensions();
-        debugPrint("load extension");
-      });
+    Directory(extensionsDir).watch().listen((event) async {
+      if (path.extension(event.path) == '.js') {
+        final package = path.basenameWithoutExtension(event.path);
+        debugPrint('extension event: ${event.path} ${event.type}');
+        runtimes.remove(package);
+        extensionErrorMap.remove(event.path);
+        switch (event.type) {
+          case FileSystemEvent.delete:
+            break;
+          case FileSystemEvent.create:
+          case FileSystemEvent.modify:
+            await _installByPath(event.path);
+            break;
+        }
+        _reloadPage();
+      }
     });
   }
 
   static _loadExtensions() async {
-    final Map<String, ExtensionService> exts = {};
-    final Map<String, String> extErrorMap = {};
-
     // 获取扩展列表
-    final extensionsList = Directory(await getExtensionsDir).listSync();
+    final extensionsList = Directory(extensionsDir).listSync();
     // 遍历扩展列表
     for (final extension in extensionsList) {
-      if (path.extension(extension.path) == '.js') {
-        final file = File(extension.path);
-        final content = await file.readAsString();
-        try {
-          // 如果文件名和包名不一致，抛出异常
-          final ext = ExtensionUtils.parseExtension(content);
-          if (path.basenameWithoutExtension(extension.path) != ext.package) {
-            throw Exception("Inconsistency between file name and package name");
-          }
-          exts[ext.package] = await ExtensionService().initRuntime(ext);
-        } catch (e) {
-          extErrorMap[extension.path] = e.toString();
-        }
-      }
+      await _installByPath(extension.path);
     }
 
-    runtimes = exts;
-    extensionErrorMap = extErrorMap;
-    // 重载扩展页面
-    if (Get.isRegistered<ExtensionPageController>()) {
-      Get.find<ExtensionPageController>().callRefresh();
-    }
-    // 重载搜索页面
-    if (Get.isRegistered<SearchPageController>()) {
-      Get.find<SearchPageController>().callRefresh();
-    }
+    _reloadPage();
   }
 
   static uninstall(String package) async {
-    final file = File(path.join(await getExtensionsDir, '$package.js'));
+    final file = File(path.join(extensionsDir, '$package.js'));
     if (file.existsSync()) {
       file.deleteSync();
     }
@@ -91,25 +77,54 @@ class ExtensionUtils {
         throw Exception("Does not seem to be an extension");
       }
       final ext = ExtensionUtils.parseExtension(res.data!);
-      final savePath = path.join(await getExtensionsDir, '${ext.package}.js');
+      final savePath = path.join(extensionsDir, '${ext.package}.js');
       // 保存文件
       File(savePath).writeAsStringSync(res.data!);
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      showPlatformDialog(
-        context: context,
-        title: 'extension-install-error'.i18n,
-        content: Text(e.toString()),
-        actions: [
-          PlatformButton(
-            child: Text('common.close'.i18n),
-            onPressed: () {
-              RouterUtils.pop();
-            },
-          )
-        ],
-      );
+      if (context.mounted) {
+        showPlatformDialog(
+          context: context,
+          title: 'extension-install-error'.i18n,
+          content: Text(e.toString()),
+          actions: [
+            PlatformButton(
+              child: Text('common.close'.i18n),
+              onPressed: () {
+                RouterUtils.pop();
+              },
+            )
+          ],
+        );
+      }
       rethrow;
+    }
+  }
+
+  static _installByPath(String p) async {
+    if (path.extension(p) == '.js') {
+      try {
+        final file = File(p);
+        final content = await file.readAsString();
+        // 如果文件名和包名不一致，抛出异常
+        final ext = ExtensionUtils.parseExtension(content);
+        if (path.basenameWithoutExtension(p) != ext.package) {
+          throw Exception("Inconsistency between file name and package name");
+        }
+        runtimes[ext.package] = await ExtensionService().initRuntime(ext);
+      } catch (e) {
+        extensionErrorMap[p] = e.toString();
+      }
+    }
+  }
+
+  static _reloadPage() {
+    // 重载扩展页面
+    if (Get.isRegistered<ExtensionPageController>()) {
+      Get.find<ExtensionPageController>().callRefresh();
+    }
+    // 重载搜索页面
+    if (Get.isRegistered<SearchPageController>()) {
+      Get.find<SearchPageController>().callRefresh();
     }
   }
 
