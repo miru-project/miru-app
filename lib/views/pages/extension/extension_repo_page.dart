@@ -128,7 +128,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
     }
     if (c.searchType.value != null) {
       extensionCards.removeWhere(
-        (element) => element.type.toString() != c.searchType.value.toString(),
+        (element) => element.type != c.searchType.value,
       );
     }
 
