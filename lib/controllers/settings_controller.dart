@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_js/flutter_js.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/utils/extension.dart';
+import 'package:miru_app/utils/request.dart';
 
 class SettingsController extends GetxController {
   final contributors = [].obs;
@@ -125,7 +125,7 @@ class SettingsController extends GetxController {
   }
 
   _getContributors() async {
-    final res = await Dio()
+    final res = await dio
         .get("https://api.github.com/repos/miru-project/miru-app/contributors");
     contributors.value = List.from(res.data)
         .where((element) => element["type"] == "User")
