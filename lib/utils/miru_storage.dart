@@ -127,7 +127,7 @@ class MiruStorage {
     await _initSetting(SettingKey.windowsWebviewUA,
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0");
     await _initSetting(SettingKey.errorMessage, []);
-    await _initSetting(SettingKey.showBugReport, true);
+    await _initSetting(SettingKey.logRemoveDateDiff, 7);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -184,5 +184,5 @@ class SettingKey {
   static String androidWebviewUA = "AndroidWebviewUA";
   static String windowsWebviewUA = "WindowsWebviewUA";
   static String errorMessage = "ErrorMessage";
-  static String showBugReport = "ShowBugReport";
+  static String logRemoveDateDiff = "LogRemoveDateDiff";
 }

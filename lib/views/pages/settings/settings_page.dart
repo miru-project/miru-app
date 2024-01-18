@@ -24,6 +24,7 @@ import 'package:miru_app/views/widgets/list_title.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:miru_app/views/widgets/error_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -439,17 +440,39 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: fluent.FluentIcons.bug,
         androidIcon: Icons.bug_report_rounded,
         title: 'settings.bug-report'.i18n,
-        subTitle: 'bugreport-setting.show-report-dialog'.i18n,
+        subTitle: 'bugreport.setting.show-report-dialog'.i18n,
         content: Column(children: [
-          SettingsSwitchTile(
-              title: 'bugreport-setting.show-report-dialog'.i18n,
-              buildSubtitle: () =>
-                  'bugreport-setting.show-report-dialog-subtitle'.i18n,
-              buildValue: () =>
-                  MiruStorage.getSetting(SettingKey.showBugReport),
-              onChanged: (val) {
-                MiruStorage.setSetting(SettingKey.showBugReport, val);
-              }),
+          SettingsTile(
+              title: "bugreport.gotopage".i18n,
+              buildSubtitle: () => "bugreport.gotopage-subtitle".i18n,
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Platform.isAndroid
+                  ? Get.to(() => const ErrorPageDesktop())
+                  : router.push('/bugreport')),
+          SettingsIntpuTile(
+            title: "bugreport.auto-remove-title".i18n,
+            onChanged: (input) {
+              MiruStorage.setSetting(
+                  SettingKey.logRemoveDateDiff, int.tryParse(input) ?? 7);
+            },
+            text:
+                MiruStorage.getSetting(SettingKey.logRemoveDateDiff).toString(),
+            buildSubtitle: () => "bugreport.auto-remove-subtitle"
+                .i18n
+                .replaceFirst(
+                    "~",
+                    MiruStorage.getSetting(SettingKey.logRemoveDateDiff)
+                        .toString()),
+          )
+          // SettingsSwitchTile(
+          //     title: 'bugreport-setting.show-report-dialog'.i18n,
+          //     buildSubtitle: () =>
+          //         'bugreport-setting.show-report-dialog-subtitle'.i18n,
+          //     buildValue: () =>
+          //         MiruStorage.getSetting(SettingKey.showBugReport),
+          //     onChanged: (val) {
+          //       MiruStorage.setSetting(SettingKey.showBugReport, val);
+          //     }),
         ]),
       ),
       // 关于

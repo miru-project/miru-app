@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/views/widgets/button.dart';
@@ -15,8 +14,6 @@ import 'package:miru_app/views/widgets/messenger.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:miru_app/utils/miru_storage.dart';
-import 'package:flutter/services.dart';
 
 late PackageInfo packageInfo;
 late AndroidDeviceInfo androidDeviceInfo;
@@ -33,105 +30,6 @@ class ApplicationUtils {
       windowsDeviceInfo = await deviceInfo.windowsInfo;
     }
     return packageInfo;
-  }
-
-  static feedbackDialog(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (Platform.isAndroid) {
-      final issueUrl =
-          Uri.parse("https://github.com/miru-project/miru-app/issues");
-      final bool showdialog = MiruStorage.getSetting(SettingKey.showBugReport);
-      final isShowdialog = showdialog.obs;
-      final List errorMessage = MiruStorage.getSetting(SettingKey.errorMessage);
-      Get.to(() => Scaffold(
-            bottomSheet: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Row(
-                    children: [
-                      Obx(() => Checkbox(
-                            value: isShowdialog.value,
-                            onChanged: (val) {
-                              if (val != null) {
-                                MiruStorage.setSetting(
-                                    SettingKey.showBugReport, val);
-                                isShowdialog.value = val;
-                              }
-                            },
-                          )),
-                      Text("report.show-report-checkbox".i18n)
-                    ],
-                  ),
-                  Row(children: [
-                    FilledButton(
-                        onPressed: () async {
-                          MiruStorage.setSetting(SettingKey.errorMessage, []);
-                          Clipboard.setData(ClipboardData(
-                              text: errorMessage
-                                  .map((map) => map.entries
-                                      .map((e) => '${e.key}:${e.value}')
-                                      .join('\n'))
-                                  .join('\n')));
-                          showPlatformSnackbar(
-                              context: context, content: "report.copied".i18n);
-                          if (await canLaunchUrl(issueUrl)) {
-                            await launchUrl(issueUrl);
-                          } else {
-                            throw 'failed to launch $issueUrl';
-                          }
-                          Get.back();
-                        },
-                        child: Text("report.github-bug-report".i18n)),
-                    const Spacer(),
-                    ElevatedButton(
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(
-                              text: errorMessage
-                                  .map((map) => map["exception"])
-                                  .join('\n')));
-                          showPlatformSnackbar(
-                              context: context, content: "report.copied".i18n);
-                        },
-                        child: Text("report.copy-message".i18n)),
-                    ElevatedButton(
-                        onPressed: () async {
-                          MiruStorage.setSetting(SettingKey.errorMessage, []);
-                          Get.back();
-                        },
-                        child: Text("common.close".i18n)),
-                  ])
-                ])),
-            appBar: AppBar(
-              title: Text('report.title'.i18n),
-            ),
-            body: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(children: [
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: errorMessage.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                              child: ListTile(
-                            isThreeLine: true,
-                            title: Text(
-                                "Context : ${errorMessage[index]["context"]}"),
-                            subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      "Exception : ${errorMessage[index]["exception"]}"),
-                                  Text("${errorMessage[index]["stackTrace"]}")
-                                ]),
-                          ));
-                        }),
-                  ),
-                ])),
-          ));
-      return;
-    }
-    context.go("/bug-report");
   }
 
   static checkUpdate(BuildContext context, {bool showSnackbar = false}) async {

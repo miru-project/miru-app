@@ -178,7 +178,8 @@
   "novel-settings": {
     "font-size": "Font size"
   },
-  "bugreport-setting":{
+  "bugreport":{
+    "auto-remove-subtitle":"delete in ~ days",
     "show-report-dialog": "Show Report Dialog",
     "show-report-dialog-subtitle": "Show error report dialog when app starts"
   },

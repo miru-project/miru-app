@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
@@ -18,76 +19,89 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // 多窗口
-  if (args.firstOrNull == 'multi_window') {
-    final windowId = int.parse(args[1]);
-    final arguments = args[2].isEmpty
-        ? const {}
-        : jsonDecode(args[2]) as Map<String, dynamic>;
+    // 多窗口
+    if (args.firstOrNull == 'multi_window') {
+      final windowId = int.parse(args[1]);
+      final arguments = args[2].isEmpty
+          ? const {}
+          : jsonDecode(args[2]) as Map<String, dynamic>;
 
-    Map windows = {
-      "log": ExtensionLogWindow(
-        windowController: WindowController.fromWindowId(windowId),
-      ),
-    };
-    runApp(windows[arguments["name"]]);
+      Map windows = {
+        "log": ExtensionLogWindow(
+          windowController: WindowController.fromWindowId(windowId),
+        ),
+      };
+      runApp(windows[arguments["name"]]);
 
-    return;
-  }
-
-  // 主窗口
-  await MiruStorage.ensureInitialized();
-  await ApplicationUtils.ensureInitialized();
-  ExtensionUtils.ensureInitialized();
-  MediaKit.ensureInitialized();
-  //Error handler
-  FlutterError.onError = (details) {
-    if (details.stack == null) {
-      _onError(details.context.toString(), StackTrace.current.toString(),
-          details.exceptionAsString());
-    } else {
-      _onError(details.context.toString(), details.stack.toString(),
-          details.exceptionAsString());
+      return;
     }
-  };
-  if (!Platform.isAndroid) {
-    await windowManager.ensureInitialized();
-    final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
-    final size = Size(double.parse(sizeArr[0]), double.parse(sizeArr[1]));
-    WindowOptions windowOptions = WindowOptions(
-      size: size,
-      center: true,
-      minimumSize: const Size(600, 500),
-      skipTaskbar: false,
-      titleBarStyle: TitleBarStyle.hidden,
-    );
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
-      final position = MiruStorage.getSetting(SettingKey.windowPosition);
-      if (position != null) {
-        final offsetArr = position.split(",");
-        final offset = Offset(
-          double.parse(offsetArr[0]),
-          double.parse(offsetArr[1]),
-        );
-        await windowManager.setPosition(
-          offset,
-        );
-      }
-      await windowManager.show();
-      await windowManager.focus();
-    });
-  }
 
-  if (Platform.isAndroid) {
-    SystemUiOverlayStyle style = const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    );
-    SystemChrome.setSystemUIOverlayStyle(style);
-  }
-  runApp(const MainApp());
+    // 主窗口
+    await MiruStorage.ensureInitialized();
+    await ApplicationUtils.ensureInitialized();
+    ExtensionUtils.ensureInitialized();
+    MediaKit.ensureInitialized();
+    final errorLog = MiruStorage.getSetting(SettingKey.errorMessage);
+    final removeDate = MiruStorage.getSetting(SettingKey.logRemoveDateDiff);
+    //remove after 7 days
+    errorLog.removeWhere((log) {
+      return DateTime.now().difference(log['time']).inDays > removeDate;
+    });
+    //Error handler
+    FlutterError.onError = (details) {
+      if (details.stack == null) {
+        _onError(details.context.toString(), StackTrace.current.toString(),
+            details.exceptionAsString());
+      } else {
+        _onError(details.context.toString(), details.stack.toString(),
+            details.exceptionAsString());
+      }
+    };
+    if (!Platform.isAndroid) {
+      await windowManager.ensureInitialized();
+      final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
+      final size = Size(double.parse(sizeArr[0]), double.parse(sizeArr[1]));
+      WindowOptions windowOptions = WindowOptions(
+        size: size,
+        center: true,
+        minimumSize: const Size(600, 500),
+        skipTaskbar: false,
+        titleBarStyle: TitleBarStyle.hidden,
+      );
+      windowManager.waitUntilReadyToShow(windowOptions, () async {
+        final position = MiruStorage.getSetting(SettingKey.windowPosition);
+        if (position != null) {
+          final offsetArr = position.split(",");
+          final offset = Offset(
+            double.parse(offsetArr[0]),
+            double.parse(offsetArr[1]),
+          );
+          await windowManager.setPosition(
+            offset,
+          );
+        }
+        await windowManager.show();
+        await windowManager.focus();
+      });
+    }
+
+    if (Platform.isAndroid) {
+      SystemUiOverlayStyle style = const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      );
+      SystemChrome.setSystemUIOverlayStyle(style);
+    }
+    runApp(const MainApp());
+  }, (error, stack) {
+    debugPrint("error logging \r\n");
+    debugPrint(error.toString());
+    debugPrint(stack.toString());
+    _onError(error.toString(), stack.toString(), "");
+  });
 }
 
 _onError(String errorContext, String stackTrace, String exception) {
@@ -99,7 +113,8 @@ _onError(String errorContext, String stackTrace, String exception) {
   errorlog.add({
     "context": errorContext,
     "exception": exception,
-    "stackTrace": stackTrace
+    "stackTrace": stackTrace,
+    "time": DateTime.now(),
   });
   MiruStorage.setSetting(SettingKey.errorMessage, errorlog);
   // showDialog(context: context, builder: builder)
