@@ -42,6 +42,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
               onPressed: () {
                 setState(() {
                   widget.textEditingController.clear();
+                  widget.onSubmitted?.call('');
                   _showSearch = false;
                 });
               },
@@ -49,15 +50,28 @@ class _SearchAppBarState extends State<SearchAppBar> {
             )
           : null,
       title: _showSearch
-          ? TextField(
-              controller: widget.textEditingController,
-              decoration: InputDecoration(
-                hintText: widget.hintText ?? widget.title,
-                border: InputBorder.none,
+          ? PopScope(
+              canPop: false,
+              onPopInvoked: (_) async {
+                if (_showSearch) {
+                  setState(() {
+                    widget.textEditingController.clear();
+                    widget.onSubmitted?.call('');
+                    _showSearch = false;
+                  });
+                  return;
+                }
+              },
+              child: TextField(
+                controller: widget.textEditingController,
+                decoration: InputDecoration(
+                  hintText: widget.hintText ?? widget.title,
+                  border: InputBorder.none,
+                ),
+                autofocus: true,
+                onChanged: widget.onChanged,
+                onSubmitted: widget.onSubmitted,
               ),
-              autofocus: true,
-              onChanged: widget.onChanged,
-              onSubmitted: widget.onSubmitted,
             )
           : Text(widget.title),
       actions: [
