@@ -23,6 +23,7 @@ class CacheNetWorkImagePic extends StatelessWidget {
     this.headers,
     this.placeholder,
     this.canFullScreen = false,
+    this.mode = ExtendedImageMode.none,
   });
   final String url;
   final BoxFit fit;
@@ -32,6 +33,7 @@ class CacheNetWorkImagePic extends StatelessWidget {
   final Map<String, String>? headers;
   final bool canFullScreen;
   final Widget? placeholder;
+  final ExtendedImageMode mode;
 
   _errorBuild() {
     if (fallback != null) {
@@ -49,6 +51,7 @@ class CacheNetWorkImagePic extends StatelessWidget {
       width: width,
       height: height,
       cache: true,
+      mode: mode,
       loadStateChanged: (state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
