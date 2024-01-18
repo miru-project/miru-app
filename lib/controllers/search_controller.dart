@@ -16,8 +16,7 @@ class SearchPageController extends GetxController {
   // 是否打开了这个页面
 
   search() {
-    _randomKey = DateTime.now().millisecondsSinceEpoch.toString();
-    getResult(_randomKey);
+    getRuntime(type: cuurentExtensionType.value);
   }
 
   getRuntime({ExtensionType? type}) {

@@ -66,6 +66,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
             setState(() {
               if (_showSearch) {
                 widget.textEditingController.clear();
+                widget.onSubmitted?.call('');
                 return;
               }
               _showSearch = !_showSearch;

@@ -19,7 +19,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   late SearchPageController c;
-  final _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -34,7 +33,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void dispose() {
     c.isPageOpen = false;
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -43,11 +41,14 @@ class _SearchPageState extends State<SearchPage> {
       length: 4,
       child: Scaffold(
         appBar: SearchAppBar(
-          textEditingController: _searchController,
+          textEditingController: TextEditingController(
+            text: c.keyword.value,
+          ),
           onChanged: (value) {
             c.keyword.value = value;
           },
           onSubmitted: (value) {
+            c.keyword.value = value;
             c.search();
           },
           hintText: "search.hint-text".i18n,
@@ -220,16 +221,18 @@ class _SearchPageState extends State<SearchPage> {
                       SizedBox(
                         width: 300,
                         child: fluent.TextBox(
-                          controller: _searchController,
+                          controller: TextEditingController(
+                            text: c.keyword.value,
+                          ),
+                          onChanged: (value) {
+                            c.keyword.value = value;
+                          },
                           placeholder: "search.hint-text".i18n,
                           suffix: Obx(
                             () => c.keyword.value.isNotEmpty
                                 ? suffix
                                 : const SizedBox.shrink(),
                           ),
-                          onChanged: (value) {
-                            c.keyword.value = value;
-                          },
                           onSubmitted: (value) {
                             c.search();
                           },
