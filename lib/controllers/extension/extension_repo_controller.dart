@@ -1,36 +1,23 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
-import 'package:miru_app/router/router.dart';
-import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/utils/request.dart';
-import 'package:miru_app/views/widgets/messenger.dart';
 
 class ExtensionRepoPageController extends GetxController {
-  final isLoading = false.obs;
   List<dynamic> extensions = <dynamic>[].obs;
+  List<dynamic> extensionsTemp = <dynamic>[];
+
+  final isLoading = false.obs;
   final isError = false.obs;
   final search = ''.obs;
-  List<dynamic> extensionsTemp = <dynamic>[];
+  final Rx<ExtensionType?> searchType = Rx(null);
 
   @override
   void onInit() {
     onRefresh();
-    ever(search, (callback) {
-      extensions.clear();
-      extensions.addAll(
-        extensionsTemp
-            .where(
-              (element) => (element['name'] as String).toLowerCase().contains(
-                    search.value.toLowerCase(),
-                  ),
-            )
-            .toList(),
-      );
-    });
     super.onInit();
   }
 
@@ -47,14 +34,6 @@ class ExtensionRepoPageController extends GetxController {
       }
       extensionsTemp.clear();
       extensionsTemp.addAll(extensions);
-
-      if (Platform.isAndroid && extensions.isEmpty) {
-        // ignore: use_build_context_synchronously
-        showPlatformSnackbar(
-          context: currentContext,
-          content: 'extension-repo.empty'.i18n,
-        );
-      }
     } catch (e) {
       isError.value = true;
       debugPrint(e.toString());

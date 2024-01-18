@@ -207,7 +207,8 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
     List<_Destination> destinations = <_Destination>[
       _Destination(Icons.home_outlined, Icons.home, 'common.home'.i18n),
       _Destination(Icons.search_outlined, Icons.search, 'common.search'.i18n),
-      _Destination(Icons.apps_outlined, Icons.apps, 'common.extension'.i18n),
+      _Destination(
+          Icons.extension_outlined, Icons.extension, 'common.extension'.i18n),
       _Destination(
           Icons.settings_outlined, Icons.settings, 'common.settings'.i18n),
     ];
