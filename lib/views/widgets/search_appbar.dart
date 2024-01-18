@@ -37,6 +37,17 @@ class _SearchAppBarState extends State<SearchAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: _showSearch
+          ? IconButton(
+              onPressed: () {
+                setState(() {
+                  widget.textEditingController.clear();
+                  _showSearch = false;
+                });
+              },
+              icon: const Icon(Icons.arrow_back),
+            )
+          : null,
       title: _showSearch
           ? TextField(
               controller: widget.textEditingController,
@@ -53,8 +64,11 @@ class _SearchAppBarState extends State<SearchAppBar> {
         IconButton(
           onPressed: () {
             setState(() {
+              if (_showSearch) {
+                widget.textEditingController.clear();
+                return;
+              }
               _showSearch = !_showSearch;
-              if (!_showSearch) widget.onSubmitted?.call("");
             });
           },
           icon: Icon(_showSearch ? Icons.close : Icons.search),

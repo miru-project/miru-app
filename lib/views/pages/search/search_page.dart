@@ -19,6 +19,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   late SearchPageController c;
+  final _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void dispose() {
     c.isPageOpen = false;
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -41,16 +43,12 @@ class _SearchPageState extends State<SearchPage> {
       length: 4,
       child: Scaffold(
         appBar: SearchAppBar(
-          textEditingController: TextEditingController(
-            text: c.search.value,
-          ),
+          textEditingController: _searchController,
           onChanged: (value) {
-            if (value.isEmpty) {
-              c.search.value = '';
-            }
+            c.keyword.value = value;
           },
           onSubmitted: (value) {
-            c.search.value = value;
+            c.search();
           },
           hintText: "search.hint-text".i18n,
           title: "common.search".i18n,
@@ -99,14 +97,14 @@ class _SearchPageState extends State<SearchPage> {
             final list = c.searchResultList.value;
             return SearchAllExtSearch(
               key: ValueKey(
-                c.search.value + c.cuurentExtensionType.value.toString(),
+                c.keyword.value + c.cuurentExtensionType.value.toString(),
               ),
-              kw: c.search.value,
+              kw: c.keyword.value,
               runtimeList: list,
               onClickMore: (index) {
                 Get.to(ExtensionSearcherPage(
                   package: c.getPackgeByIndex(index),
-                  keyWord: c.search.value,
+                  keyWord: c.keyword.value,
                 ));
               },
             );
@@ -117,6 +115,21 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildDesktopSearch(BuildContext context) {
+    final suffix = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.only(start: 2.0),
+          child: fluent.IconButton(
+            icon: const Icon(fluent.FluentIcons.chrome_close, size: 9.0),
+            onPressed: () {
+              c.keyword.value = '';
+              c.search();
+            },
+          ),
+        ),
+      ],
+    );
     return Obx(
       () => Column(
         children: [
@@ -207,16 +220,18 @@ class _SearchPageState extends State<SearchPage> {
                       SizedBox(
                         width: 300,
                         child: fluent.TextBox(
-                          controller:
-                              TextEditingController(text: c.search.value),
+                          controller: _searchController,
                           placeholder: "search.hint-text".i18n,
+                          suffix: Obx(
+                            () => c.keyword.value.isNotEmpty
+                                ? suffix
+                                : const SizedBox.shrink(),
+                          ),
                           onChanged: (value) {
-                            if (value.isEmpty) {
-                              c.search.value = '';
-                            }
+                            c.keyword.value = value;
                           },
                           onSubmitted: (value) {
-                            c.search.value = value;
+                            c.search();
                           },
                         ),
                       )
@@ -229,9 +244,9 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
             child: SearchAllExtSearch(
               key: ValueKey(
-                c.search.value + c.cuurentExtensionType.value.toString(),
+                c.keyword.value + c.cuurentExtensionType.value.toString(),
               ),
-              kw: c.search.value,
+              kw: c.keyword.value,
               // ignore: invalid_use_of_protected_member
               runtimeList: c.searchResultList.value,
               onClickMore: (index) {
@@ -239,7 +254,7 @@ class _SearchPageState extends State<SearchPage> {
                   path: "/search_extension",
                   queryParameters: {
                     "package": c.getPackgeByIndex(index),
-                    "keyWord": c.search.value,
+                    "keyWord": c.keyword.value,
                   },
                 ).toString());
               },

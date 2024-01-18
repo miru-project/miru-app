@@ -49,7 +49,7 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
               router.push("/search");
             }
             final c = Get.put(SearchPageController());
-            c.search.value = title;
+            c.keyword.value = title;
           },
           title: title,
           cover: cover,
