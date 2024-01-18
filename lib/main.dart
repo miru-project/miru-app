@@ -49,10 +49,6 @@ void main(List<String> args) async {
     MediaKit.ensureInitialized();
 
     // 主窗口
-    await MiruStorage.ensureInitialized();
-    await ApplicationUtils.ensureInitialized();
-    ExtensionUtils.ensureInitialized();
-    MediaKit.ensureInitialized();
     final errorLog = MiruStorage.getSetting(SettingKey.errorMessage);
     final removeDate = MiruStorage.getSetting(SettingKey.logRemoveDateDiff);
     //remove after 7 days
