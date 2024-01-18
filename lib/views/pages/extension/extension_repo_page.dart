@@ -9,6 +9,7 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/button.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
+import 'package:miru_app/views/widgets/search_appbar.dart';
 
 class ExtensionRepoPage extends StatefulWidget {
   const ExtensionRepoPage({super.key});
@@ -26,7 +27,59 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
     super.initState();
   }
 
-  _content() {
+  // 筛选 dialog
+  _filterDialog() {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Obx(
+                  () => SegmentedButton<ExtensionType?>(
+                    segments: [
+                      ButtonSegment(
+                        value: null,
+                        label: Text('common.show-all'.i18n),
+                      ),
+                      ButtonSegment(
+                        value: ExtensionType.bangumi,
+                        label: Text('extension-type.video'.i18n),
+                      ),
+                      ButtonSegment(
+                        value: ExtensionType.manga,
+                        label: Text('extension-type.comic'.i18n),
+                      ),
+                      ButtonSegment(
+                        value: ExtensionType.fikushon,
+                        label: Text('extension-type.novel'.i18n),
+                      ),
+                    ],
+                    selected: <ExtensionType?>{c.searchType.value},
+                    onSelectionChanged: (value) {
+                      debugPrint(value.first.toString());
+                      c.searchType.value = value.first;
+                      Get.back();
+                    },
+                    showSelectedIcon: false,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _content() {
     if (c.isLoading.value) {
       return const Center(child: ProgressRing());
     }
@@ -68,6 +121,20 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
               (element) => element.toString() == 'ExtensionType.${e['type']}',
             )))
         .toList();
+    // 过滤
+    if (c.search.value.isNotEmpty) {
+      extensionCards.removeWhere((element) =>
+          !element.name.toLowerCase().contains(c.search.value.toLowerCase()));
+    }
+    if (c.searchType.value != null) {
+      extensionCards.removeWhere(
+        (element) => element.type.toString() != c.searchType.value.toString(),
+      );
+    }
+
+    if (extensionCards.isEmpty) {
+      return Center(child: Text('extension-repo.empty'.i18n));
+    }
 
     return PlatformBuildWidget(
       androidBuilder: (context) => ListView(
@@ -88,13 +155,30 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
 
   Widget _buildAndroid(BuildContext context) {
     return Obx(
-      () => EasyRefresh(
-        onRefresh: c.onRefresh,
-        header: const ClassicHeader(
-          showText: false,
-          showMessage: false,
+      () => Scaffold(
+        appBar: SearchAppBar(
+          title: 'common.extension-repo'.i18n,
+          textEditingController: TextEditingController(text: c.search.value),
+          onSubmitted: (value) {
+            c.search.value = value;
+          },
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: () {
+                _filterDialog();
+              },
+            ),
+          ],
         ),
-        child: _content(),
+        body: EasyRefresh(
+          onRefresh: c.onRefresh,
+          header: const ClassicHeader(
+            showText: false,
+            showMessage: false,
+          ),
+          child: Obx(_content),
+        ),
       ),
     );
   }
@@ -102,54 +186,85 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
   Widget _buildDesktop(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-      child: Obx(() => Column(
+      child: Column(
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Text(
-                    'common.extension-repo'.i18n,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: 200,
-                    child: fluent.TextBox(
-                      controller: TextEditingController(text: c.search.value),
-                      placeholder: 'common.search'.i18n,
-                      onChanged: (value) {
-                        if (value.isEmpty) {
-                          c.onRefresh();
-                          c.search.value = '';
-                        }
-                      },
-                      onSubmitted: (value) {
-                        c.search.value = value;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  fluent.IconButton(
-                      icon: const Icon(fluent.FluentIcons.refresh),
-                      onPressed: () {
-                        c.onRefresh();
-                      })
-                ],
+              Text(
+                'common.extension-repo'.i18n,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 16),
-              Expanded(child: Obx(() {
-                if (c.isLoading.value) {
-                  return const Center(child: ProgressRing());
-                }
-                if (c.extensions.isEmpty) {
-                  return Center(child: Text('extension-repo.empty'.i18n));
-                }
-                return _content();
-              })),
+              const Spacer(),
+              // 选择框
+              Obx(
+                () => fluent.ComboBox<String>(
+                  items: [
+                    fluent.ComboBoxItem(
+                      value: "all",
+                      child: Text('common.show-all'.i18n),
+                    ),
+                    fluent.ComboBoxItem(
+                      value: ExtensionType.bangumi.toString(),
+                      child: Text('extension-type.video'.i18n),
+                    ),
+                    fluent.ComboBoxItem(
+                      value: ExtensionType.manga.toString(),
+                      child: Text('extension-type.comic'.i18n),
+                    ),
+                    fluent.ComboBoxItem(
+                      value: ExtensionType.fikushon.toString(),
+                      child: Text('extension-type.novel'.i18n),
+                    ),
+                  ],
+                  value: c.searchType.value?.toString() ?? "all",
+                  onChanged: (value) {
+                    if (value == "all") {
+                      c.searchType.value = null;
+                      return;
+                    }
+                    c.searchType.value = ExtensionType.values.firstWhere(
+                      (element) => element.toString() == value,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: 16),
+              SizedBox(
+                width: 200,
+                child: Obx(
+                  () => fluent.TextBox(
+                    controller: TextEditingController(text: c.search.value),
+                    placeholder: 'common.search'.i18n,
+                    onChanged: (value) {
+                      if (value.isEmpty) {
+                        c.onRefresh();
+                        c.search.value = '';
+                      }
+                    },
+                    onSubmitted: (value) {
+                      c.search.value = value;
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              fluent.IconButton(
+                icon: const Icon(fluent.FluentIcons.refresh),
+                onPressed: () {
+                  c.onRefresh();
+                },
+              )
             ],
-          )),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Obx(_content),
+          ),
+        ],
+      ),
     );
   }
 
