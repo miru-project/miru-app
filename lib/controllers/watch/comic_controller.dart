@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/models/index.dart';
@@ -25,20 +26,25 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     'webTonn': MangaReadMode.webTonn,
   };
   final String setting = MiruStorage.getSetting(SettingKey.readingMode);
+
   final readType = MangaReadMode.standard.obs;
 
+  final currentScale = 1.0.obs;
   // MangaReadMode
   // 当前页码
   final currentPage = 0.obs;
-  bool timerCancel = false;
+
   final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
-  final scrolloffsetListener = ScrollOffsetListener.create();
 
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
+
+  // 是否按下 ctrl
+
+  final isZoom = false.obs;
 
   @override
   void onInit() {
@@ -50,6 +56,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       currentPage.value = pos.index;
     });
+
     ever(readType, (callback) {
       _jumpPage(currentPage.value);
       // 保存设置
@@ -64,12 +71,14 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       if (isRecover.value || callback == null) {
         return;
       }
+
       isRecover.value = true;
       // 获取上次阅读的页码
       final history = await DatabaseService.getHistoryByPackageAndUrl(
         super.runtime.extension.package,
         super.detailUrl,
       );
+
       if (history == null ||
           history.progress.isEmpty ||
           episodeGroupId != history.episodeGroupId ||
@@ -82,18 +91,45 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     super.onInit();
   }
 
+  onKey(RawKeyEvent event) {
+    // 按下 ctrl
+    isZoom.value = event.isControlPressed;
+    // 上下
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+      if (readType.value == MangaReadMode.webTonn) {
+        return previousPage();
+      }
+    }
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+      if (readType.value == MangaReadMode.webTonn) {
+        return nextPage();
+      }
+    }
+
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+      if (readType.value == MangaReadMode.rightToLeft) {
+        return nextPage();
+      }
+      previousPage();
+    }
+
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+      if (readType.value == MangaReadMode.rightToLeft) {
+        return previousPage();
+      }
+      nextPage();
+    }
+  }
+
   _initSetting() async {
     readType.value = readmode[setting] ?? MangaReadMode.standard;
     readType.value = await DatabaseService.getMnagaReaderType(
-        super.detailUrl, readType.value);
+      super.detailUrl,
+      readType.value,
+    );
   }
 
-  // double mapValue(double value) {
-  //   double mappedValue = ((value - 0) * (1 - (-1))) / (2.5 - 0) + (-1);
-  //   return mappedValue;
-  // }
-
-  _jumpPage(int page) {
+  _jumpPage(int page) async {
     if (readType.value == MangaReadMode.webTonn) {
       if (itemScrollController.isAttached) {
         itemScrollController.jumpTo(
@@ -136,19 +172,12 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     } else {
       scrollOffsetController.animateScroll(
-        duration: const Duration(milliseconds: 10),
-        curve: Curves.linear,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.ease,
         offset: -200.0,
       );
     }
   }
-
-  // void scrollWithOffset(double offset) {
-  //   scrollOffsetController.animateScroll(
-  //       duration: const Duration(milliseconds: 100),
-  //       curve: Curves.ease,
-  //       offset: offset);
-  // }
 
   @override
   void onClose() {
@@ -160,7 +189,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         pages.toString(),
       );
     }
-    pageController.value.dispose();
     if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
       AniListProvider.editList(
         status: AnilistMediaListStatus.current,
