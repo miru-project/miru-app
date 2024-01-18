@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 
 enum AnilistType { anime, manga }
@@ -106,7 +107,7 @@ class AniListProvider {
     required String queryString,
   }) async {
     try {
-      final response = await Dio().post(
+      final response = await dio.post(
         apiUrl,
         options: Options(headers: {
           "Authorization": "Bearer $anilistToken",

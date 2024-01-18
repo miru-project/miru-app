@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/application_controller.dart';
+import 'package:miru_app/utils/miru_directory.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/pages/debug_page.dart';
 import 'package:miru_app/views/pages/main_page.dart';
 import 'package:miru_app/router/router.dart';
@@ -37,8 +39,10 @@ void main(List<String> args) async {
   }
 
   // 主窗口
+  await MiruDirectory.ensureInitialized();
   await MiruStorage.ensureInitialized();
   await ApplicationUtils.ensureInitialized();
+  await MiruRequest.ensureInitialized();
   ExtensionUtils.ensureInitialized();
   MediaKit.ensureInitialized();
 
