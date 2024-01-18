@@ -22,8 +22,8 @@ class ExtensionService {
   initRuntime(Extension ext) async {
     extension = ext;
     // 读取文件
-    final file = File(
-        '${await ExtensionUtils.getExtensionsDir}/${extension.package}.js');
+    final file =
+        File('${ExtensionUtils.extensionsDir}/${extension.package}.js');
     final content = file.readAsStringSync();
 
     // 初始化runtime
