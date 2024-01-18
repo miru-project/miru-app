@@ -117,6 +117,18 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildDesktopSearch(BuildContext context) {
+    final suffix = Row(mainAxisSize: MainAxisSize.min, children: [
+      Padding(
+        padding: const EdgeInsetsDirectional.only(start: 2.0),
+        child: fluent.IconButton(
+          icon: const Icon(fluent.FluentIcons.chrome_close, size: 9.0),
+          onPressed: () {
+            c.search.value = '';
+            setState(() {});
+          },
+        ),
+      ),
+    ]);
     return Obx(
       () => Column(
         children: [
@@ -210,6 +222,8 @@ class _SearchPageState extends State<SearchPage> {
                           controller:
                               TextEditingController(text: c.search.value),
                           placeholder: "search.hint-text".i18n,
+                          suffix: suffix,
+                          suffixMode: fluent.OverlayVisibilityMode.editing,
                           onChanged: (value) {
                             if (value.isEmpty) {
                               c.search.value = '';
