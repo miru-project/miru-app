@@ -83,7 +83,10 @@ class _ExtensionCardState extends State<ExtensionCard> {
       ),
       title: Text(widget.name),
       subtitle: DefaultTextStyle(
-          style: const TextStyle(fontSize: 12),
+          style: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).textTheme.bodySmall!.color,
+          ),
           child: Row(
             children: [
               Padding(
@@ -174,7 +177,10 @@ class _ExtensionCardState extends State<ExtensionCard> {
           const SizedBox(height: 8),
           Text(widget.name, style: const TextStyle(fontSize: 17)),
           DefaultTextStyle(
-            style: const TextStyle(fontSize: 12),
+            style: TextStyle(
+              fontSize: 12,
+              color: fluent.FluentTheme.of(context).inactiveColor,
+            ),
             child: Row(
               children: [
                 Padding(

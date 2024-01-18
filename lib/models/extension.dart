@@ -233,3 +233,31 @@ class ExtensionLog {
 
   Map<String, dynamic> toJson() => _$ExtensionLogToJson(this);
 }
+
+@JsonSerializable()
+class ExtensionNetworkLog {
+  final Extension extension;
+  String? responseBody;
+  String? requestBody;
+  Map<String, dynamic>? requestHeaders;
+  Map<String, dynamic>? responseHeaders;
+  String url;
+  String method;
+  int? statusCode;
+
+  ExtensionNetworkLog({
+    required this.extension,
+    required this.url,
+    required this.method,
+    this.statusCode,
+    this.responseBody,
+    this.requestBody,
+    this.requestHeaders,
+    this.responseHeaders,
+  });
+
+  factory ExtensionNetworkLog.fromJson(Map<String, dynamic> json) =>
+      _$ExtensionNetworkLogFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExtensionNetworkLogToJson(this);
+}

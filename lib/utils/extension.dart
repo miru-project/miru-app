@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
-import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
@@ -13,6 +12,7 @@ import 'package:miru_app/controllers/settings_controller.dart';
 import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_directory.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/views/widgets/button.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
@@ -24,7 +24,7 @@ class ExtensionUtils {
   static Timer? _timer;
 
   static Future<String> get getExtensionsDir async =>
-      path.join(await MiruDirectory.getDirectory, 'extensions');
+      path.join(MiruDirectory.getDirectory, 'extensions');
 
   // 初始化扩展
   static ensureInitialized() async {
@@ -86,7 +86,7 @@ class ExtensionUtils {
 
   static install(String url, BuildContext context) async {
     try {
-      final res = await Dio().get<String>(url);
+      final res = await dio.get<String>(url);
       if (res.data == null) {
         throw Exception("Does not seem to be an extension");
       }
@@ -133,7 +133,6 @@ class ExtensionUtils {
       return;
     }
     final windowId = Get.find<SettingsController>().extensionLogWindowId.value;
-
     if (windowId == -1) {
       return;
     }
@@ -149,6 +148,31 @@ class ExtensionUtils {
             level: level,
           ).toJson(),
         ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static addNetworkLog(
+    String key,
+    ExtensionNetworkLog log,
+  ) {
+    if (!Get.isRegistered<SettingsController>()) {
+      return;
+    }
+    final windowId = Get.find<SettingsController>().extensionLogWindowId.value;
+    if (windowId == -1) {
+      return;
+    }
+    try {
+      DesktopMultiWindow.invokeMethod(
+        windowId,
+        "addNetworkLog",
+        jsonEncode({
+          'key': key,
+          'log': log.toJson(),
+        }),
       );
     } catch (e) {
       debugPrint(e.toString());

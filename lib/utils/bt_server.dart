@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/bt_server_provider.dart';
@@ -9,6 +8,7 @@ import 'package:miru_app/controllers/bt_dialog_controller.dart';
 import 'package:miru_app/controllers/main_controller.dart';
 import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/utils/miru_directory.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:path/path.dart' as path;
 
 class BTServerUtils {
@@ -24,7 +24,6 @@ class BTServerUtils {
     const url =
         "https://api.github.com/repos/miru-project/bt-server/releases/latest";
 
-    final dio = Dio();
     final res = dio.get(url);
     final remoteVersion = (await res).data["tag_name"] as String;
     debugPrint("最新版本: $remoteVersion");
@@ -53,7 +52,7 @@ class BTServerUtils {
     final downloadUrl =
         "https://github.com/miru-project/bt-server/releases/download/$remoteVersion/bt-server-$remoteVersion-$platform-$arch";
 
-    final savePath = await MiruDirectory.getDirectory;
+    final savePath = MiruDirectory.getDirectory;
     await dio.download(
       downloadUrl,
       path.join(savePath, _getBTServerFilename()),
@@ -70,7 +69,7 @@ class BTServerUtils {
       return;
     }
 
-    final savePath = await MiruDirectory.getDirectory;
+    final savePath = MiruDirectory.getDirectory;
     final btServerPath = path.join(savePath, _getBTServerFilename());
 
     try {
@@ -127,7 +126,7 @@ class BTServerUtils {
     try {
       const url =
           "https://api.github.com/repos/miru-project/bt-server/releases/latest";
-      final res = Dio().get(url);
+      final res = dio.get(url);
       final remoteVersion = (await res).data["tag_name"] as String;
       return remoteVersion.replaceFirst("v", '');
     } catch (e) {
@@ -138,13 +137,13 @@ class BTServerUtils {
   // 卸载 bt-server
   static Future<void> uninstall() async {
     stopServer();
-    final savePath = await MiruDirectory.getDirectory;
+    final savePath = MiruDirectory.getDirectory;
     final btServerPath = path.join(savePath, _getBTServerFilename());
     await File(btServerPath).delete();
   }
 
   static Future<bool> isInstalled() async {
-    final savePath = await MiruDirectory.getDirectory;
+    final savePath = MiruDirectory.getDirectory;
     final btServerPath = path.join(savePath, _getBTServerFilename());
     return File(btServerPath).existsSync();
   }

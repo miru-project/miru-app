@@ -7,7 +7,6 @@ environment:
   sdk: ">=3.0.3 <4.0.0"
 
 dependencies:
-  cached_network_image: ^3.2.3
   desktop_multi_window: ^0.2.0
   dio: ^5.3.2
   dio_cookie_manager: ^3.1.0+1
@@ -63,6 +62,7 @@ dependencies:
   extended_image: ^8.2.0
   flutter_hls_parser: ^2.0.1
   image_gallery_saver: ^2.0.3
+  flutter_socks_proxy: ^0.0.3
 
 dev_dependencies:
   flutter_test:
