@@ -153,35 +153,37 @@ class _ThumnailPageState extends State<_ThumnailPage> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return ExtendedImageSlidePage(
-      slideAxis: SlideAxis.both,
-      slideType: SlideType.onlyImage,
-      slidePageBackgroundHandler: (offset, pageSize) {
-        final color = Platform.isAndroid
-            ? Theme.of(context).scaffoldBackgroundColor
-            : fluent.FluentTheme.of(context).scaffoldBackgroundColor;
-        return color.withOpacity(0);
-      },
-      child: ExtendedImage.network(
-        widget.url,
-        headers: widget.headers,
-        cache: true,
-        fit: BoxFit.contain,
-        mode: ExtendedImageMode.gesture,
-        initGestureConfigHandler: (state) {
-          return GestureConfig(
-            minScale: 0.9,
-            animationMinScale: 0.7,
-            maxScale: 3.0,
-            animationMaxScale: 3.5,
-            speed: 1.0,
-            inertialSpeed: 100.0,
-            initialScale: 1.0,
-            inPageView: true,
-            reverseMousePointerScrollDirection: true,
-            initialAlignment: InitialAlignment.center,
-          );
+    return Center(
+      child: ExtendedImageSlidePage(
+        slideAxis: SlideAxis.both,
+        slideType: SlideType.onlyImage,
+        slidePageBackgroundHandler: (offset, pageSize) {
+          final color = Platform.isAndroid
+              ? Theme.of(context).scaffoldBackgroundColor
+              : fluent.FluentTheme.of(context).scaffoldBackgroundColor;
+          return color.withOpacity(0);
         },
+        child: ExtendedImage.network(
+          widget.url,
+          headers: widget.headers,
+          cache: true,
+          fit: BoxFit.contain,
+          mode: ExtendedImageMode.gesture,
+          initGestureConfigHandler: (state) {
+            return GestureConfig(
+              minScale: 0.9,
+              animationMinScale: 0.7,
+              maxScale: 3.0,
+              animationMaxScale: 3.5,
+              speed: 1.0,
+              inertialSpeed: 100.0,
+              initialScale: 1.0,
+              inPageView: true,
+              reverseMousePointerScrollDirection: true,
+              initialAlignment: InitialAlignment.center,
+            );
+          },
+        ),
       ),
     );
   }
