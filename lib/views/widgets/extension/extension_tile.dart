@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as path;
 
 class ExtensionTile extends StatefulWidget {
-  const ExtensionTile(this.extension, {Key? key}) : super(key: key);
+  const ExtensionTile(this.extension, {super.key});
   final Extension extension;
 
   @override
@@ -29,7 +29,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
       leading: SizedBox(
         width: 35,
         height: 35,
-        child: CacheNetWorkImage(
+        child: CacheNetWorkImagePic(
           widget.extension.icon ?? '',
           key: ValueKey(widget.extension.icon),
           fit: BoxFit.contain,
@@ -96,7 +96,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
                   child: SizedBox(
                     width: 45,
                     height: 45,
-                    child: CacheNetWorkImage(
+                    child: CacheNetWorkImagePic(
                       widget.extension.icon ?? '',
                       key: ValueKey(widget.extension.icon),
                       fit: BoxFit.contain,
@@ -164,18 +164,9 @@ class _ExtensionTileState extends State<ExtensionTile> {
                           text: Text('extension.edit-code'.i18n),
                           onPressed: () async {
                             fluent.Flyout.of(context).close();
-                            // final window =
-                            //     await DesktopMultiWindow.createWindow(jsonEncode({
-                            //   'name': 'code',
-                            //   'args1': 'args',
-                            // }));
-                            // window
-                            //   ..center()
-                            //   ..setTitle('code edit')
-                            //   ..show();
-
                             launchUrl(path.toUri(
-                                '${await ExtensionUtils.getExtensionsDir}/${widget.extension.package}.js'));
+                              '${ExtensionUtils.extensionsDir}/${widget.extension.package}.js',
+                            ));
                           },
                         ),
                         fluent.MenuFlyoutItem(

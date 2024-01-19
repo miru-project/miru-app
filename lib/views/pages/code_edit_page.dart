@@ -11,8 +11,8 @@ import 'package:flutter_highlight/themes/monokai-sublime.dart';
 class CodeEditPage extends StatefulWidget {
   const CodeEditPage({
     required this.extension,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   final Extension extension;
   @override
   State<CodeEditPage> createState() => _CodeEditPageState();
@@ -30,7 +30,7 @@ class _CodeEditPageState extends State<CodeEditPage> {
   }
 
   _init() async {
-    final dir = await ExtensionUtils.getExtensionsDir;
+    final dir = ExtensionUtils.extensionsDir;
     final file = File('$dir/${widget.extension.package}.js');
     if (await file.exists()) {
       final content = await file.readAsString();
@@ -39,7 +39,7 @@ class _CodeEditPageState extends State<CodeEditPage> {
   }
 
   _save() async {
-    final dir = await ExtensionUtils.getExtensionsDir;
+    final dir = ExtensionUtils.extensionsDir;
     final file = File('$dir/${widget.extension.package}.js');
     await file.writeAsString(controller.text);
     // ignore: use_build_context_synchronously

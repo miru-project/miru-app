@@ -10,18 +10,20 @@ import 'package:miru_app/views/widgets/progress.dart';
 
 class ExtensionCard extends StatefulWidget {
   const ExtensionCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.version,
     required this.icon,
     required this.package,
+    required this.lang,
     required this.nsfw,
     required this.type,
-  }) : super(key: key);
+  });
   final String? icon;
   final String name;
   final String version;
   final String package;
+  final String lang;
   final ExtensionType type;
   final bool nsfw;
 
@@ -73,42 +75,44 @@ class _ExtensionCardState extends State<ExtensionCard> {
       leading: SizedBox(
         width: 35,
         height: 35,
-        child: CacheNetWorkImage(
+        child: CacheNetWorkImagePic(
           icon,
           fit: BoxFit.contain,
           fallback: const Icon(Icons.extension),
         ),
       ),
       title: Text(widget.name),
-      subtitle: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text(
-              widget.version,
-              style: const TextStyle(fontSize: 12),
-            ),
+      subtitle: DefaultTextStyle(
+          style: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).textTheme.bodySmall!.color,
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text(
-              ExtensionUtils.typeToString(widget.type),
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-          if (widget.nsfw)
-            const Padding(
-              padding: EdgeInsets.only(right: 8),
-              child: Text(
-                '18+',
-                style: TextStyle(
-                  color: Colors.redAccent,
-                  fontSize: 12,
-                ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(widget.version),
               ),
-            ),
-        ],
-      ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(ExtensionUtils.typeToString(widget.type)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Text(widget.lang),
+              ),
+              if (widget.nsfw)
+                const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: Text(
+                    '18+',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                ),
+            ],
+          )),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -162,7 +166,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
               borderRadius: BorderRadius.circular(8),
             ),
             clipBehavior: Clip.antiAlias,
-            child: CacheNetWorkImage(
+            child: CacheNetWorkImagePic(
               icon,
               width: 64,
               height: 64,
@@ -172,27 +176,33 @@ class _ExtensionCardState extends State<ExtensionCard> {
           ),
           const SizedBox(height: 8),
           Text(widget.name, style: const TextStyle(fontSize: 17)),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Text(
-                  ExtensionUtils.typeToString(widget.type),
-                  style: const TextStyle(fontSize: 12),
+          DefaultTextStyle(
+            style: TextStyle(
+              fontSize: 12,
+              color: fluent.FluentTheme.of(context).inactiveColor,
+            ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(ExtensionUtils.typeToString(widget.type)),
                 ),
-              ),
-              if (widget.nsfw)
-                const Padding(
-                  padding: EdgeInsets.only(right: 8),
-                  child: Text(
-                    '18+',
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 12,
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(widget.lang),
+                ),
+                if (widget.nsfw)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Text(
+                      '18+',
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
           Row(
             children: [

@@ -16,9 +16,9 @@ import 'package:tmdb_api/tmdb_api.dart';
 
 class TMDBBinding extends StatefulWidget {
   const TMDBBinding({
-    Key? key,
+    super.key,
     required this.title,
-  }) : super(key: key);
+  });
   final String title;
 
   @override
@@ -59,12 +59,13 @@ class _TMDBBindingState extends State<TMDBBinding> {
       _data.addAll(result);
       _page++;
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      showPlatformSnackbar(
-        context: context,
-        content: e.toString(),
-        severity: fluent.InfoBarSeverity.error,
-      );
+      if (mounted) {
+        showPlatformSnackbar(
+          context: context,
+          content: e.toString(),
+          severity: fluent.InfoBarSeverity.error,
+        );
+      }
     } finally {
       _isLoading = false;
       if (mounted) {

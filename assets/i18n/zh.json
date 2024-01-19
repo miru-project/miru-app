@@ -1,5 +1,7 @@
 {
   "common": {
+    "anime": "动漫",
+    "manga": "漫画",
     "home": "首页",
     "search": "搜索",
     "extension": "扩展",
@@ -23,22 +25,25 @@
     "previous": "上一个",
     "show-all": "显示全部",
     "delete": "删除",
-    "delete-all": "删除全部"
+    "delete-all": "删除全部",
+    "save": "保存",
+    "save-success": "保存成功",
+    "logout": "登出",
+    "clear": "清除",
+    "export": "导出"
   },
-
   "home": {
     "continue-watching": "继续观看",
     "favorite": "收藏",
     "no-record": "暂无收藏和观看记录",
-    "watched": "看到 {ep}"
+    "watched": "看到 {ep}",
+    "favorite-all": "所有{type}收藏"
   },
-
   "search": {
     "hint-text": "请善用搜索哦!~",
     "all": "全部",
     "filter": "筛选"
   },
-
   "extension": {
     "import": {
       "title": "导入扩展",
@@ -51,15 +56,28 @@
     "installed": "已安装",
     "edit-code": "编辑代码"
   },
-
   "extension-repo": {
     "error": "发生错误了!",
     "error-tips": "请检查网络连接或者仓库地址是否正确",
     "empty": "仓库为空",
     "upgrade": "更新"
   },
-
   "settings": {
+    "general": "常规",
+    "general-subtitle": "TMDB、语言、主题、检查更新...",
+    "extension": "扩展",
+    "extension-subtitle": "扩展仓库",
+    "video-player": "视频播放器",
+    "video-player-subtitle": "BT Server、外部播放器...",
+    "comic-reader": "漫画阅读器",
+    "comic-reader-subtitle": "默认阅读模式...",
+    "tracking": "追踪",
+    "tracking-subtitle": "AniList...",
+    "auto-tracking": "自动追踪观看/阅读进度",
+    "auto-tracking-subtitle": "结束观看/阅读后自动更新进度",
+    "about": "关于",
+    "links": "链接",
+    "contributors": "贡献者",
     "repo-url": "扩展仓库地址",
     "repo-url-subtitle": "获取扩展的仓库地址",
     "tmdb-key": "TMDB API Key",
@@ -87,18 +105,29 @@
     "language-subtitle": "选择软件的语言",
     "extension-log": "扩展日志窗口",
     "extension-log-subtitle": "用于调试扩展",
-    "about": "关于",
-    "official-site": "官方网站",
-    "official-site-training": "访问官网",
-    "source-code": "开源",
-    "source-code-training": "前往 Star",
-    "license": "许可",
-    "license-subtitle": "许可证"
+    "default-reader-mode": "默认漫画阅读模式",
+    "network": "网络",
+    "network-subtitle": "代理, User-Agent...",
+    "network-ua": "Webview User-Agent",
+    "network-ua-subtitle": "修改 Webview 和扩展的请求头的 User-Agent",
+    "proxy-type": "代理类型",
+    "proxy-type-subtitle": "设置请求时的代理类型",
+    "proxy-type-direct": "不代理",
+    "proxy-type-socks4": "Socks4",
+    "proxy-type-socks5": "Socks5",
+    "proxy-type-http": "HTTP",
+    "proxy": "代理",
+    "proxy-subtitle": "代理地址 (例如 username:password@host:port)",
+    "log": "日志",
+    "log-subtitle": "保存日志, 导出日志...",
+    "save-log": "保存日志",
+    "save-log-subtitle": "自动保存日志文件",
+    "export-log": "导出日志",
+    "export-log-subtitle": "导出日志文件到本地"
   },
-
   "external-player-launching": "正在启动 {player}",
-
   "detail": {
+    "tracking": "追踪",
     "favorite": "收藏",
     "favorited": "已收藏",
     "continue-watching": "继续 {episode}",
@@ -111,7 +140,6 @@
     "no-tmdb-data": "未匹配到 TMDB 数据，请自行绑定数据",
     "tmdb-key-missing": "TMDB API Key 丢失，请前往设置填写"
   },
-
   "video": {
     "episodes": "剧集",
     "watch-now": "立即观看",
@@ -124,24 +152,20 @@
     "subtitle-file": "选择字幕文件",
     "torrent-downloading": "正在下载种子"
   },
-
   "reader": {
     "chapters": "章节",
     "read-now": "立即阅读",
     "no-chapters": "暂无章节"
   },
-
   "comic-settings": {
     "read-mode": "漫画阅读模式",
     "standard": "标准",
     "right-to-left": "从右到左",
     "web-tonn": "条漫"
   },
-
   "novel-settings": {
     "font-size": "字体大小"
   },
-
   "upgrade": {
     "check-update": "检查更新",
     "new-version": "检测到新版本 {version}",
@@ -150,15 +174,12 @@
     "not-now": "暂不更新",
     "error": "检查更新失败,网络出现异常"
   },
-
   "extension-install-error": "扩展安装错误",
-
   "extension-type": {
     "video": "影视",
     "novel": "小说",
     "comic": "漫画"
   },
-
   "extension-info": {
     "author": "作者",
     "description": "描述",
@@ -169,14 +190,12 @@
     "license": "许可",
     "title": "扩展详情"
   },
-
   "cookie-clean": {
     "title": "清除 Cookie",
     "subtitle": "清理后可能需要重新登录",
     "success": "清除成功",
     "clean": "清除"
   },
-
   "tmdb": {
     "backdrops": "剧照",
     "status": "状态",
@@ -186,7 +205,6 @@
     "runtime": "时长",
     "languages": "语言"
   },
-
   "bt-server": {
     "not-installed": "BT-Server 未安装",
     "running": "BT-Server 正在运行",
@@ -196,5 +214,26 @@
     "stop": "停止",
     "upgrade": "升级",
     "start": "启动"
+  },
+  "anilist": {
+    "title": "Anilist 追踪",
+    "login-hint-1": "你需要登录 AniList 才能使用此功能",
+    "login-hint-2": "请登录后重试",
+    "status": "状态",
+    "score": "评分",
+    "watching": "观看中",
+    "reading": "阅读中",
+    "completed": "已完成",
+    "dropped": "已放弃",
+    "planning": "计划中",
+    "hold-on": "搁置中",
+    "re-watching": "重看中",
+    "re-reading": "重读中",
+    "start-date": "开始日期",
+    "end-date": "结束日期",
+    "unbind": "取消绑定",
+    "episodes": "进度",
+    "manga-chaper-read": "看过的漫画章节: {chapters}",
+    "anime-episode-watch": "看过的动画剧集: {episodes}"
   }
 }

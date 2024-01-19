@@ -1,9 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 
 class ComicController extends ReaderController<ExtensionMangaWatch> {
   ComicController({
@@ -14,19 +18,33 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     required super.episodeGroupId,
     required super.runtime,
     required super.cover,
+    required super.anilistID,
   });
+  Map<String, MangaReadMode> readmode = {
+    'standard': MangaReadMode.standard,
+    'rightToLeft': MangaReadMode.rightToLeft,
+    'webTonn': MangaReadMode.webTonn,
+  };
+  final String setting = MiruStorage.getSetting(SettingKey.readingMode);
 
   final readType = MangaReadMode.standard.obs;
+
+  final currentScale = 1.0.obs;
+  // MangaReadMode
   // 当前页码
   final currentPage = 0.obs;
 
-  final pageController = PageController().obs;
+  final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
 
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
+
+  // 是否按下 ctrl
+
+  final isZoom = false.obs;
 
   @override
   void onInit() {
@@ -38,6 +56,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       currentPage.value = pos.index;
     });
+
     ever(readType, (callback) {
       _jumpPage(currentPage.value);
       // 保存设置
@@ -52,12 +71,14 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       if (isRecover.value || callback == null) {
         return;
       }
+
       isRecover.value = true;
       // 获取上次阅读的页码
       final history = await DatabaseService.getHistoryByPackageAndUrl(
         super.runtime.extension.package,
         super.detailUrl,
       );
+
       if (history == null ||
           history.progress.isEmpty ||
           episodeGroupId != history.episodeGroupId ||
@@ -70,11 +91,45 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     super.onInit();
   }
 
-  _initSetting() async {
-    readType.value = await DatabaseService.getMnagaReaderType(super.detailUrl);
+  onKey(RawKeyEvent event) {
+    // 按下 ctrl
+    isZoom.value = event.isControlPressed;
+    // 上下
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+      if (readType.value == MangaReadMode.webTonn) {
+        return previousPage();
+      }
+    }
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+      if (readType.value == MangaReadMode.webTonn) {
+        return nextPage();
+      }
+    }
+
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+      if (readType.value == MangaReadMode.rightToLeft) {
+        return nextPage();
+      }
+      previousPage();
+    }
+
+    if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+      if (readType.value == MangaReadMode.rightToLeft) {
+        return previousPage();
+      }
+      nextPage();
+    }
   }
 
-  _jumpPage(int page) {
+  _initSetting() async {
+    readType.value = readmode[setting] ?? MangaReadMode.standard;
+    readType.value = await DatabaseService.getMnagaReaderType(
+      super.detailUrl,
+      readType.value,
+    );
+  }
+
+  _jumpPage(int page) async {
     if (readType.value == MangaReadMode.webTonn) {
       if (itemScrollController.isAttached) {
         itemScrollController.jumpTo(
@@ -87,10 +142,11 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       pageController.value.jumpToPage(page);
       return;
     }
-    pageController.value = PageController(initialPage: page);
+    pageController.value = ExtendedPageController(initialPage: page);
   }
 
   // 下一页
+  @override
   void nextPage() {
     if (readType.value != MangaReadMode.webTonn) {
       pageController.value.nextPage(
@@ -107,6 +163,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   }
 
   // 上一页
+  @override
   void previousPage() {
     if (readType.value != MangaReadMode.webTonn) {
       pageController.value.previousPage(
@@ -132,7 +189,13 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         pages.toString(),
       );
     }
-    pageController.value.dispose();
+    if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
+      AniListProvider.editList(
+        status: AnilistMediaListStatus.current,
+        progress: playIndex + 1,
+        mediaId: anilistID,
+      );
+    }
     super.onClose();
   }
 }

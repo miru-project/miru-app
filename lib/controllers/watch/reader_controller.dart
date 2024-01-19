@@ -15,6 +15,7 @@ class ReaderController<T> extends GetxController {
   final int episodeGroupId;
   final ExtensionService runtime;
   final String? cover;
+  final String anilistID;
 
   ReaderController({
     required this.title,
@@ -23,6 +24,7 @@ class ReaderController<T> extends GetxController {
     required this.playIndex,
     required this.episodeGroupId,
     required this.runtime,
+    required this.anilistID,
     this.cover,
   });
 
@@ -44,13 +46,15 @@ class ReaderController<T> extends GetxController {
     try {
       error.value = '';
       watchData.value = null;
-      watchData.value = await runtime.watch(
-        cuurentPlayUrl,
-      ) as T;
+      watchData.value = await runtime.watch(cuurentPlayUrl) as T;
     } catch (e) {
       error.value = e.toString();
     }
   }
+
+  void previousPage() {}
+
+  void nextPage() {}
 
   showControlPanel() {
     isShowControlPanel.value = true;

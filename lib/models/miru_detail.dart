@@ -11,4 +11,5 @@ class MiruDetail {
   late String data;
   int? tmdbID;
   DateTime updateTime = DateTime.now();
+  String? aniListID;
 }

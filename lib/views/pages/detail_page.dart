@@ -18,17 +18,18 @@ import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/card_tile.dart';
 import 'package:miru_app/views/widgets/cover.dart';
+import 'package:miru_app/views/widgets/detail/detail_tracking_button.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({
-    Key? key,
+    super.key,
     required this.url,
     required this.package,
     this.tag,
-  }) : super(key: key);
+  });
   final String url;
   final String package;
   final String? tag;
@@ -105,6 +106,12 @@ class _DetailPageState extends State<DetailPage> {
                     tabs: tabs,
                   ),
                   actions: [
+                    // DetailTrackingButton
+                    DetailTrackingButton(
+                      tag: widget.tag,
+                    ),
+
+                    // webview
                     IconButton(
                       onPressed: () {
                         Get.to(
@@ -142,71 +149,76 @@ class _DetailPageState extends State<DetailPage> {
             },
             body: Padding(
               padding: const EdgeInsets.all(8),
-              child: TabBarView(
-                children: [
-                  if (!LayoutUtils.isTablet)
-                    DetailEpisodes(
+              child: SafeArea(
+                top: false,
+                child: TabBarView(
+                  children: [
+                    if (!LayoutUtils.isTablet)
+                      DetailEpisodes(
+                        tag: widget.tag,
+                      ),
+                    DetailOverView(
                       tag: widget.tag,
                     ),
-                  DetailOverView(
-                    tag: widget.tag,
-                  ),
-                  if (c.type == ExtensionType.bangumi)
-                    Obx(() {
-                      if (c.tmdbDetail == null || c.tmdbDetail!.casts.isEmpty) {
-                        return Column(
-                          children: [
-                            const SizedBox(height: 100),
-                            Text('detail.no-tmdb-data'.i18n),
-                            const SizedBox(height: 8),
-                            FilledButton(
-                              onPressed: () {
-                                c.modifyTMDBBinding();
-                              },
-                              child: Text(
-                                'detail.modify-tmdb-binding'.i18n,
-                              ),
-                            )
-                          ],
-                        );
-                      }
-                      return ListView.builder(
-                        padding: const EdgeInsets.all(0),
-                        itemBuilder: (context, index) {
-                          final cast = c.tmdbDetail!.casts[index];
-                          late String url = '';
-                          if (cast.profilePath != null) {
-                            url = TmdbApi.getImageUrl(cast.profilePath!) ?? '';
-                          }
-
-                          return ListTile(
-                            leading: Container(
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              child: CacheNetWorkImage(
-                                url,
-                                width: 50,
-                                height: 50,
-                                headers: c.detail?.headers,
-                              ),
-                            ),
-                            title: Text(cast.name),
-                            subtitle: Text(cast.character),
-                            onTap: () {
-                              launchUrl(
-                                Uri.parse(
-                                  "https://www.themoviedb.org/person/${cast.id}",
+                    if (c.type == ExtensionType.bangumi)
+                      Obx(() {
+                        if (c.tmdbDetail == null ||
+                            c.tmdbDetail!.casts.isEmpty) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 100),
+                              Text('detail.no-tmdb-data'.i18n),
+                              const SizedBox(height: 8),
+                              FilledButton(
+                                onPressed: () {
+                                  c.modifyTMDBBinding();
+                                },
+                                child: Text(
+                                  'detail.modify-tmdb-binding'.i18n,
                                 ),
-                              );
-                            },
+                              )
+                            ],
                           );
-                        },
-                        itemCount: c.tmdbDetail!.casts.length,
-                      );
-                    }),
-                ],
+                        }
+                        return ListView.builder(
+                          padding: const EdgeInsets.all(0),
+                          itemBuilder: (context, index) {
+                            final cast = c.tmdbDetail!.casts[index];
+                            late String url = '';
+                            if (cast.profilePath != null) {
+                              url =
+                                  TmdbApi.getImageUrl(cast.profilePath!) ?? '';
+                            }
+
+                            return ListTile(
+                              leading: Container(
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: CacheNetWorkImagePic(
+                                  url,
+                                  width: 50,
+                                  height: 50,
+                                  headers: c.detail?.headers,
+                                ),
+                              ),
+                              title: Text(cast.name),
+                              subtitle: Text(cast.character),
+                              onTap: () {
+                                launchUrl(
+                                  Uri.parse(
+                                    "https://www.themoviedb.org/person/${cast.id}",
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          itemCount: c.tmdbDetail!.casts.length,
+                        );
+                      }),
+                  ],
+                ),
               ),
             ),
           ),
@@ -242,7 +254,6 @@ class _DetailPageState extends State<DetailPage> {
           child: ProgressRing(),
         );
       }
-
       return Stack(
         children: [
           Animate(
@@ -250,6 +261,7 @@ class _DetailPageState extends State<DetailPage> {
               alt: c.detail?.title ?? '',
               url: c.backgorund,
               noText: true,
+              headers: c.detail?.headers,
             ),
           ).blur(
             begin: const Offset(10, 10),
@@ -275,19 +287,17 @@ class _DetailPageState extends State<DetailPage> {
                         children: [
                           if (c.detail!.cover != null)
                             if (constraints.maxWidth > 600) ...[
-                              Hero(
-                                tag: c.heroTag ?? '',
-                                child: Container(
-                                  width: 230,
-                                  height: double.infinity,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: CacheNetWorkImage(
-                                    c.detail?.cover ?? '',
-                                    headers: c.detail?.headers,
-                                  ),
+                              Container(
+                                width: 230,
+                                height: double.infinity,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: CacheNetWorkImagePic(
+                                  c.detail?.cover ?? '',
+                                  headers: c.detail?.headers,
+                                  canFullScreen: true,
                                 ),
                               ),
                               const SizedBox(width: 30),
@@ -312,6 +322,11 @@ class _DetailPageState extends State<DetailPage> {
                                   // 收藏按钮
                                   const DetailFavoriteButton(),
                                   const SizedBox(width: 8),
+                                  DetailTrackingButton(
+                                    tag: widget.tag,
+                                  ),
+                                  const SizedBox(width: 8),
+
                                   if (c.tmdbDetail != null)
                                     fluent.Button(
                                       child: const Padding(
@@ -377,9 +392,10 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                     clipBehavior: Clip.antiAlias,
                                     margin: const EdgeInsets.only(right: 8),
-                                    child: CacheNetWorkImage(
+                                    child: CacheNetWorkImagePic(
                                       url,
                                       height: 200,
+                                      canFullScreen: true,
                                     ),
                                   );
                                 },
@@ -432,7 +448,7 @@ class _DetailPageState extends State<DetailPage> {
                                                 shape: BoxShape.circle,
                                               ),
                                               clipBehavior: Clip.antiAlias,
-                                              child: CacheNetWorkImage(
+                                              child: CacheNetWorkImagePic(
                                                 url ?? '',
                                                 width: 100,
                                                 height: 100,
@@ -523,12 +539,10 @@ class _DetailPageState extends State<DetailPage> {
                                 'tmdb.runtime'.i18n,
                                 c.tmdbDetail!.runtime.toString(),
                               ),
-                            ]
-                                .map((e) => SizedBox(
-                                      width: 200,
-                                      child: e,
-                                    ))
-                                .toList(),
+                            ].map((e) => SizedBox(
+                                  width: 200,
+                                  child: e,
+                                )),
                           ]),
                         );
                       },

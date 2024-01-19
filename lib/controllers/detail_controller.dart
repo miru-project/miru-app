@@ -3,10 +3,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_windows_webview/flutter_windows_webview.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/tmdb_provider.dart';
 import 'package:miru_app/models/index.dart';
@@ -20,7 +20,6 @@ import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/utils/external_player.dart';
 import 'package:miru_app/utils/i18n.dart';
-import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/views/widgets/messenger.dart';
 
@@ -43,6 +42,7 @@ class DetailPageController extends GetxController {
   final RxString error = ''.obs;
   final RxBool isLoading = true.obs;
   final RxInt selectEpGroup = 0.obs;
+  final RxString aniListID = ''.obs;
   final Rx<TMDBDetail?> tmdb = Rx(null);
   final Rx<ExtensionService?> runtime = Rx(null);
   ExtensionType get type =>
@@ -78,23 +78,31 @@ class DetailPageController extends GetxController {
       fluent.IconButton(
         icon: const Icon(fluent.FluentIcons.pop_expand),
         onPressed: () async {
-          final webview = await WebviewWindow.create(
-            configuration: CreateConfiguration(
-              userDataFolderWindows: await MiruDirectory.getDirectory,
-              title: detail!.title,
+          final webview = FlutterWindowsWebview();
+          await webview.setUA(MiruStorage.getUASetting());
+          webview.launchWebview(
+            extension!.webSite + url,
+            WebviewOptions(
+              onNavigation: (url) {
+                if (Uri.parse(url).host != Uri.parse(extension!.webSite).host) {
+                  return false;
+                }
+                webview.getCookies(url).then((value) async {
+                  if (value.containsKey("cf_clearance")) {
+                    debugPrint("验证通过");
+                  }
+                  runtime.value!.setCookie(
+                    value.entries
+                        .map((e) => '${e.key}=${e.value}')
+                        .toList()
+                        .join(';'),
+                  );
+                });
+
+                return false;
+              },
             ),
           );
-          webview
-            ..addOnUrlRequestCallback((url) async {
-              if (Uri.parse(url).host != Uri.parse(extension!.webSite).host) {
-                return;
-              }
-              final cookies = await webview.evaluateJavaScript(
-                'document.cookie',
-              );
-              runtime.value?.setCookie(cookies!.split("\"")[1]);
-            })
-            ..launch(extension!.webSite + url);
         },
       ),
       fluent.FlyoutTarget(
@@ -136,6 +144,7 @@ class DetailPageController extends GetxController {
     try {
       _miruDetail = await DatabaseService.getMiruDetail(package, url);
       _tmdbID = _miruDetail?.tmdbID ?? -1;
+      aniListID.value = _miruDetail?.aniListID ?? "";
       await getDetail();
       await getTMDBDetail();
       await getHistory();
@@ -149,7 +158,7 @@ class DetailPageController extends GetxController {
   // 修改 tmdb 绑定
   modifyTMDBBinding() async {
     // 判断是否有 key
-    if (MiruStorage.getSetting(SettingKey.tmdbKay) == "") {
+    if (MiruStorage.getSetting(SettingKey.tmdbKey) == "") {
       showPlatformSnackbar(
         context: currentContext,
         content: 'detail.tmdb-key-missing'.i18n,
@@ -193,8 +202,13 @@ class DetailPageController extends GetxController {
   getRemoteDeatil() async {
     try {
       detail = await runtime.value!.detail(url);
-      await DatabaseService.putMiruDetail(package, url, detail!,
-          tmdbID: _tmdbID);
+      await DatabaseService.putMiruDetail(
+        package,
+        url,
+        detail!,
+        tmdbID: _tmdbID,
+        anilistID: aniListID.value,
+      );
     } catch (e) {
       // 弹出错误信息
       if (runtime.value == null) {
@@ -258,6 +272,16 @@ class DetailPageController extends GetxController {
       url,
       detail!,
       tmdbID: _tmdbID,
+      anilistID: aniListID.value,
+    );
+  }
+
+  saveAniListIds() async {
+    await DatabaseService.putMiruDetail(
+      package,
+      url,
+      detail!,
+      anilistID: aniListID.value,
     );
   }
 
@@ -277,8 +301,10 @@ class DetailPageController extends GetxController {
   }
 
   refreshFavorite() async {
-    isFavorite.value =
-        await DatabaseService.isFavorite(package: package, url: url);
+    isFavorite.value = await DatabaseService.isFavorite(
+      package: package,
+      url: url,
+    );
   }
 
   toggleFavorite() async {
@@ -390,6 +416,7 @@ class DetailPageController extends GetxController {
               title: detail!.title,
               episodeGroupId: selectEpGroup,
               detailUrl: url,
+              anilistID: aniListID.value,
             ),
           );
         }),

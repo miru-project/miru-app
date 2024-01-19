@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class ProgressRing extends StatelessWidget {
-  const ProgressRing({Key? key, this.value}) : super(key: key);
+  const ProgressRing({super.key, this.value});
   final double? value;
 
   @override
@@ -20,7 +20,7 @@ class ProgressRing extends StatelessWidget {
 }
 
 class ProgressBar extends StatelessWidget {
-  const ProgressBar({Key? key, this.value}) : super(key: key);
+  const ProgressBar({super.key, this.value});
   final double? value;
 
   @override

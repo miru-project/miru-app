@@ -7,9 +7,9 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class DetailFavoriteButton extends StatefulWidget {
   const DetailFavoriteButton({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
   final String? tag;
 
   @override

@@ -1,15 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/application_controller.dart';
-import 'package:miru_app/views/pages/log_page.dart';
+import 'package:miru_app/utils/log.dart';
+import 'package:miru_app/utils/miru_directory.dart';
+import 'package:miru_app/utils/request.dart';
+import 'package:miru_app/views/pages/debug_page.dart';
 import 'package:miru_app/views/pages/main_page.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
@@ -20,11 +22,11 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.severe("", details.exception, details.stack);
+  };
 
-  if (runWebViewTitleBarWidget(args)) {
-    return;
-  }
+  WidgetsFlutterBinding.ensureInitialized();
 
   // 多窗口
   if (args.firstOrNull == 'multi_window') {
@@ -34,7 +36,7 @@ void main(List<String> args) async {
         : jsonDecode(args[2]) as Map<String, dynamic>;
 
     Map windows = {
-      "log": ExtensionLogWindow(
+      "debug": ExtensionDebugWindow(
         windowController: WindowController.fromWindowId(windowId),
       ),
     };
@@ -43,21 +45,37 @@ void main(List<String> args) async {
   }
 
   // 主窗口
+  await MiruDirectory.ensureInitialized();
   await MiruStorage.ensureInitialized();
+  MiruLog.ensureInitialized();
   await ApplicationUtils.ensureInitialized();
+  await MiruRequest.ensureInitialized();
   ExtensionUtils.ensureInitialized();
   MediaKit.ensureInitialized();
 
   if (!Platform.isAndroid) {
     await windowManager.ensureInitialized();
-    WindowOptions windowOptions = const WindowOptions(
-      size: Size(1280, 720),
-      minimumSize: Size(600, 500),
+    final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
+    final size = Size(double.parse(sizeArr[0]), double.parse(sizeArr[1]));
+    WindowOptions windowOptions = WindowOptions(
+      size: size,
       center: true,
+      minimumSize: const Size(600, 500),
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.hidden,
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {
+      final position = MiruStorage.getSetting(SettingKey.windowPosition);
+      if (position != null) {
+        final offsetArr = position.split(",");
+        final offset = Offset(
+          double.parse(offsetArr[0]),
+          double.parse(offsetArr[1]),
+        );
+        await windowManager.setPosition(
+          offset,
+        );
+      }
       await windowManager.show();
       await windowManager.focus();
     });
@@ -69,19 +87,20 @@ void main(List<String> args) async {
       statusBarIconBrightness: Brightness.dark,
     );
     SystemChrome.setSystemUIOverlayStyle(style);
-    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
-  runApp(const MainApp());
+  runZonedGuarded(() => runApp(const MainApp()), (error, stack) {
+    logger.severe("", error, stack);
+  });
 }
 
-class MainApp extends fluent.StatefulWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
-  fluent.State<MainApp> createState() => _MainAppState();
+  State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends fluent.State<MainApp> {
+class _MainAppState extends State<MainApp> {
   late ApplicationController c;
 
   @override

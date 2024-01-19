@@ -4,21 +4,24 @@ import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/views/pages/watch/reader/comic/comic_reader_content.dart';
 import 'package:miru_app/views/pages/watch/reader/comic/comic_reader_settings.dart';
 import 'package:miru_app/controllers/watch/comic_controller.dart';
-import 'package:miru_app/views/widgets/watch/reader_view.dart';
+import 'package:miru_app/views/widgets/platform_widget.dart';
+// import 'package:miru_app/views/pages/watch/reader/comic/comic_zoom.dart';
 import 'package:miru_app/data/services/extension_service.dart';
+import 'package:miru_app/views/widgets/watch/reader_view.dart';
 import 'package:window_manager/window_manager.dart';
 
 class ComicReader extends StatefulWidget {
   const ComicReader({
-    Key? key,
+    super.key,
     required this.title,
     required this.playList,
     required this.detailUrl,
     required this.playerIndex,
     required this.episodeGroupId,
     required this.runtime,
+    required this.anilistID,
     this.cover,
-  }) : super(key: key);
+  });
 
   final String title;
   final List<ExtensionEpisode> playList;
@@ -27,6 +30,7 @@ class ComicReader extends StatefulWidget {
   final int episodeGroupId;
   final ExtensionService runtime;
   final String? cover;
+  final String anilistID;
 
   @override
   State<ComicReader> createState() => _ComicReaderState();
@@ -44,6 +48,7 @@ class _ComicReaderState extends State<ComicReader> {
         episodeGroupId: widget.episodeGroupId,
         runtime: widget.runtime,
         cover: widget.cover,
+        anilistID: widget.anilistID,
       ),
       tag: widget.title,
     );
@@ -60,9 +65,11 @@ class _ComicReaderState extends State<ComicReader> {
   Widget build(BuildContext context) {
     return ReaderView<ComicController>(
       widget.title,
-      content: DragToMoveArea(
-        child: ComicReaderContent(widget.title),
-      ),
+      content: PlatformWidget(
+          androidWidget: ComicReaderContent(widget.title),
+          desktopWidget: DragToMoveArea(
+            child: ComicReaderContent(widget.title),
+          )),
       buildSettings: (context) => ComicReaderSettings(widget.title),
     );
   }

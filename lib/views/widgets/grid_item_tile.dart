@@ -4,16 +4,18 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class GridItemTile extends StatefulWidget {
   const GridItemTile({
-    Key? key,
+    super.key,
     required this.title,
     this.cover,
     this.subtitle,
     this.onTap,
-  }) : super(key: key);
+    this.headers,
+  });
   final String title;
   final String? cover;
   final String? subtitle;
   final Function()? onTap;
+  final Map<String, String>? headers;
 
   @override
   State<GridItemTile> createState() => _GridItemTileState();
@@ -33,6 +35,7 @@ class _GridItemTileState extends State<GridItemTile> {
           child: Cover(
             alt: widget.title,
             url: widget.cover,
+            headers: widget.headers,
           ),
         ),
         Positioned(
@@ -134,6 +137,7 @@ class _GridItemTileState extends State<GridItemTile> {
                     child: Cover(
                       alt: widget.title,
                       url: widget.cover,
+                      headers: widget.headers,
                     ),
                   )),
             ),

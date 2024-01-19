@@ -2,9 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class DetailBackgroundColor extends StatefulWidget {
   const DetailBackgroundColor({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
   final ScrollController controller;
 
   @override

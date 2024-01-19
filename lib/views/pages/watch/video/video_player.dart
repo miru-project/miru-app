@@ -10,14 +10,15 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class VideoPlayer extends StatefulWidget {
   const VideoPlayer({
-    Key? key,
+    super.key,
     required this.playList,
     required this.runtime,
     required this.episodeGroupId,
     required this.playerIndex,
     required this.title,
     required this.detailUrl,
-  }) : super(key: key);
+    required this.anilistID,
+  });
 
   final String title;
   final List<ExtensionEpisode> playList;
@@ -25,6 +26,8 @@ class VideoPlayer extends StatefulWidget {
   final int playerIndex;
   final int episodeGroupId;
   final ExtensionService runtime;
+  final String anilistID;
+
   @override
   State<VideoPlayer> createState() => _VideoPlayerState();
 }
@@ -42,6 +45,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         playIndex: widget.playerIndex,
         episodeGroupId: widget.episodeGroupId,
         runtime: widget.runtime,
+        anilistID: widget.anilistID,
       ),
       tag: widget.title,
     );
@@ -58,10 +62,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
   _buildContent() {
     return Obx(() {
       final maxWidth = MediaQuery.of(context).size.width;
-      return WillPopScope(
-        onWillPop: () async {
+      return PopScope(
+        onPopInvoked: (_) async {
           await _c.onExit();
-          return true;
         },
         child: Row(
           children: [

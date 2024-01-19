@@ -6,7 +6,7 @@ import 'package:miru_app/views/pages/extension/extension_page.dart';
 import 'package:miru_app/views/pages/home_page.dart';
 import 'package:miru_app/controllers/main_controller.dart';
 import 'package:miru_app/views/pages/search/search_page.dart';
-import 'package:miru_app/views/pages/settings_page.dart';
+import 'package:miru_app/views/pages/settings/settings_page.dart';
 import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/utils/i18n.dart';
@@ -16,11 +16,11 @@ import 'package:window_manager/window_manager.dart';
 
 class DesktopMainPage extends StatefulWidget {
   const DesktopMainPage({
-    Key? key,
+    super.key,
     required this.child,
     required this.shellContext,
     required this.state,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final BuildContext? shellContext;
@@ -30,7 +30,7 @@ class DesktopMainPage extends StatefulWidget {
   State<DesktopMainPage> createState() => _DesktopMainPageState();
 }
 
-class _DesktopMainPageState extends State<DesktopMainPage> {
+class _DesktopMainPageState extends State<DesktopMainPage> with WindowListener {
   late MainController c;
 
   @override
@@ -39,7 +39,14 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
     if (MiruStorage.getSetting(SettingKey.autoCheckUpdate)) {
       ApplicationUtils.checkUpdate(context);
     }
+    windowManager.addListener(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
   }
 
   Widget _title() {
@@ -147,10 +154,30 @@ class _DesktopMainPageState extends State<DesktopMainPage> {
       ),
     );
   }
+
+  @override
+  void onWindowResize() {
+    WindowManager.instance.getSize().then((value) {
+      MiruStorage.setSetting(
+        SettingKey.windowSize,
+        "${value.width},${value.height}",
+      );
+    });
+  }
+
+  @override
+  void onWindowMove() {
+    WindowManager.instance.getPosition().then((value) {
+      MiruStorage.setSetting(
+        SettingKey.windowPosition,
+        "${value.dx},${value.dy}",
+      );
+    });
+  }
 }
 
 class AndroidMainPage extends fluent.StatefulWidget {
-  const AndroidMainPage({Key? key}) : super(key: key);
+  const AndroidMainPage({super.key});
 
   @override
   fluent.State<AndroidMainPage> createState() => _AndroidMainPageState();
@@ -180,7 +207,8 @@ class _AndroidMainPageState extends fluent.State<AndroidMainPage> {
     List<_Destination> destinations = <_Destination>[
       _Destination(Icons.home_outlined, Icons.home, 'common.home'.i18n),
       _Destination(Icons.search_outlined, Icons.search, 'common.search'.i18n),
-      _Destination(Icons.apps_outlined, Icons.apps, 'common.extension'.i18n),
+      _Destination(
+          Icons.extension_outlined, Icons.extension, 'common.extension'.i18n),
       _Destination(
           Icons.settings_outlined, Icons.settings, 'common.settings'.i18n),
     ];

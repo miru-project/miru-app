@@ -4,10 +4,10 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class PlatformButton extends StatelessWidget {
   const PlatformButton({
-    Key? key,
+    super.key,
     required this.child,
     this.onPressed,
-  }) : super(key: key);
+  });
   final Widget child;
   final VoidCallback? onPressed;
 
@@ -30,10 +30,10 @@ class PlatformButton extends StatelessWidget {
 
 class PlatformFilledButton extends StatelessWidget {
   const PlatformFilledButton({
-    Key? key,
+    super.key,
     required this.child,
     this.onPressed,
-  }) : super(key: key);
+  });
   final Widget child;
   final VoidCallback? onPressed;
 
@@ -56,10 +56,10 @@ class PlatformFilledButton extends StatelessWidget {
 
 class PlatformTextButton extends StatelessWidget {
   const PlatformTextButton({
-    Key? key,
+    super.key,
     required this.child,
     this.onPressed,
-  }) : super(key: key);
+  });
   final Widget child;
   final VoidCallback? onPressed;
 
@@ -82,10 +82,10 @@ class PlatformTextButton extends StatelessWidget {
 
 class PlatformIconButton extends StatelessWidget {
   const PlatformIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     this.onPressed,
-  }) : super(key: key);
+  });
   final Widget icon;
   final VoidCallback? onPressed;
 
@@ -108,11 +108,11 @@ class PlatformIconButton extends StatelessWidget {
 
 class PlatformToggleButton extends fluent.StatelessWidget {
   const PlatformToggleButton({
-    Key? key,
+    super.key,
     required this.checked,
     required this.onChanged,
     required this.text,
-  }) : super(key: key);
+  });
 
   final bool checked;
   final void Function(bool)? onChanged;

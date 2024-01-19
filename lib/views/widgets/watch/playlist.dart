@@ -5,12 +5,12 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class PlayList extends fluent.StatelessWidget {
   const PlayList({
-    Key? key,
+    super.key,
     required this.title,
     required this.list,
     required this.selectIndex,
     required this.onChange,
-  }) : super(key: key);
+  });
   final String title;
   final List<String> list;
   final int selectIndex;
@@ -69,11 +69,11 @@ class PlayList extends fluent.StatelessWidget {
 
 class PlaylistAndroidTile extends StatelessWidget {
   const PlaylistAndroidTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.onTap,
     required this.selected,
-  }) : super(key: key);
+  });
   final String title;
   final Function() onTap;
   final bool selected;

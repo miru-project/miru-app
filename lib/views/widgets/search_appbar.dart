@@ -37,24 +37,53 @@ class _SearchAppBarState extends State<SearchAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: _showSearch
+          ? IconButton(
+              onPressed: () {
+                setState(() {
+                  widget.textEditingController.clear();
+                  widget.onSubmitted?.call('');
+                  _showSearch = false;
+                });
+              },
+              icon: const Icon(Icons.arrow_back),
+            )
+          : null,
       title: _showSearch
-          ? TextField(
-              controller: widget.textEditingController,
-              decoration: InputDecoration(
-                hintText: widget.hintText ?? widget.title,
-                border: InputBorder.none,
+          ? PopScope(
+              canPop: false,
+              onPopInvoked: (_) async {
+                if (_showSearch) {
+                  setState(() {
+                    widget.textEditingController.clear();
+                    widget.onSubmitted?.call('');
+                    _showSearch = false;
+                  });
+                  return;
+                }
+              },
+              child: TextField(
+                controller: widget.textEditingController,
+                decoration: InputDecoration(
+                  hintText: widget.hintText ?? widget.title,
+                  border: InputBorder.none,
+                ),
+                autofocus: true,
+                onChanged: widget.onChanged,
+                onSubmitted: widget.onSubmitted,
               ),
-              autofocus: true,
-              onChanged: widget.onChanged,
-              onSubmitted: widget.onSubmitted,
             )
           : Text(widget.title),
       actions: [
         IconButton(
           onPressed: () {
             setState(() {
+              if (_showSearch) {
+                widget.textEditingController.clear();
+                widget.onSubmitted?.call('');
+                return;
+              }
               _showSearch = !_showSearch;
-              if (!_showSearch) widget.onSubmitted?.call("");
             });
           },
           icon: Icon(_showSearch ? Icons.close : Icons.search),

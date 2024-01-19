@@ -3,17 +3,20 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/data/providers/bt_server_provider.dart';
 import 'package:miru_app/models/index.dart';
+import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/dialogs/bt_dialog.dart';
 import 'package:miru_app/controllers/home_controller.dart';
 import 'package:miru_app/controllers/main_controller.dart';
@@ -28,6 +31,8 @@ import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:crypto/crypto.dart';
+import 'package:miru_app/utils/miru_storage.dart';
+import 'package:flutter_hls_parser/flutter_hls_parser.dart';
 
 class VideoPlayerController extends GetxController {
   final String title;
@@ -36,6 +41,7 @@ class VideoPlayerController extends GetxController {
   final int playIndex;
   final int episodeGroupId;
   final ExtensionService runtime;
+  final String anilistID;
 
   VideoPlayerController({
     required this.title,
@@ -44,6 +50,7 @@ class VideoPlayerController extends GetxController {
     required this.playIndex,
     required this.episodeGroupId,
     required this.runtime,
+    required this.anilistID,
   });
 
   final player = Player();
@@ -53,11 +60,13 @@ class VideoPlayerController extends GetxController {
   final isFullScreen = false.obs;
   late final index = playIndex.obs;
   final subtitles = <ExtensionBangumiWatchSubtitle>[].obs;
+  final keyboardShortcuts = <ShortcutActivator, VoidCallback>{};
   final selectedSubtitle = 0.obs;
-
+  final currentQality = "".obs;
+  final qualityUrls = <String, String>{};
   // 是否已经自动跳转到上次播放进度
   bool _isAutoSeekPosition = false;
-
+  Map<String, String>? videoheaders = {};
   final messageQueue = <Message>[];
 
   final Rx<Widget?> cuurentMessageWidget = Rx(null);
@@ -65,20 +74,28 @@ class VideoPlayerController extends GetxController {
   final speed = 1.0.obs;
 
   final torrentMediaFileList = <String>[].obs;
-
   final currentTorrentFile = ''.obs;
 
   String _torrenHash = "";
-
+  final ReceivePort qualityRereceivePort = ReceivePort();
+  Isolate? qualityReceiver;
   // 复制当前 context
 
   @override
-  void onInit() {
+  void onInit() async {
     if (Platform.isAndroid) {
       // 切换到横屏
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    }
+
+    if (player.platform is NativePlayer) {
+      await (player.platform as dynamic).setProperty('cache', 'yes');
+      await (player.platform as dynamic)
+          .setProperty('demuxer-readahead-secs', '20');
+      await (player.platform as dynamic)
+          .setProperty('demuxer-max-bytes', '30MiB');
     }
     play();
 
@@ -98,7 +115,6 @@ class VideoPlayerController extends GetxController {
         isOpenSidebar.value = false;
       }
     });
-
     // 切换字幕
     ever(selectedSubtitle, (callback) {
       if (callback == -1) {
@@ -162,12 +178,28 @@ class VideoPlayerController extends GetxController {
         index.value++;
       }
     });
-
+    //畫質的listener
+    qualityRereceivePort.listen((message) async {
+      debugPrint("${message.keys} get");
+      final resolution = message['resolution'];
+      final urls = message['urls'];
+      qualityUrls.addAll(Map.fromIterables(resolution, urls));
+      qualityRereceivePort.close();
+      qualityReceiver!.kill();
+    });
+    //讀取現在的畫質
+    player.stream.height.listen((event) async {
+      if (player.state.width != null) {
+        final width = player.state.width;
+        currentQality.value = "${width}x$event";
+      }
+    });
     // 自动恢复上次播放进度
     player.stream.duration.listen((event) async {
       if (_isAutoSeekPosition || event.inSeconds == 0) {
         return;
       }
+
       // 获取上次播放进度
       final history = await DatabaseService.getHistoryByPackageAndUrl(
         runtime.extension.package,
@@ -190,6 +222,57 @@ class VideoPlayerController extends GetxController {
     });
 
     super.onInit();
+    keyboardShortcuts.addAll({
+      const SingleActivator(LogicalKeyboardKey.mediaPlay): () => player.play(),
+      const SingleActivator(LogicalKeyboardKey.mediaPause): () =>
+          player.pause(),
+      const SingleActivator(LogicalKeyboardKey.mediaPlayPause): () =>
+          player.playOrPause(),
+      const SingleActivator(LogicalKeyboardKey.mediaTrackNext): () =>
+          player.next(),
+      const SingleActivator(LogicalKeyboardKey.mediaTrackPrevious): () =>
+          player.previous(),
+      const SingleActivator(LogicalKeyboardKey.space): () =>
+          player.playOrPause(),
+      const SingleActivator(LogicalKeyboardKey.keyJ): () {
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.keyJ) * 1000).toInt());
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.keyI): () {
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.keyI) * 1000).toInt());
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.arrowLeft) * 1000)
+                        .toInt());
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowRight): () {
+        final rate = player.state.position +
+            Duration(
+                milliseconds:
+                    (MiruStorage.getSetting(SettingKey.arrowRight) * 1000)
+                        .toInt());
+        player.seek(rate);
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowUp): () {
+        final volume = player.state.volume + 5.0;
+        player.setVolume(volume.clamp(0.0, 100.0));
+      },
+      const SingleActivator(LogicalKeyboardKey.arrowDown): () {
+        final volume = player.state.volume - 5.0;
+        player.setVolume(volume.clamp(0.0, 100.0));
+      },
+    });
   }
 
   play() async {
@@ -203,6 +286,7 @@ class VideoPlayerController extends GetxController {
       selectedSubtitle.value = -1;
       final playUrl = playList[index.value].url;
       final watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
+      videoheaders = watchData.headers;
 
       if (watchData.type == ExtensionWatchBangumiType.torrent) {
         if (Get.find<MainController>().btServerisRunning.value == false) {
@@ -215,10 +299,10 @@ class VideoPlayerController extends GetxController {
         );
         // 下载 torrent
         final torrentFile = path.join(
-          await MiruDirectory.getCacheDirectory,
+          MiruDirectory.getCacheDirectory,
           'temp.torrent',
         );
-        await Dio().download(watchData.url, torrentFile);
+        await dio.download(watchData.url, torrentFile);
         final file = File(torrentFile);
         _torrenHash = await BTServerApi.addTorrent(file.readAsBytesSync());
 
@@ -240,6 +324,28 @@ class VideoPlayerController extends GetxController {
         }
         playTorrentFile(torrentMediaFileList.first);
       } else {
+        //背景取得畫質
+        qualityReceiver = await Isolate.spawn((SendPort sendport) async {
+          try {
+            final response = await dio.get(
+              watchData.url,
+              options: Options(
+                headers: watchData.headers,
+              ),
+            );
+            final playList = await HlsPlaylistParser.create().parseString(
+                Uri.parse(watchData.url), response.data) as HlsMasterPlaylist;
+            List<String> urlList =
+                playList.mediaPlaylistUrls.map((e) => e.toString()).toList();
+            final resolution = playList.variants
+                .map((it) => "${it.format.width}x${it.format.height}");
+            debugPrint("get sources");
+            sendport.send({'resolution': resolution, 'urls': urlList});
+          } catch (error) {
+            debugPrint('Error: $error');
+          }
+        }, qualityRereceivePort.sendPort);
+
         await player.open(Media(watchData.url, httpHeaders: watchData.headers));
         if (watchData.audioTrack != null) {
           await player.setAudioTrack(AudioTrack.uri(watchData.audioTrack!));
@@ -264,6 +370,7 @@ class VideoPlayerController extends GetxController {
         await Future.delayed(const Duration(seconds: 3));
 
         play();
+
         return;
       }
       sendMessage(
@@ -287,6 +394,23 @@ class VideoPlayerController extends GetxController {
     isFullScreen.value = !isFullScreen.value;
   }
 
+  switchQuality(String qualityUrl) async {
+    final currentSecond = player.state.position.inSeconds;
+    try {
+      await player.open(Media(qualityUrl, httpHeaders: videoheaders));
+      //跳轉到切換之前的時間
+      Timer.periodic(const Duration(seconds: 1), (timer) {
+        player.seek(Duration(seconds: currentSecond));
+        if (player.state.position.inSeconds == currentSecond) {
+          timer.cancel();
+        }
+      });
+    } catch (e) {
+      await Future.delayed(const Duration(seconds: 3));
+      player.open(Media(qualityUrl, httpHeaders: videoheaders));
+    }
+  }
+
   onExit() async {
     if (_torrenHash.isNotEmpty) {
       BTServerApi.removeTorrent(_torrenHash);
@@ -296,7 +420,7 @@ class VideoPlayerController extends GetxController {
       return;
     }
 
-    final tempDir = await MiruDirectory.getCacheDirectory;
+    final tempDir = MiruDirectory.getCacheDirectory;
     final coverDir = path.join(tempDir, 'history_cover');
     Directory(coverDir).createSync(recursive: true);
     final epName = playList[index.value].name;
@@ -374,6 +498,15 @@ class VideoPlayerController extends GetxController {
         DeviceOrientation.portraitDown,
       ]);
     }
+
+    if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
+      AniListProvider.editList(
+        status: AnilistMediaListStatus.current,
+        progress: playIndex + 1,
+        mediaId: anilistID,
+      );
+    }
+
     super.onClose();
   }
 }

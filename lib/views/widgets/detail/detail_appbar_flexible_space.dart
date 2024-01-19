@@ -9,9 +9,9 @@ import 'package:miru_app/views/widgets/cover.dart';
 
 class DetailAppbarflexibleSpace extends StatefulWidget {
   const DetailAppbarflexibleSpace({
-    Key? key,
+    super.key,
     this.tag,
-  }) : super(key: key);
+  });
 
   final String? tag;
 
@@ -24,6 +24,10 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
   late DetailPageController c = Get.find(tag: widget.tag);
 
   double _offset = 1;
+  // static const anlistExtensionMap = <ExtensionType, String>{
+  //   ExtensionType.bangumi: "ANIME",
+  //   ExtensionType.manga: "MANGA",
+  // };
 
   @override
   void initState() {
@@ -71,6 +75,7 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                       alt: c.data.value?.title ?? '',
                       url: c.backgorund,
                       noText: true,
+                      headers: c.detail?.headers,
                     ),
             ),
             Positioned.fill(
@@ -105,10 +110,11 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
                           width: 100,
                           child: c.isLoading.value
                               ? const Center(child: CircularProgressIndicator())
-                              : CacheNetWorkImage(
+                              : CacheNetWorkImagePic(
                                   c.data.value?.cover ?? '',
                                   fit: BoxFit.cover,
                                   headers: c.detail?.headers,
+                                  canFullScreen: true,
                                 ),
                         ),
                       ),
@@ -143,16 +149,14 @@ class _DetailAppbarflexibleSpaceState extends State<DetailAppbarflexibleSpace> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 4,
                     child: DetailContinuePlay(
                       tag: widget.tag,
                     ),
                   ),
                   const SizedBox(
-                    width: 10,
+                    width: 20,
                   ),
                   Expanded(
-                    flex: 3,
                     child: DetailFavoriteButton(
                       tag: widget.tag,
                     ),

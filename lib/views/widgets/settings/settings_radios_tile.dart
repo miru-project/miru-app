@@ -1,11 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
-import 'package:miru_app/views/widgets/settings_tile.dart';
+import 'package:miru_app/views/widgets/settings/settings_tile.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class SettingsRadiosTile<T> extends StatefulWidget {
   const SettingsRadiosTile({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     this.buildSubtitle,
@@ -13,7 +13,8 @@ class SettingsRadiosTile<T> extends StatefulWidget {
     required this.applyValue,
     required this.buildGroupValue,
     this.trailing = const Icon(Icons.chevron_right),
-  }) : super(key: key);
+    this.isCard = false,
+  });
   final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;
@@ -21,6 +22,7 @@ class SettingsRadiosTile<T> extends StatefulWidget {
   final Map<String, T> itemNameValue;
   final T Function() buildGroupValue;
   final Widget trailing;
+  final bool isCard;
 
   @override
   State<SettingsRadiosTile<T>> createState() => _SettingsRadiosTileState<T>();
@@ -29,6 +31,7 @@ class SettingsRadiosTile<T> extends StatefulWidget {
 class _SettingsRadiosTileState<T> extends State<SettingsRadiosTile<T>> {
   Widget _buildAndroid(BuildContext context) {
     return SettingsTile(
+      isCard: widget.isCard,
       icon: widget.icon,
       title: widget.title,
       buildSubtitle: widget.buildSubtitle,
@@ -62,6 +65,7 @@ class _SettingsRadiosTileState<T> extends State<SettingsRadiosTile<T>> {
 
   Widget _buildDesktop(BuildContext context) {
     return SettingsTile(
+      isCard: widget.isCard,
       icon: widget.icon,
       title: widget.title,
       buildSubtitle: widget.buildSubtitle,

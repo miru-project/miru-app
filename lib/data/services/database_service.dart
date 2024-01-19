@@ -96,21 +96,6 @@ class DatabaseService {
   // 更新历史
 
   static Future<Id> putHistory(History history) async {
-    // 判断是否存在，存在则更新
-    // final hst = await getHistoryByPackageAndUrl(history.package, history.url);
-    // if (hst != null) {
-    //   hst
-    //     ..date = DateTime.now()
-    //     ..cover = history.cover
-    //     ..title = history.title
-    //     ..episodeGroupId = history.episodeGroupId
-    //     ..episodeId = history.episodeId
-    //     ..episodeTitle = history.episodeTitle
-    //     ..progress = history.progress
-    //     ..totalProgress = history.totalProgress;
-    //   return db.writeTxn(() => db.historys.put(hst));
-    // }
-
     return db.writeTxn(() => db.historys.putByIndex(r'package&url', history));
   }
 
@@ -221,9 +206,10 @@ class DatabaseService {
   }
 
   // 获取漫画阅读模式
-  static Future<MangaReadMode> getMnagaReaderType(String url) {
+  static Future<MangaReadMode> getMnagaReaderType(
+      String url, MangaReadMode defaultMode) {
     return db.mangaSettings.filter().urlEqualTo(url).findFirst().then(
-          (value) => value?.readMode ?? MangaReadMode.standard,
+          (value) => value?.readMode ?? defaultMode,
         );
   }
 
@@ -247,6 +233,7 @@ class DatabaseService {
     String url,
     ExtensionDetail extensionDetail, {
     int? tmdbID,
+    String? anilistID,
   }) {
     return db.writeTxn(
       () => db.miruDetails.putByIndex(
@@ -255,7 +242,8 @@ class DatabaseService {
           ..data = jsonEncode(extensionDetail.toJson())
           ..package = package
           ..tmdbID = tmdbID
-          ..url = url,
+          ..url = url
+          ..aniListID = anilistID,
       ),
     );
   }

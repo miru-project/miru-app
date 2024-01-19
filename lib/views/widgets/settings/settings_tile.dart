@@ -4,18 +4,20 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 
 class SettingsTile extends StatefulWidget {
   const SettingsTile({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     this.trailing,
     this.buildSubtitle,
     this.onTap,
-  }) : super(key: key);
+    this.isCard = false,
+  });
   final Widget? icon;
   final String title;
   final String Function()? buildSubtitle;
   final Function()? onTap;
   final Widget? trailing;
+  final bool isCard;
 
   @override
   State<SettingsTile> createState() => _SettingsTileState();
@@ -26,15 +28,16 @@ class _SettingsTileState extends State<SettingsTile> {
     return ListTile(
       leading: widget.icon,
       title: Text(widget.title),
-      subtitle: Text(widget.buildSubtitle?.call() ?? ""),
+      subtitle: widget.buildSubtitle != null
+          ? Text(widget.buildSubtitle!.call())
+          : null,
       trailing: widget.trailing,
       onTap: widget.onTap,
     );
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return fluent.Card(
-        child: Row(
+    Widget content = Row(
       children: [
         if (widget.icon != null) ...[
           widget.icon!,
@@ -42,18 +45,41 @@ class _SettingsTileState extends State<SettingsTile> {
         ],
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(widget.title),
-            Text(
-              widget.buildSubtitle?.call() ?? "",
-              style: const TextStyle(fontSize: 12),
-            )
+            if (widget.buildSubtitle != null)
+              Text(
+                widget.buildSubtitle!.call(),
+                style: const TextStyle(fontSize: 12),
+              )
           ],
         ),
         const Spacer(),
         widget.trailing ?? const SizedBox(),
       ],
-    ));
+    );
+
+    if (widget.onTap != null) {
+      content = MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          behavior: HitTestBehavior.opaque,
+          child: content,
+        ),
+      );
+    }
+
+    if (widget.isCard) {
+      return fluent.Card(
+        child: content,
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: content,
+    );
   }
 
   @override

@@ -9,7 +9,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class NovelReaderContent extends StatefulWidget {
-  const NovelReaderContent(this.tag, {Key? key}) : super(key: key);
+  const NovelReaderContent(this.tag, {super.key});
   final String tag;
 
   @override

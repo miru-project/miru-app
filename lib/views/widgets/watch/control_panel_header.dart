@@ -12,9 +12,9 @@ import 'package:window_manager/window_manager.dart';
 class ControlPanelHeader<T extends ReaderController> extends StatefulWidget {
   const ControlPanelHeader(
     this.tag, {
-    Key? key,
+    super.key,
     required this.buildSettings,
-  }) : super(key: key);
+  });
   final String tag;
   final Widget Function(BuildContext context) buildSettings;
 

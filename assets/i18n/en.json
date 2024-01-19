@@ -3,15 +3,18 @@
     "be": "Беларуская",
     "en": "English",
     "es": "Español",
+    "fr": "Français",
     "ja": "日本語",
     "ru": "Русский",
     "ryu": "うちなーぐち",
     "uk": "Українська",
     "zh": "中文",
+    "zhHant": "繁體中文",
     "hi": "हिंदी"
   },
-
   "common": {
+    "anime": "Anime",
+    "manga": "Manga",
     "home": "Home",
     "search": "Search",
     "extension": "Extensions",
@@ -35,22 +38,27 @@
     "previous": "Previous",
     "show-all": "Show all",
     "delete": "Delete",
-    "delete-all": "Delete all"
+    "delete-all": "Delete all",
+    "save": "Save",
+    "save-success": "Save success",
+    "logout": "Logout",
+    "login": "Login",
+    "no-data": "No data",
+    "clear": "Clear",
+    "export": "Export"
   },
-
   "home": {
     "continue-watching": "Continue",
     "favorite": "Favorite",
     "no-record": "No favorites or viewing records",
-    "watched": "Watched {ep}"
+    "watched": "Watched {ep}",
+    "favorite-all": "All {type} favourites"
   },
-
   "search": {
     "hint-text": "Please use search wisely!~",
     "all": "All",
     "filter": "Filter"
   },
-
   "extension": {
     "import": {
       "title": "Import Extension",
@@ -63,15 +71,28 @@
     "installed": "Installed",
     "edit-code": "Edit Code"
   },
-
   "extension-repo": {
     "error": "An error occurred!",
     "error-tips": "Please check your network connection or the repository address",
     "empty": "Repository is empty",
     "upgrade": "Update"
   },
-
   "settings": {
+    "general": "General",
+    "general-subtitle": "TMDB, Language, Theme, check for updates...",
+    "extension": "Extensions",
+    "extension-subtitle": "Extension repository",
+    "video-player": "Video Player",
+    "video-player-subtitle": "BT Server, External Player...",
+    "comic-reader": "Comic Reader",
+    "comic-reader-subtitle": "Default reader mode...",
+    "tracking": "Tracking",
+    "tracking-subtitle": "AniList...",
+    "auto-tracking": "Auto Tracking",
+    "auto-tracking-subtitle": "Automatically sync progress when finished watching / reading",
+    "about": "About",
+    "links": "Links",
+    "contributors": "Contributors",
     "repo-url": "Extension Repository URL",
     "repo-url-subtitle": "Get the repository URL for extensions",
     "tmdb-key": "TMDB API Key",
@@ -99,18 +120,31 @@
     "language-subtitle": "Change the language of the software",
     "extension-log": "Extension Log Window",
     "extension-log-subtitle": "Used for debugging extensions",
-    "about": "About",
-    "official-site": "Official Website",
-    "official-site-training": "Visit",
-    "source-code": "Open Source",
-    "source-code-training": "Give Star",
-    "license": "License",
-    "license-subtitle": "License"
+    "skip-interval": "Skip Interval",
+    "skip-interval-subtitle": "Skipping interval for builtin video player",
+    "default-reader-mode": "Default reader mode",
+    "network": "Network",
+    "network-subtitle": "Proxy, User-Agent...",
+    "network-ua": "Webview User-Agent",
+    "network-ua-subtitle": "Modify the User-Agent in the request header for Webviews and extensions.",
+    "proxy-type": "Proxy Type",
+    "proxy-type-subtitle": "Proxy type for requests",
+    "proxy-type-direct": "Direct",
+    "proxy-type-socks4": "Socks4",
+    "proxy-type-socks5": "Socks5",
+    "proxy-type-http": "HTTP",
+    "proxy": "Proxy",
+    "proxy-subtitle": "Proxy address (e.g. username:password@host:port)",
+    "log": "Log",
+    "log-subtitle": "Save log, export log...",
+    "save-log": "Save Log",
+    "save-log-subtitle": "Auto save log file",
+    "export-log": "Export Log",
+    "export-log-subtitle": "Export log file"
   },
-
   "external-player-launching": "Launching {player}",
-
   "detail": {
+    "tracking": "Tracking",
     "favorite": "Favorite",
     "favorited": "Favorited",
     "continue-watching": "Continue {episode}",
@@ -121,9 +155,9 @@
     "get-lastest-data-error": "Failed to get latest data",
     "modify-tmdb-binding": "Modify TMDB Binding",
     "no-tmdb-data": "No TMDB data matched, please bind the data yourself",
-    "tmdb-key-missing": "TMDB API Key missing, please fill in the settings"
+    "tmdb-key-missing": "TMDB API Key missing, please fill in the settings",
+    "tracker": "Tracking"
   },
-
   "video": {
     "episodes": "Episodes",
     "watch-now": "Watch Now",
@@ -134,26 +168,41 @@
     "subtitle": "Subtitle",
     "subtitle-change": "Change Subtitle {title}",
     "subtitle-file": "Subtitle File",
-    "torrent-downloading": "Torrent downloading"
+    "torrent-downloading": "Torrent downloading",
+    "tooltip": {
+      "close": "Close",
+      "subtitle": "Subtitle",
+      "play-list": "Play List",
+      "quality": "Quality",
+      "speed": "Speed",
+      "play": "Play",
+      "play-or-pause": "Pause",
+      "previous": "Previous",
+      "next": "Next",
+      "full-screen": "Full Screen",
+      "volume": "Volume",
+      "torrent-file-list": "Torrent file list"
+    }
   },
-
   "comic-settings": {
     "read-mode": "Read mode",
     "standard": "Standard",
     "right-to-left": "Right to left",
     "web-tonn": "Webtoon"
   },
-
   "novel-settings": {
     "font-size": "Font size"
   },
-
+  "bugreport": {
+    "auto-remove-subtitle": "delete in ~ days",
+    "show-report-dialog": "Show Report Dialog",
+    "show-report-dialog-subtitle": "Show error report dialog when app starts"
+  },
   "reader": {
     "chapters": "Chapters",
     "read-now": "Read Now",
     "no-chapters": "No chapters"
   },
-
   "upgrade": {
     "check-update": "Check for Updates",
     "new-version": "New version {version} detected",
@@ -162,15 +211,12 @@
     "not-now": "Not now",
     "error": "Failed to check for updates, network error occurred"
   },
-
   "extension-install-error": "Failed to install extension",
-
   "extension-type": {
     "video": "Video",
     "novel": "Novel",
     "comic": "Comic"
   },
-
   "extension-info": {
     "author": "Author",
     "description": "Description",
@@ -181,14 +227,12 @@
     "license": "License",
     "title": "Extension Info"
   },
-
   "cookie-clean": {
     "title": "Cookie Clean",
     "subtitle": "You may need to log in again after the cleanup",
     "success": "Clean success",
     "clean": "Clean"
   },
-
   "tmdb": {
     "backdrops": "Backdrops",
     "status": "Status",
@@ -198,7 +242,6 @@
     "runtime": "Runtime",
     "languages": "Languages"
   },
-
   "bt-server": {
     "not-installed": "BT-Server not installed",
     "running": "BT-Server is running",
@@ -208,5 +251,34 @@
     "stop": "Stop",
     "upgrade": "Upgrade",
     "start": "Start"
+  },
+  "report": {
+    "copied": "Copied to clipboard",
+    "github-bug-report": "Report to Github issue",
+    "title": "Bug Report",
+    "copy-message": "Copy error message",
+    "show-report-checkbox": "Show report dialog when app starts"
+  },
+  "anilist": {
+    "title": "Anilist Tracking",
+    "login-hint-1": "Seems you haven't login into AniList yet",
+    "login-hint-2": "Please login into AniList first",
+    "status": "Status",
+    "score": "Score",
+    "watching": "Watching",
+    "reading": "reading",
+    "completed": "Completed",
+    "paused": "Paused",
+    "dropped": "Dropped",
+    "planning": "Planning",
+    "hold-on": "Hold on",
+    "re-watching": "Re-watching",
+    "re-reading": "Re-reading",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "unbind": "Unbind",
+    "episodes": "Episodes",
+    "manga-chaper-read": "Manga Chaper Read: {chapters}",
+    "anime-episode-watch": "Anime Episode Watched: {episodes}"
   }
 }

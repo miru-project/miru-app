@@ -7,15 +7,16 @@ import 'package:miru_app/utils/extension.dart';
 
 class WatchPage extends StatelessWidget {
   const WatchPage({
-    Key? key,
+    super.key,
     required this.playList,
     required this.package,
     required this.title,
     required this.playerIndex,
     required this.episodeGroupId,
     required this.detailUrl,
+    required this.anilistID,
     this.cover,
-  }) : super(key: key);
+  });
   final List<ExtensionEpisode> playList;
   final int playerIndex;
   final String title;
@@ -23,6 +24,7 @@ class WatchPage extends StatelessWidget {
   final String detailUrl;
   final int episodeGroupId;
   final String? cover;
+  final String anilistID;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class WatchPage extends StatelessWidget {
           // 用来存储历史记录了
           episodeGroupId: episodeGroupId,
           detailUrl: detailUrl,
+          anilistID: anilistID,
         );
       case ExtensionType.manga:
         return ComicReader(
@@ -47,6 +50,7 @@ class WatchPage extends StatelessWidget {
           episodeGroupId: episodeGroupId,
           runtime: runtime,
           cover: cover,
+          anilistID: anilistID,
         );
       default:
         return NovelReader(
@@ -57,6 +61,7 @@ class WatchPage extends StatelessWidget {
           title: title,
           detailUrl: detailUrl,
           cover: cover,
+          anilistID: anilistID,
         );
     }
   }

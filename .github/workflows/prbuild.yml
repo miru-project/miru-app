@@ -23,7 +23,7 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.13.0
+          flutter-version: 3.16.1
           channel: stable
       - name: Decode keystore
         run: |
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.13.0
+          flutter-version: 3.16.1
           channel: stable
       - name: Install project dependencies
         run: flutter pub get
@@ -72,10 +72,10 @@ jobs:
         run: flutter build windows --release
       - name: Rename Release Directory Name to Miru-App # 为了解压缩后更好看一点
         run: |
-          mv build/windows/runner/Release build/windows/runner/Miru-App
+          mv build/windows/x64/runner/Release build/windows/x64/runner/Miru-App
       # 发布安装包
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          path: "build/windows/runner/Miru-App"
+          path: "build/windows/x64/runner/Miru-App"
           name: Miru-pr-${{ github.event.pull_request.number }}-windows.zip

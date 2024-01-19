@@ -3,24 +3,23 @@ import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 
 class ExtensionLogTile extends StatelessWidget {
-  const ExtensionLogTile({Key? key, required this.log}) : super(key: key);
+  const ExtensionLogTile({super.key, required this.log});
   final ExtensionLog log;
 
   @override
   Widget build(BuildContext context) {
+    Color? color;
+
+    if (log.level == ExtensionLogLevel.error) {
+      color = Colors.red;
+    }
+
     return Container(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(10),
+      color: color?.withAlpha(50),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(5),
-            color: log.level == ExtensionLogLevel.error
-                ? Colors.red
-                : Colors.green,
-            child: Text(log.time.toString()),
-          ),
-          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +41,7 @@ class ExtensionLogTile extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               clipBehavior: Clip.antiAlias,
-              child: CacheNetWorkImage(
+              child: CacheNetWorkImagePic(
                 log.extension.icon!,
                 width: 32,
                 height: 32,

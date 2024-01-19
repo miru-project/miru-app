@@ -9,15 +9,16 @@ import 'package:miru_app/data/services/extension_service.dart';
 
 class NovelReader extends StatefulWidget {
   const NovelReader({
-    Key? key,
+    super.key,
     required this.playList,
     required this.runtime,
     required this.episodeGroupId,
     required this.playerIndex,
     required this.title,
     required this.detailUrl,
+    required this.anilistID,
     this.cover,
-  }) : super(key: key);
+  });
 
   final String title;
   final List<ExtensionEpisode> playList;
@@ -26,6 +27,7 @@ class NovelReader extends StatefulWidget {
   final int episodeGroupId;
   final ExtensionService runtime;
   final String? cover;
+  final String anilistID;
 
   @override
   State<NovelReader> createState() => _NovelReaderState();
@@ -43,6 +45,7 @@ class _NovelReaderState extends State<NovelReader> {
         episodeGroupId: widget.episodeGroupId,
         runtime: widget.runtime,
         cover: widget.cover,
+        anilistID: widget.anilistID,
       ),
       tag: widget.title,
     );

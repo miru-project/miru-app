@@ -9,11 +9,11 @@ import 'package:miru_app/views/widgets/progress.dart';
 
 class SearchAllTile extends StatefulWidget {
   const SearchAllTile({
-    Key? key,
+    super.key,
     required this.searchResult,
     required this.onClickMore,
     required this.kw,
-  }) : super(key: key);
+  });
 
   final String kw;
   final SearchResult searchResult;
@@ -55,6 +55,7 @@ class _SearchAllTileState extends State<SearchAllTile> {
                   width: Platform.isAndroid ? 110 : 170,
                   margin: const EdgeInsets.only(right: 16),
                   child: ExtensionItemCard(
+                    headers: data[index].headers,
                     key: ValueKey(data[index].url),
                     title: data[index].title,
                     url: data[index].url,

@@ -8,7 +8,7 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/button.dart';
 
 class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
-  const ControlPanelFooter(this.tag, {Key? key}) : super(key: key);
+  const ControlPanelFooter(this.tag, {super.key});
   final String tag;
 
   @override
@@ -19,7 +19,7 @@ class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: Platform.isAndroid
-            ? Theme.of(context).colorScheme.background
+            ? Theme.of(context).colorScheme.background.withOpacity(0.9)
             : Colors.transparent,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(40),
