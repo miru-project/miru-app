@@ -49,12 +49,10 @@ class _WebViewPageState extends State<WebViewPage> {
       ),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(url),
+          url: WebUri(url),
         ),
-        initialOptions: InAppWebViewGroupOptions(
-          crossPlatform: InAppWebViewOptions(
-            userAgent: MiruStorage.getUASetting(),
-          ),
+        initialSettings: InAppWebViewSettings(
+          userAgent: MiruStorage.getUASetting(),
         ),
         onLoadStart: (controller, url) {
           setState(() {
