@@ -32,7 +32,7 @@ Miru App
 - Unify the design language of the system UI
 - Automatically fetch TMDB metadata information
 - Support for AniList tracking
-- Supoort for Proxy Server Protocols (HTTP, SOCKS4, SOCKS5)
+- Support for Proxy Server Protocols (HTTP, SOCKS4, SOCKS5)
 
 ## Todo
 
