@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/application_controller.dart';
+import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/pages/debug_page.dart';
@@ -21,118 +22,85 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main(List<String> args) async {
-  await runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.severe("", details.exception, details.stack);
+  };
 
-    // 多窗口
-    if (args.firstOrNull == 'multi_window') {
-      final windowId = int.parse(args[1]);
-      final arguments = args[2].isEmpty
-          ? const {}
-          : jsonDecode(args[2]) as Map<String, dynamic>;
+  WidgetsFlutterBinding.ensureInitialized();
 
-      Map windows = {
-        "debug": ExtensionDebugWindow(
-          windowController: WindowController.fromWindowId(windowId),
-        ),
-      };
-      runApp(windows[arguments["name"]]);
-      return;
-    }
+  // 多窗口
+  if (args.firstOrNull == 'multi_window') {
+    final windowId = int.parse(args[1]);
+    final arguments = args[2].isEmpty
+        ? const {}
+        : jsonDecode(args[2]) as Map<String, dynamic>;
 
-    // 主窗口
-    await MiruDirectory.ensureInitialized();
-    await MiruStorage.ensureInitialized();
-    await ApplicationUtils.ensureInitialized();
-    await MiruRequest.ensureInitialized();
-    ExtensionUtils.ensureInitialized();
-    MediaKit.ensureInitialized();
-
-    // 主窗口
-    final errorLog = MiruStorage.getSetting(SettingKey.errorMessage);
-    final removeDate = MiruStorage.getSetting(SettingKey.logRemoveDateDiff);
-    //remove after 7 days
-    errorLog.removeWhere((log) {
-      return DateTime.now().difference(log['time']).inDays > removeDate;
-    });
-    //Error handler
-    FlutterError.onError = (details) {
-      if (details.stack == null) {
-        _onError(details.context.toString(), StackTrace.current.toString(),
-            details.exceptionAsString());
-      } else {
-        _onError(details.context.toString(), details.stack.toString(),
-            details.exceptionAsString());
-      }
+    Map windows = {
+      "debug": ExtensionDebugWindow(
+        windowController: WindowController.fromWindowId(windowId),
+      ),
     };
-    if (!Platform.isAndroid) {
-      await windowManager.ensureInitialized();
-      final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
-      final size = Size(double.parse(sizeArr[0]), double.parse(sizeArr[1]));
-      WindowOptions windowOptions = WindowOptions(
-        size: size,
-        center: true,
-        minimumSize: const Size(600, 500),
-        skipTaskbar: false,
-        titleBarStyle: TitleBarStyle.hidden,
-      );
-      windowManager.waitUntilReadyToShow(windowOptions, () async {
-        final position = MiruStorage.getSetting(SettingKey.windowPosition);
-        if (position != null) {
-          final offsetArr = position.split(",");
-          final offset = Offset(
-            double.parse(offsetArr[0]),
-            double.parse(offsetArr[1]),
-          );
-          await windowManager.setPosition(
-            offset,
-          );
-        }
-        await windowManager.show();
-        await windowManager.focus();
-      });
-    }
+    runApp(windows[arguments["name"]]);
+    return;
+  }
 
-    if (Platform.isAndroid) {
-      SystemUiOverlayStyle style = const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      );
-      SystemChrome.setSystemUIOverlayStyle(style);
-    }
-    runApp(const MainApp());
-  }, (error, stack) {
-    debugPrint("error logging \r\n");
-    debugPrint(error.toString());
-    debugPrint(stack.toString());
-    _onError(error.toString(), stack.toString(), "");
+  // 主窗口
+  await MiruDirectory.ensureInitialized();
+  await MiruStorage.ensureInitialized();
+  MiruLog.ensureInitialized();
+  await ApplicationUtils.ensureInitialized();
+  await MiruRequest.ensureInitialized();
+  ExtensionUtils.ensureInitialized();
+  MediaKit.ensureInitialized();
+
+  if (!Platform.isAndroid) {
+    await windowManager.ensureInitialized();
+    final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
+    final size = Size(double.parse(sizeArr[0]), double.parse(sizeArr[1]));
+    WindowOptions windowOptions = WindowOptions(
+      size: size,
+      center: true,
+      minimumSize: const Size(600, 500),
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      final position = MiruStorage.getSetting(SettingKey.windowPosition);
+      if (position != null) {
+        final offsetArr = position.split(",");
+        final offset = Offset(
+          double.parse(offsetArr[0]),
+          double.parse(offsetArr[1]),
+        );
+        await windowManager.setPosition(
+          offset,
+        );
+      }
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
+
+  if (Platform.isAndroid) {
+    SystemUiOverlayStyle style = const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    );
+    SystemChrome.setSystemUIOverlayStyle(style);
+  }
+  runZonedGuarded(() => runApp(const MainApp()), (error, stack) {
+    logger.severe("", error, stack);
   });
 }
 
-_onError(String errorContext, String stackTrace, String exception) {
-  debugPrint("error logging \r\n");
-  debugPrint(errorContext.toString());
-  debugPrint(exception.toString());
-  debugPrint(stackTrace.toString());
-  final List errorlog = MiruStorage.getSetting(SettingKey.errorMessage);
-  errorlog.add({
-    "context": errorContext,
-    "exception": exception,
-    "stackTrace": stackTrace,
-    "time": DateTime.now(),
-  });
-  MiruStorage.setSetting(SettingKey.errorMessage, errorlog);
-  // showDialog(context: context, builder: builder)
-}
-
-class MainApp extends fluent.StatefulWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
-  fluent.State<MainApp> createState() => _MainAppState();
+  State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends fluent.State<MainApp> {
+class _MainAppState extends State<MainApp> {
   late ApplicationController c;
 
   @override

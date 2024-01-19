@@ -44,7 +44,8 @@
     "logout": "Logout",
     "login": "Login",
     "no-data": "No data",
-    "clear": "Clear"
+    "clear": "Clear",
+    "export": "Export"
   },
   "home": {
     "continue-watching": "Continue",
@@ -122,7 +123,6 @@
     "skip-interval": "Skip Interval",
     "skip-interval-subtitle": "Skipping interval for builtin video player",
     "default-reader-mode": "Default reader mode",
-    "bug-report": "Bug Report",
     "network": "Network",
     "network-subtitle": "Proxy, User-Agent...",
     "network-ua": "Webview User-Agent",
@@ -134,7 +134,13 @@
     "proxy-type-socks5": "Socks5",
     "proxy-type-http": "HTTP",
     "proxy": "Proxy",
-    "proxy-subtitle": "Proxy address (e.g. username:password@host:port)"
+    "proxy-subtitle": "Proxy address (e.g. username:password@host:port)",
+    "log": "Log",
+    "log-subtitle": "Save log, export log...",
+    "save-log": "Save Log",
+    "save-log-subtitle": "Auto save log file",
+    "export-log": "Export Log",
+    "export-log-subtitle": "Export log file"
   },
   "external-player-launching": "Launching {player}",
   "detail": {
@@ -187,8 +193,8 @@
   "novel-settings": {
     "font-size": "Font size"
   },
-  "bugreport":{
-    "auto-remove-subtitle":"delete in ~ days",
+  "bugreport": {
+    "auto-remove-subtitle": "delete in ~ days",
     "show-report-dialog": "Show Report Dialog",
     "show-report-dialog-subtitle": "Show error report dialog when app starts"
   },
@@ -246,16 +252,15 @@
     "upgrade": "Upgrade",
     "start": "Start"
   },
-  "report":{
-    "copied":"Copied to clipboard",
-    "github-bug-report":"Report to Github issue",
-    "title":"Bug Report",
-    "copy-message":"Copy error message",
-    "show-report-checkbox":"Show report dialog when app starts"
+  "report": {
+    "copied": "Copied to clipboard",
+    "github-bug-report": "Report to Github issue",
+    "title": "Bug Report",
+    "copy-message": "Copy error message",
+    "show-report-checkbox": "Show report dialog when app starts"
   },
-  "anilist":{
-    "title":"Anilist Tracking",
-
+  "anilist": {
+    "title": "Anilist Tracking",
     "login-hint-1": "Seems you haven't login into AniList yet",
     "login-hint-2": "Please login into AniList first",
     "status": "Status",

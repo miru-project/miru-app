@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';

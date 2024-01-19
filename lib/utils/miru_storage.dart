@@ -126,10 +126,9 @@ class MiruStorage {
         "Mozilla/5.0 (Linux; Android 13; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.43 Mobile Safari/537.36");
     await _initSetting(SettingKey.windowsWebviewUA,
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0");
-    await _initSetting(SettingKey.errorMessage, []);
-    await _initSetting(SettingKey.logRemoveDateDiff, 7);
     await _initSetting(SettingKey.proxy, '');
     await _initSetting(SettingKey.proxyType, 'DIRECT');
+    await _initSetting(SettingKey.saveLog, true);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -185,8 +184,7 @@ class SettingKey {
   static String windowPosition = 'WindowsPosition';
   static String androidWebviewUA = "AndroidWebviewUA";
   static String windowsWebviewUA = "WindowsWebviewUA";
-  static String errorMessage = "ErrorMessage";
-  static String logRemoveDateDiff = "LogRemoveDateDiff";
   static String proxy = "Proxy";
   static String proxyType = "ProxyType";
+  static String saveLog = "SaveLog";
 }
