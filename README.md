@@ -31,11 +31,13 @@ Miru App
 - Support online viewing of multiple sources of videos, comics, and novels, realizing the unification of multiple platforms
 - Unify the design language of the system UI
 - Automatically fetch TMDB metadata information
+- Support for AniList tracking
+- Supoort for Proxy Server Protocols (HTTP, SOCKS4, SOCKS5)
 
 ## Todo
 
 - [x] BT torrent
-- [ ] Better debugging tools
+- [x] Better debugging tools
 - [ ] Data synchronization
 - [ ] Automatically search for subtitles
 
