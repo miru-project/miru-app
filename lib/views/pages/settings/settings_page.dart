@@ -403,7 +403,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       const SizedBox(height: 20),
       // 高级
-      ListTitle(title: '高级'.i18n),
+      ListTitle(title: 'settings.advanced'.i18n),
       const SizedBox(height: 20),
       // 网络设置
       SettingsExpanderTile(

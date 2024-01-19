@@ -123,7 +123,8 @@
     "save-log": "保存日志",
     "save-log-subtitle": "自动保存日志文件",
     "export-log": "导出日志",
-    "export-log-subtitle": "导出日志文件到本地"
+    "export-log-subtitle": "导出日志文件到本地",
+    "advanced": "高级"
   },
   "external-player-launching": "正在启动 {player}",
   "detail": {

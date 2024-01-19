@@ -140,7 +140,8 @@
     "save-log": "Save Log",
     "save-log-subtitle": "Auto save log file",
     "export-log": "Export Log",
-    "export-log-subtitle": "Export log file"
+    "export-log-subtitle": "Export log file",
+    "advanced": "Advanced"
   },
   "external-player-launching": "Launching {player}",
   "detail": {
