@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/application_controller.dart';
+import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/utils/miru_directory.dart';
 import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/pages/debug_page.dart';
@@ -20,6 +22,10 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main(List<String> args) async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.severe("", details.exception, details.stack);
+  };
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // 多窗口
@@ -41,6 +47,7 @@ void main(List<String> args) async {
   // 主窗口
   await MiruDirectory.ensureInitialized();
   await MiruStorage.ensureInitialized();
+  MiruLog.ensureInitialized();
   await ApplicationUtils.ensureInitialized();
   await MiruRequest.ensureInitialized();
   ExtensionUtils.ensureInitialized();
@@ -81,17 +88,19 @@ void main(List<String> args) async {
     );
     SystemChrome.setSystemUIOverlayStyle(style);
   }
-  runApp(const MainApp());
+  runZonedGuarded(() => runApp(const MainApp()), (error, stack) {
+    logger.severe("", error, stack);
+  });
 }
 
-class MainApp extends fluent.StatefulWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
-  fluent.State<MainApp> createState() => _MainAppState();
+  State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends fluent.State<MainApp> {
+class _MainAppState extends State<MainApp> {
   late ApplicationController c;
 
   @override

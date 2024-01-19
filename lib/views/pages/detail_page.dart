@@ -326,6 +326,7 @@ class _DetailPageState extends State<DetailPage> {
                                     tag: widget.tag,
                                   ),
                                   const SizedBox(width: 8),
+
                                   if (c.tmdbDetail != null)
                                     fluent.Button(
                                       child: const Padding(

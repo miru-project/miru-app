@@ -57,6 +57,8 @@ dependencies:
   flutter_hls_parser: ^2.0.1
   image_gallery_saver: ^2.0.3
   flutter_socks_proxy: ^0.0.3
+  logging: ^1.2.0
+  share_plus: ^7.2.1
 
 dev_dependencies:
   flutter_test:
