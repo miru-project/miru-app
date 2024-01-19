@@ -62,7 +62,7 @@ class SettingsExpanderTile extends StatelessWidget {
       buildSubtitle: () => subTitle,
       onTap: () {
         Get.to(
-          Scaffold(
+          () => Scaffold(
             appBar: AppBar(
               title: Text(title),
             ),

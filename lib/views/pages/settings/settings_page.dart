@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:miru_app/data/providers/tmdb_provider.dart';
 import 'package:miru_app/controllers/application_controller.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/utils/request.dart';
 import 'package:miru_app/views/dialogs/bt_dialog.dart';
 import 'package:miru_app/controllers/extension/extension_repo_controller.dart';
@@ -23,6 +25,7 @@ import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/utils/application.dart';
 import 'package:miru_app/views/widgets/list_title.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -398,7 +401,10 @@ class _SettingsPageState extends State<SettingsPage> {
         title: 'settings.tracking'.i18n,
         subTitle: 'settings.tracking-subtitle'.i18n,
       ),
-      const SizedBox(height: 10),
+      const SizedBox(height: 20),
+      // 高级
+      ListTitle(title: '高级'.i18n),
+      const SizedBox(height: 20),
       // 网络设置
       SettingsExpanderTile(
         content: Column(
@@ -453,7 +459,55 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       const SizedBox(height: 10),
       // Debug
-      if (!Platform.isAndroid)
+      SettingsExpanderTile(
+        title: "settings.log".i18n,
+        subTitle: 'settings.log-subtitle'.i18n,
+        androidIcon: Icons.report,
+        icon: fluent.FluentIcons.report_alert,
+        content: Column(
+          children: [
+            SettingsSwitchTile(
+              title: 'settings.save-log'.i18n,
+              buildSubtitle: () => 'settings.save-log-subtitle'.i18n,
+              buildValue: () {
+                return MiruStorage.getSetting(SettingKey.saveLog);
+              },
+              onChanged: (value) {
+                MiruStorage.setSetting(SettingKey.saveLog, value);
+              },
+            ),
+            const SizedBox(height: 10),
+            // 导出日志
+            SettingsTile(
+              title: 'settings.export-log'.i18n,
+              buildSubtitle: () => 'settings.export-log-subtitle'.i18n,
+              trailing: PlatformWidget(
+                androidWidget: TextButton(
+                  onPressed: () {
+                    Share.shareXFiles([XFile(MiruLog.logFilePath)]);
+                  },
+                  child: Text('common.export'.i18n),
+                ),
+                desktopWidget: fluent.FilledButton(
+                  onPressed: () async {
+                    final path = await FilePicker.platform.saveFile(
+                      type: FileType.custom,
+                      allowedExtensions: ['log'],
+                      fileName: 'miru.log',
+                    );
+                    if (path != null) {
+                      File(MiruLog.logFilePath).copy(path);
+                    }
+                  },
+                  child: Text('common.export'.i18n),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      if (!Platform.isAndroid) ...[
+        const SizedBox(height: 10),
         Obx(
           () {
             final value = c.extensionLogWindowId.value != -1;
@@ -471,7 +525,8 @@ class _SettingsPageState extends State<SettingsPage> {
               isCard: true,
             );
           },
-        ),
+        )
+      ],
       // 关于
       const SizedBox(height: 20),
       ListTitle(title: 'settings.about'.i18n),
