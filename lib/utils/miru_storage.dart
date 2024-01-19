@@ -128,6 +128,7 @@ class MiruStorage {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0");
     await _initSetting(SettingKey.proxy, '');
     await _initSetting(SettingKey.proxyType, 'DIRECT');
+    await _initSetting(SettingKey.saveLog, true);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -185,4 +186,5 @@ class SettingKey {
   static String windowsWebviewUA = "WindowsWebviewUA";
   static String proxy = "Proxy";
   static String proxyType = "ProxyType";
+  static String saveLog = "SaveLog";
 }
