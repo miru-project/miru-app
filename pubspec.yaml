@@ -1,7 +1,7 @@
 name: miru_app
 description: A new Flutter project.
 publish_to: "none"
-version: 1.7.2+37
+version: 1.8.0+38
 
 environment:
   sdk: ">=3.0.3 <4.0.0"
