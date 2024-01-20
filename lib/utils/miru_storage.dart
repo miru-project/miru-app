@@ -129,6 +129,7 @@ class MiruStorage {
     await _initSetting(SettingKey.proxy, '');
     await _initSetting(SettingKey.proxyType, 'DIRECT');
     await _initSetting(SettingKey.saveLog, true);
+    await _initSetting(SettingKey.enableWakelock, false);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -176,7 +177,9 @@ class SettingKey {
   static String keyJ = 'KeyJ';
   static String arrowLeft = 'Arrowleft';
   static String arrowRight = 'Arrowright';
+  //reading mode
   static String readingMode = 'ReadingMode';
+  static String enableWakelock = 'EnableWakelock';
   static String aniListToken = 'AniListToken';
   static String aniListUserId = 'AniListUserId';
   static String autoTracking = 'AutoTracking';

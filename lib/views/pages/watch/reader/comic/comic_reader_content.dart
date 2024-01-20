@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -12,6 +11,7 @@ import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:based_battery_indicator/based_battery_indicator.dart';
 
 class ComicReaderContent extends StatefulWidget {
   const ComicReaderContent(this.tag, {super.key});
@@ -22,11 +22,6 @@ class ComicReaderContent extends StatefulWidget {
 }
 
 class _ComicReaderContentState extends State<ComicReaderContent> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   late final _c = Get.find<ComicController>(tag: widget.tag);
 
   // 按下数量
@@ -46,25 +41,64 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     );
   }
 
-  _buildDisplay(Widget child) {
+  Widget _buildDisplay(Widget child) {
+    if (_c.statusBarElement.values.every((element) => element.value == false)) {
+      return child;
+    }
     return Stack(
       children: [
         child,
-        Positioned(
-          bottom: 0,
-          child: Container(
-            color: Colors.black.withAlpha(200),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            child: Obx(
-              () => Text(
-                "${_c.currentPage.value + 1}/${_c.watchData.value?.urls.length ?? 0}",
-                style: const TextStyle(color: Colors.white, fontSize: 15),
+        Obx(() => Align(
+              alignment: _c.alignMode.value,
+              child: Container(
+                color: Colors.black.withAlpha(200),
+                padding: const EdgeInsets.fromLTRB(20, 2, 12, 2),
+                child: _indicatorBuilder(),
               ),
-            ),
-          ),
-        ),
+            )),
       ],
     );
+  }
+
+  Widget _indicatorBuilder() {
+    return Obx(() => Row(mainAxisSize: MainAxisSize.min, children: [
+          if (_c.statusBarElement["reader-setting.page-indicator".i18n]!
+              .value) ...[
+            Text(
+              "${_c.currentPage.value + 1}/${_c.watchData.value?.urls.length ?? 0}",
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            const SizedBox(width: 8)
+          ],
+          if (_c
+              .statusBarElement["reader-setting.battery-icon".i18n]!.value) ...[
+            BasedBatteryIndicator(
+              status: BasedBatteryStatus(
+                value: _c.batteryLevel.value,
+                type: BasedBatteryStatusType.normal,
+              ),
+              trackHeight: 10.0,
+              trackAspectRatio: 2.0,
+              curve: Curves.ease,
+              duration: const Duration(seconds: 10),
+            ),
+            const SizedBox(width: 8)
+          ],
+          if (_c.statusBarElement["reader-setting.battery".i18n]!.value) ...[
+            Text(
+              "${_c.batteryLevel.value}%",
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            const SizedBox(width: 8)
+          ],
+          if (_c.statusBarElement["reader-setting.time".i18n]!.value) ...[
+            Text(
+              _c.currentTime.value,
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+            ),
+            const SizedBox(width: 8)
+          ],
+        ]));
   }
 
   _buildContent() {

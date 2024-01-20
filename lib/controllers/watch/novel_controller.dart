@@ -4,6 +4,8 @@ import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:flutter/services.dart';
 
 class NovelController extends ReaderController<ExtensionFikushonWatch> {
   NovelController({
@@ -26,8 +28,10 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
   @override
   void onInit() {
     super.onInit();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     fontSize.value = MiruStorage.getSetting(SettingKey.novelFontSize);
-
+    WakelockPlus.toggle(
+        enable: MiruStorage.getSetting(SettingKey.enableWakelock));
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -72,6 +76,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
         totalProgress,
       );
     }
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.onClose();
   }
 }
