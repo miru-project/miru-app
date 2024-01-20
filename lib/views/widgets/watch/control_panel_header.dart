@@ -42,7 +42,13 @@ class _ControlPanelHeaderState<T extends ReaderController>
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  builder: (context) => widget.buildSettings(context),
+                  isScrollControlled: true,
+                  builder: (context) => DraggableScrollableSheet(
+                    expand: false,
+                    builder: (context, controller) => SingleChildScrollView(
+                        controller: controller,
+                        child: widget.buildSettings(context)),
+                  ),
                 );
               },
               icon: const Icon(Icons.settings),

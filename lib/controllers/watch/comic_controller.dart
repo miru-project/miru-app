@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/data/providers/anilist_provider.dart';
@@ -8,6 +9,10 @@ import 'package:miru_app/data/services/database_service.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:miru_app/utils/miru_storage.dart';
+import 'dart:async';
+import 'package:battery_plus/battery_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:miru_app/utils/i18n.dart';
 
 class ComicController extends ReaderController<ExtensionMangaWatch> {
   ComicController({
@@ -38,17 +43,39 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   final itemPositionsListener = ItemPositionsListener.create();
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
-
+  final alignMode = Alignment.bottomLeft.obs;
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
-
+  final batteryLevel = 100.obs;
   // 是否按下 ctrl
-
+  Timer? _barreryTimer;
+  final statusBarElement = <String, RxBool>{
+    'reader-setting.battery'.i18n: true.obs,
+    'reader-setting.time'.i18n: true.obs,
+    'reader-setting.page-indicator'.i18n: true.obs,
+    'reader-setting.battery-icon'.i18n: true.obs,
+  };
   final isZoom = false.obs;
+  final currentTime = "".obs;
+  Future<void> _statusBar([Timer? t]) async {
+    final battery = Battery();
+    batteryLevel.value = await battery.batteryLevel;
+    final datenow = DateTime.now();
+    final hour = datenow.hour < 10 ? "0${datenow.hour}" : datenow.hour;
+    final minute = datenow.minute < 10 ? "0${datenow.minute}" : datenow.minute;
+    currentTime.value = "$hour:$minute";
+    debugPrint("${datenow.toLocal()}");
+  }
 
   @override
-  void onInit() {
+  void onInit() async {
     _initSetting();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    WakelockPlus.toggle(
+        enable: MiruStorage.getSetting(SettingKey.enableWakelock));
+    await _statusBar();
+    _barreryTimer = Timer.periodic(
+        const Duration(seconds: 10), (timer) => _statusBar(timer));
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -196,6 +223,9 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         mediaId: anilistID,
       );
     }
+    _barreryTimer!.cancel();
+    WakelockPlus.disable();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.onClose();
   }
 }
