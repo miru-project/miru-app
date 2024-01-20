@@ -62,7 +62,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
 
   Widget _indicatorBuilder() {
     return Obx(() => Row(mainAxisSize: MainAxisSize.min, children: [
-          if (_c.statusBarElement["reader-setting.page-indicator".i18n]!
+          if (_c.statusBarElement["reader-settings.page-indicator".i18n]!
               .value) ...[
             Text(
               "${_c.currentPage.value + 1}/${_c.watchData.value?.urls.length ?? 0}",
@@ -70,8 +70,8 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             ),
             const SizedBox(width: 8)
           ],
-          if (_c
-              .statusBarElement["reader-setting.battery-icon".i18n]!.value) ...[
+          if (_c.statusBarElement["reader-settings.battery-icon".i18n]!
+              .value) ...[
             BasedBatteryIndicator(
               status: BasedBatteryStatus(
                 value: _c.batteryLevel.value,
@@ -84,14 +84,14 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             ),
             const SizedBox(width: 8)
           ],
-          if (_c.statusBarElement["reader-setting.battery".i18n]!.value) ...[
+          if (_c.statusBarElement["reader-settings.battery".i18n]!.value) ...[
             Text(
               "${_c.batteryLevel.value}%",
               style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
             const SizedBox(width: 8)
           ],
-          if (_c.statusBarElement["reader-setting.time".i18n]!.value) ...[
+          if (_c.statusBarElement["reader-settings.time".i18n]!.value) ...[
             Text(
               _c.currentTime.value,
               style: const TextStyle(color: Colors.white, fontSize: 15),
