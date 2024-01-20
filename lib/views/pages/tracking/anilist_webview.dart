@@ -33,7 +33,7 @@ class _AnilistWebViewPageState extends State<AnilistWebViewPage> {
           url: WebUri(widget.url),
         ),
         onLoadStart: (controller, url) async {
-          if (url != null && url.path != "/login") {
+          if (url != null && url.toString().contains("access_token")) {
             debugPrint(url.host);
             Get.back(result: url.toString());
           }
