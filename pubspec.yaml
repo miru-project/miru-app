@@ -59,6 +59,9 @@ dependencies:
   flutter_socks_proxy: ^0.0.3
   logging: ^1.2.0
   share_plus: ^7.2.1
+  wakelock_plus: ^1.1.4
+  battery_plus: ^5.0.2
+  based_battery_indicator: ^1.0.3
 
 dev_dependencies:
   flutter_test:

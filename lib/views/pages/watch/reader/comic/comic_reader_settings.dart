@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/comic_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
+import 'package:miru_app/views/widgets/settings/settings_switch_tile.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class ComicReaderSettings extends StatefulWidget {
   const ComicReaderSettings(this.tag, {super.key});
@@ -20,43 +23,100 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   Widget _buildAndroid(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 阅读模式
-          Text('comic-settings.read-mode'.i18n),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: SegmentedButton(
-              segments: [
-                ButtonSegment<MangaReadMode>(
-                  value: MangaReadMode.standard,
-                  label: Text('comic-settings.standard'.i18n),
+      child: Obx(() => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 阅读模式
+
+              Text('comic-settings.read-mode'.i18n),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: SegmentedButton(
+                  segments: [
+                    ButtonSegment<MangaReadMode>(
+                      value: MangaReadMode.standard,
+                      label: Text('comic-settings.standard'.i18n),
+                    ),
+                    ButtonSegment<MangaReadMode>(
+                      value: MangaReadMode.rightToLeft,
+                      label: Text('comic-settings.right-to-left'.i18n),
+                    ),
+                    ButtonSegment<MangaReadMode>(
+                      value: MangaReadMode.webTonn,
+                      label: Text('comic-settings.web-tonn'.i18n),
+                    ),
+                  ],
+                  selected: <MangaReadMode>{_c.readType.value},
+                  onSelectionChanged: (value) {
+                    if (value.isNotEmpty) {
+                      _c.readType.value = value.first;
+                    }
+                  },
+                  showSelectedIcon: false,
                 ),
-                ButtonSegment<MangaReadMode>(
-                  value: MangaReadMode.rightToLeft,
-                  label: Text('comic-settings.right-to-left'.i18n),
+              ),
+
+              const SizedBox(height: 16),
+              Text('comic-settings.indicator-alignment'.i18n),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: SegmentedButton(
+                  segments: [
+                    ButtonSegment<Alignment>(
+                      value: Alignment.bottomLeft,
+                      label: Text('comic-settings.bottomLeft'.i18n),
+                    ),
+                    ButtonSegment<Alignment>(
+                      value: Alignment.bottomRight,
+                      label: Text('comic-settings.rightLeft'.i18n),
+                    ),
+                    ButtonSegment<Alignment>(
+                      value: Alignment.topLeft,
+                      label: Text('comic-settings.topLeft'.i18n),
+                    ),
+                    ButtonSegment<Alignment>(
+                      value: Alignment.topRight,
+                      label: Text('comic-settings.topRight'.i18n),
+                    )
+                  ],
+                  selected: <Alignment>{_c.alignMode.value},
+                  onSelectionChanged: (value) {
+                    if (value.isNotEmpty) {
+                      _c.alignMode.value = value.first;
+                    }
+                  },
+                  showSelectedIcon: false,
                 ),
-                ButtonSegment<MangaReadMode>(
-                  value: MangaReadMode.webTonn,
-                  label: Text('comic-settings.web-tonn'.i18n),
-                ),
-              ],
-              selected: <MangaReadMode>{_c.readType.value},
-              onSelectionChanged: (value) {
-                if (value.isNotEmpty) {
-                  setState(() {
-                    _c.readType.value = value.first;
-                  });
-                }
-              },
-              showSelectedIcon: false,
-            ),
-          ),
-        ],
-      ),
+              ),
+              const SizedBox(height: 16),
+              Text('comic-settings.status-bar'.i18n),
+              const SizedBox(height: 5),
+              Wrap(
+                spacing: 5,
+                children: _c.statusBarElement.keys
+                    .map((e) => FilterChip(
+                        label: Text(e),
+                        selected: _c.statusBarElement[e]!.value,
+                        onSelected: (val) {
+                          _c.statusBarElement[e]!.value = val;
+                        }))
+                    .toList(),
+              ),
+              SettingsSwitchTile(
+                  icon: const Icon(Icons.coffee),
+                  title: "reader-settings.enable-wakelock".i18n,
+                  buildValue: () =>
+                      MiruStorage.getSetting(SettingKey.enableWakelock),
+                  onChanged: (val) {
+                    WakelockPlus.toggle(enable: val);
+                    MiruStorage.setSetting(SettingKey.enableWakelock, val);
+                  }),
+              const SizedBox(height: 16),
+            ],
+          )),
     );
   }
 
