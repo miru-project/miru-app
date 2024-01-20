@@ -50,10 +50,10 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   // 是否按下 ctrl
   Timer? _barreryTimer;
   final statusBarElement = <String, RxBool>{
-    'reader-setting.battery'.i18n: true.obs,
-    'reader-setting.time'.i18n: true.obs,
-    'reader-setting.page-indicator'.i18n: true.obs,
-    'reader-setting.battery-icon'.i18n: true.obs,
+    'reader-settings.battery'.i18n: true.obs,
+    'reader-settings.time'.i18n: true.obs,
+    'reader-settings.page-indicator'.i18n: true.obs,
+    'reader-settings.battery-icon'.i18n: true.obs,
   };
   final isZoom = false.obs;
   final currentTime = "".obs;

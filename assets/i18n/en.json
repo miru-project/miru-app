@@ -189,7 +189,20 @@
     "read-mode": "Read mode",
     "standard": "Standard",
     "right-to-left": "Right to left",
-    "web-tonn": "Webtoon"
+    "web-tonn": "Webtoon",
+    "bottomLeft": "Bottom left",
+    "bottomRight": "Bottom right",
+    "topLeft": "Top left",
+    "topRight": "Top right",
+    "indicator-alignment": "Indicator alignment",
+    "status-bar":"Status bar"
+  },
+  "reader-settings": {
+    "enable-wakelock": "Keep screen on",
+    "battery": "Battery",
+    "time": "Time",
+    "page-indicator": "Page Indicator",
+    "battery-icon": "Battery Icon"
   },
   "novel-settings": {
     "font-size": "Font size"
