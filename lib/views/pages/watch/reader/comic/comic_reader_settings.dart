@@ -19,7 +19,6 @@ class ComicReaderSettings extends StatefulWidget {
 
 class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   late final ComicController _c = Get.find<ComicController>(tag: widget.tag);
-
   Widget _buildAndroid(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -67,19 +66,40 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                   segments: [
                     ButtonSegment<Alignment>(
                       value: Alignment.bottomLeft,
-                      label: Text('comic-settings.bottomLeft'.i18n),
+                      label: Column(children: [
+                        Text('comic-settings.bottomLeft'.i18n),
+                        const SizedBox(height: 5),
+                        Transform.rotate(
+                            angle: -3.14,
+                            child: const Icon(Icons.arrow_outward))
+                      ]),
                     ),
                     ButtonSegment<Alignment>(
                       value: Alignment.bottomRight,
-                      label: Text('comic-settings.rightLeft'.i18n),
+                      label: Column(children: [
+                        Text('comic-settings.bottomRight'.i18n),
+                        const SizedBox(height: 5),
+                        Transform.rotate(
+                            angle: 1.57, child: const Icon(Icons.arrow_outward))
+                      ]),
                     ),
                     ButtonSegment<Alignment>(
                       value: Alignment.topLeft,
-                      label: Text('comic-settings.topLeft'.i18n),
+                      label: Column(children: [
+                        Text('comic-settings.topLeft'.i18n),
+                        const SizedBox(height: 5),
+                        Transform.rotate(
+                            angle: -1.57,
+                            child: const Icon(Icons.arrow_outward))
+                      ]),
                     ),
                     ButtonSegment<Alignment>(
                       value: Alignment.topRight,
-                      label: Text('comic-settings.topRight'.i18n),
+                      label: Column(children: [
+                        Text('comic-settings.topRight'.i18n),
+                        const SizedBox(height: 5),
+                        const Icon(Icons.arrow_outward)
+                      ]),
                     )
                   ],
                   selected: <Alignment>{_c.alignMode.value},
