@@ -37,9 +37,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   final currentPage = 0.obs;
   final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
-  final itemScrollController = ItemScrollController();
-  final scrollOffsetController = ScrollOffsetController();
-  final scrollOffsetListener = ScrollOffsetListener.create();
   final alignMode = Alignment.bottomLeft.obs;
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
@@ -80,7 +77,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       currentPage.value = pos.index;
     });
     scrollOffsetListener.changes.listen((event) {
-      // debugPrint("offset");
       hideControlPanel();
     });
 

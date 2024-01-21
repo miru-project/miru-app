@@ -46,7 +46,38 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
 
     // 切换章节时重置页码
     ever(index, (callback) => positions.value = 0);
+    ever(super.watchData, (callback) async {
+      if (isRecover.value || callback == null) {
+        return;
+      }
+      isRecover.value = true;
+      // 获取上次阅读的页码
+      final history = await DatabaseService.getHistoryByPackageAndUrl(
+        super.runtime.extension.package,
+        super.detailUrl,
+      );
 
+      if (history == null ||
+          history.progress.isEmpty ||
+          episodeGroupId != history.episodeGroupId ||
+          history.episodeId != index.value) {
+        return;
+      }
+      positions.value = int.parse(history.progress);
+      _jumpLine(positions.value);
+    });
+    ever(progress, (callback) {
+      // 防止逆向回饋
+      if (!updateSlider.value) {
+        return;
+      }
+      positions.value = callback;
+      _jumpLine(callback);
+    });
+    ever(positions, (callback) {
+      progress.value = callback;
+      updateSlider.value = false;
+    });
     ever(super.watchData, (callback) async {
       if (isRecover.value || callback == null) {
         return;
@@ -65,6 +96,13 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       }
       positions.value = int.parse(history.progress);
     });
+  }
+
+  _jumpLine(int? index) {
+    if (index == null) {
+      return;
+    }
+    itemScrollController.jumpTo(index: index);
   }
 
   @override

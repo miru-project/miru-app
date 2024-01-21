@@ -71,7 +71,7 @@ class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
                               label: (progressObs.value + 1).toString(),
                               max: (totalObs.value - 1).toDouble(),
                               min: 0,
-                              divisions: totalObs.value,
+                              divisions: totalObs.value - 1,
                               value: progressObs.value.toDouble(),
                               onChanged: c.isShowControlPanel.value
                                   ? (val) {
