@@ -61,6 +61,8 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
             child: ScrollablePositionedList.builder(
               itemPositionsListener: _c.itemPositionsListener,
               initialScrollIndex: _c.positions.value,
+              itemScrollController: _c.itemScrollController,
+              scrollOffsetController: _c.scrollOffsetController,
               padding: EdgeInsets.symmetric(
                 horizontal: listviewPadding,
                 vertical: 16,
