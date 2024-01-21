@@ -31,18 +31,15 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     'webTonn': MangaReadMode.webTonn,
   };
   final String setting = MiruStorage.getSetting(SettingKey.readingMode);
-
   final readType = MangaReadMode.standard.obs;
-
   final currentScale = 1.0.obs;
-  // MangaReadMode
   // 当前页码
   final currentPage = 0.obs;
-
   final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
   final itemScrollController = ItemScrollController();
   final scrollOffsetController = ScrollOffsetController();
+  final scrollOffsetListener = ScrollOffsetListener.create();
   final alignMode = Alignment.bottomLeft.obs;
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
@@ -64,7 +61,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     final hour = datenow.hour < 10 ? "0${datenow.hour}" : datenow.hour;
     final minute = datenow.minute < 10 ? "0${datenow.minute}" : datenow.minute;
     currentTime.value = "$hour:$minute";
-    debugPrint("${datenow.toLocal()}");
   }
 
   @override
@@ -83,6 +79,10 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       currentPage.value = pos.index;
     });
+    scrollOffsetListener.changes.listen((event) {
+      // debugPrint("offset");
+      hideControlPanel();
+    });
 
     ever(readType, (callback) {
       _jumpPage(currentPage.value);
@@ -94,11 +94,23 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     });
     // 如果切换章节，重置当前页码
     ever(super.index, (callback) => currentPage.value = 0);
+    //control footer 的 slider 改變時，更新頁碼
+    ever(progress, (callback) {
+      // 防止逆向回饋
+      if (!updateSlider.value) {
+        return;
+      }
+      currentPage.value = callback;
+      _jumpPage(callback);
+    });
+    ever(currentPage, (callback) {
+      progress.value = callback;
+      updateSlider.value = false;
+    });
     ever(super.watchData, (callback) async {
       if (isRecover.value || callback == null) {
         return;
       }
-
       isRecover.value = true;
       // 获取上次阅读的页码
       final history = await DatabaseService.getHistoryByPackageAndUrl(

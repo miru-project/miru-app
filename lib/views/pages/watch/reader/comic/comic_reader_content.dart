@@ -176,6 +176,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                         itemScrollController: _c.itemScrollController,
                         itemPositionsListener: _c.itemPositionsListener,
                         scrollOffsetController: _c.scrollOffsetController,
+                        scrollOffsetListener: _c.scrollOffsetListener,
                         itemBuilder: (context, index) {
                           final url = images[index];
                           return CacheNetWorkImagePic(
