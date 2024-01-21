@@ -32,9 +32,11 @@ class ReaderController<T> extends GetxController {
   final error = ''.obs;
   final isShowControlPanel = false.obs;
   late final index = playIndex.obs;
+  late final progress = 0.obs;
   get cuurentPlayUrl => playList[index.value].url;
   Timer? _timer;
-
+  final isScrolled = true.obs;
+  final updateSlider = true.obs;
   @override
   void onInit() {
     getContent();
@@ -62,6 +64,10 @@ class ReaderController<T> extends GetxController {
     _timer = Timer(const Duration(seconds: 3), () {
       isShowControlPanel.value = false;
     });
+  }
+
+  hideControlPanel() {
+    isShowControlPanel.value = false;
   }
 
   addHistory(String progress, String totalProgress) async {
