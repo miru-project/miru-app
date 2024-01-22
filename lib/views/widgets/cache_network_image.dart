@@ -91,6 +91,46 @@ class CacheNetWorkImagePic extends StatelessWidget {
   }
 }
 
+void saveImage(url, Map<String, dynamic>? headers, bool mounted,
+    BuildContext context) async {
+  // final url = widget.url;
+  final fileName = url.split('/').last;
+  final res = await dio.get(
+    url,
+    options: Options(
+      responseType: ResponseType.bytes,
+      headers: headers,
+    ),
+  );
+  if (Platform.isAndroid) {
+    final result = await ImageGallerySaver.saveImage(
+      res.data,
+      name: fileName,
+    );
+    if (mounted) {
+      final msg = result['isSuccess'] == true
+          ? 'common.save-success'.i18n
+          : result['errorMessage'];
+      showPlatformSnackbar(
+        context: context,
+        content: msg,
+      );
+    }
+    return;
+  }
+  // 打开目录选择对话框file_picker
+
+  final path = await FilePicker.platform.saveFile(
+    type: FileType.image,
+    fileName: fileName,
+  );
+  if (path == null) {
+    return;
+  }
+  // 保存
+  File(path).writeAsBytesSync(res.data);
+}
+
 class _ThumnailPage extends StatefulWidget {
   const _ThumnailPage({
     required this.url,
@@ -113,44 +153,44 @@ class _ThumnailPageState extends State<_ThumnailPage> {
     super.dispose();
   }
 
-  _saveImage() async {
-    final url = widget.url;
-    final fileName = url.split('/').last;
-    final res = await dio.get(
-      url,
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: widget.headers,
-      ),
-    );
-    if (Platform.isAndroid) {
-      final result = await ImageGallerySaver.saveImage(
-        res.data,
-        name: fileName,
-      );
-      if (mounted) {
-        final msg = result['isSuccess'] == true
-            ? 'common.save-success'.i18n
-            : result['errorMessage'];
-        showPlatformSnackbar(
-          context: context,
-          content: msg,
-        );
-      }
-      return;
-    }
-    // 打开目录选择对话框file_picker
+  // _saveImage() async {
+  //   final url = widget.url;
+  //   final fileName = url.split('/').last;
+  //   final res = await dio.get(
+  //     url,
+  //     options: Options(
+  //       responseType: ResponseType.bytes,
+  //       headers: widget.headers,
+  //     ),
+  //   );
+  //   if (Platform.isAndroid) {
+  //     final result = await ImageGallerySaver.saveImage(
+  //       res.data,
+  //       name: fileName,
+  //     );
+  //     if (mounted) {
+  //       final msg = result['isSuccess'] == true
+  //           ? 'common.save-success'.i18n
+  //           : result['errorMessage'];
+  //       showPlatformSnackbar(
+  //         context: context,
+  //         content: msg,
+  //       );
+  //     }
+  //     return;
+  //   }
+  //   // 打开目录选择对话框file_picker
 
-    final path = await FilePicker.platform.saveFile(
-      type: FileType.image,
-      fileName: fileName,
-    );
-    if (path == null) {
-      return;
-    }
-    // 保存
-    File(path).writeAsBytesSync(res.data);
-  }
+  //   final path = await FilePicker.platform.saveFile(
+  //     type: FileType.image,
+  //     fileName: fileName,
+  //   );
+  //   if (path == null) {
+  //     return;
+  //   }
+  //   // 保存
+  //   File(path).writeAsBytesSync(res.data);
+  // }
 
   Widget _buildContent(BuildContext context) {
     return Center(
@@ -193,6 +233,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
       appBar: AppBar(),
       body: GestureDetector(
         child: _buildContent(context),
+        onTapDown: (details) {},
         onLongPress: () {
           showModalBottomSheet(
             context: context,
@@ -207,7 +248,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
                     title: Text('common.save'.i18n),
                     onTap: () {
                       Navigator.of(context).pop();
-                      _saveImage();
+                      saveImage(widget.url, widget.headers, mounted, context);
                     },
                   ),
                 ],
@@ -238,7 +279,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
                 text: Text('common.save'.i18n),
                 onPressed: () {
                   fluent.Flyout.of(context).close();
-                  _saveImage();
+                  saveImage(widget.url, widget.headers, mounted, context);
                 },
               ),
             ]);

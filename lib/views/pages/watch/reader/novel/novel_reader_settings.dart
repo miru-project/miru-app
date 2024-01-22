@@ -30,9 +30,11 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
               const SizedBox(height: 16),
               Slider(
                 value: _c.fontSize.value,
+                label: _c.fontSize.value.toString(),
                 onChanged: (value) {
                   _c.fontSize.value = value;
                 },
+                divisions: 12,
                 min: 12,
                 max: 24,
               ),

@@ -179,12 +179,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                         scrollOffsetListener: _c.scrollOffsetListener,
                         itemBuilder: (context, index) {
                           final url = images[index];
-                          return CacheNetWorkImagePic(
-                            url,
-                            fit: BoxFit.fitWidth,
-                            placeholder: _buildPlaceholder(context),
-                            headers: _c.watchData.value?.headers,
-                          );
+                          return imageBuilder(url);
                         },
                         itemCount: images.length,
                       ),
@@ -208,14 +203,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                     padding: EdgeInsets.symmetric(
                       horizontal: viewPadding,
                     ),
-                    child: CacheNetWorkImagePic(
-                      url,
-                      mode: ExtendedImageMode.gesture,
-                      key: ValueKey(url),
-                      fit: BoxFit.contain,
-                      placeholder: _buildPlaceholder(context),
-                      headers: _c.watchData.value?.headers,
-                    ),
+                    child: imageBuilder(url),
                   );
                 },
               );
@@ -226,8 +214,45 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     );
   }
 
+  Widget imageBuilder(String url) {
+    return GestureDetector(
+        onTapDown: (deatils) {
+          _c.isShowControlPanel.value = !_c.isShowControlPanel.value;
+        },
+        onDoubleTapDown: (details) {
+          showModalBottomSheet(
+            context: context,
+            showDragHandle: true,
+            useSafeArea: true,
+            builder: (_) => SizedBox(
+              height: 100,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.save),
+                    title: Text('common.save'.i18n),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      saveImage(
+                          url, _c.watchData.value?.headers, mounted, context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        child: CacheNetWorkImagePic(
+          url,
+          fit: BoxFit.fitWidth,
+          placeholder: _buildPlaceholder(context),
+          headers: _c.watchData.value?.headers,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    _c.height.value = MediaQuery.of(context).size.height;
     return PlatformBuildWidget(
       androidBuilder: (context) {
         return Scaffold(

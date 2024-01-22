@@ -130,6 +130,10 @@ class MiruStorage {
     await _initSetting(SettingKey.proxyType, 'DIRECT');
     await _initSetting(SettingKey.saveLog, true);
     await _initSetting(SettingKey.enableWakelock, false);
+    await _initSetting(SettingKey.nextPageHitBox, 0.2);
+    await _initSetting(SettingKey.prevPageHitBox, 0.2);
+    await _initSetting(SettingKey.autoScrollInterval, 300);
+    await _initSetting(SettingKey.autoScrollOffset, 20.0);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -190,4 +194,8 @@ class SettingKey {
   static String proxy = "Proxy";
   static String proxyType = "ProxyType";
   static String saveLog = "SaveLog";
+  static String nextPageHitBox = "NextPageHitBox";
+  static String prevPageHitBox = "PrevPageHitBox";
+  static String autoScrollInterval = "AutoScrollInterval";
+  static String autoScrollOffset = "AutoScrollOffset";
 }
