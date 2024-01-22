@@ -19,6 +19,7 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = Get.find<T>(tag: tag);
+    final width = LayoutUtils.width;
     return Obx(
       () => Stack(
         children: [
@@ -36,28 +37,52 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
 
           // 点击中间显示控制面板
           // 左边上一页右边下一页
-          if (c.error.value.isEmpty)
-            Positioned(
-              top: 120,
-              bottom: 120,
-              left: 0,
-              right: 0,
-              child: GestureDetector(
-                onTapDown: (TapDownDetails details) {
-                  final xPos = details.globalPosition.dx;
-                  final width = LayoutUtils.width;
-                  final unitWidth = width / 3;
-                  if (xPos < unitWidth) {
+          if (c.error.value.isEmpty) ...[
+            Padding(
+                padding: EdgeInsets.fromLTRB(
+                    0, 120, width - c.prevPageHitBox.value * width, 120),
+                child: GestureDetector(
+                  onTapDown: (details) {
+                    if (c.tapRegionIsReversed.value) {
+                      return c.nextPage();
+                    }
                     return c.previousPage();
-                  }
-                  if (xPos > unitWidth * 2) {
+                  },
+                )),
+            Padding(
+                padding: EdgeInsets.fromLTRB(
+                    width - c.nextPageHitBox.value * width, 120, 0, 120),
+                child: GestureDetector(
+                  onTapDown: (details) {
+                    if (c.tapRegionIsReversed.value) {
+                      return c.previousPage();
+                    }
                     return c.nextPage();
-                  }
-                  c.isShowControlPanel.value = !c.isShowControlPanel.value;
-                },
-              ),
-            ),
+                  },
+                ))
+          ]
+          // Positioned(
+          //   top: 120,
+          //   bottom: 120,
+          //   left: 0,
+          //   right: 0,
+          //   child: GestureDetector(
+          //     onTapDown: (TapDownDetails details) {
+          //       final xPos = details.globalPosition.dx;
+          //       final width = LayoutUtils.width;
+          //       // final unitWidth = width / 3;
+          //       if (xPos < c.prevPageHitBox.value * width) {
+          //         return c.previousPage();
+          //       }
+          //       if (xPos > width - c.nextPageHitBox.value * width) {
+          //         return c.nextPage();
+          //       }
+          //       c.isShowControlPanel.value = !c.isShowControlPanel.value;
+          //     },
+          //   ),
+          // ),
 
+          ,
           if (c.isShowControlPanel.value) ...[
             // 顶部控制
             Positioned(
@@ -73,7 +98,13 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
               bottom: 0,
               child: ControlPanelFooter<T>(tag),
             ),
-          ]
+          ],
+          if (c.enableAutoScroll.value)
+            ElevatedButton(
+                onPressed: () {
+                  c.enableAutoScroll.value = false;
+                },
+                child: const Icon(Icons.stop)),
         ],
       ),
     );

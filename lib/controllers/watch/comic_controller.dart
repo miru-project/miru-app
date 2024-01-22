@@ -41,7 +41,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
   final batteryLevel = 100.obs;
-  // 是否按下 ctrl
   Timer? _barreryTimer;
   final statusBarElement = <String, RxBool>{
     'reader-settings.battery'.i18n: true.obs,
@@ -51,7 +50,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   };
   final isZoom = false.obs;
   final currentTime = "".obs;
-  Future<void> _statusBar([Timer? t]) async {
+  Future<void> _statusBar() async {
     final battery = Battery();
     batteryLevel.value = await battery.batteryLevel;
     final datenow = DateTime.now();
@@ -67,8 +66,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     WakelockPlus.toggle(
         enable: MiruStorage.getSetting(SettingKey.enableWakelock));
     await _statusBar();
-    _barreryTimer = Timer.periodic(
-        const Duration(seconds: 10), (timer) => _statusBar(timer));
+    _barreryTimer =
+        Timer.periodic(const Duration(seconds: 10), (timer) => _statusBar());
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -79,7 +78,9 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     scrollOffsetListener.changes.listen((event) {
       hideControlPanel();
     });
-
+    ever(height, (callback) {
+      super.height.value = callback;
+    });
     ever(readType, (callback) {
       _jumpPage(currentPage.value);
       // 保存设置
@@ -223,6 +224,10 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         currentPage.value.toString(),
         pages.toString(),
       );
+    }
+    //check auto scroller is closed or not
+    if (autoScrollTimer != null) {
+      autoScrollTimer!.cancel();
     }
     if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
       AniListProvider.editList(

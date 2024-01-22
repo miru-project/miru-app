@@ -35,8 +35,7 @@ class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
         ? Theme.of(context).colorScheme.background.withOpacity(0.9)
         : Colors.transparent;
 
-    return GestureDetector(
-        child: SizedBox(
+    return SizedBox(
       height: 110,
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -98,6 +97,6 @@ class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
                           },
                           icon: const Icon(Icons.skip_next_rounded)))
               ]))).animate().slideY(begin: 1, end: 0),
-    ));
+    );
   }
 }

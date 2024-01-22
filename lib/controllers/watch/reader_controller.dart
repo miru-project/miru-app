@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/models/history.dart';
 import 'package:miru_app/controllers/home_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/data/services/extension_service.dart';
+import 'package:miru_app/utils/miru_storage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ReaderController<T> extends GetxController {
@@ -37,12 +39,49 @@ class ReaderController<T> extends GetxController {
   late final progress = 0.obs;
   get cuurentPlayUrl => playList[index.value].url;
   Timer? _timer;
+  Timer? autoScrollTimer;
   final isScrolled = true.obs;
   final updateSlider = true.obs;
+  //點擊區域是否反轉
+  final RxBool tapRegionIsReversed = false.obs;
+  final dynamic _nextPageHitBox =
+      MiruStorage.getSetting(SettingKey.nextPageHitBox);
+  final double _prevPageHitBox =
+      MiruStorage.getSetting(SettingKey.prevPageHitBox);
+  final int _autoScrollInterval =
+      MiruStorage.getSetting(SettingKey.autoScrollInterval);
+  final double _autoScrollOffset =
+      MiruStorage.getSetting(SettingKey.autoScrollOffset);
+  final RxInt autoScrollInterval = 300.obs;
+  final RxDouble autoScrollOffset = 0.4.obs;
+  final RxDouble nextPageHitBox = 0.3.obs;
+  final RxDouble prevPageHitBox = 0.3.obs;
+  final enableAutoScroll = false.obs;
+  final height = 1000.0.obs;
   @override
   void onInit() {
     getContent();
+    autoScrollInterval.value = _autoScrollInterval;
+    autoScrollOffset.value = _autoScrollOffset;
+    nextPageHitBox.value = _nextPageHitBox;
+    prevPageHitBox.value = _prevPageHitBox;
     ever(index, (callback) => getContent());
+    ever(enableAutoScroll, (callback) {
+      if (callback) {
+        autoScrollTimer = Timer.periodic(
+            Duration(milliseconds: autoScrollInterval.value), (timer) {
+          if (isScrolled.value) {
+            scrollOffsetController.animateScroll(
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.ease,
+              offset: autoScrollOffset.value,
+            );
+          }
+        });
+        return;
+      }
+      autoScrollTimer?.cancel();
+    });
     super.onInit();
   }
 
