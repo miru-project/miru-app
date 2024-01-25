@@ -217,7 +217,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
   Widget imageBuilder(String url) {
     return GestureDetector(
         onTapDown: (deatils) {
-          _c.isShowControlPanel.value = !_c.isShowControlPanel.value;
+          _c.showControlPanel();
         },
         onDoubleTapDown: (details) {
           showModalBottomSheet(
