@@ -100,6 +100,10 @@ class ReaderController<T> extends GetxController {
   void nextPage() {}
 
   showControlPanel() {
+    if (isShowControlPanel.value) {
+      hideControlPanel();
+      return;
+    }
     isShowControlPanel.value = true;
     _timer?.cancel();
     _timer = Timer(const Duration(seconds: 3), () {

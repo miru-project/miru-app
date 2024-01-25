@@ -92,13 +92,8 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
               ),
             ),
             // 底部控制
-            Positioned(
-              right: 0,
-              left: 0,
-              bottom: 0,
-              child: ControlPanelFooter<T>(tag),
-            ),
           ],
+          ControlPanelFooter<T>(tag),
           if (c.enableAutoScroll.value)
             ElevatedButton(
                 onPressed: () {

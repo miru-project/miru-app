@@ -39,6 +39,9 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       final pos = itemPositionsListener.itemPositions.value.first;
       positions.value = pos.index;
     });
+    scrollOffsetListener.changes.listen((event) {
+      hideControlPanel();
+    });
     ever(
       fontSize,
       (callback) => MiruStorage.setSetting(SettingKey.novelFontSize, callback),
