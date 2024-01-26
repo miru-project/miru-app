@@ -373,7 +373,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
                           const SizedBox(height: 16),
                         ],
                         CardTile(
-                          title: 'extension-info.other-infomation'.i18n,
+                          title: 'extension-info.other-information'.i18n,
                           child: Wrap(
                             children: [
                               InfoCard(
