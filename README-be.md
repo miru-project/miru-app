@@ -1,23 +1,21 @@
-[简体中文](README-zh.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md) | [English](README.md) | [Русский](README-ru.md) | [Українська](README-uk.md)
+[English](README.md) | [简体中文](README-zh.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md) | [Русский](README-ru.md) | **Беларуская** | [Українська](README-uk.md)
 
-<p align="center">
-<img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
-</p>
+<div align="center">
+  <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
+</div>
 
-<h1 align="center">
-Miru App
-</h1>
+<h1 align="center">Miru App</h1>
 
 <p align="center">Бясплатнае шматфункцыянальнае праграма з адкрытым зыходным кодам, якое падтрымлівае відэа, коміксы і навэлы, дзякуючы пашырэнням. Працуе на Android, Windows, Web.</p>
 
-<h1 align="center">
+<div align="center">
 
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/miru-project/miru-app)](https://github.com/miru-project/miru-app/releases/latest)
 [![License](https://img.shields.io/github/license/miru-project/miru-app)](https://github.com/miru-project/miru-app/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/miru-project/miru-app)](https://github.com/miru-project/miru-app/stargazers)
 [![GitHub all releases](https://img.shields.io/github/downloads/miru-project/miru-app/total)](https://github.com/miru-project/miru-app/releases/latest)
 
-</h1>
+</div>
 
 ![screenshot](assets/screenshot/screenshot.webp)
 
@@ -35,13 +33,13 @@ Miru App
 ## Спіс задач
 
 - [x] BT торэнт
-- [ ] Палепшаныя прылады адладкі
+- [x] Палепшаныя прылады адладкі
 - [ ] Сінхранізацыя дадзеных
 - [ ] Аўтаматычны пошук субтытраў
 
 ## Ўстаноўка
 
-Вы можаце перайсці ў [Release](https://github.com/miru-project/miru-app/releases/latest) , каб спампаваць апошнюю версію ўсталявальнага пакета або сабраць самастойна наступным метадам
+Вы можаце перайсці ў [Release](https://github.com/miru-project/miru-app/releases/latest), каб спампаваць апошнюю версію ўсталявальнага пакета або сабраць самастойна наступным метадам
 
 ## Зборка
 
@@ -79,7 +77,6 @@ flutter build windows
 
 У цяперашні час Linux не можа запусціць quickjs з-за праблем з залежнасцямі, таму на дадзены момант ён не падтрымліваецца
 
-
 ## Удзел у распрацоўцы
 
 Удзел у распрацоўцы любога роду вітаецца, у тым ліку, але не абмяжоўваючыся:
@@ -89,9 +86,6 @@ flutter build windows
 - Змяненне кода
 - Напісанне дакументацыі
 
-
 ## Дадатковыя спасылкі
 
-Telegram: https://t.me/MiruChat
-
-Telegram channel: https://t.me/MiruChannel
+Telegram: <https://t.me/MiruChat>
