@@ -1,5 +1,7 @@
 {
   "common": {
+    "anime": "Anime",
+    "manga": "Manga",
     "home": "Inicio",
     "search": "Buscar",
     "extension": "Extensiones",
@@ -23,22 +25,27 @@
     "previous": "Anterior",
     "show-all": "Mostrar todo",
     "delete": "Borrar",
-    "delete-all": "Borrar todo"
+    "delete-all": "Borrar todo",
+    "save": "Guardar",
+    "save-success": "Guardado con éxito",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión", 
+    "no-data": "Sin datos",
+    "clear": "Limpiar",
+    "export": "Exportar"
   },
-
   "home": {
     "continue-watching": "Continuar",
     "favorite": "Favorito",
     "no-record": "Sin favoritos ni registros de visualización",
-    "watched": "Visto {ep}"
+    "watched": "Visto {ep}",
+    "favorite-all": "Todos los {type}s favoritos"
   },
-
   "search": {
     "hint-text": "¡Por favor, busca ampliamente!~",
     "all": "Todo",
     "filter": "Filtro"
   },
-
   "extension": {
     "import": {
       "title": "Importar extensión",
@@ -51,17 +58,30 @@
     "installed": "Instalado",
     "edit-code": "Código de edición"
   },
-
   "extension-repo": {
     "error": "¡Ha ocurrido un error!",
     "error-tips": "Por favor, verifica tu conexión de red o la dirección del repositorio",
     "empty": "El repositorio está vacío",
     "upgrade": "Actualizar"
   },
-
   "settings": {
-    "repo-url": "URL del repositorio de la extensión",
-    "repo-url-subtitle": "Obtener el URL del repositorio para extensiones",
+    "general": "General",
+    "general-subtitle": "TMDB, idioma, tema, buscar actualizaciones...",
+    "extension": "Extensiones",
+    "extension-subtitle": "Repositorio de extensiones",
+    "video-player": "Reproductor de vídeo",
+    "video-player-subtitle": "Servidor BT, reproductor externo...",
+    "comic-reader": "Lector de cómics",
+    "comic-reader-subtitle": "Modo de lector predeterminado...",
+    "tracking": "Siguiendo",
+    "tracking-subtitle": "AniList...",
+    "auto-tracking": "Seguir automáticamente",
+    "auto-tracking-subtitle": "Sincronizar el progreso automáticamente al terminal de ver/leer",
+    "about": "Acerca de",
+    "links": "Enlaces",
+    "contributors": "Contribuidores",
+    "repo-url": "URL del repositorio de extensiones",
+    "repo-url-subtitle": "Obtener el URL del repositorio de extensiones",
     "tmdb-key": "Clave de la API de TMDB",
     "tmdb-key-subtitle": "Obtener la clave de la API para los metadatos de TMDB",
     "bt-server": "Servidor BT",
@@ -87,12 +107,32 @@
     "language-subtitle": "Cambia el idioma de la aplicación",
     "extension-log": "Ventana de registro de extensiones",
     "extension-log-subtitle": "Usado para depurar extensiones",
-    "about": "Acerca de"
+    "skip-interval": "Saltar intervalo",
+    "skip-interval-subtitle": "Saltando intervalo para el reproductor de vídeo incorporado",
+    "default-reader-mode": "Modo de lector predeterminado",
+    "network": "Red",
+    "network-subtitle": "Proxy, User-Agent...",
+    "network-ua": "Webview User-Agent",
+    "network-ua-subtitle": "Modifica el User-Agent en la cabecera de la solicitud para Webviews y extensiones.",
+    "proxy-type": "Tipo de proxy",
+    "proxy-type-subtitle": "Tipo de proxy para solicitudes",
+    "proxy-type-direct": "Directa",
+    "proxy-type-socks4": "Socks4",
+    "proxy-type-socks5": "Socks5",
+    "proxy-type-http": "HTTP",
+    "proxy": "Proxy",
+    "proxy-subtitle": "Dirección proxy (p. ej. usuario:contraseña@anfitrión:puerto)",
+    "log": "Registros",
+    "log-subtitle": "Guardar registros, exportar registros...",
+    "save-log": "Guardar registros",
+    "save-log-subtitle": "Guardar automáticamente el archivo de registros",
+    "export-log": "Exportar registros",
+    "export-log-subtitle": "Exportar archivo de registros",
+    "advanced": "Avanzado"
   },
-
   "external-player-launching": "Lanzando {player}",
-
   "detail": {
+    "tracking": "Siguiendo",
     "favorite": "Favorito",
     "favorited": "Favorito",
     "continue-watching": "Continuar {episode}",
@@ -103,9 +143,9 @@
     "get-lastest-data-error": "No se pudieron obtener los datos más recientes",
     "modify-tmdb-binding": "Modificar enlace a TMDB",
     "no-tmdb-data": "No hay datos de TMDB coincidentes, por favor, enlaza los datos tu mismo/a",
-    "tmdb-key-missing": "Falta la clave de la API de TMDB, por favor, rellenala en los ajustes"
+    "tmdb-key-missing": "Falta la clave de la API de TMDB, por favor, rellenala en los ajustes",
+    "tracker": "Siguiendo"
   },
-
   "video": {
     "episodes": "Episodios",
     "watch-now": "Ver ahora",
@@ -116,61 +156,71 @@
     "subtitle": "Subtítulos",
     "subtitle-change": "Cambiar subtítulos {title}",
     "subtitle-file": "Archivo de subtítulos",
-    "torrent-downloading": "Descargando torrent"
+    "torrent-downloading": "Descargando torrent",
+    "tooltip": {
+      "close": "Cerrar",
+      "subtitle": "Subtítulo",
+      "play-list": "Lista de reproducción",
+      "quality": "Calidad",
+      "speed": "Velocidad",
+      "play": "Reproducir",
+      "play-or-pause": "Pausar",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "full-screen": "Pantalla completa",
+      "volume": "Volumen",
+      "torrent-file-list": "Lista de archivos torrent"
+    }
   },
-
   "comic-settings": {
     "read-mode": "Modo de lectura",
     "standard": "Estándar",
     "right-to-left": "Derecha a izquierda",
     "web-tonn": "Webtoon"
   },
-
   "novel-settings": {
     "font-size": "Tamaño de la fuente"
   },
-
+  "bugreport": {
+    "auto-remove-subtitle": "eliminar en ~ días",
+    "show-report-dialog": "Mostrar diálogo de informe",
+    "show-report-dialog-subtitle": "Mostrar el diálogo de informe de errores cuando se inicia la aplicación"
+  },
   "reader": {
     "chapters": "Capítulos",
     "read-now": "Leer ahora",
     "no-chapters": "Sin capítulos"
   },
-
   "upgrade": {
     "check-update": "Buscar actualizaciones",
     "new-version": "Nueva versión {version} detectada",
     "download": "Ir a actualizar",
     "no-update": "Ya actualizado",
-    "not-now": "No ahora",
+    "not-now": "Ahora no",
     "error": "No se pudo verificar si hay actualizaciones, se produjo un error de red"
   },
-
   "extension-install-error": "No se pudo instalar la extensión",
-
   "extension-type": {
     "video": "Vídeo",
     "novel": "Novela",
     "comic": "Cómic"
   },
-
   "extension-info": {
     "author": "Autor",
     "description": "Descripción",
     "version": "Versión",
     "language": "Idioma",
-    "original-site": "Sitio oficial",
+    "original-site": "Sitio original",
     "other-infomation": "Otra información",
     "license": "Licencia",
     "title": "Información de la extensión"
   },
-
   "cookie-clean": {
     "title": "Limpiar cookies",
     "subtitle": "Es posible que tengas que iniciar sesión de nuevo después de la limpieza",
     "success": "Limpiado con éxito",
     "clean": "Limpiar"
   },
-
   "tmdb": {
     "backdrops": "Bajo el telón",
     "status": "Estado",
@@ -180,7 +230,6 @@
     "runtime": "Tiempo de ejecución",
     "languages": "Idiomas"
   },
-
   "bt-server": {
     "not-installed": "BT-Server no está instalado",
     "running": "BT-Server está ejecutándose",
@@ -190,5 +239,34 @@
     "stop": "Parar",
     "upgrade": "Mejorar",
     "start": "Iniciar"
+  },
+  "report": {
+    "copied": "Copiado al portapapeles",
+    "github-bug-report": "Informar en un problema de Github",
+    "title": "Informe de error",
+    "copy-message": "Copiar mensaje de error",
+    "show-report-checkbox": "Mostrar el diálogo de informe cuando se inicia la aplicación"
+  },
+  "anilist": {
+    "title": "Siguiendo en Anilist",
+    "login-hint-1": "Parece que aún no has iniciado sesión en AniList",
+    "login-hint-2": "Por favor, inicia sesión en AniList primero",
+    "status": "Estado",
+    "score": "Puntuación",
+    "watching": "Viendo",
+    "reading": "Leyendo",
+    "completed": "Completado",
+    "paused": "Pausado",
+    "dropped": "Abandonado",
+    "planning": "Planenando",
+    "hold-on": "En espera",
+    "re-watching": "Viendo de nuevo",
+    "re-reading": "Leyendo de nuevo",
+    "start-date": "Fecha de inicio",
+    "end-date": "Fecha de finalización",
+    "unbind": "Desvincular",
+    "episodes": "Episodios",
+    "manga-chaper-read": "Leído capítulo de manga: {chapters}",
+    "anime-episode-watch": "Visto episodio de anime: {episodes}"
   }
 }
