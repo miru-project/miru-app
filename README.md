@@ -92,6 +92,4 @@ Contributions of any kind are welcome, including but not limited to:
 
 ## Additional links
 
-Telegram: https://t.me/MiruChat
-
-Telegram channel: https://t.me/MiruChannel
+Telegram: <https://t.me/MiruChat>

@@ -90,6 +90,4 @@ flutter build windows
 
 ## コミュニケーション
 
-Telegram：https://t.me/MiruChat
-
-Telegramチャンネル：https://t.me/MiruChannel
+Telegram: <https://t.me/MiruChat>

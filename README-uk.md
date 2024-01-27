@@ -90,6 +90,4 @@ flutter build windows
 
 ## Додаткові посилання
 
-Telegram: https://t.me/MiruChat
-
-Telegram channel: https://t.me/MiruChannel
+Telegram: <https://t.me/MiruChat>

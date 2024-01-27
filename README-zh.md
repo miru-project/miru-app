@@ -90,6 +90,4 @@ flutter build windows
 
 ## 交流
 
-Telegram: https://t.me/MiruChat
-
-Telegram 频道: https://t.me/MiruChannel
+Telegram: <https://t.me/MiruChat>
