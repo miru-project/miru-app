@@ -4,18 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/controllers/watch/novel_controller.dart';
+import 'package:miru_app/views/widgets/platform_widget.dart';
 
-class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
+class ControlPanelFooter<T extends ReaderController> extends StatefulWidget {
   const ControlPanelFooter(this.tag, {super.key});
   final String tag;
   @override
-  Widget build(BuildContext context) {
-    final c = Get.find<T>(tag: tag);
-    final int total = (T == NovelController)
-        ? c.watchData.value?.content.length ?? 0
-        : c.watchData.value?.urls.length ?? 0;
-    final totalObs = total.obs;
-    final progressObs = c.progress.value.obs;
+  State<ControlPanelFooter> createState() => _ControlPanelFooterState<T>();
+}
+
+class _ControlPanelFooterState<T extends ReaderController>
+    extends State<ControlPanelFooter> {
+  late final c = Get.find<T>(tag: widget.tag);
+  late final int total = (T == NovelController)
+      ? c.watchData.value?.content.length ?? 0
+      : c.watchData.value?.urls.length ?? 0;
+  late final totalObs = total.obs;
+  late final progressObs = c.progress.value.obs;
+  late final Color containerColor = Platform.isAndroid
+      ? Theme.of(context).colorScheme.background.withOpacity(0.9)
+      : Colors.transparent;
+  @override
+  void initState() {
+    super.initState();
     ever(c.watchData, (callback) {
       progressObs.value = 0;
       totalObs.value = (T == NovelController)
@@ -29,10 +40,10 @@ class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
       debugPrint("scrolled ${c.progress.value}");
       progressObs.value = c.progress.value;
     });
+  }
+
+  Widget _buildAndroid(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    final Color containerColor = Platform.isAndroid
-        ? Theme.of(context).colorScheme.background.withOpacity(0.9)
-        : Colors.transparent;
 
     return Align(
         alignment: const Alignment(0, 1),
@@ -107,8 +118,24 @@ class ControlPanelFooter<T extends ReaderController> extends StatelessWidget {
                       ])))),
           duration: const Duration(milliseconds: 200),
           tween: Tween<Offset>(
-              begin: (c.isShowControlPanel.value) ? Offset(0, 1) : Offset.zero,
-              end: (c.isShowControlPanel.value) ? Offset.zero : Offset(0, 1.0)),
+              begin: (c.isShowControlPanel.value)
+                  ? const Offset(0, 1)
+                  : Offset.zero,
+              end: (c.isShowControlPanel.value)
+                  ? Offset.zero
+                  : const Offset(0, 1.0)),
         ));
+  }
+
+  Widget _buildDesktop(BuildContext context) {
+    return Center();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PlatformBuildWidget(
+      androidBuilder: _buildAndroid,
+      desktopBuilder: _buildAndroid,
+    );
   }
 }

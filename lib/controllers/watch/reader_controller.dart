@@ -58,6 +58,9 @@ class ReaderController<T> extends GetxController {
   final RxDouble prevPageHitBox = 0.3.obs;
   final enableAutoScroll = false.obs;
   final height = 1000.0.obs;
+  final RxBool isMouseHover = false.obs;
+  final RxBool setControllPanel = false.obs;
+  Timer? mouseTimer;
   @override
   void onInit() {
     getContent();
@@ -82,6 +85,15 @@ class ReaderController<T> extends GetxController {
       }
       autoScrollTimer?.cancel();
     });
+    mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
+      debugPrint(setControllPanel.toString());
+      if (setControllPanel.value) {
+        isShowControlPanel.value = true;
+        return;
+      }
+      isShowControlPanel.value = false;
+      setControllPanel.value = false;
+    });
     super.onInit();
   }
 
@@ -99,20 +111,21 @@ class ReaderController<T> extends GetxController {
 
   void nextPage() {}
 
-  showControlPanel() {
-    if (isShowControlPanel.value) {
-      hideControlPanel();
-      return;
-    }
-    isShowControlPanel.value = true;
-    _timer?.cancel();
-    _timer = Timer(const Duration(seconds: 3), () {
-      isShowControlPanel.value = false;
-    });
-  }
+  // showControlPanel() {
+  //   if (isShowControlPanel.value) {
+  //     hideControlPanel();
+  //     return;
+  //   }
+  //   debugPrint(isMouseHover.toString());
+  //   isShowControlPanel.value = true;
+  //   _timer?.cancel();
+  //   _timer = Timer(const Duration(seconds: 3), () {
+  //     isShowControlPanel.value = false;
+  //   });
+  // }
 
   hideControlPanel() {
-    isShowControlPanel.value = false;
+    setControllPanel.value = false;
   }
 
   addHistory(String progress, String totalProgress) async {

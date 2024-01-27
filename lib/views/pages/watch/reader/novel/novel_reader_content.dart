@@ -22,7 +22,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
   _buildContent() {
     return GestureDetector(
         onTapDown: (detail) {
-          _c.showControlPanel();
+          _c.setControllPanel.value = !_c.setControllPanel.value;
         },
         child: LayoutBuilder(
           builder: (context, constraints) => Obx(

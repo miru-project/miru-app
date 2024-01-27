@@ -26,11 +26,14 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
           MouseRegion(
             onHover: (event) {
               if (event.position.dy < 60) {
-                c.showControlPanel();
+                c.setControllPanel.value = true;
+                return;
               }
               if (event.position.dy > LayoutUtils.height - 60) {
-                c.showControlPanel();
+                c.setControllPanel.value = true;
+                return;
               }
+              c.setControllPanel.value = false;
             },
             child: content,
           ),

@@ -237,6 +237,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       );
     }
     _barreryTimer!.cancel();
+    mouseTimer?.cancel();
     WakelockPlus.disable();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.onClose();
