@@ -21,7 +21,7 @@
 
 ## Features
 
-- Support for `windows`,`android`
+- Support for `windows` and `android`
 - Friendly extension writing support, debug log
 - The extension uses the JavaScript language, and the development is simple
 - Support for a custom extension repository

@@ -6,7 +6,7 @@
 
 <h1 align="center">Miru App</h1>
 
-<p align="center">免费、开源的 支持视频、漫画、小说扩展源的多功能应用，支持 Android、Windows、Web.</p>
+<p align="center">免费，开源的 支持视频，漫画，小说扩展源的多功能应用，支持 Android，Windows，Web.</p>
 
 <div align="center">
 
@@ -21,12 +21,12 @@
 
 ## 特性
 
-- 支持 `windows`,`android`
-- 友好的扩展编写支持、调试日志
+- 支持 `windows`，`android`
+- 友好的扩展编写支持，调试日志
 - 扩展使用 JavaScript 语言，开发简单
 - 支持自定义扩展仓库
 - 官方扩展仓库提供视频源，无需编写任何扩展即可使用
-- 支持在线观看多种视频、漫画、小说源，实现多平台的统一
+- 支持在线观看多种视频，漫画，小说源，实现多平台的统一
 - 统一系统 UI 的设计语言
 - 自动获取 TMDB 元数据信息
 
