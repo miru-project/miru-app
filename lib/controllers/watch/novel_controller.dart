@@ -118,6 +118,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       );
     }
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    mouseTimer?.cancel();
     super.onClose();
   }
 }
