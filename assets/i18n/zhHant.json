@@ -25,20 +25,17 @@
     "delete": "删除",
     "delete-all": "删除全部"
   },
-
   "home": {
     "continue-watching": "繼續觀看",
     "favorite": "收藏",
     "no-record": "暫無收藏和觀看紀錄",
     "watched": "看到 {ep}"
   },
-
   "search": {
     "hint-text": "請善用搜索哦!~",
     "all": "全部",
     "filter": "篩選"
   },
-
   "extension": {
     "import": {
       "title": "導入擴充套件",
@@ -51,14 +48,12 @@
     "installed": "已安装",
     "edit-code": "編輯程式"
   },
-
   "extension-repo": {
     "error": "發生錯誤!",
     "error-tips": "請檢查網絡連線或者擴充套件庫地址是否正確",
     "empty": "擴充套件庫為空",
     "upgrade": "更新"
   },
-
   "settings": {
     "repo-url": "擴充套件庫地址",
     "repo-url-subtitle": "獲取擴充套件的仓库地址",
@@ -89,9 +84,7 @@
     "extension-log-subtitle": "擴充套件除錯視窗",
     "about": "關於"
   },
-
   "external-player-launching": "正在啟動 {player}",
-
   "detail": {
     "favorite": "收藏",
     "favorited": "已收藏",
@@ -105,7 +98,6 @@
     "no-tmdb-data": "未匹配到 TMDB 數據，请自行綁定數據",
     "tmdb-key-missing": "TMDB API Key 丢失，請前往設置填寫"
   },
-
   "video": {
     "episodes": "集",
     "watch-now": "立即觀看",
@@ -118,24 +110,20 @@
     "subtitle-file": "選擇字幕文件",
     "torrent-downloading": "正在下載種子"
   },
-
   "reader": {
     "chapters": "章",
     "read-now": "立即閱讀",
     "no-chapters": "暫無章節"
   },
-
   "comic-settings": {
     "read-mode": "漫畫閱讀模式",
     "standard": "標準模式",
     "right-to-left": "從右到左",
     "web-tonn": "Webtoon"
   },
-
   "novel-settings": {
     "font-size": "字體大小"
   },
-
   "upgrade": {
     "check-update": "檢查更新",
     "new-version": "偵測到新版本 {version}",
@@ -144,33 +132,28 @@
     "not-now": "暫不更新",
     "error": "检查更新失敗，請檢查網路狀態"
   },
-
   "extension-install-error": "擴充套件安裝失敗",
-
   "extension-type": {
     "video": "影片",
     "novel": "小說",
     "comic": "漫畫"
   },
-
   "extension-info": {
     "author": "作者",
     "description": "描述",
     "version": "版本",
     "language": "語言",
     "original-site": "原始網站",
-    "other-infomation": "其他訊息",
+    "other-information": "其他訊息",
     "license": "許可",
     "title": "擴充套件詳情"
   },
-
   "cookie-clean": {
     "title": "清除 Cookie",
     "subtitle": "清除之後可能要重新登錄",
     "success": "清除成功",
     "clean": "清除"
   },
-
   "tmdb": {
     "backdrops": "劇照",
     "status": "狀態",
@@ -180,7 +163,6 @@
     "runtime": "時長",
     "languages": "語言"
   },
-
   "bt-server": {
     "not-installed": "BT-Server 尚未安装",
     "running": "BT-Server 正在執行",

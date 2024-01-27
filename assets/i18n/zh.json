@@ -187,7 +187,7 @@
     "version": "版本",
     "language": "语言",
     "original-site": "源站",
-    "other-infomation": "其他信息",
+    "other-information": "其他信息",
     "license": "许可",
     "title": "扩展详情"
   },
@@ -234,7 +234,7 @@
     "end-date": "结束日期",
     "unbind": "取消绑定",
     "episodes": "进度",
-    "manga-chaper-read": "看过的漫画章节: {chapters}",
+    "manga-chapter-read": "看过的漫画章节: {chapters}",
     "anime-episode-watch": "看过的动画剧集: {episodes}"
   }
 }
