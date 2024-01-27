@@ -39,7 +39,7 @@
 
 ## インストール
 
-うぬたみねー、[くまから](https://github.com/miru-project/miru-app/releases/latest)さいしんばんぬインストールパッケージダウンロードすが、いかぬほうほうっしぐじしんでぃビルドしみそーれー 
+うぬたみねー、[くまから](https://github.com/miru-project/miru-app/releases/latest)さいしんばんぬインストールパッケージダウンロードすが、いかぬほうほうっしぐじしんでぃビルドしみそーれー
 
 ## かんちく
 

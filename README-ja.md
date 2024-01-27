@@ -39,7 +39,7 @@
 
 ## インストール
 
-そのためには、[ここから](https://github.com/miru-project/miru-app/releases/latest)最新版のインストールパッケージをダウンロードするか、以下の方法でご自身でビルドしてください 
+そのためには、[ここから](https://github.com/miru-project/miru-app/releases/latest)最新版のインストールパッケージをダウンロードするか、以下の方法でご自身でビルドしてください
 
 ## 構築
 

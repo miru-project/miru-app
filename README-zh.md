@@ -39,7 +39,7 @@
 
 ## 安装
 
-你可以通过 [Release](https://github.com/miru-project/miru-app/releases/latest) 页面下载最新版本的安装包，或者通过下面的方法自行构建 
+你可以通过 [Release](https://github.com/miru-project/miru-app/releases/latest) 页面下载最新版本的安装包，或者通过下面的方法自行构建
 
 ## 构建
 
