@@ -1,6 +1,5 @@
 [简体中文](README-zh.md) | [English](README.md) | [日本語](README-ja.md) | [Русский](README-ru.md) | [Беларуская](README-be.md) | [Українська](README-uk.md)
 
-
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
 </p>
@@ -80,7 +79,6 @@ flutter build windows
 
 ぎんじてぃんでーLinuxっしはいどーんかんけいぬむんだいにゆりquickjsきどうならんたみ、とうみんぬえーじゃサポートたいさがいとぅなやびーん。
 
-
 ## こうきん
 
 いかくくむん、あらゆるしゅるいぬこうきんかんぎうぅいさびーん。
@@ -89,7 +87,6 @@ flutter build windows
 - バグてぃがろーフィードバック
 - コード
 - ぶんしょさくせい
-
 
 ## コミュニケーション
 

@@ -1,6 +1,5 @@
 [English](README.md) | [日本語](README-ja.md) | [うちなーぐち](README-ryu.md) | [Русский](README-ru.md) | [Беларуская](README-be.md) | [Українська](README-uk.md)
 
-
 <p align="center">
 <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
 </p>
@@ -80,7 +79,6 @@ flutter build windows
 
 目前 Linux 因为依赖问题导致无法启动 quickjs 所以暂时不支持了
 
-
 ## 贡献
 
 欢迎任何形式的贡献，包括但不限于：
@@ -89,7 +87,6 @@ flutter build windows
 - Bug 反馈
 - 代码贡献
 - 文档编写
-
 
 ## 交流
 

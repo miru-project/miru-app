@@ -81,7 +81,6 @@ flutter build windows
 
 At present, Linux cannot start quickjs due to dependency problems, so it is not supported for the time being
 
-
 ## Contribution
 
 Contributions of any kind are welcome, including but not limited to:
@@ -90,7 +89,6 @@ Contributions of any kind are welcome, including but not limited to:
 - bug feedback
 - code contribution
 - document writing
-
 
 ## Additional links
 

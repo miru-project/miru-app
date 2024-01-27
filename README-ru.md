@@ -88,7 +88,6 @@ flutter build windows
 - Изменение кода
 - Написание документации
 
-
 ## Дополнительные ссылки
 
 Telegram: https://t.me/MiruChat
