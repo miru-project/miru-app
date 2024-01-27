@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
-import 'package:miru_app/views/widgets/watch/playlist.dart';
+import 'package:miru_app/views/pages/watch/video/video_player_sidebar.dart';
 import 'package:miru_app/views/pages/watch/video/video_player_content.dart';
 import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
@@ -110,14 +110,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
             ),
             if (_c.isOpenSidebar.value)
               Expanded(
-                child: PlayList(
-                  selectIndex: _c.index.value,
-                  list: widget.playList.map((e) => e.name).toList(),
-                  title: widget.title,
-                  onChange: (value) {
-                    _c.index.value = value;
-                    _c.showPlayList.value = false;
-                  },
+                child: VideoPlayerSidebar(
+                  controller: _c,
                 ),
               )
           ],
