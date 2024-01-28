@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -218,24 +217,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
   Widget imageBuilder(String url) {
     return GestureDetector(
         onTapDown: (deatils) {
-          double counter = 0;
-          debugPrint(
-              "${deatils.globalPosition.dx} ${deatils.globalPosition.dy}");
-          if (_c.isShowControlPanel.value) {
-            // _c.setControllPanel.value = false;
-            // _c.isShowControlPanel.value = false;
-            Timer.periodic(const Duration(milliseconds: 50), (timer) {
-              if (counter == 10) {
-                timer.cancel();
-              }
-              _c.isShowControlPanel.value = false;
-              counter++;
-            });
-            return;
-          }
-          // _c.setControllPanel.value = !_c.isShowControlPanel.value;
-          _c.setControllPanel.value = true;
-          // _c.isShowControlPanel.value = true;
+          _c.setControllPanel.value = !_c.setControllPanel.value;
         },
         onDoubleTapDown: (details) {
           showModalBottomSheet(

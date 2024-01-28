@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:miru_app/models/extension.dart';
-import 'package:miru_app/models/history.dart';
 import 'package:miru_app/controllers/home_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/data/services/extension_service.dart';
+import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -38,7 +37,6 @@ class ReaderController<T> extends GetxController {
   late final index = playIndex.obs;
   late final progress = 0.obs;
   get cuurentPlayUrl => playList[index.value].url;
-  Timer? _timer;
   Timer? autoScrollTimer;
   final isScrolled = true.obs;
   final updateSlider = true.obs;
@@ -61,6 +59,8 @@ class ReaderController<T> extends GetxController {
   final RxBool isMouseHover = false.obs;
   final RxBool setControllPanel = false.obs;
   Timer? mouseTimer;
+  final RxBool enableWakeLock = false.obs;
+  // final readType = MangaReadMode.standard.obs;
   @override
   void onInit() {
     getContent();
@@ -92,7 +92,6 @@ class ReaderController<T> extends GetxController {
         return;
       }
       isShowControlPanel.value = false;
-      setControllPanel.value = false;
     });
     super.onInit();
   }
@@ -110,19 +109,6 @@ class ReaderController<T> extends GetxController {
   void previousPage() {}
 
   void nextPage() {}
-
-  // showControlPanel() {
-  //   if (isShowControlPanel.value) {
-  //     hideControlPanel();
-  //     return;
-  //   }
-  //   debugPrint(isMouseHover.toString());
-  //   isShowControlPanel.value = true;
-  //   _timer?.cancel();
-  //   _timer = Timer(const Duration(seconds: 3), () {
-  //     isShowControlPanel.value = false;
-  //   });
-  // }
 
   hideControlPanel() {
     setControllPanel.value = false;

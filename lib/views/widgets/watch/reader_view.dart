@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/utils/layout.dart';
@@ -24,17 +26,16 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
       () => Stack(
         children: [
           MouseRegion(
-            onHover: (event) {
-              if (event.position.dy < 60) {
-                c.setControllPanel.value = true;
-                return;
-              }
-              if (event.position.dy > LayoutUtils.height - 60) {
-                c.setControllPanel.value = true;
-                return;
-              }
-              c.setControllPanel.value = false;
-            },
+            onHover: (Platform.isAndroid)
+                ? null
+                : (event) {
+                    if (event.position.dy < 60 ||
+                        event.position.dy > LayoutUtils.height - 60) {
+                      c.setControllPanel.value = true;
+                      return;
+                    }
+                    c.setControllPanel.value = false;
+                  },
             child: content,
           ),
 
@@ -97,7 +98,7 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
             // 底部控制
           ],
           ControlPanelFooter<T>(tag),
-          if (c.enableAutoScroll.value)
+          if (c.enableAutoScroll.value && Platform.isAndroid)
             ElevatedButton(
                 onPressed: () {
                   c.enableAutoScroll.value = false;
