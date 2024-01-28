@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/views/pages/watch/video/video_player_controls.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
@@ -75,6 +76,9 @@ class _VideoPlayerContenState extends State<VideoPlayerConten> {
   Widget _buildDesktop(BuildContext context) {
     return Video(
       controller: _c.videoController,
+      subtitleViewConfiguration: const SubtitleViewConfiguration(
+        visible: false,
+      ),
       controls: (state) {
         return VideoPlayerControls(
           tag: widget.tag,

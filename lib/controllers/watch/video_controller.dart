@@ -52,8 +52,10 @@ class VideoPlayerController extends GetxController {
     required this.anilistID,
   });
 
+  // 播放器
   final player = Player();
   late final videoController = VideoController(player);
+
   final showPlayList = false.obs;
   final isOpenSidebar = false.obs;
   final isFullScreen = false.obs;
@@ -139,7 +141,17 @@ class VideoPlayerController extends GetxController {
   String _torrenHash = "";
 
   // 调用 watch 方法获取到的数据
-  final Rx<ExtensionBangumiWatch?> watchData = Rx(null);
+  ExtensionBangumiWatch? watchData;
+  final error = "".obs;
+  final isGettingWatchData = true.obs;
+
+  // 字幕配置
+  final subtitleFontSize = 24.0.obs;
+  final subtitleBackgroundColor = const Color(0xaa000000).obs;
+  final subtitleTextColor = Colors.white.obs;
+  final subtitleTextHeight = 1.4.obs;
+  final subtitleFontWeight = FontWeight.normal.obs;
+  final subtitleTextAlign = TextAlign.center.obs;
 
   @override
   void onInit() async {
@@ -157,7 +169,6 @@ class VideoPlayerController extends GetxController {
       await (player.platform as dynamic)
           .setProperty('demuxer-max-bytes', '30MiB');
     }
-    play();
 
     // 切换剧集
     ever(index, (callback) {
@@ -225,73 +236,51 @@ class VideoPlayerController extends GetxController {
       sendMessage(Message(Text(event)));
     });
 
+    play();
     super.onInit();
   }
 
+  // 播放
   play() async {
-    player.stop();
     // 如果已经 delete 当前 controller
     if (!Get.isRegistered<VideoPlayerController>(tag: title)) {
       return;
     }
+    player.stop();
+    isGettingWatchData.value = true;
+    try {
+      await getWatchData();
+    } catch (e) {
+      logger.severe(e);
+      error.value = e.toString();
+      return;
+    }
 
     try {
-      watchData.value = null;
-      subtitles.clear();
-      final playUrl = playList[index.value].url;
-      watchData.value = await runtime.watch(playUrl) as ExtensionBangumiWatch;
-
-      if (watchData.value!.type == ExtensionWatchBangumiType.torrent) {
-        if (Get.find<MainController>().btServerisRunning.value == false) {
-          await BTServerUtils.startServer();
+      if (watchData!.type == ExtensionWatchBangumiType.torrent) {
+        try {
+          await getTorrentMediaFile();
+        } catch (e) {
+          logger.severe(e);
+          error.value = e.toString();
+          return;
         }
-        sendMessage(
-          Message(
-            Text('video.torrent-downloading'.i18n),
-          ),
-        );
-        // 下载 torrent
-        final torrentFile = path.join(
-          MiruDirectory.getCacheDirectory,
-          'temp.torrent',
-        );
-        await dio.download(watchData.value!.url, torrentFile);
-        final file = File(torrentFile);
-        _torrenHash = await BTServerApi.addTorrent(file.readAsBytesSync());
-
-        final files = await BTServerApi.getFileList(_torrenHash);
-
-        torrentMediaFileList.clear();
-
-        for (final file in files) {
-          if (_isSubtitle(file)) {
-            subtitles.add(
-              SubtitleTrack.uri(
-                '${BTServerApi.baseApi}/torrent/$_torrenHash/$file',
-                title: path.basename(file),
-              ),
-            );
-          } else {
-            torrentMediaFileList.add(file);
-          }
-        }
-
         playTorrentFile(torrentMediaFileList.first);
       } else {
         getQuality();
         await player.open(
-          Media(watchData.value!.url, httpHeaders: watchData.value!.headers),
+          Media(watchData!.url, httpHeaders: watchData!.headers),
         );
-        if (watchData.value!.audioTrack != null) {
+        if (watchData!.audioTrack != null) {
           await player.setAudioTrack(
-            AudioTrack.uri(watchData.value!.audioTrack!),
+            AudioTrack.uri(watchData!.audioTrack!),
           );
         }
       }
-
+      isGettingWatchData.value = false;
       // 添加来自扩展的字幕
       subtitles.addAll(
-        (watchData.value!.subtitles ?? []).map(
+        (watchData!.subtitles ?? []).map(
           (e) => SubtitleTrack.uri(
             e.url,
             language: e.language,
@@ -300,26 +289,25 @@ class VideoPlayerController extends GetxController {
         ),
       );
       player.setSubtitleTrack(SubtitleTrack.no());
-    } catch (e) {
+    } on StartServerException catch (_) {
       // 如果是 启动 bt server 失败
-      if (e is StartServerException) {
-        if (Platform.isAndroid) {
-          await showDialog(
-            context: currentContext,
-            builder: (context) => const BTDialog(),
-          );
-        } else {
-          await fluent.showDialog(
-            context: currentContext,
-            builder: (context) => const BTDialog(),
-          );
-        }
-
-        // 延时 3 秒再重试
-        await Future.delayed(const Duration(seconds: 3));
-        play();
-        return;
+      if (Platform.isAndroid) {
+        await showDialog(
+          context: currentContext,
+          builder: (context) => const BTDialog(),
+        );
+      } else {
+        await fluent.showDialog(
+          context: currentContext,
+          builder: (context) => const BTDialog(),
+        );
       }
+
+      // 延时 3 秒再重试
+      await Future.delayed(const Duration(seconds: 3));
+      play();
+      return;
+    } catch (e) {
       sendMessage(
         Message(
           Text(e.toString()),
@@ -330,9 +318,52 @@ class VideoPlayerController extends GetxController {
     }
   }
 
+  getWatchData() async {
+    watchData = null;
+    subtitles.clear();
+    final playUrl = playList[index.value].url;
+    watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
+  }
+
+  getTorrentMediaFile() async {
+    if (Get.find<MainController>().btServerisRunning.value == false) {
+      await BTServerUtils.startServer();
+    }
+    sendMessage(
+      Message(
+        Text('video.torrent-downloading'.i18n),
+      ),
+    );
+    // 下载 torrent
+    final torrentFile = path.join(
+      MiruDirectory.getCacheDirectory,
+      'temp.torrent',
+    );
+    await dio.download(watchData!.url, torrentFile);
+
+    final file = File(torrentFile);
+    _torrenHash = await BTServerApi.addTorrent(file.readAsBytesSync());
+    final files = await BTServerApi.getFileList(_torrenHash);
+
+    torrentMediaFileList.clear();
+
+    for (final file in files) {
+      if (_isSubtitle(file)) {
+        subtitles.add(
+          SubtitleTrack.uri(
+            '${BTServerApi.baseApi}/torrent/$_torrenHash/$file',
+            title: path.basename(file),
+          ),
+        );
+      } else {
+        torrentMediaFileList.add(file);
+      }
+    }
+  }
+
   getQuality() async {
-    final url = watchData.value!.url;
-    final headers = watchData.value!.headers;
+    final url = watchData!.url;
+    final headers = watchData!.headers;
     try {
       final response = await dio.get(
         url,
@@ -368,7 +399,7 @@ class VideoPlayerController extends GetxController {
 
   switchQuality(String qualityUrl) async {
     final currentSecond = player.state.position.inSeconds;
-    final headers = watchData.value!.headers;
+    final headers = watchData!.headers;
     await player.open(
       Media(qualityUrl, httpHeaders: headers),
     );

@@ -1,11 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
 import 'package:miru_app/router/router.dart';
+import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/watch/playlist.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -25,6 +30,7 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
   final FocusNode _focusNode = FocusNode();
   Timer? _timer;
   bool showControls = true;
+  final _subtitleViewKey = GlobalKey<SubtitleViewState>();
 
   @override
   void initState() {
@@ -73,45 +79,182 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
               c.keyboardShortcuts[value.logicalKey]?.call();
             }
           },
-          child: Column(
+          child: Stack(
             children: [
-              Opacity(
-                opacity: showControls ? 1 : 0,
-                child: _VideoPlayerControlsHeader(
-                  title: c.title,
-                  episode: c.playList[c.index.value].name,
-                  onClose: () {
-                    if (c.isFullScreen.value) {
-                      WindowManager.instance.setFullScreen(false);
-                    }
-                    router.pop();
+              const Positioned.fill(
+                child: SizedBox.expand(),
+              ),
+              // subtitle
+              Positioned.fill(
+                child: // subtitle
+                    Obx(
+                  () {
+                    final textStyle = TextStyle(
+                      height: c.subtitleTextHeight.value,
+                      fontSize: c.subtitleFontSize.value,
+                      letterSpacing: 0.0,
+                      wordSpacing: 0.0,
+                      color: c.subtitleTextColor.value,
+                      fontWeight: c.subtitleFontWeight.value,
+                      backgroundColor: c.subtitleBackgroundColor.value,
+                    );
+                    _subtitleViewKey.currentState?.textAlign =
+                        c.subtitleTextAlign.value;
+                    _subtitleViewKey.currentState?.style = textStyle;
+                    _subtitleViewKey.currentState?.padding =
+                        EdgeInsets.fromLTRB(
+                      16.0,
+                      0.0,
+                      16.0,
+                      showControls ? 100.0 : 16.0,
+                    );
+                    return SubtitleView(
+                      controller: c.videoController,
+                      configuration: SubtitleViewConfiguration(
+                        style: textStyle,
+                        textAlign: c.subtitleTextAlign.value,
+                      ),
+                      key: _subtitleViewKey,
+                    );
                   },
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: Obx(() {
-                    if (c.watchData.value != null) {
-                      return StreamBuilder(
-                        stream: c.player.stream.buffering,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data! ||
-                              c.player.state.buffering) {
-                            return const ProgressRing();
+              Positioned.fill(
+                child: Column(
+                  children: [
+                    // header
+                    Opacity(
+                      opacity: showControls ? 1 : 0,
+                      child: _VideoPlayerControlsHeader(
+                        title: c.title,
+                        episode: c.playList[c.index.value].name,
+                        onClose: () {
+                          if (c.isFullScreen.value) {
+                            WindowManager.instance.setFullScreen(false);
                           }
-                          return const SizedBox.shrink();
+                          router.pop();
                         },
-                      );
-                    }
-                    return Text(
-                      'Getting play link from ${c.runtime.extension.name}...',
-                    );
-                  }),
+                      ),
+                    ),
+                    // center
+                    Expanded(
+                      child: Center(
+                        child: Obx(() {
+                          if (c.error.value.isNotEmpty) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  "Getting streamlink error",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Button(
+                                      child: const Text('Error message'),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => ContentDialog(
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 500,
+                                            ),
+                                            title: const Text('Error message'),
+                                            content:
+                                                SelectableText(c.error.value),
+                                            actions: [
+                                              Button(
+                                                child:
+                                                    Text('common.close'.i18n),
+                                                onPressed: () {
+                                                  router.pop();
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Button(
+                                      child: Text('Retry'.i18n),
+                                      onPressed: () {
+                                        c.error.value = '';
+                                        c.play();
+                                      },
+                                    ),
+                                  ],
+                                )
+                              ],
+                            );
+                          }
+                          if (!c.isGettingWatchData.value) {
+                            return StreamBuilder(
+                              stream: c.player.stream.buffering,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData && snapshot.data! ||
+                                    c.player.state.buffering) {
+                                  return const ProgressRing();
+                                }
+                                return const SizedBox.shrink();
+                              },
+                            );
+                          }
+                          return Card(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (c.runtime.extension.icon != null)
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: const EdgeInsets.only(right: 10),
+                                    child: CacheNetWorkImagePic(
+                                      c.runtime.extension.icon!,
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                  ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      c.runtime.extension.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const Text(
+                                      'Getting streamlink...',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    // footer
+                    Opacity(
+                      opacity: showControls ? 1 : 0,
+                      child: _VideoPlayerFooter(controller: c),
+                    ),
+                  ],
                 ),
-              ),
-              Opacity(
-                opacity: showControls ? 1 : 0,
-                child: _VideoPlayerFooter(controller: c),
               ),
             ],
           ),
@@ -639,6 +782,24 @@ class _VideoPlayerTrack extends StatefulWidget {
 class _VideoPlayerTrackState extends State<_VideoPlayerTrack> {
   final controller = FlyoutController();
 
+  _addSubtitle() async {
+    final file = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['srt', 'vtt'],
+      allowMultiple: false,
+    );
+    if (file == null) {
+      return;
+    }
+    final data = File(file.files.first.path!).readAsStringSync();
+    widget.controller.subtitles.add(
+      SubtitleTrack.data(
+        data,
+        title: file.files.first.name,
+      ),
+    );
+  }
+
   @override
   dispose() {
     super.dispose();
@@ -689,6 +850,12 @@ class _VideoPlayerTrackState extends State<_VideoPlayerTrack> {
                               SubtitleTrack.no(),
                             );
                             router.pop();
+                          },
+                        ),
+                        ListTile.selectable(
+                          title: const Text('Add subtitle file'),
+                          onPressed: () {
+                            _addSubtitle();
                           },
                         ),
                         // 来自扩展的字幕
