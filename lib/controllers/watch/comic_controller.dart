@@ -31,7 +31,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     'webTonn': MangaReadMode.webTonn,
   };
   final String setting = MiruStorage.getSetting(SettingKey.readingMode);
-  final readType = MangaReadMode.standard.obs;
+  // final readType = MangaReadMode.standard.obs;
   final currentScale = 1.0.obs;
   // 当前页码
   final currentPage = 0.obs;
@@ -41,6 +41,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
   final batteryLevel = 100.obs;
+  final readType = MangaReadMode.standard.obs;
   Timer? _barreryTimer;
   final statusBarElement = <String, RxBool>{
     'reader-settings.battery'.i18n: true.obs,
@@ -63,8 +64,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   void onInit() async {
     _initSetting();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    WakelockPlus.toggle(
-        enable: MiruStorage.getSetting(SettingKey.enableWakelock));
+    enableWakeLock.value = MiruStorage.getSetting(SettingKey.enableWakelock);
+    WakelockPlus.toggle(enable: enableWakeLock.value);
     await _statusBar();
     _barreryTimer =
         Timer.periodic(const Duration(seconds: 10), (timer) => _statusBar());

@@ -8,7 +8,6 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/settings/settings_switch_tile.dart';
-import 'package:miru_app/views/widgets/settings/settings_tile.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class ComicReaderSettings extends StatefulWidget {
@@ -21,7 +20,7 @@ class ComicReaderSettings extends StatefulWidget {
 
 class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   late final ComicController _c = Get.find<ComicController>(tag: widget.tag);
-
+  final fluent.FlyoutController _readModeFlyout = fluent.FlyoutController();
   // double nextPageHitBox = MiruStorage.getSetting(SettingKey.nextPageHitBox);
   // double prevPageHitBox = MiruStorage.getSetting(SettingKey.prevPageHitBox);
   Widget _buildAndroid(BuildContext context) {
@@ -181,16 +180,16 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                                 MiruStorage.setSetting(
                                     SettingKey.prevPageHitBox, val);
                               }),
-                          SettingsSwitchTile(
+                          Obx(() => SettingsSwitchTile(
                               icon: const Icon(Icons.coffee),
                               title: "reader-settings.enable-wakelock".i18n,
-                              buildValue: () => MiruStorage.getSetting(
-                                  SettingKey.enableWakelock),
+                              buildValue: () => _c.enableWakeLock.value,
                               onChanged: (val) {
                                 WakelockPlus.toggle(enable: val);
+                                _c.enableWakeLock.value = val;
                                 MiruStorage.setSetting(
                                     SettingKey.enableWakelock, val);
-                              }),
+                              })),
                         ],
                       )),
                 ),
@@ -242,59 +241,102 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return Obx(() {
-      return fluent.Card(
-        backgroundColor: fluent.FluentTheme.of(context).micaBackgroundColor,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('comic-settings.read-mode'.i18n),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                fluent.ToggleButton(
-                  checked: _c.readType.value == MangaReadMode.standard,
-                  onChanged: (value) {
-                    if (value) {
-                      setState(() {
-                        _c.readType.value = MangaReadMode.standard;
-                      });
-                    }
+    return Obx(() => fluent.CommandBar(
+          primaryItems: <fluent.CommandBarItem>[
+            CommandBarFlyOutTarget(
+                controller: _readModeFlyout,
+                child: fluent.IconButton(
+                  icon: Row(mainAxisSize: MainAxisSize.min, children: [
+                    const Icon(
+                      fluent.FluentIcons.reading_mode,
+                      size: 17,
+                    ),
+                    const SizedBox(width: 8),
+                    Text("comic-settings.read-mode".i18n)
+                  ]),
+                  onPressed: () {
+                    _readModeFlyout.showFlyout(
+                        builder: (context) => fluent.MenuFlyout(
+                              items: [
+                                fluent.MenuFlyoutItem(
+                                    leading: _c.readType.value ==
+                                            MangaReadMode.standard
+                                        ? const Icon(
+                                            fluent.FluentIcons.location_dot)
+                                        : null,
+                                    text: Text("comic-settings.standard".i18n),
+                                    onPressed: () {
+                                      _c.readType.value =
+                                          MangaReadMode.standard;
+                                    }),
+                                fluent.MenuFlyoutItem(
+                                    leading: _c.readType.value ==
+                                            MangaReadMode.rightToLeft
+                                        ? const Icon(
+                                            fluent.FluentIcons.location_dot)
+                                        : null,
+                                    text: Text(
+                                        "comic-settings.right-to-left".i18n),
+                                    onPressed: () {
+                                      _c.readType.value =
+                                          MangaReadMode.rightToLeft;
+                                    }),
+                                fluent.MenuFlyoutItem(
+                                    leading: _c.readType.value ==
+                                            MangaReadMode.webTonn
+                                        ? const Icon(
+                                            fluent.FluentIcons.location_dot)
+                                        : null,
+                                    text: Text("comic-settings.web-tonn".i18n),
+                                    onPressed: () {
+                                      _c.readType.value = MangaReadMode.webTonn;
+                                    })
+                              ],
+                            ));
                   },
-                  child: Text('comic-settings.standard'.i18n),
+                )),
+            fluent.CommandBarBuilderItem(
+                wrappedItem: fluent.CommandBarButton(
+                  label: SizedBox(
+                      width: 40,
+                      child: fluent.NumberBox(
+                        max: _c.watchData.value?.urls.length ?? 1,
+                        min: 1,
+                        mode: fluent.SpinButtonPlacementMode.none,
+                        clearButton: false,
+                        value: _c.progress.value + 1,
+                        onChanged: (value) {
+                          if (value != null) {
+                            _c.updateSlider.value = true;
+                            _c.progress.value = value - 1;
+                          }
+                        },
+                      )),
+                  onPressed: null,
                 ),
-                const SizedBox(width: 8),
-                fluent.ToggleButton(
-                  checked: _c.readType.value == MangaReadMode.rightToLeft,
-                  onChanged: (value) {
-                    if (value) {
-                      setState(() {
-                        _c.readType.value = MangaReadMode.rightToLeft;
-                      });
-                    }
+                builder: (context, mode, w) => Tooltip(
+                      message: "comic-settings.page".i18n,
+                      child: w,
+                    )),
+            CommandBarText(text: "/ ${_c.watchData.value?.urls.length ?? 0}"),
+            const fluent.CommandBarSeparator(thickness: 3),
+            fluent.CommandBarBuilderItem(
+              builder: (context, mode, w) => Tooltip(
+                message: "reader-settings.enable-wakelock".i18n,
+                child: w,
+              ),
+              wrappedItem: CommandBarToggleButton(
+                  onchange: (val) {
+                    _c.enableWakeLock.value = val;
+                    WakelockPlus.toggle(enable: val);
+                    MiruStorage.setSetting(SettingKey.enableWakelock, val);
                   },
-                  child: Text('comic-settings.right-to-left'.i18n),
-                ),
-                const SizedBox(width: 8),
-                fluent.ToggleButton(
-                  checked: _c.readType.value == MangaReadMode.webTonn,
-                  onChanged: (value) {
-                    if (value) {
-                      setState(() {
-                        _c.readType.value = MangaReadMode.webTonn;
-                      });
-                    }
-                  },
-                  child: Text('comic-settings.web-tonn'.i18n),
-                )
-              ],
-            )
+                  checked: _c.enableWakeLock.value,
+                  child:
+                      const Icon(fluent.FluentIcons.coffee_script, size: 17)),
+            ),
           ],
-        ),
-      );
-    });
+        ));
   }
 
   @override
@@ -302,6 +344,78 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
     return PlatformBuildWidget(
       androidBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
+    );
+  }
+}
+
+class CommandBarDropDownButton extends fluent.CommandBarItem {
+  const CommandBarDropDownButton(
+      {super.key, required this.items, this.onPressed, this.icon, this.label});
+  final List<fluent.MenuFlyoutItem> items;
+  final VoidCallback? onPressed;
+  final Widget? icon;
+  final Widget? label;
+
+  @override
+  Widget build(
+      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      if (icon != null) ...[icon!, const SizedBox(width: 8)],
+      fluent.DropDownButton(items: items)
+    ]);
+  }
+}
+
+class CommandBarFlyOutTarget extends fluent.CommandBarItem {
+  const CommandBarFlyOutTarget(
+      {super.key, required this.controller, required this.child, this.label});
+  final fluent.FlyoutController controller;
+  final Widget child;
+  final Widget? label;
+  @override
+  Widget build(
+      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      if (label != null) ...[
+        label!,
+        const SizedBox(
+          width: 6.0,
+        )
+      ],
+      fluent.FlyoutTarget(
+        controller: controller,
+        child: child,
+      )
+    ]);
+  }
+}
+
+class CommandBarText extends fluent.CommandBarItem {
+  const CommandBarText({super.key, required this.text});
+  final String text;
+  @override
+  Widget build(
+      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
+    return Text(text);
+  }
+}
+
+class CommandBarToggleButton extends fluent.CommandBarItem {
+  const CommandBarToggleButton(
+      {super.key,
+      required this.onchange,
+      required this.checked,
+      required this.child});
+  final bool checked;
+  final void Function(bool)? onchange;
+  final Widget child;
+  @override
+  Widget build(
+      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
+    return fluent.ToggleButton(
+      checked: checked,
+      onChanged: onchange,
+      child: child,
     );
   }
 }

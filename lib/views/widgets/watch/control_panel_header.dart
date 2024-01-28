@@ -27,8 +27,6 @@ class _ControlPanelHeaderState<T extends ReaderController>
   late final _c = Get.find<T>(tag: widget.tag);
   final fluent.FlyoutController _playListFlayoutcontroller =
       fluent.FlyoutController();
-  final fluent.FlyoutController _settingFlayoutcontroller =
-      fluent.FlyoutController();
 
   Widget _buildAndroid(BuildContext context) {
     return SafeArea(
@@ -83,17 +81,17 @@ class _ControlPanelHeaderState<T extends ReaderController>
   Widget _buildDesktop(BuildContext context) {
     final route = ModalRoute.of(context)?.settings.name;
     debugPrint(route ?? '');
-    return MouseRegion(
-        onHover: (details) {
-          // _c.setControllPanel.value = true;
-        },
-        child: Obx(
-          () => fluent.Column(children: [
-            Container(
-              width: double.infinity,
-              height: 40,
-              color: fluent.FluentTheme.of(context).micaBackgroundColor,
-              padding: const EdgeInsets.only(left: 16),
+    return Obx(
+      () => fluent.Column(children: [
+        Container(
+          width: double.infinity,
+          height: 40,
+          color: fluent.FluentTheme.of(context).micaBackgroundColor,
+          padding: const EdgeInsets.only(left: 16),
+          child: MouseRegion(
+              onHover: (detail) {
+                _c.setControllPanel.value = true;
+              },
               child: DragToMoveArea(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -107,19 +105,7 @@ class _ControlPanelHeaderState<T extends ReaderController>
                     const SizedBox(width: 16),
                     Text(_c.title + _c.playList[_c.index.value].name),
                     const Spacer(),
-                    fluent.FlyoutTarget(
-                      controller: _settingFlayoutcontroller,
-                      child: fluent.IconButton(
-                        icon: const Icon(fluent.FluentIcons.settings),
-                        onPressed: () {
-                          _settingFlayoutcontroller.showFlyout(
-                              builder: (context) {
-                            return widget.buildSettings(context);
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 8),
+                    // const SizedBox(width: 8),
                     fluent.FlyoutTarget(
                       controller: _playListFlayoutcontroller,
                       child: fluent.IconButton(
@@ -154,87 +140,15 @@ class _ControlPanelHeaderState<T extends ReaderController>
                     )
                   ],
                 ),
-              ),
-            ),
-            fluent.Container(
-                height: 40,
-                color: fluent.FluentTheme.of(context).micaBackgroundColor,
-                // child: Row(
-                //   children: [
-                //     commandBaruilder(fluent.IconButton(
-                //       icon: const Icon(
-                //         fluent.FluentIcons.chevron_left,
-                //         // size: 30,
-                //       ),
-                //       onPressed: () {},
-                //     ))
-                //   ],
-                // )
-                child: Obx(() => fluent.CommandBar(
-                      primaryItems: <fluent.CommandBarItem>[
-                        fluent.CommandBarButton(
-                          icon: const Icon(fluent.FluentIcons.add),
-                          label: SizedBox(
-                              width: 100,
-                              child: fluent.NumberBox(
-                                mode: fluent.SpinButtonPlacementMode.none,
-                                value: _c.progress.value + 1,
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    _c.progress.value = value - 1;
-                                  }
-                                },
-                              )),
-                          onPressed: null,
-                        ),
-                        fluent.CommandBarBuilderItem(
-                          builder: (context, mode, w) => Tooltip(
-                            message: "Create something new!",
-                            child: w,
-                          ),
-                          wrappedItem: fluent.CommandBarButton(
-                            icon: const Icon(fluent.FluentIcons.add),
-                            label: const Text('New'),
-                            onPressed: () {},
-                          ),
-                        ),
-                        fluent.CommandBarBuilderItem(
-                          builder: (context, mode, w) => Tooltip(
-                            message: "Delete what is currently selected!",
-                            child: w,
-                          ),
-                          wrappedItem: fluent.CommandBarButton(
-                            icon: const Icon(fluent.FluentIcons.delete),
-                            label: const Text('Delete'),
-                            onPressed: () {},
-                          ),
-                        ),
-                        fluent.CommandBarButton(
-                          icon: const Icon(fluent.FluentIcons.archive),
-                          label: const Text('Archive'),
-                          onPressed: () {},
-                        ),
-                        fluent.CommandBarButton(
-                          icon: const Icon(fluent.FluentIcons.move),
-                          label: const Text('Move'),
-                          onPressed: () {},
-                        ),
-                        fluent.CommandBarBuilderItem(
-                          builder: (context, displayMode, widget) =>
-                              fluent.NumberBox(
-                            value: 1,
-                            onChanged: null,
-                          ),
-                          wrappedItem: fluent.CommandBarButton(
-                            icon: const Icon(fluent.FluentIcons.add),
-                            label: const Text('New'),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ],
-                    )))
-          ]).animate().fade(),
-        ));
+              )),
+        ),
+        fluent.Container(
+            height: 40,
+            color: fluent.FluentTheme.of(context).micaBackgroundColor,
+            child: widget.buildSettings(context)),
+        //  Obx())
+      ]).animate().fade(),
+    );
   }
 
   Widget commandBaruilder(child) {
@@ -250,5 +164,11 @@ class _ControlPanelHeaderState<T extends ReaderController>
       androidBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
     );
+  }
+
+  @override
+  void dispose() {
+    _playListFlayoutcontroller.dispose();
+    super.dispose();
   }
 }
