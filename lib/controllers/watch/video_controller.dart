@@ -56,7 +56,7 @@ class VideoPlayerController extends GetxController {
   final player = Player();
   late final videoController = VideoController(player);
 
-  final showPlayList = false.obs;
+  final showSidebar = false.obs;
   final isOpenSidebar = false.obs;
   final isFullScreen = false.obs;
   late final index = playIndex.obs;
@@ -146,12 +146,14 @@ class VideoPlayerController extends GetxController {
   final isGettingWatchData = true.obs;
 
   // 字幕配置
-  final subtitleFontSize = 24.0.obs;
-  final subtitleBackgroundColor = const Color(0xaa000000).obs;
-  final subtitleTextColor = Colors.white.obs;
-  final subtitleTextHeight = 1.4.obs;
+  final subtitleFontSize = 34.0.obs;
   final subtitleFontWeight = FontWeight.normal.obs;
   final subtitleTextAlign = TextAlign.center.obs;
+  final subtitleFontColor = Colors.white.obs;
+  final subtitleBackgroundColor = const Color(0xaa000000).obs;
+
+  // 播放方式
+  final playMode = PlaylistMode.none.obs;
 
   @override
   void onInit() async {
@@ -181,17 +183,23 @@ class VideoPlayerController extends GetxController {
     });
 
     // 显示剧集列表
-    ever(showPlayList, (callback) {
-      if (!showPlayList.value) {
+    ever(showSidebar, (callback) {
+      if (!showSidebar.value) {
         isOpenSidebar.value = false;
       }
     });
 
     // 自动切换下一集
     player.stream.completed.listen((event) {
-      if (!event) {
+      if (!event || playMode.value == PlaylistMode.single) {
         return;
       }
+      if (playMode.value == PlaylistMode.loop) {
+        player.seek(Duration.zero);
+        player.play();
+        return;
+      }
+
       if (index.value == playList.length - 1) {
         sendMessage(Message(Text('video.play-complete'.i18n)));
         return;

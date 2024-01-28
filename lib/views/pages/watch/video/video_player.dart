@@ -70,9 +70,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
           children: [
             AnimatedContainer(
               onEnd: () {
-                _c.isOpenSidebar.value = _c.showPlayList.value;
+                _c.isOpenSidebar.value = _c.showSidebar.value;
               },
-              width: _c.showPlayList.value
+              width: _c.showSidebar.value
                   ? MediaQuery.of(context).size.width - 300
                   : maxWidth,
               duration: const Duration(milliseconds: 120),

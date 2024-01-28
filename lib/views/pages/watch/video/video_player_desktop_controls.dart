@@ -14,33 +14,38 @@ import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/watch/playlist.dart';
 import 'package:window_manager/window_manager.dart';
 
-class VideoPlayerControls extends StatefulWidget {
-  const VideoPlayerControls({
+class VideoPlayerDesktopControls extends StatefulWidget {
+  const VideoPlayerDesktopControls({
     super.key,
-    required this.tag,
+    required this.controller,
   });
-  final String tag;
+  final VideoPlayerController controller;
 
   @override
-  State<VideoPlayerControls> createState() => _VideoPlayerControlsState();
+  State<VideoPlayerDesktopControls> createState() =>
+      _VideoPlayerDesktopControlsState();
 }
 
-class _VideoPlayerControlsState extends State<VideoPlayerControls> {
-  late final c = Get.find<VideoPlayerController>(tag: widget.tag);
+class _VideoPlayerDesktopControlsState
+    extends State<VideoPlayerDesktopControls> {
+  late final _c = widget.controller;
   final FocusNode _focusNode = FocusNode();
   Timer? _timer;
-  bool showControls = true;
+  bool _showControls = true;
   final _subtitleViewKey = GlobalKey<SubtitleViewState>();
 
-  @override
-  void initState() {
-    super.initState();
+  _updateTimer() {
+    _timer?.cancel();
+    _timer = null;
+    setState(() {
+      _showControls = true;
+    });
     _timer = Timer.periodic(
       const Duration(seconds: 3),
       (_) {
         if (mounted) {
           setState(() {
-            showControls = false;
+            _showControls = false;
           });
         }
       },
@@ -48,24 +53,16 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _updateTimer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onHover: (_) {
-        _timer?.cancel();
-        _timer = null;
-        setState(() {
-          showControls = true;
-        });
-        _timer = Timer.periodic(
-          const Duration(seconds: 3),
-          (_) {
-            if (mounted) {
-              setState(() {
-                showControls = false;
-              });
-            }
-          },
-        );
+        _updateTimer();
       },
       child: FluentTheme(
         data: FluentThemeData(
@@ -76,13 +73,121 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
           autofocus: true,
           onKeyEvent: (value) {
             if (value is KeyDownEvent) {
-              c.keyboardShortcuts[value.logicalKey]?.call();
+              _c.keyboardShortcuts[value.logicalKey]?.call();
             }
           },
           child: Stack(
             children: [
-              const Positioned.fill(
-                child: SizedBox.expand(),
+              Positioned.fill(
+                child: SizedBox.expand(
+                  child: Center(
+                    child: Obx(() {
+                      if (_c.error.value.isNotEmpty) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              "Getting streamlink error",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Button(
+                                  child: const Text('Error message'),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => ContentDialog(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 500,
+                                        ),
+                                        title: const Text('Error message'),
+                                        content: SelectableText(_c.error.value),
+                                        actions: [
+                                          Button(
+                                            child: Text('common.close'.i18n),
+                                            onPressed: () {
+                                              router.pop();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 10),
+                                Button(
+                                  child: Text('Retry'.i18n),
+                                  onPressed: () {
+                                    _c.error.value = '';
+                                    _c.play();
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        );
+                      }
+                      if (!_c.isGettingWatchData.value) {
+                        return StreamBuilder(
+                          stream: _c.player.stream.buffering,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data! ||
+                                _c.player.state.buffering) {
+                              return const ProgressRing();
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        );
+                      }
+                      return Card(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_c.runtime.extension.icon != null)
+                              Container(
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                margin: const EdgeInsets.only(right: 10),
+                                child: CacheNetWorkImagePic(
+                                  _c.runtime.extension.icon!,
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _c.runtime.extension.name,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Text(
+                                  'Getting streamlink...',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ),
               ),
               // subtitle
               Positioned.fill(
@@ -90,29 +195,29 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
                     Obx(
                   () {
                     final textStyle = TextStyle(
-                      height: c.subtitleTextHeight.value,
-                      fontSize: c.subtitleFontSize.value,
+                      height: 1.4,
+                      fontSize: _c.subtitleFontSize.value,
                       letterSpacing: 0.0,
                       wordSpacing: 0.0,
-                      color: c.subtitleTextColor.value,
-                      fontWeight: c.subtitleFontWeight.value,
-                      backgroundColor: c.subtitleBackgroundColor.value,
+                      color: _c.subtitleFontColor.value,
+                      fontWeight: _c.subtitleFontWeight.value,
+                      backgroundColor: _c.subtitleBackgroundColor.value,
                     );
                     _subtitleViewKey.currentState?.textAlign =
-                        c.subtitleTextAlign.value;
+                        _c.subtitleTextAlign.value;
                     _subtitleViewKey.currentState?.style = textStyle;
                     _subtitleViewKey.currentState?.padding =
                         EdgeInsets.fromLTRB(
                       16.0,
                       0.0,
                       16.0,
-                      showControls ? 100.0 : 16.0,
+                      _showControls ? 100.0 : 16.0,
                     );
                     return SubtitleView(
-                      controller: c.videoController,
+                      controller: _c.videoController,
                       configuration: SubtitleViewConfiguration(
                         style: textStyle,
-                        textAlign: c.subtitleTextAlign.value,
+                        textAlign: _c.subtitleTextAlign.value,
                       ),
                       key: _subtitleViewKey,
                     );
@@ -124,12 +229,12 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
                   children: [
                     // header
                     Opacity(
-                      opacity: showControls ? 1 : 0,
-                      child: _VideoPlayerControlsHeader(
-                        title: c.title,
-                        episode: c.playList[c.index.value].name,
+                      opacity: _showControls ? 1 : 0,
+                      child: _Header(
+                        title: _c.title,
+                        episode: _c.playList[_c.index.value].name,
                         onClose: () {
-                          if (c.isFullScreen.value) {
+                          if (_c.isFullScreen.value) {
                             WindowManager.instance.setFullScreen(false);
                           }
                           router.pop();
@@ -137,121 +242,11 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
                       ),
                     ),
                     // center
-                    Expanded(
-                      child: Center(
-                        child: Obx(() {
-                          if (c.error.value.isNotEmpty) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  "Getting streamlink error",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Button(
-                                      child: const Text('Error message'),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => ContentDialog(
-                                            constraints: const BoxConstraints(
-                                              maxWidth: 500,
-                                            ),
-                                            title: const Text('Error message'),
-                                            content:
-                                                SelectableText(c.error.value),
-                                            actions: [
-                                              Button(
-                                                child:
-                                                    Text('common.close'.i18n),
-                                                onPressed: () {
-                                                  router.pop();
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Button(
-                                      child: Text('Retry'.i18n),
-                                      onPressed: () {
-                                        c.error.value = '';
-                                        c.play();
-                                      },
-                                    ),
-                                  ],
-                                )
-                              ],
-                            );
-                          }
-                          if (!c.isGettingWatchData.value) {
-                            return StreamBuilder(
-                              stream: c.player.stream.buffering,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData && snapshot.data! ||
-                                    c.player.state.buffering) {
-                                  return const ProgressRing();
-                                }
-                                return const SizedBox.shrink();
-                              },
-                            );
-                          }
-                          return Card(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (c.runtime.extension.icon != null)
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    clipBehavior: Clip.antiAlias,
-                                    margin: const EdgeInsets.only(right: 10),
-                                    child: CacheNetWorkImagePic(
-                                      c.runtime.extension.icon!,
-                                      width: 30,
-                                      height: 30,
-                                    ),
-                                  ),
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      c.runtime.extension.name,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const Text(
-                                      'Getting streamlink...',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
+                    const Spacer(),
                     // footer
                     Opacity(
-                      opacity: showControls ? 1 : 0,
-                      child: _VideoPlayerFooter(controller: c),
+                      opacity: _showControls ? 1 : 0,
+                      child: _Footer(controller: _c),
                     ),
                   ],
                 ),
@@ -264,8 +259,8 @@ class _VideoPlayerControlsState extends State<VideoPlayerControls> {
   }
 }
 
-class _VideoPlayerControlsHeader extends StatelessWidget {
-  const _VideoPlayerControlsHeader({
+class _Header extends StatelessWidget {
+  const _Header({
     required this.title,
     required this.episode,
     required this.onClose,
@@ -306,6 +301,15 @@ class _VideoPlayerControlsHeader extends StatelessWidget {
               ),
             ),
             IconButton(
+              icon: const Icon(
+                FluentIcons.chrome_minimize,
+              ),
+              onPressed: () {
+                WindowManager.instance.minimize();
+              },
+            ),
+            const SizedBox(width: 10),
+            IconButton(
               onPressed: onClose,
               icon: const Icon(
                 FluentIcons.chevron_down,
@@ -318,8 +322,8 @@ class _VideoPlayerControlsHeader extends StatelessWidget {
   }
 }
 
-class _VideoPlayerFooter extends StatelessWidget {
-  const _VideoPlayerFooter({
+class _Footer extends StatelessWidget {
+  const _Footer({
     required this.controller,
   });
   final VideoPlayerController controller;
@@ -353,7 +357,7 @@ class _VideoPlayerFooter extends StatelessWidget {
                 ),
                 const SizedBox(width: 20),
                 Expanded(
-                  child: _VideoPlayerProgress(controller: controller),
+                  child: _Progress(controller: controller),
                 ),
                 const SizedBox(width: 20),
                 // 总时长
@@ -376,148 +380,155 @@ class _VideoPlayerFooter extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: // 音量
-                      Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _VideoPlayerVolume(
-                        value: controller.player.state.volume,
-                        onVolumeChanged: (value) {
-                          controller.player.setVolume(value);
-                        },
+            LayoutBuilder(builder: (context, constraints) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (constraints.maxWidth > 500)
+                    Expanded(
+                      flex: 1,
+                      child: // 音量
+                          Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _Volume(
+                            value: controller.player.state.volume,
+                            onVolumeChanged: (value) {
+                              controller.player.setVolume(value);
+                            },
+                          ),
+                          // 画质
+                          Obx(() {
+                            if (controller.currentQality.value.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: _Quality(controller: controller),
+                            );
+                          }),
+                        ],
                       ),
-                      // 画质
-                      Obx(() {
-                        if (controller.currentQality.value.isEmpty) {
-                          return const SizedBox.shrink();
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: _VideoPlayerQuality(controller: controller),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // 上一集
-                      Obx(
-                        () => IconButton(
-                          onPressed: controller.index.value > 0
-                              ? () {
-                                  controller.index.value--;
-                                }
-                              : null,
-                          icon: const Icon(
-                            FluentIcons.previous,
+                    ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // 上一集
+                        Obx(
+                          () => IconButton(
+                            onPressed: controller.index.value > 0
+                                ? () {
+                                    controller.index.value--;
+                                  }
+                                : null,
+                            icon: const Icon(
+                              FluentIcons.previous,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 20),
-                      StreamBuilder(
-                        stream: controller.player.stream.playing,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data!) {
+                        const SizedBox(width: 20),
+                        StreamBuilder(
+                          stream: controller.player.stream.playing,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data!) {
+                              return IconButton(
+                                onPressed: controller.player.pause,
+                                icon: const Icon(
+                                  FluentIcons.pause,
+                                  size: 30,
+                                ),
+                              );
+                            }
                             return IconButton(
-                              onPressed: controller.player.pause,
+                              onPressed: controller.player.play,
                               icon: const Icon(
-                                FluentIcons.pause,
+                                FluentIcons.play,
                                 size: 30,
                               ),
                             );
-                          }
-                          return IconButton(
-                            onPressed: controller.player.play,
-                            icon: const Icon(
-                              FluentIcons.play,
-                              size: 30,
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 20),
-                      // 下一集
-                      Obx(
-                        () => IconButton(
-                          onPressed: controller.playList.length - 1 >
-                                  controller.index.value
-                              ? () {
-                                  controller.index.value++;
-                                }
-                              : null,
-                          icon: const Icon(
-                            FluentIcons.next,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // playback speed
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: _VideoPlayerSpeed(controller: controller),
-                      ),
-                      // torrent files
-                      Obx(() {
-                        if (controller.torrentMediaFileList.isEmpty) {
-                          return const SizedBox.shrink();
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: _VideoPlayerTorrentFiles(
-                            controller: controller,
-                          ),
-                        );
-                      }),
-                      // track
-                      _VideoPlayerTrack(controller: controller),
-                      const SizedBox(width: 10),
-
-                      // 剧集
-                      _VideoPlayerEpisode(controller: controller),
-                      const SizedBox(width: 10),
-                      // 全屏
-                      Obx(
-                        () => IconButton(
-                          onPressed: () {
-                            controller.toggleFullscreen();
                           },
-                          icon: Icon(
-                            controller.isFullScreen.value
-                                ? FluentIcons.back_to_window
-                                : FluentIcons.full_screen,
+                        ),
+                        const SizedBox(width: 20),
+                        // 下一集
+                        Obx(
+                          () => IconButton(
+                            onPressed: controller.playList.length - 1 >
+                                    controller.index.value
+                                ? () {
+                                    controller.index.value++;
+                                  }
+                                : null,
+                            icon: const Icon(
+                              FluentIcons.next,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      // 设置
-                      IconButton(
-                        onPressed: () {
-                          final showPlayList = controller.showPlayList.value;
-                          controller.showPlayList.value = !showPlayList;
-                        },
-                        icon: const Icon(
-                          FluentIcons.settings,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )
+                  if (constraints.maxWidth > 500)
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // playback speed
+                          if (constraints.maxWidth > 700)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: _Speed(controller: controller),
+                            ),
+                          // torrent files
+                          if (constraints.maxWidth > 700)
+                            Obx(() {
+                              if (controller.torrentMediaFileList.isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _TorrentFiles(
+                                  controller: controller,
+                                ),
+                              );
+                            }),
+                          // track
+                          _Track(controller: controller),
+                          const SizedBox(width: 10),
+
+                          // 剧集
+                          _Episode(controller: controller),
+                          const SizedBox(width: 10),
+                          // 全屏
+                          Obx(
+                            () => IconButton(
+                              onPressed: () {
+                                controller.toggleFullscreen();
+                              },
+                              icon: Icon(
+                                controller.isFullScreen.value
+                                    ? FluentIcons.back_to_window
+                                    : FluentIcons.full_screen,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // 设置
+                          IconButton(
+                            onPressed: () {
+                              final showPlayList = controller.showSidebar.value;
+                              controller.showSidebar.value = !showPlayList;
+                            },
+                            icon: const Icon(
+                              FluentIcons.settings,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              );
+            })
           ],
         ),
       ),
@@ -525,8 +536,8 @@ class _VideoPlayerFooter extends StatelessWidget {
   }
 }
 
-class _VideoPlayerVolume extends StatefulWidget {
-  const _VideoPlayerVolume({
+class _Volume extends StatefulWidget {
+  const _Volume({
     required this.value,
     required this.onVolumeChanged,
   });
@@ -534,10 +545,10 @@ class _VideoPlayerVolume extends StatefulWidget {
   final Function(double value) onVolumeChanged;
 
   @override
-  State<_VideoPlayerVolume> createState() => _VideoPlayerVolumeState();
+  State<_Volume> createState() => _VolumeState();
 }
 
-class _VideoPlayerVolumeState extends State<_VideoPlayerVolume> {
+class _VolumeState extends State<_Volume> {
   final _controller = FlyoutController();
   final _volume = 0.0.obs;
   @override
@@ -630,18 +641,18 @@ class _VideoPlayerVolumeState extends State<_VideoPlayerVolume> {
   }
 }
 
-class _VideoPlayerEpisode extends StatefulWidget {
-  const _VideoPlayerEpisode({
+class _Episode extends StatefulWidget {
+  const _Episode({
     required this.controller,
   });
 
   final VideoPlayerController controller;
 
   @override
-  State<_VideoPlayerEpisode> createState() => _VideoPlayerEpisodeState();
+  State<_Episode> createState() => _EpisodeState();
 }
 
-class _VideoPlayerEpisodeState extends State<_VideoPlayerEpisode> {
+class _EpisodeState extends State<_Episode> {
   final controller = FlyoutController();
 
   @override
@@ -696,18 +707,18 @@ class _VideoPlayerEpisodeState extends State<_VideoPlayerEpisode> {
   }
 }
 
-class _VideoPlayerQuality extends StatefulWidget {
-  const _VideoPlayerQuality({
+class _Quality extends StatefulWidget {
+  const _Quality({
     required this.controller,
   });
 
   final VideoPlayerController controller;
 
   @override
-  State<_VideoPlayerQuality> createState() => _VideoPlayerQualityState();
+  State<_Quality> createState() => _QualityState();
 }
 
-class _VideoPlayerQualityState extends State<_VideoPlayerQuality> {
+class _QualityState extends State<_Quality> {
   final controller = FlyoutController();
 
   @override
@@ -768,18 +779,18 @@ class _VideoPlayerQualityState extends State<_VideoPlayerQuality> {
   }
 }
 
-class _VideoPlayerTrack extends StatefulWidget {
-  const _VideoPlayerTrack({
+class _Track extends StatefulWidget {
+  const _Track({
     required this.controller,
   });
 
   final VideoPlayerController controller;
 
   @override
-  State<_VideoPlayerTrack> createState() => _VideoPlayerTrackState();
+  State<_Track> createState() => _TrackState();
 }
 
-class _VideoPlayerTrackState extends State<_VideoPlayerTrack> {
+class _TrackState extends State<_Track> {
   final controller = FlyoutController();
 
   _addSubtitle() async {
@@ -931,19 +942,18 @@ class _VideoPlayerTrackState extends State<_VideoPlayerTrack> {
   }
 }
 
-class _VideoPlayerTorrentFiles extends StatefulWidget {
-  const _VideoPlayerTorrentFiles({
+class _TorrentFiles extends StatefulWidget {
+  const _TorrentFiles({
     required this.controller,
   });
 
   final VideoPlayerController controller;
 
   @override
-  State<_VideoPlayerTorrentFiles> createState() =>
-      _VideoPlayerTorrentFilesState();
+  State<_TorrentFiles> createState() => _TorrentFilesState();
 }
 
-class _VideoPlayerTorrentFilesState extends State<_VideoPlayerTorrentFiles> {
+class _TorrentFilesState extends State<_TorrentFiles> {
   final controller = FlyoutController();
 
   @override
@@ -1004,18 +1014,18 @@ class _VideoPlayerTorrentFilesState extends State<_VideoPlayerTorrentFiles> {
   }
 }
 
-class _VideoPlayerSpeed extends StatefulWidget {
-  const _VideoPlayerSpeed({
+class _Speed extends StatefulWidget {
+  const _Speed({
     required this.controller,
   });
 
   final VideoPlayerController controller;
 
   @override
-  State<_VideoPlayerSpeed> createState() => _VideoPlayerSpeedState();
+  State<_Speed> createState() => _SpeedState();
 }
 
-class _VideoPlayerSpeedState extends State<_VideoPlayerSpeed> {
+class _SpeedState extends State<_Speed> {
   final controller = FlyoutController();
 
   @override
@@ -1075,39 +1085,52 @@ class _VideoPlayerSpeedState extends State<_VideoPlayerSpeed> {
   }
 }
 
-class _VideoPlayerProgress extends StatefulWidget {
-  const _VideoPlayerProgress({
+class _Progress extends StatefulWidget {
+  const _Progress({
     required this.controller,
   });
   final VideoPlayerController controller;
 
   @override
-  State<_VideoPlayerProgress> createState() => _VideoPlayerProgressState();
+  State<_Progress> createState() => _ProgressState();
 }
 
-class _VideoPlayerProgressState extends State<_VideoPlayerProgress> {
+class _ProgressState extends State<_Progress> {
   Duration position = const Duration();
   Duration duration = const Duration();
   bool _isDrag = false;
+  StreamSubscription<Duration>? positionSubscription;
+  StreamSubscription<Duration>? durationSubscription;
 
   @override
   void initState() {
     super.initState();
-    widget.controller.player.stream.position.listen((event) {
+    positionSubscription =
+        widget.controller.player.stream.position.listen((event) {
       if (!_isDrag) {
         position = event;
       }
     });
-    widget.controller.player.stream.duration.listen((event) {
+    durationSubscription =
+        widget.controller.player.stream.duration.listen((event) {
       duration = event;
     });
+  }
+
+  @override
+  void dispose() {
+    positionSubscription?.cancel();
+    durationSubscription?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Slider(
       value: (position.inSeconds).toDouble(),
-      max: (duration.inSeconds).toDouble(),
+      max: duration.inSeconds < position.inSeconds
+          ? position.inSeconds.toDouble()
+          : duration.inSeconds.toDouble(),
       label: '${position.inMinutes}:${position.inSeconds % 60}',
       onChanged: (value) {
         _isDrag = true;
