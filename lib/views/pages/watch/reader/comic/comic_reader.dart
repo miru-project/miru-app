@@ -66,11 +66,12 @@ class _ComicReaderState extends State<ComicReader> {
     return ReaderView<ComicController>(
       widget.playerIndex.toString(),
       content: PlatformWidget(
-          androidWidget: ComicReaderContent(widget.title),
+          androidWidget: ComicReaderContent(widget.playerIndex.toString()),
           desktopWidget: DragToMoveArea(
-            child: ComicReaderContent(widget.title),
+            child: ComicReaderContent(widget.playerIndex.toString()),
           )),
-      buildSettings: (context) => ComicReaderSettings(widget.title),
+      buildSettings: (context) =>
+          ComicReaderSettings(widget.playerIndex.toString()),
     );
   }
 }
