@@ -7,6 +7,7 @@ import 'package:miru_app/controllers/watch/comic_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/button.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
+
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -26,7 +27,8 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
 
   // 按下数量
   final List<int> _pointer = [];
-
+  final menuController = fluent.FlyoutController();
+  final contextAttachKey = GlobalKey();
   _buildPlaceholder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -147,45 +149,74 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
               if (readerType == MangaReadMode.webTonn) {
                 final width = MediaQuery.of(context).size.width;
                 final height = MediaQuery.of(context).size.height;
-                return SizedBox(
-                  width: width,
-                  height: height,
-                  child: Listener(
-                    onPointerDown: (event) {
-                      _pointer.add(event.pointer);
-                      if (_pointer.length == 2) {
-                        _c.isZoom.value = true;
+                return NotificationListener<ScrollEndNotification>(
+                    onNotification: (scrollEnd) {
+                      final metrics = scrollEnd.metrics;
+                      if (metrics.atEdge) {
+                        bool isTop = metrics.pixels == 0;
+                        if (isTop) {
+                          debugPrint('At the top');
+                          _c.isScrollEnd.value = false;
+                        } else {
+                          debugPrint('At the bottom');
+                          _c.isScrollEnd.value = true;
+                        }
                       }
+                      return true;
                     },
-                    onPointerUp: (event) {
-                      _pointer.remove(event.pointer);
-                      if (_pointer.length == 1) {
-                        _c.isZoom.value = false;
-                      }
-                    },
-                    child: InteractiveViewer(
-                      scaleEnabled: _c.isZoom.value,
-                      child: ScrollablePositionedList.builder(
-                        physics: _c.isZoom.value
-                            ? const NeverScrollableScrollPhysics()
-                            : null,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: viewPadding,
-                        ),
-                        initialScrollIndex: cuurentPage,
-                        itemScrollController: _c.itemScrollController,
-                        itemPositionsListener: _c.itemPositionsListener,
-                        scrollOffsetController: _c.scrollOffsetController,
-                        scrollOffsetListener: _c.scrollOffsetListener,
-                        itemBuilder: (context, index) {
-                          final url = images[index];
-                          return imageBuilder(url);
-                        },
-                        itemCount: images.length,
-                      ),
-                    ),
-                  ),
-                );
+                    child: SingleChildScrollView(
+                        physics: (_c.isScrollEnd.value)
+                            ? null
+                            : const NeverScrollableScrollPhysics(),
+                        child: Column(children: [
+                          SizedBox(
+                            width: width,
+                            height: height,
+                            child: Listener(
+                              onPointerDown: (event) {
+                                _pointer.add(event.pointer);
+                                if (_pointer.length == 2) {
+                                  _c.isZoom.value = true;
+                                }
+                              },
+                              onPointerUp: (event) {
+                                _pointer.remove(event.pointer);
+                                if (_pointer.length == 1) {
+                                  _c.isZoom.value = false;
+                                }
+                              },
+                              child: InteractiveViewer(
+                                scaleEnabled: _c.isZoom.value,
+                                child: ScrollablePositionedList.builder(
+                                  physics:
+                                      _c.isZoom.value || _c.isScrollEnd.value
+                                          ? const NeverScrollableScrollPhysics()
+                                          : null,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: viewPadding,
+                                  ),
+                                  initialScrollIndex: cuurentPage,
+                                  itemScrollController: _c.itemScrollController,
+                                  itemPositionsListener:
+                                      _c.itemPositionsListener,
+                                  scrollOffsetController:
+                                      _c.scrollOffsetController,
+                                  scrollOffsetListener: _c.scrollOffsetListener,
+                                  itemBuilder: (context, index) {
+                                    final url = images[index];
+                                    return imageBuilder(url);
+                                  },
+                                  itemCount: images.length,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: width,
+                            height: height,
+                            color: Colors.green,
+                          )
+                        ])));
               }
 
               //common mode and left to right mode
@@ -219,29 +250,56 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
         onTapDown: (deatils) {
           _c.setControllPanel.value = !_c.setControllPanel.value;
         },
-        onDoubleTapDown: (details) {
-          showModalBottomSheet(
-            context: context,
-            showDragHandle: true,
-            useSafeArea: true,
-            builder: (_) => SizedBox(
-              height: 100,
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.save),
-                    title: Text('common.save'.i18n),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      saveImage(
-                          url, _c.watchData.value?.headers, mounted, context);
-                    },
-                  ),
-                ],
-              ),
-            ),
+        onSecondaryTapUp: (d) {
+          final targetContext = contextAttachKey.currentContext;
+          if (targetContext == null) return;
+          final box = targetContext.findRenderObject() as RenderBox;
+          final position = box.localToGlobal(
+            d.localPosition,
+            ancestor: Navigator.of(context).context.findRenderObject(),
+          );
+          menuController.showFlyout(
+            position: position,
+            builder: (context) {
+              return fluent.MenuFlyout(items: [
+                fluent.MenuFlyoutItem(
+                  leading: const Icon(fluent.FluentIcons.save),
+                  text: Text('common.save'.i18n),
+                  onPressed: () {
+                    fluent.Flyout.of(context).close();
+                    saveImage(
+                        url, _c.watchData.value?.headers, mounted, context);
+                  },
+                ),
+              ]);
+            },
           );
         },
+        onDoubleTapDown: (Platform.isAndroid)
+            ? (details) {
+                showModalBottomSheet(
+                  context: context,
+                  showDragHandle: true,
+                  useSafeArea: true,
+                  builder: (_) => SizedBox(
+                    height: 100,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.save),
+                          title: Text('common.save'.i18n),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            saveImage(url, _c.watchData.value?.headers, mounted,
+                                context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            : null,
         child: CacheNetWorkImagePic(
           url,
           fit: BoxFit.fitWidth,

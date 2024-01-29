@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +15,7 @@ import 'dart:async';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:window_manager/window_manager.dart';
 
 class ComicController extends ReaderController<ExtensionMangaWatch> {
   ComicController({
@@ -59,6 +62,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     final minute = datenow.minute < 10 ? "0${datenow.minute}" : datenow.minute;
     currentTime.value = "$hour:$minute";
   }
+
+  final isScrollEnd = false.obs;
 
   @override
   void onInit() async {
@@ -217,7 +222,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     if (super.watchData.value != null) {
       // 获取所有页数量
       final pages = super.watchData.value!.urls.length;
@@ -241,6 +246,9 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     mouseTimer?.cancel();
     WakelockPlus.disable();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    if (!Platform.isAndroid) {
+      await WindowManager.instance.setFullScreen(false);
+    }
     super.onClose();
   }
 }

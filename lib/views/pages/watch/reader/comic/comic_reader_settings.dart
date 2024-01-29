@@ -9,6 +9,7 @@ import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/settings/settings_switch_tile.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:window_manager/window_manager.dart';
 
 class ComicReaderSettings extends StatefulWidget {
   const ComicReaderSettings(this.tag, {super.key});
@@ -335,6 +336,20 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                   child:
                       const Icon(fluent.FluentIcons.coffee_script, size: 17)),
             ),
+            const fluent.CommandBarSeparator(thickness: 3),
+            fluent.CommandBarBuilderItem(
+              builder: (context, mode, w) => Tooltip(
+                message: "reader-settings.enable-fullScreen".i18n,
+                child: w,
+              ),
+              wrappedItem: CommandBarToggleButton(
+                  onchange: (val) async {
+                    _c.enableFullScreen.value = val;
+                    await windowManager.setFullScreen(val);
+                  },
+                  checked: _c.enableFullScreen.value,
+                  child: const Icon(fluent.FluentIcons.full_screen, size: 17)),
+            )
           ],
         ));
   }
@@ -396,7 +411,7 @@ class CommandBarText extends fluent.CommandBarItem {
   @override
   Widget build(
       BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
-    return Text(text);
+    return Padding(padding: const EdgeInsets.all(10), child: Text(text));
   }
 }
 
@@ -412,10 +427,12 @@ class CommandBarToggleButton extends fluent.CommandBarItem {
   @override
   Widget build(
       BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
-    return fluent.ToggleButton(
-      checked: checked,
-      onChanged: onchange,
-      child: child,
-    );
+    return Padding(
+        padding: const EdgeInsets.all(10),
+        child: fluent.ToggleButton(
+          checked: checked,
+          onChanged: onchange,
+          child: child,
+        ));
   }
 }
