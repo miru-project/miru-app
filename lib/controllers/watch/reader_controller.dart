@@ -60,6 +60,7 @@ class ReaderController<T> extends GetxController {
   final RxBool setControllPanel = false.obs;
   Timer? mouseTimer;
   final RxBool enableWakeLock = false.obs;
+  final RxBool enableFullScreen = false.obs;
   // final readType = MangaReadMode.standard.obs;
   @override
   void onInit() {

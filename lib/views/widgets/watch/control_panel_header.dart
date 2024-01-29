@@ -143,7 +143,7 @@ class _ControlPanelHeaderState<T extends ReaderController>
               )),
         ),
         fluent.Container(
-            height: 40,
+            height: 70,
             color: fluent.FluentTheme.of(context).micaBackgroundColor,
             child: widget.buildSettings(context)),
         //  Obx())

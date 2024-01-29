@@ -50,21 +50,21 @@ class _ComicReaderState extends State<ComicReader> {
         cover: widget.cover,
         anilistID: widget.anilistID,
       ),
-      tag: widget.title,
+      tag: widget.playerIndex.toString(),
     );
     super.initState();
   }
 
   @override
   void dispose() {
-    Get.delete<ComicController>(tag: widget.title);
+    Get.delete<ComicController>(tag: widget.playerIndex.toString());
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ReaderView<ComicController>(
-      widget.title,
+      widget.playerIndex.toString(),
       content: PlatformWidget(
           androidWidget: ComicReaderContent(widget.title),
           desktopWidget: DragToMoveArea(
