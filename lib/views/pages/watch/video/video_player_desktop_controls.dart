@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -399,7 +397,7 @@ class _Footer extends StatelessWidget {
                           ),
                           // 画质
                           Obx(() {
-                            if (controller.currentQality.value.isEmpty) {
+                            if (controller.currentQuality.value.isEmpty) {
                               return const SizedBox.shrink();
                             }
                             return Padding(
@@ -732,7 +730,7 @@ class _QualityState extends State<_Quality> {
     return FlyoutTarget(
       controller: controller,
       child: Button(
-        child: Text(widget.controller.currentQality.value),
+        child: Text(widget.controller.currentQuality.value),
         onPressed: () {
           if (widget.controller.qualityMap.isEmpty) {
             widget.controller.sendMessage(
@@ -793,24 +791,6 @@ class _Track extends StatefulWidget {
 class _TrackState extends State<_Track> {
   final controller = FlyoutController();
 
-  _addSubtitle() async {
-    final file = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['srt', 'vtt'],
-      allowMultiple: false,
-    );
-    if (file == null) {
-      return;
-    }
-    final data = File(file.files.first.path!).readAsStringSync();
-    widget.controller.subtitles.add(
-      SubtitleTrack.data(
-        data,
-        title: file.files.first.name,
-      ),
-    );
-  }
-
   @override
   dispose() {
     super.dispose();
@@ -866,7 +846,7 @@ class _TrackState extends State<_Track> {
                         ListTile.selectable(
                           title: const Text('Add subtitle file'),
                           onPressed: () {
-                            _addSubtitle();
+                            widget.controller.addSubtitleFile();
                           },
                         ),
                         // 来自扩展的字幕
@@ -905,7 +885,7 @@ class _TrackState extends State<_Track> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            "Audio Tracks",
+                            "Audio",
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.white.withAlpha(200),

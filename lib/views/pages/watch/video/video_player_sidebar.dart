@@ -6,6 +6,14 @@ import 'package:miru_app/controllers/watch/video_controller.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/watch/playlist.dart';
 
+enum SidebarTab {
+  episodes,
+  qualitys,
+  torrentFiles,
+  tracks,
+  settings,
+}
+
 class VideoPlayerSidebar extends StatefulWidget {
   const VideoPlayerSidebar({
     super.key,
@@ -20,8 +28,8 @@ class VideoPlayerSidebar extends StatefulWidget {
 class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
   late final _c = widget.controller;
 
-  late final Map<String, Widget> _tabs = {
-    "Episodes": PlayList(
+  late final Map<SidebarTab, Widget> _tabs = {
+    SidebarTab.episodes: PlayList(
       title: _c.title,
       list: _c.playList.map((e) => e.name).toList(),
       selectIndex: _c.index.value,
@@ -30,18 +38,19 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
         _c.showSidebar.value = false;
       },
     ),
-    "Settings": _SideBarSettings(
-      controller: _c,
-    ),
   };
 
   Widget _buildAndroid(BuildContext context) {
     return DefaultTabController(
       length: _tabs.length,
+      initialIndex: !_tabs.keys.toList().contains(_c.initSidebarTab.value)
+          ? 0
+          : _tabs.keys.toList().indexOf(_c.initSidebarTab.value),
       child: Column(
         children: [
           TabBar(
-            tabs: _tabs.keys.map((e) => Tab(text: e)).toList(),
+            isScrollable: true,
+            tabs: _tabs.keys.map((e) => Tab(text: e.name)).toList(),
           ),
           Expanded(
             child: TabBarView(
@@ -79,7 +88,7 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
               ],
             ),
             const SizedBox(height: 20),
-            _tabs["Settings"]!
+            _tabs[SidebarTab.settings]!
           ],
         ),
       ),
@@ -88,6 +97,26 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
 
   @override
   Widget build(BuildContext context) {
+    if (_c.qualityMap.isNotEmpty) {
+      _tabs.addAll(
+        {
+          SidebarTab.qualitys: _QualitySelector(
+            controller: _c,
+          ),
+        },
+      );
+    }
+
+    _tabs.addAll(
+      {
+        SidebarTab.tracks: _TrackSelector(
+          controller: _c,
+        ),
+        SidebarTab.settings: _SideBarSettings(
+          controller: _c,
+        ),
+      },
+    );
     return PlatformBuildWidget(
       androidBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
@@ -521,6 +550,128 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
     return PlatformBuildWidget(
       androidBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
+    );
+  }
+}
+
+class _QualitySelector extends StatefulWidget {
+  const _QualitySelector({
+    required this.controller,
+  });
+  final VideoPlayerController controller;
+
+  @override
+  State<_QualitySelector> createState() => _QualitySelectorState();
+}
+
+class _QualitySelectorState extends State<_QualitySelector> {
+  late final _c = widget.controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        for (final quality in _c.qualityMap.entries)
+          ListTile(
+            onTap: () {
+              _c.switchQuality(quality.value);
+              _c.showSidebar.value = false;
+            },
+            title: Text(
+              quality.key,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _TrackSelector extends StatelessWidget {
+  const _TrackSelector({
+    required this.controller,
+  });
+  final VideoPlayerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: Text(
+            "Subtitle",
+          ),
+        ),
+        const SizedBox(height: 5),
+        ListTile(
+          selected:
+              SubtitleTrack.no() == controller.player.state.track.subtitle,
+          title: const Text('Off'),
+          onTap: () {
+            controller.player.setSubtitleTrack(
+              SubtitleTrack.no(),
+            );
+            controller.showSidebar.value = false;
+          },
+        ),
+        ListTile(
+          title: const Text('Add subtitle file'),
+          onTap: () {
+            controller.addSubtitleFile();
+            controller.showSidebar.value = false;
+          },
+        ),
+        // 来自扩展的字幕
+        for (final subtitle in controller.subtitles)
+          ListTile(
+            selected: subtitle == controller.player.state.track.subtitle,
+            title: Text(subtitle.title ?? ''),
+            subtitle: Text(subtitle.language ?? ''),
+            onTap: () {
+              controller.player.setSubtitleTrack(
+                subtitle,
+              );
+              controller.showSidebar.value = false;
+            },
+          ),
+        // 来自视频本身的字幕
+        for (final subtitle in controller.player.state.tracks.subtitle)
+          if (subtitle != SubtitleTrack.no() &&
+              (subtitle.language != null || subtitle.title != null))
+            ListTile(
+              selected: subtitle == controller.player.state.track.subtitle,
+              title: Text(subtitle.title ?? ''),
+              subtitle: Text(subtitle.language ?? ''),
+              onTap: () {
+                controller.player.setSubtitleTrack(
+                  subtitle,
+                );
+                controller.showSidebar.value = false;
+              },
+            ),
+        const SizedBox(height: 10),
+        const Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: Text(
+            "Audio",
+          ),
+        ),
+        const SizedBox(height: 5),
+        for (final audio in controller.player.state.tracks.audio)
+          if (audio.language != null || audio.title != null)
+            ListTile(
+              selected: audio == controller.player.state.track.audio,
+              title: Text(audio.title ?? ''),
+              subtitle: Text(audio.language ?? ''),
+              onTap: () {
+                controller.player.setAudioTrack(
+                  audio,
+                );
+                controller.showSidebar.value = false;
+              },
+            ),
+      ],
     );
   }
 }

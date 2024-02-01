@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,7 @@ import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/miru_directory.dart';
+import 'package:miru_app/views/pages/watch/video/video_player_sidebar.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:path/path.dart' as path;
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -121,7 +123,7 @@ class VideoPlayerController extends GetxController {
   final subtitles = <SubtitleTrack>[].obs;
 
   // 画质
-  final currentQality = "".obs;
+  final currentQuality = "".obs;
   final qualityMap = <String, String>{};
 
   // 是否已经自动跳转到上次播放进度
@@ -152,6 +154,9 @@ class VideoPlayerController extends GetxController {
   final subtitleFontColor = Colors.white.obs;
   final subtitleBackgroundColor = const Color(0xaa000000).obs;
 
+  // 侧边栏初始化 tab
+  final initSidebarTab = SidebarTab.episodes.obs;
+
   // 播放方式
   final playMode = PlaylistMode.none.obs;
 
@@ -162,14 +167,6 @@ class VideoPlayerController extends GetxController {
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    }
-
-    if (player.platform is NativePlayer) {
-      await (player.platform as dynamic).setProperty('cache', 'yes');
-      await (player.platform as dynamic)
-          .setProperty('demuxer-readahead-secs', '20');
-      await (player.platform as dynamic)
-          .setProperty('demuxer-max-bytes', '30MiB');
     }
 
     // 切换剧集
@@ -213,7 +210,7 @@ class VideoPlayerController extends GetxController {
     player.stream.height.listen((event) async {
       if (player.state.width != null) {
         final width = player.state.width;
-        currentQality.value = "${width}x$event";
+        currentQuality.value = "${width}x$event";
       }
     });
 
@@ -372,25 +369,71 @@ class VideoPlayerController extends GetxController {
   getQuality() async {
     final url = watchData!.url;
     final headers = watchData!.headers;
+    logger.info(url);
+    final response = await dio.get(
+      url,
+      options: Options(
+        headers: headers,
+        responseType: ResponseType.stream,
+      ),
+    );
+
+    // 请求判断 content-type 是否为 m3u8
+    final contentType = response.headers.value('content-type');
+    if (contentType == null || !contentType.contains('mpegurl')) {
+      logger.info('not m3u8');
+      return;
+    }
+
+    // 接收数据到变量
+    final completer = Completer<String>();
+
+    final stream = response.data.stream;
+    final buffer = StringBuffer();
+
+    stream.listen(
+      (data) {
+        buffer.write(utf8.decode(data));
+      },
+      onDone: () {
+        final m3u8Content = buffer.toString();
+        completer.complete(m3u8Content);
+      },
+      onError: (error) {
+        completer.completeError(error);
+      },
+    );
+
+    final m3u8Content = await completer.future;
+    if (m3u8Content.isEmpty) {
+      return;
+    }
+    late HlsPlaylist playlist;
     try {
-      final response = await dio.get(
-        url,
-        options: Options(
-          headers: headers,
+      playlist = await HlsPlaylistParser.create().parseString(
+        response.realUri,
+        m3u8Content,
+      );
+    } on ParserException catch (e) {
+      logger.severe(e);
+      return;
+    }
+
+    if (playlist is HlsMasterPlaylist) {
+      final urlList = playlist.mediaPlaylistUrls
+          .map(
+            (e) => e.toString(),
+          )
+          .toList();
+      final resolution = playlist.variants.map(
+        (it) => "${it.format.width}x${it.format.height}",
+      );
+      qualityMap.addAll(
+        Map.fromIterables(
+          resolution,
+          urlList,
         ),
       );
-      final playList = await HlsPlaylistParser.create().parseString(
-        Uri.parse(url),
-        response.data,
-      ) as HlsMasterPlaylist;
-      List<String> urlList =
-          playList.mediaPlaylistUrls.map((e) => e.toString()).toList();
-      final resolution = playList.variants
-          .map((it) => "${it.format.width}x${it.format.height}");
-      logger.info("get sources");
-      qualityMap.addAll(Map.fromIterables(resolution, urlList));
-    } catch (error) {
-      logger.severe(error);
     }
   }
 
@@ -440,27 +483,25 @@ class VideoPlayerController extends GetxController {
       file.deleteSync(recursive: true);
     }
 
-    player.screenshot().then((value) {
-      file.writeAsBytes(value!).then(
-        (value) async {
-          debugPrint("save.. ${value.path}");
-          await DatabaseService.putHistory(
-            History()
-              ..url = detailUrl
-              ..cover = value.path
-              ..episodeGroupId = episodeGroupId
-              ..package = runtime.extension.package
-              ..type = runtime.extension.type
-              ..episodeId = index.value
-              ..episodeTitle = epName
-              ..title = title
-              ..progress = player.state.position.inSeconds.toString()
-              ..totalProgress = player.state.duration.inSeconds.toString(),
-          );
-          await Get.find<HomePageController>().onRefresh();
-        },
-      );
-    });
+    final data = await player.screenshot();
+    if (data == null) {
+      return;
+    }
+    await file.writeAsBytes(data);
+    await DatabaseService.putHistory(
+      History()
+        ..url = detailUrl
+        ..cover = file.path
+        ..episodeGroupId = episodeGroupId
+        ..package = runtime.extension.package
+        ..type = runtime.extension.type
+        ..episodeId = index.value
+        ..episodeTitle = epName
+        ..title = title
+        ..progress = player.state.position.inSeconds.toString()
+        ..totalProgress = player.state.duration.inSeconds.toString(),
+    );
+    await Get.find<HomePageController>().onRefresh();
   }
 
   _isSubtitle(String file) {
@@ -491,6 +532,33 @@ class VideoPlayerController extends GetxController {
     _processNextMessage();
   }
 
+  toggleSideBar(SidebarTab tab) {
+    if (showSidebar.value) {
+      showSidebar.value = false;
+      return;
+    }
+    initSidebarTab.value = tab;
+    showSidebar.value = true;
+  }
+
+  addSubtitleFile() async {
+    final file = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['srt', 'vtt'],
+      allowMultiple: false,
+    );
+    if (file == null) {
+      return;
+    }
+    final data = File(file.files.first.path!).readAsStringSync();
+    subtitles.add(
+      SubtitleTrack.data(
+        data,
+        title: file.files.first.name,
+      ),
+    );
+  }
+
   @override
   void onClose() {
     if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
@@ -500,6 +568,8 @@ class VideoPlayerController extends GetxController {
         mediaId: anilistID,
       );
     }
+    player.stop();
+    player.dispose();
 
     if (Platform.isAndroid) {
       SystemChrome.setEnabledSystemUIMode(
@@ -515,7 +585,6 @@ class VideoPlayerController extends GetxController {
         DeviceOrientation.portraitDown,
       ]);
     }
-
     super.onClose();
   }
 }

@@ -54,7 +54,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   void dispose() {
-    _c.player.dispose();
     Get.delete<VideoPlayerController>(tag: widget.title);
     super.dispose();
   }
@@ -63,8 +62,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
     return Obx(() {
       final maxWidth = MediaQuery.of(context).size.width;
       return PopScope(
-        onPopInvoked: (_) async {
-          await _c.onExit();
+        onPopInvoked: (_) {
+          _c.onExit();
         },
         child: Row(
           children: [
