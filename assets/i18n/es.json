@@ -248,7 +248,7 @@
     "show-report-checkbox": "Mostrar el diálogo de informe cuando se inicia la aplicación"
   },
   "anilist": {
-    "title": "Siguiendo en Anilist",
+    "title": "Siguiendo en AniList",
     "login-hint-1": "Parece que aún no has iniciado sesión en AniList",
     "login-hint-2": "Por favor, inicia sesión en AniList primero",
     "status": "Estado",
@@ -266,7 +266,7 @@
     "end-date": "Fecha de finalización",
     "unbind": "Desvincular",
     "episodes": "Episodios",
-    "manga-chaper-read": "Leído capítulo de manga: {chapters}",
+    "manga-chapter-read": "Leído capítulo de manga: {chapters}",
     "anime-episode-watch": "Visto episodio de anime: {episodes}"
   }
 }
