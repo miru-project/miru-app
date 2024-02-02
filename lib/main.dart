@@ -61,7 +61,6 @@ void main(List<String> args) async {
       WindowOptions windowOptions = WindowOptions(
         size: size,
         center: true,
-        minimumSize: const Size(600, 500),
         skipTaskbar: false,
         titleBarStyle: TitleBarStyle.hidden,
       );

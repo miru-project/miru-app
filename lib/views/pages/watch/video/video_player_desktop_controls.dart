@@ -256,7 +256,7 @@ class _VideoPlayerDesktopControlsState
   }
 }
 
-class _Header extends StatelessWidget {
+class _Header extends StatefulWidget {
   const _Header({
     required this.title,
     required this.episode,
@@ -265,6 +265,29 @@ class _Header extends StatelessWidget {
   final String title;
   final String episode;
   final VoidCallback onClose;
+
+  @override
+  State<_Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<_Header> {
+  bool _isAlwaysOnTop = false;
+
+  @override
+  initState() {
+    super.initState();
+    WindowManager.instance.isAlwaysOnTop().then((value) {
+      _isAlwaysOnTop = value;
+    });
+  }
+
+  @override
+  void dispose() {
+    if (_isAlwaysOnTop) {
+      WindowManager.instance.setAlwaysOnTop(false);
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -280,14 +303,14 @@ class _Header extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      widget.title,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      episode,
+                      widget.episode,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w300,
@@ -297,6 +320,21 @@ class _Header extends StatelessWidget {
                 ),
               ),
             ),
+            // 置顶
+            IconButton(
+              icon: Icon(
+                _isAlwaysOnTop ? FluentIcons.pinned : FluentIcons.pin,
+              ),
+              onPressed: () async {
+                WindowManager.instance.setAlwaysOnTop(
+                  !_isAlwaysOnTop,
+                );
+                setState(() {
+                  _isAlwaysOnTop = !_isAlwaysOnTop;
+                });
+              },
+            ),
+            const SizedBox(width: 10),
             IconButton(
               icon: const Icon(
                 FluentIcons.chrome_minimize,
@@ -307,7 +345,7 @@ class _Header extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             IconButton(
-              onPressed: onClose,
+              onPressed: widget.onClose,
               icon: const Icon(
                 FluentIcons.chevron_down,
               ),
