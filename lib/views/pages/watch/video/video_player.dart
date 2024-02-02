@@ -117,7 +117,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: (context) => Scaffold(body: _buildContent()),
+      androidBuilder: (context) => Theme(
+        data: ThemeData.dark(useMaterial3: true),
+        child: Scaffold(body: _buildContent()),
+      ),
       desktopBuilder: ((context) => _buildContent()),
     );
   }

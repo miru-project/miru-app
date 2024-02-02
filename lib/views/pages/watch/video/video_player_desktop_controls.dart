@@ -87,7 +87,10 @@ class _VideoPlayerDesktopControlsState
                       wordSpacing: 0.0,
                       color: _c.subtitleFontColor.value,
                       fontWeight: _c.subtitleFontWeight.value,
-                      backgroundColor: _c.subtitleBackgroundColor.value,
+                      backgroundColor:
+                          _c.subtitleBackgroundColor.value.withOpacity(
+                        _c.subtitleBackgroundOpacity.value,
+                      ),
                     );
                     _subtitleViewKey.currentState?.textAlign =
                         _c.subtitleTextAlign.value;

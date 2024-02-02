@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
+import 'package:miru_app/utils/color.dart';
 import 'package:miru_app/views/widgets/list_title.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/watch/playlist.dart';
@@ -42,24 +43,27 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
   };
 
   Widget _buildAndroid(BuildContext context) {
-    return DefaultTabController(
-      length: _tabs.length,
-      initialIndex: !_tabs.keys.toList().contains(_c.initSidebarTab.value)
-          ? 0
-          : _tabs.keys.toList().indexOf(_c.initSidebarTab.value),
-      child: Column(
-        children: [
-          TabBar(
-            tabAlignment: TabAlignment.center,
-            isScrollable: true,
-            tabs: _tabs.keys.map((e) => Tab(text: e.name)).toList(),
-          ),
-          Expanded(
-            child: TabBarView(
-              children: _tabs.values.toList(),
+    return Container(
+      color: ThemeData.dark().colorScheme.background,
+      child: DefaultTabController(
+        length: _tabs.length,
+        initialIndex: !_tabs.keys.toList().contains(_c.initSidebarTab.value)
+            ? 0
+            : _tabs.keys.toList().indexOf(_c.initSidebarTab.value),
+        child: Column(
+          children: [
+            TabBar(
+              tabAlignment: TabAlignment.center,
+              isScrollable: true,
+              tabs: _tabs.keys.map((e) => Tab(text: e.name)).toList(),
             ),
-          ),
-        ],
+            Expanded(
+              child: TabBarView(
+                children: _tabs.values.toList(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -155,6 +159,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
       children: [
         fluent.Card(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Subtitle'),
@@ -196,25 +201,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
                           runSpacing: 10.0,
                           spacing: 8.0,
                           children: [
-                            fluent.Button(
-                              autofocus:
-                                  _c.subtitleFontColor.value == Colors.white,
-                              style: fluent.ButtonStyle(
-                                padding: fluent.ButtonState.all(
-                                  const EdgeInsets.all(4.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                _c.subtitleFontColor.value = Colors.white;
-                                Navigator.of(context).pop(Colors.white);
-                              },
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                color: Colors.white,
-                              ),
-                            ),
-                            ...fluent.Colors.accentColors.map((color) {
+                            ...ColorUtils.baseColors.map((color) {
                               return fluent.Button(
                                 autofocus: _c.subtitleFontColor.value == color,
                                 style: fluent.ButtonStyle(
@@ -266,26 +253,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
                           runSpacing: 10.0,
                           spacing: 8.0,
                           children: [
-                            fluent.Button(
-                              autofocus: _c.subtitleBackgroundColor.value ==
-                                  Colors.transparent,
-                              style: fluent.ButtonStyle(
-                                padding: fluent.ButtonState.all(
-                                  const EdgeInsets.all(4.0),
-                                ),
-                              ),
-                              onPressed: () {
-                                _c.subtitleBackgroundColor.value =
-                                    Colors.transparent;
-                                Navigator.of(context).pop(Colors.transparent);
-                              },
-                              child: Container(
-                                height: 32,
-                                width: 32,
-                                color: Colors.transparent,
-                              ),
-                            ),
-                            ...fluent.Colors.accentColors.map((color) {
+                            ...ColorUtils.baseColors.map((color) {
                               return fluent.Button(
                                 autofocus:
                                     _c.subtitleBackgroundColor.value == color,
@@ -333,11 +301,9 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
                   Expanded(
                     child: Obx(
                       () => fluent.Slider(
-                        value: _c.subtitleBackgroundColor.value.opacity,
+                        value: _c.subtitleBackgroundOpacity.value,
                         onChanged: (value) {
-                          _c.subtitleBackgroundColor.value = _c
-                              .subtitleBackgroundColor.value
-                              .withOpacity(value);
+                          _c.subtitleBackgroundOpacity.value = value;
                         },
                         min: 0,
                         max: 1,
@@ -347,8 +313,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
                   const SizedBox(width: 10),
                   Obx(
                     () => Text(
-                      _c.subtitleBackgroundColor.value.opacity
-                          .toStringAsFixed(2),
+                      _c.subtitleBackgroundOpacity.value.toStringAsFixed(2),
                     ),
                   ),
                 ],
@@ -510,6 +475,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
         const SizedBox(height: 20),
         fluent.Card(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("Play mode"),
@@ -554,7 +520,178 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
   }
 
   Widget _buildAndroid(BuildContext context) {
-    return Container();
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      children: [
+        Text(
+          'Subtitle',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
+        Row(
+          children: [
+            const Text('Font size'),
+            Expanded(
+              child: Obx(
+                () => Slider(
+                  value: _c.subtitleFontSize.value,
+                  onChanged: (value) {
+                    _c.subtitleFontSize.value = value;
+                  },
+                  min: 20,
+                  max: 80,
+                ),
+              ),
+            ),
+            Obx(
+              () => Text(
+                _c.subtitleFontSize.value.toStringAsFixed(0),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            const Text('Font color'),
+            const SizedBox(width: 10),
+            Obx(
+              () => DropdownButton(
+                value: _c.subtitleFontColor.value,
+                onChanged: (value) {
+                  if (value != null) _c.subtitleFontColor.value = value;
+                },
+                items: ColorUtils.baseColors
+                    .map(
+                      (color) => DropdownMenuItem(
+                        value: color,
+                        child: Container(
+                          height: 32,
+                          width: 32,
+                          color: color,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            const Text('Background color'),
+            const SizedBox(width: 10),
+            Obx(
+              () => DropdownButton(
+                value: _c.subtitleBackgroundColor.value,
+                onChanged: (value) {
+                  if (value != null) _c.subtitleBackgroundColor.value = value;
+                },
+                items: ColorUtils.baseColors
+                    .map(
+                      (color) => DropdownMenuItem(
+                        value: color,
+                        child: Container(
+                          height: 32,
+                          width: 32,
+                          color: color,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            const Text('Background opacity'),
+            Expanded(
+              child: Obx(
+                () => Slider(
+                  value: _c.subtitleBackgroundOpacity.value,
+                  onChanged: (value) {
+                    _c.subtitleBackgroundOpacity.value = value;
+                  },
+                  min: 0,
+                  max: 1,
+                ),
+              ),
+            ),
+            Obx(
+              () => Text(
+                _c.subtitleBackgroundOpacity.value.toStringAsFixed(2),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        // textAlign
+        Row(
+          children: [
+            const Text('Text align'),
+            const SizedBox(width: 10),
+            Obx(
+              () => DropdownButton(
+                value: _c.subtitleTextAlign.value,
+                onChanged: (value) {
+                  if (value != null) _c.subtitleTextAlign.value = value;
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: TextAlign.justify,
+                    child: Icon(Icons.format_align_justify),
+                  ),
+                  DropdownMenuItem(
+                    value: TextAlign.left,
+                    child: Icon(Icons.format_align_left),
+                  ),
+                  DropdownMenuItem(
+                    value: TextAlign.right,
+                    child: Icon(Icons.format_align_right),
+                  ),
+                  DropdownMenuItem(
+                    value: TextAlign.center,
+                    child: Icon(Icons.format_align_center),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        const Text("Font weight"),
+        const SizedBox(height: 10),
+        Obx(
+          () => SegmentedButton(
+            showSelectedIcon: false,
+            segments: const [
+              ButtonSegment(value: FontWeight.normal, label: Text("Normal")),
+              ButtonSegment(value: FontWeight.bold, label: Text("Bold")),
+            ],
+            selected: <FontWeight>{_c.subtitleFontWeight.value},
+            onSelectionChanged: (value) {
+              _c.subtitleFontWeight.value = value.first;
+            },
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text("Play mode"),
+        const SizedBox(height: 10),
+        Obx(
+          () => SegmentedButton(
+            showSelectedIcon: false,
+            segments: const [
+              ButtonSegment(value: PlaylistMode.loop, label: Text("Loop")),
+              ButtonSegment(value: PlaylistMode.single, label: Text("Single")),
+              ButtonSegment(value: PlaylistMode.none, label: Text("Auto next")),
+            ],
+            selected: <PlaylistMode>{_c.playMode.value},
+            onSelectionChanged: (value) {
+              _c.playMode.value = value.first;
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   @override

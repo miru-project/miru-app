@@ -152,7 +152,8 @@ class VideoPlayerController extends GetxController {
   final subtitleFontWeight = FontWeight.normal.obs;
   final subtitleTextAlign = TextAlign.center.obs;
   final subtitleFontColor = Colors.white.obs;
-  final subtitleBackgroundColor = const Color(0xaa000000).obs;
+  final subtitleBackgroundColor = Colors.black.obs;
+  final subtitleBackgroundOpacity = 0.7.obs;
 
   // 侧边栏初始化 tab
   final initSidebarTab = SidebarTab.episodes.obs;
