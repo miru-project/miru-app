@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
+import 'package:miru_app/views/widgets/list_title.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/watch/playlist.dart';
 
@@ -49,6 +50,7 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
       child: Column(
         children: [
           TabBar(
+            tabAlignment: TabAlignment.center,
             isScrollable: true,
             tabs: _tabs.keys.map((e) => Tab(text: e.name)).toList(),
           ),
@@ -97,6 +99,16 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
 
   @override
   Widget build(BuildContext context) {
+    if (_c.torrentMediaFileList.isNotEmpty) {
+      _tabs.addAll(
+        {
+          SidebarTab.torrentFiles: _TorrentFiles(
+            controller: _c,
+          ),
+        },
+      );
+    }
+
     if (_c.qualityMap.isNotEmpty) {
       _tabs.addAll(
         {
@@ -597,13 +609,9 @@ class _TrackSelector extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 10),
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 16),
-          child: Text(
-            "Subtitle",
-          ),
+        const ListTitle(
+          title: "Subtitle",
         ),
-        const SizedBox(height: 5),
         ListTile(
           selected:
               SubtitleTrack.no() == controller.player.state.track.subtitle,
@@ -651,11 +659,8 @@ class _TrackSelector extends StatelessWidget {
               },
             ),
         const SizedBox(height: 10),
-        const Padding(
-          padding: EdgeInsets.only(left: 16),
-          child: Text(
-            "Audio",
-          ),
+        const ListTitle(
+          title: "Audio",
         ),
         const SizedBox(height: 5),
         for (final audio in controller.player.state.tracks.audio)
@@ -671,6 +676,33 @@ class _TrackSelector extends StatelessWidget {
                 controller.showSidebar.value = false;
               },
             ),
+      ],
+    );
+  }
+}
+
+class _TorrentFiles extends StatelessWidget {
+  const _TorrentFiles({required this.controller});
+  final VideoPlayerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        for (final file in controller.torrentMediaFileList)
+          ListTile(
+            selected: controller.currentTorrentFile.value == file,
+            title: Text(
+              file,
+              style: const TextStyle(
+                fontSize: 13,
+              ),
+            ),
+            onTap: () {
+              controller.playTorrentFile(file);
+              controller.showSidebar.value = false;
+            },
+          ),
       ],
     );
   }

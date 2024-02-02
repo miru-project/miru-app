@@ -463,11 +463,7 @@ class VideoPlayerController extends GetxController {
     });
   }
 
-  onExit() async {
-    if (_torrenHash.isNotEmpty) {
-      BTServerApi.removeTorrent(_torrenHash);
-    }
-
+  _saveHistory() async {
     if (player.state.duration.inSeconds == 0) {
       return;
     }
@@ -488,6 +484,9 @@ class VideoPlayerController extends GetxController {
       return;
     }
     await file.writeAsBytes(data);
+
+    logger.info('save history');
+
     await DatabaseService.putHistory(
       History()
         ..url = detailUrl
@@ -560,7 +559,7 @@ class VideoPlayerController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
       AniListProvider.editList(
         status: AnilistMediaListStatus.current,
@@ -568,23 +567,24 @@ class VideoPlayerController extends GetxController {
         mediaId: anilistID,
       );
     }
-    player.stop();
-    player.dispose();
-
     if (Platform.isAndroid) {
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.edgeToEdge,
       );
       // 如果是平板则不改变
-      if (LayoutUtils.isTablet) {
-        return;
-      }
       // 切换回竖屏
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
+      if (!LayoutUtils.isTablet) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+      }
     }
+    player.pause();
+    try {
+      await _saveHistory();
+    } catch (_) {}
+    player.dispose();
     super.onClose();
   }
 }

@@ -76,6 +76,40 @@ class _VideoPlayerDesktopControlsState
           },
           child: Stack(
             children: [
+              // subtitle
+              Positioned.fill(
+                child: Obx(
+                  () {
+                    final textStyle = TextStyle(
+                      height: 1.4,
+                      fontSize: _c.subtitleFontSize.value,
+                      letterSpacing: 0.0,
+                      wordSpacing: 0.0,
+                      color: _c.subtitleFontColor.value,
+                      fontWeight: _c.subtitleFontWeight.value,
+                      backgroundColor: _c.subtitleBackgroundColor.value,
+                    );
+                    _subtitleViewKey.currentState?.textAlign =
+                        _c.subtitleTextAlign.value;
+                    _subtitleViewKey.currentState?.style = textStyle;
+                    _subtitleViewKey.currentState?.padding =
+                        EdgeInsets.fromLTRB(
+                      16.0,
+                      0.0,
+                      16.0,
+                      _showControls ? 100.0 : 16.0,
+                    );
+                    return SubtitleView(
+                      controller: _c.videoController,
+                      configuration: SubtitleViewConfiguration(
+                        style: textStyle,
+                        textAlign: _c.subtitleTextAlign.value,
+                      ),
+                      key: _subtitleViewKey,
+                    );
+                  },
+                ),
+              ),
               Positioned.fill(
                 child: SizedBox.expand(
                   child: Center(
@@ -185,41 +219,6 @@ class _VideoPlayerDesktopControlsState
                       );
                     }),
                   ),
-                ),
-              ),
-              // subtitle
-              Positioned.fill(
-                child: // subtitle
-                    Obx(
-                  () {
-                    final textStyle = TextStyle(
-                      height: 1.4,
-                      fontSize: _c.subtitleFontSize.value,
-                      letterSpacing: 0.0,
-                      wordSpacing: 0.0,
-                      color: _c.subtitleFontColor.value,
-                      fontWeight: _c.subtitleFontWeight.value,
-                      backgroundColor: _c.subtitleBackgroundColor.value,
-                    );
-                    _subtitleViewKey.currentState?.textAlign =
-                        _c.subtitleTextAlign.value;
-                    _subtitleViewKey.currentState?.style = textStyle;
-                    _subtitleViewKey.currentState?.padding =
-                        EdgeInsets.fromLTRB(
-                      16.0,
-                      0.0,
-                      16.0,
-                      _showControls ? 100.0 : 16.0,
-                    );
-                    return SubtitleView(
-                      controller: _c.videoController,
-                      configuration: SubtitleViewConfiguration(
-                        style: textStyle,
-                        textAlign: _c.subtitleTextAlign.value,
-                      ),
-                      key: _subtitleViewKey,
-                    );
-                  },
                 ),
               ),
               Positioned.fill(
@@ -355,7 +354,7 @@ class _Footer extends StatelessWidget {
                 ),
                 const SizedBox(width: 20),
                 Expanded(
-                  child: _Progress(controller: controller),
+                  child: _SeekBar(controller: controller),
                 ),
                 const SizedBox(width: 20),
                 // 总时长
@@ -1065,17 +1064,17 @@ class _SpeedState extends State<_Speed> {
   }
 }
 
-class _Progress extends StatefulWidget {
-  const _Progress({
+class _SeekBar extends StatefulWidget {
+  const _SeekBar({
     required this.controller,
   });
   final VideoPlayerController controller;
 
   @override
-  State<_Progress> createState() => _ProgressState();
+  State<_SeekBar> createState() => _SeekBarState();
 }
 
-class _ProgressState extends State<_Progress> {
+class _SeekBarState extends State<_SeekBar> {
   Duration position = const Duration();
   Duration duration = const Duration();
   bool _isDrag = false;

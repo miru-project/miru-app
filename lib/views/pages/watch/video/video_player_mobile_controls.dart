@@ -35,7 +35,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
         data: ThemeData.dark(useMaterial3: true),
         child: Stack(
           children: [
-            const SizedBox.expand(),
+            // 字幕
             Positioned.fill(
               child: Obx(
                 () {
@@ -68,6 +68,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                 },
               ),
             ),
+            // 手势层
             Positioned.fill(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -104,6 +105,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                 child: const SizedBox.expand(),
               ),
             ),
+            // 中间显示
             Positioned.fill(
               child: Center(
                 child: Obx(() {
@@ -214,6 +216,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                 }),
               ),
             ),
+            // 头部控制栏
             Positioned(
               top: 0,
               left: 0,
@@ -225,6 +228,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                 ),
               ),
             ),
+            // 底部控制栏
             Positioned(
               bottom: 0,
               left: 0,
@@ -234,6 +238,23 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                 child: _Footer(controller: _c),
               ),
             ),
+            Positioned.fill(
+              child: Obx(
+                () {
+                  if (!_c.showSidebar.value) {
+                    return const SizedBox.shrink();
+                  }
+                  return GestureDetector(
+                    child: Container(
+                      color: Colors.black54,
+                    ),
+                    onTap: () {
+                      _c.showSidebar.value = false;
+                    },
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -434,7 +455,19 @@ class _Footer extends StatelessWidget {
                   ),
                 ),
               ),
+              // torrent files
               const SizedBox(width: 10),
+              Obx(() {
+                if (controller.torrentMediaFileList.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return IconButton(
+                  onPressed: () {
+                    controller.toggleSideBar(SidebarTab.torrentFiles);
+                  },
+                  icon: const Icon(Icons.video_file),
+                );
+              }),
               IconButton(
                 onPressed: () {
                   controller.toggleSideBar(SidebarTab.tracks);
@@ -513,47 +546,50 @@ class _SeekBarState extends State<_SeekBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SliderTheme(
-        data: const SliderThemeData(
-          trackHeight: 2,
-          thumbShape: RoundSliderThumbShape(
-            enabledThumbRadius: 6,
+    return SizedBox(
+      height: 13,
+      child: SliderTheme(
+          data: const SliderThemeData(
+            trackHeight: 2,
+            thumbShape: RoundSliderThumbShape(
+              enabledThumbRadius: 6,
+            ),
+            overlayShape: RoundSliderOverlayShape(
+              overlayRadius: 12,
+            ),
           ),
-          overlayShape: RoundSliderOverlayShape(
-            overlayRadius: 12,
-          ),
-        ),
-        child: Slider(
-          min: 0,
-          max: _duration.inMilliseconds.toDouble(),
-          value: clampDouble(
-            _position.inMilliseconds.toDouble(),
-            0,
-            _duration.inMilliseconds.toDouble(),
-          ),
-          secondaryTrackValue: clampDouble(
-            _buffer.inMilliseconds.toDouble(),
-            0,
-            _duration.inMilliseconds.toDouble(),
-          ),
-          onChanged: (value) {
-            if (_isSliderDraging) {
-              setState(() {
-                _position = Duration(milliseconds: value.toInt());
-              });
-            }
-          },
-          onChangeStart: (value) {
-            _isSliderDraging = true;
-          },
-          onChangeEnd: (value) {
-            if (_isSliderDraging) {
-              widget.controller.player.seek(
-                Duration(milliseconds: value.toInt()),
-              );
-              _isSliderDraging = false;
-            }
-          },
-        ));
+          child: Slider(
+            min: 0,
+            max: _duration.inMilliseconds.toDouble(),
+            value: clampDouble(
+              _position.inMilliseconds.toDouble(),
+              0,
+              _duration.inMilliseconds.toDouble(),
+            ),
+            secondaryTrackValue: clampDouble(
+              _buffer.inMilliseconds.toDouble(),
+              0,
+              _duration.inMilliseconds.toDouble(),
+            ),
+            onChanged: (value) {
+              if (_isSliderDraging) {
+                setState(() {
+                  _position = Duration(milliseconds: value.toInt());
+                });
+              }
+            },
+            onChangeStart: (value) {
+              _isSliderDraging = true;
+            },
+            onChangeEnd: (value) {
+              if (_isSliderDraging) {
+                widget.controller.player.seek(
+                  Duration(milliseconds: value.toInt()),
+                );
+                _isSliderDraging = false;
+              }
+            },
+          )),
+    );
   }
 }

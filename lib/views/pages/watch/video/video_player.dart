@@ -61,60 +61,55 @@ class _VideoPlayerState extends State<VideoPlayer> {
   _buildContent() {
     return Obx(() {
       final maxWidth = MediaQuery.of(context).size.width;
-      return PopScope(
-        onPopInvoked: (_) {
-          _c.onExit();
-        },
-        child: Row(
-          children: [
-            AnimatedContainer(
-              onEnd: () {
-                _c.isOpenSidebar.value = _c.showSidebar.value;
-              },
-              width: _c.showSidebar.value
-                  ? MediaQuery.of(context).size.width - 300
-                  : maxWidth,
-              duration: const Duration(milliseconds: 120),
-              child: Stack(
-                children: [
-                  VideoPlayerConten(tag: widget.title),
-                  // 消息弹出
-                  if (_c.cuurentMessageWidget.value != null)
-                    Positioned(
-                      left: 0,
-                      bottom: 100,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
+      return Row(
+        children: [
+          AnimatedContainer(
+            onEnd: () {
+              _c.isOpenSidebar.value = _c.showSidebar.value;
+            },
+            width: _c.showSidebar.value
+                ? MediaQuery.of(context).size.width - 300
+                : maxWidth,
+            duration: const Duration(milliseconds: 120),
+            child: Stack(
+              children: [
+                VideoPlayerConten(tag: widget.title),
+                // 消息弹出
+                if (_c.cuurentMessageWidget.value != null)
+                  Positioned(
+                    left: 0,
+                    bottom: 100,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
                         ),
-                        constraints: BoxConstraints(
-                          maxHeight: 200,
-                          maxWidth: maxWidth,
+                      ),
+                      constraints: BoxConstraints(
+                        maxHeight: 200,
+                        maxWidth: maxWidth,
+                      ),
+                      child: DefaultTextStyle(
+                        style: const TextStyle(
+                          color: Colors.white,
                         ),
-                        child: DefaultTextStyle(
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          child: _c.cuurentMessageWidget.value!,
-                        ),
-                      ).animate().fade(),
-                    ),
-                ],
-              ),
+                        child: _c.cuurentMessageWidget.value!,
+                      ),
+                    ).animate().fade(),
+                  ),
+              ],
             ),
-            if (_c.isOpenSidebar.value)
-              Expanded(
-                child: VideoPlayerSidebar(
-                  controller: _c,
-                ),
-              )
-          ],
-        ),
+          ),
+          if (_c.isOpenSidebar.value)
+            Expanded(
+              child: VideoPlayerSidebar(
+                controller: _c,
+              ),
+            )
+        ],
       );
     });
   }
