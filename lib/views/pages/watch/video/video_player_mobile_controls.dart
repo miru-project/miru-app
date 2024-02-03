@@ -6,10 +6,13 @@ import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/router.dart';
 import 'package:miru_app/views/pages/watch/video/video_player_sidebar.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/progress.dart';
+import 'package:screen_brightness/screen_brightness.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 class VideoPlayerMobileControls extends StatefulWidget {
   const VideoPlayerMobileControls({super.key, required this.controller});
@@ -24,6 +27,51 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
   late final VideoPlayerController _c = widget.controller;
   final _subtitleViewKey = GlobalKey<SubtitleViewState>();
   bool _showControls = true;
+  double _currentBrightness = 0;
+  double _currentVolume = 0;
+  // 是否是调整亮度
+  bool _isBrightness = false;
+  // 是否正在调节
+  bool _isAdjusting = false;
+  // 滑动时的进度
+  Duration _position = Duration.zero;
+  // 是否左右滑动调整进度
+  bool _isSeeking = false;
+  // 是否长按加速
+  bool _isLongPress = false;
+  // 定时器
+  Timer? _timer;
+
+  _updateTimer() {
+    _timer?.cancel();
+    _timer = null;
+    setState(() {
+      _showControls = true;
+    });
+    _timer = Timer.periodic(
+      const Duration(seconds: 3),
+      (_) {
+        if (mounted) {
+          setState(() {
+            _showControls = false;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  _init() async {
+    _updateTimer();
+    VolumeController().showSystemUI = false;
+    _currentBrightness = await ScreenBrightness().current;
+    _currentVolume = await VolumeController().getVolume();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,39 +119,158 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                 },
               ),
             ),
+            // 顶部提示
+            Positioned(
+              top: 30,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    color: Colors.black45,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_isSeeking)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${_position.inMinutes}:${(_position.inSeconds % 60).toString().padLeft(2, '0')}',
+                              ),
+                              const Text('/'),
+                              Text(
+                                '${_c.player.state.duration.inMinutes}:${(_c.player.state.duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (_isLongPress)
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Playing at 3x speed'),
+                        ),
+                      if (_isAdjusting)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_isBrightness) ...[
+                                const Icon(Icons.brightness_5),
+                                const SizedBox(width: 5),
+                                Text(
+                                  (_currentBrightness * 100).toStringAsFixed(0),
+                                )
+                              ],
+                              if (!_isBrightness) ...[
+                                const Icon(Icons.volume_up),
+                                const SizedBox(width: 5),
+                                Text(
+                                  (_currentVolume * 100).toStringAsFixed(0),
+                                )
+                              ],
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             // 手势层
             Positioned.fill(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  setState(() {
-                    _showControls = !_showControls;
-                  });
-                },
-                onDoubleTap: () {
-                  if (_c.player.state.playing) {
-                    _c.player.pause();
-                  } else {
-                    _c.player.play();
+                  if (_showControls) {
+                    _showControls = false;
+                    setState(() {});
+                    return;
                   }
+                  _updateTimer();
+                },
+                onDoubleTapDown: (details) {
+                  // 如果左边点击快退，中间暂停，右边快进
+                  final dx = details.localPosition.dx;
+                  final width = LayoutUtils.width / 3;
+                  if (dx < width) {
+                    _c.player.seek(
+                      _c.player.state.position - const Duration(seconds: 10),
+                    );
+                  } else if (dx > width * 2) {
+                    _c.player.seek(
+                      _c.player.state.position + const Duration(seconds: 10),
+                    );
+                  } else {
+                    if (_c.player.state.playing) {
+                      _c.player.pause();
+                    } else {
+                      _c.player.play();
+                    }
+                  }
+                },
+                onVerticalDragStart: (details) {
+                  _isBrightness =
+                      details.localPosition.dx < LayoutUtils.width / 2;
+                },
+                // 左右两边上下滑动
+                onVerticalDragUpdate: (details) {
+                  final add = details.delta.dy / 500;
+                  // 如果是左边调节亮度
+                  if (_isBrightness) {
+                    _currentBrightness = (_currentBrightness - add).clamp(0, 1);
+                    ScreenBrightness().setScreenBrightness(_currentBrightness);
+                  }
+                  // 如果是右边调节音量
+                  else {
+                    _currentVolume = (_currentVolume - add).clamp(0, 1);
+                    VolumeController().setVolume(_currentVolume);
+                  }
+                  _isAdjusting = true;
+                  setState(() {});
+                },
+                onHorizontalDragStart: (details) {
+                  _position = _c.player.state.position;
+                },
+                onVerticalDragEnd: (details) {
+                  _isAdjusting = false;
+                  setState(() {});
                 },
                 // 左右滑动
                 onHorizontalDragUpdate: (details) {
-                  if (details.delta.dx > 0) {
-                    _c.player.seek(
-                      _c.player.state.position + const Duration(seconds: 1),
-                    );
-                  } else {
-                    _c.player.seek(
-                      _c.player.state.position - const Duration(seconds: 1),
-                    );
-                  }
+                  double scale = 200000 / LayoutUtils.width;
+                  Duration pos = _position +
+                      Duration(
+                        milliseconds: (details.delta.dx * scale).round(),
+                      );
+                  _position = Duration(
+                    milliseconds: pos.inMilliseconds.clamp(
+                      0,
+                      _c.player.state.duration.inMilliseconds,
+                    ),
+                  );
+                  _isSeeking = true;
+                  setState(() {});
                 },
-                onLongPress: () {
+                onHorizontalDragEnd: (details) {
+                  _c.player.seek(_position);
+                  _isSeeking = false;
+                  setState(() {});
+                },
+                onLongPressStart: (details) {
+                  _isLongPress = true;
                   _c.player.setRate(3.0);
+                  setState(() {});
                 },
                 onLongPressEnd: (details) {
                   _c.player.setRate(_c.currentSpeed.value);
+                  _isLongPress = false;
+                  setState(() {});
                 },
                 child: const SizedBox.expand(),
               ),
@@ -399,34 +566,39 @@ class _Footer extends StatelessWidget {
               StreamBuilder(
                 stream: controller.player.stream.position,
                 builder: (context, snapshot) {
+                  late Duration position;
                   if (snapshot.hasData) {
-                    final position = snapshot.data as Duration;
-                    return Text(
-                      '${position.inMinutes}:${position.inSeconds % 60}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    );
+                    position = snapshot.data as Duration;
+                  } else {
+                    position = controller.player.state.position;
                   }
-                  return const SizedBox.shrink();
+
+                  return Text(
+                    '${position.inMinutes}:${(position.inSeconds % 60).toString().padLeft(2, '0')}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  );
                 },
               ),
               const Text('/'),
               StreamBuilder(
                 stream: controller.player.stream.duration,
                 builder: (context, snapshot) {
+                  late Duration duration;
                   if (snapshot.hasData) {
-                    final duration = snapshot.data as Duration;
-                    return Text(
-                      '${duration.inMinutes}:${duration.inSeconds % 60}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    );
+                    duration = snapshot.data as Duration;
+                  } else {
+                    duration = controller.player.state.duration;
                   }
-                  return const SizedBox.shrink();
+                  return Text(
+                    '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  );
                 },
               ),
               const Spacer(),
@@ -514,6 +686,10 @@ class _SeekBarState extends State<_SeekBar> {
   @override
   void initState() {
     super.initState();
+    _duration = widget.controller.player.state.duration;
+    _position = widget.controller.player.state.position;
+    _buffer = widget.controller.player.state.buffer;
+
     _durationSubscription =
         widget.controller.player.stream.duration.listen((event) {
       setState(() {

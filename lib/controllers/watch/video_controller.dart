@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -166,8 +167,10 @@ class VideoPlayerController extends GetxController {
     if (Platform.isAndroid) {
       // 切换到横屏
       SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight],
+      );
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      await AutoOrientation.landscapeAutoMode(forceSensor: true);
     }
 
     // 切换剧集
