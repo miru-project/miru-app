@@ -469,7 +469,8 @@ class _Footer extends StatelessWidget {
                         StreamBuilder(
                           stream: controller.player.stream.playing,
                           builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data!) {
+                            if (snapshot.hasData && snapshot.data! ||
+                                controller.player.state.playing) {
                               return IconButton(
                                 onPressed: controller.player.pause,
                                 icon: const Icon(

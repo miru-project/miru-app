@@ -220,27 +220,23 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
               ),
             ),
             // 头部控制栏
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Opacity(
-                opacity: _showControls ? 1.0 : 0.0,
+            if (_showControls)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
                 child: _Header(
                   controller: _c,
                 ),
               ),
-            ),
             // 底部控制栏
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Opacity(
-                opacity: _showControls ? 1.0 : 0.0,
+            if (_showControls)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
                 child: _Footer(controller: _c),
               ),
-            ),
             Positioned.fill(
               child: Obx(
                 () {
@@ -368,7 +364,8 @@ class _Footer extends StatelessWidget {
               StreamBuilder(
                 stream: controller.player.stream.playing,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data!) {
+                  if (snapshot.hasData && snapshot.data! ||
+                      controller.player.state.playing) {
                     return IconButton(
                       onPressed: controller.player.pause,
                       icon: const Icon(
