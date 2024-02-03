@@ -60,17 +60,23 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
     );
   }
 
+  _init() async {
+    _updateTimer();
+    VolumeController().showSystemUI = false;
+    _currentBrightness = await ScreenBrightness().current;
+    _currentVolume = await VolumeController().getVolume();
+  }
+
   @override
   void initState() {
     _init();
     super.initState();
   }
 
-  _init() async {
-    _updateTimer();
-    VolumeController().showSystemUI = false;
-    _currentBrightness = await ScreenBrightness().current;
-    _currentVolume = await VolumeController().getVolume();
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

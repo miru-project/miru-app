@@ -383,8 +383,11 @@ class VideoPlayerController extends GetxController {
     );
 
     // 请求判断 content-type 是否为 m3u8
-    final contentType = response.headers.value('content-type');
-    if (contentType == null || !contentType.contains('mpegurl')) {
+    final contentType = response.headers.value('content-type')?.toLowerCase();
+    if (contentType == null ||
+        !contentType.contains('mpegurl') &&
+            !contentType.contains('m3u8') &&
+            !contentType.contains('mp2t')) {
       logger.info('not m3u8');
       return;
     }

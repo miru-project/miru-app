@@ -57,6 +57,13 @@ class _VideoPlayerDesktopControlsState
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onHover: (_) {
