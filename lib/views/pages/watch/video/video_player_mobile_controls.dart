@@ -346,9 +346,10 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                     );
                   }
                   return Card(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                     elevation: 0,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(10),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

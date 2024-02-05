@@ -390,7 +390,7 @@ class _Footer extends StatelessWidget {
                     if (snapshot.hasData) {
                       final position = snapshot.data as Duration;
                       return Text(
-                        '${position.inMinutes}:${position.inSeconds % 60}',
+                        '${position.inMinutes}:${(position.inSeconds % 60).toString().padLeft(2, '0')}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
@@ -412,7 +412,7 @@ class _Footer extends StatelessWidget {
                     if (snapshot.hasData) {
                       final duration = snapshot.data as Duration;
                       return Text(
-                        '${duration.inMinutes}:${duration.inSeconds % 60}',
+                        '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w300,
@@ -1159,7 +1159,8 @@ class _SeekBarState extends State<_SeekBar> {
       max: duration.inSeconds < position.inSeconds
           ? position.inSeconds.toDouble()
           : duration.inSeconds.toDouble(),
-      label: '${position.inMinutes}:${position.inSeconds % 60}',
+      label:
+          '${position.inMinutes}:${(position.inSeconds % 60).toString().padLeft(2, '0')}',
       onChanged: (value) {
         _isDrag = true;
         setState(() {

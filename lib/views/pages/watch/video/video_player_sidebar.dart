@@ -527,18 +527,25 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
           'Subtitle',
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
+        const SizedBox(height: 20),
+        const Text('Font size'),
+        const SizedBox(height: 10),
         Row(
           children: [
-            const Text('Font size'),
             Expanded(
               child: Obx(
-                () => Slider(
-                  value: _c.subtitleFontSize.value,
-                  onChanged: (value) {
-                    _c.subtitleFontSize.value = value;
-                  },
-                  min: 20,
-                  max: 80,
+                () => SliderTheme(
+                  data: SliderThemeData(
+                    overlayShape: SliderComponentShape.noOverlay,
+                  ),
+                  child: Slider(
+                    value: _c.subtitleFontSize.value,
+                    onChanged: (value) {
+                      _c.subtitleFontSize.value = value;
+                    },
+                    min: 20,
+                    max: 80,
+                  ),
                 ),
               ),
             ),
@@ -549,70 +556,102 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
             ),
           ],
         ),
-        Row(
-          children: [
-            const Text('Font color'),
-            const SizedBox(width: 10),
-            Obx(
-              () => DropdownButton(
-                value: _c.subtitleFontColor.value,
-                onChanged: (value) {
-                  if (value != null) _c.subtitleFontColor.value = value;
-                },
-                items: ColorUtils.baseColors
-                    .map(
-                      (color) => DropdownMenuItem(
-                        value: color,
-                        child: Container(
-                          height: 32,
-                          width: 32,
+        const Text('Font color'),
+        const SizedBox(height: 10),
+        Obx(
+          () {
+            final selectColor = _c.subtitleFontColor.value;
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (final color in ColorUtils.baseColors) ...[
+                    GestureDetector(
+                      onTap: () {
+                        _c.subtitleFontColor.value = color;
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: selectColor == color
+                              ? Border.all(
+                                  color: Colors.grey,
+                                  width: 2,
+                                )
+                              : null,
                           color: color,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16),
+                          ),
                         ),
+                        height: 32,
+                        width: 32,
                       ),
-                    )
-                    .toList(),
+                    ),
+                    const SizedBox(width: 10)
+                  ],
+                ],
               ),
-            ),
-          ],
+            );
+          },
         ),
-        Row(
-          children: [
-            const Text('Background color'),
-            const SizedBox(width: 10),
-            Obx(
-              () => DropdownButton(
-                value: _c.subtitleBackgroundColor.value,
-                onChanged: (value) {
-                  if (value != null) _c.subtitleBackgroundColor.value = value;
-                },
-                items: ColorUtils.baseColors
-                    .map(
-                      (color) => DropdownMenuItem(
-                        value: color,
-                        child: Container(
-                          height: 32,
-                          width: 32,
+        const SizedBox(height: 10),
+        const Text('Background color'),
+        const SizedBox(height: 10),
+        Obx(
+          () {
+            final selectColor = _c.subtitleBackgroundColor.value;
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (final color in ColorUtils.baseColors) ...[
+                    GestureDetector(
+                      onTap: () {
+                        _c.subtitleBackgroundColor.value = color;
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: selectColor == color
+                              ? Border.all(
+                                  color: Colors.grey,
+                                  width: 2,
+                                )
+                              : null,
                           color: color,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16),
+                          ),
                         ),
+                        height: 32,
+                        width: 32,
                       ),
-                    )
-                    .toList(),
+                    ),
+                    const SizedBox(width: 10)
+                  ],
+                ],
               ),
-            ),
-          ],
+            );
+          },
         ),
+        const SizedBox(height: 10),
+        const Text('Background opacity'),
+        const SizedBox(height: 10),
         Row(
           children: [
-            const Text('Background opacity'),
             Expanded(
               child: Obx(
-                () => Slider(
-                  value: _c.subtitleBackgroundOpacity.value,
-                  onChanged: (value) {
-                    _c.subtitleBackgroundOpacity.value = value;
-                  },
-                  min: 0,
-                  max: 1,
+                () => SliderTheme(
+                  data: SliderThemeData(
+                    overlayShape: SliderComponentShape.noOverlay,
+                  ),
+                  child: Slider(
+                    value: _c.subtitleBackgroundOpacity.value,
+                    onChanged: (value) {
+                      _c.subtitleBackgroundOpacity.value = value;
+                    },
+                    min: 0,
+                    max: 1,
+                  ),
                 ),
               ),
             ),
@@ -625,37 +664,48 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
         ),
         const SizedBox(height: 10),
         // textAlign
-        Row(
-          children: [
-            const Text('Text align'),
-            const SizedBox(width: 10),
-            Obx(
-              () => DropdownButton(
-                value: _c.subtitleTextAlign.value,
-                onChanged: (value) {
-                  if (value != null) _c.subtitleTextAlign.value = value;
-                },
-                items: const [
-                  DropdownMenuItem(
-                    value: TextAlign.justify,
-                    child: Icon(Icons.format_align_justify),
+        const Text('Text align'),
+        const SizedBox(height: 10),
+
+        Obx(
+          () => Wrap(
+            children: [
+              for (final align in TextAlign.values) ...[
+                GestureDetector(
+                  onTap: () {
+                    _c.subtitleTextAlign.value = align;
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: _c.subtitleTextAlign.value == align
+                          ? Border.all(
+                              color: Colors.grey,
+                              width: 2,
+                            )
+                          : null,
+                      color: Colors.transparent,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    height: 32,
+                    width: 32,
+                    child: Icon(
+                      align == TextAlign.justify
+                          ? Icons.format_align_justify
+                          : align == TextAlign.left
+                              ? Icons.format_align_left
+                              : align == TextAlign.right
+                                  ? Icons.format_align_right
+                                  : Icons.format_align_center,
+                      color: Colors.white,
+                    ),
                   ),
-                  DropdownMenuItem(
-                    value: TextAlign.left,
-                    child: Icon(Icons.format_align_left),
-                  ),
-                  DropdownMenuItem(
-                    value: TextAlign.right,
-                    child: Icon(Icons.format_align_right),
-                  ),
-                  DropdownMenuItem(
-                    value: TextAlign.center,
-                    child: Icon(Icons.format_align_center),
-                  ),
-                ],
-              ),
-            ),
-          ],
+                ),
+                const SizedBox(width: 10)
+              ],
+            ],
+          ),
         ),
         const SizedBox(height: 10),
         const Text("Font weight"),

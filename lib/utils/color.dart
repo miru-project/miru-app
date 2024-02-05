@@ -21,6 +21,8 @@ class ColorUtils {
   }
 
   static List<Color> baseColors = [
+    Colors.white,
+    Colors.black,
     Colors.red,
     Colors.orange,
     Colors.yellow,
@@ -28,7 +30,5 @@ class ColorUtils {
     Colors.cyan,
     Colors.blue,
     Colors.purple,
-    Colors.white,
-    Colors.black,
   ];
 }
