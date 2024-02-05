@@ -885,7 +885,7 @@ class _TrackState extends State<_Track> {
                               widget.controller.player.state.track.subtitle,
                           title: const Text('Off'),
                           onPressed: () {
-                            widget.controller.player.setSubtitleTrack(
+                            widget.controller.setSubtitleTrack(
                               SubtitleTrack.no(),
                             );
                             router.pop();
@@ -905,7 +905,7 @@ class _TrackState extends State<_Track> {
                             title: Text(subtitle.title ?? ''),
                             subtitle: Text(subtitle.language ?? ''),
                             onPressed: () {
-                              widget.controller.player.setSubtitleTrack(
+                              widget.controller.setSubtitleTrack(
                                 subtitle,
                               );
                               router.pop();
@@ -923,7 +923,7 @@ class _TrackState extends State<_Track> {
                               title: Text(subtitle.title ?? ''),
                               subtitle: Text(subtitle.language ?? ''),
                               onPressed: () {
-                                widget.controller.player.setSubtitleTrack(
+                                widget.controller.setSubtitleTrack(
                                   subtitle,
                                 );
                                 router.pop();

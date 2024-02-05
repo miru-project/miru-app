@@ -129,6 +129,12 @@ class MiruStorage {
     await _initSetting(SettingKey.proxy, '');
     await _initSetting(SettingKey.proxyType, 'DIRECT');
     await _initSetting(SettingKey.saveLog, true);
+    await _initSetting(SettingKey.subtitleFontSize, 46.0);
+    await _initSetting(SettingKey.subtitleFontColor, Colors.white.value);
+    await _initSetting(SettingKey.subtitleFontWeight, 'bold');
+    await _initSetting(SettingKey.subtitleBackgroundColor, Colors.black.value);
+    await _initSetting(SettingKey.subtitleBackgroundOpacity, 0.5);
+    await _initSetting(SettingKey.subtitleTextAlign, TextAlign.center.index);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -162,29 +168,37 @@ class MiruStorage {
 }
 
 class SettingKey {
-  static String theme = "Theme";
-  static String miruRepoUrl = "MiruRepoUrl";
-  static String tmdbKey = 'TMDBKey';
-  static String autoCheckUpdate = 'AutoCheckUpdate';
-  static String language = 'Language';
-  static String novelFontSize = 'NovelFontSize';
-  static String enableNSFW = 'EnableNSFW';
-  static String videoPlayer = 'VideoPlayer';
-  static String databaseVersion = 'DatabaseVersion';
-  static String listMode = 'ListMode';
-  static String keyI = 'KeyI';
-  static String keyJ = 'KeyJ';
-  static String arrowLeft = 'Arrowleft';
-  static String arrowRight = 'Arrowright';
-  static String readingMode = 'ReadingMode';
-  static String aniListToken = 'AniListToken';
-  static String aniListUserId = 'AniListUserId';
-  static String autoTracking = 'AutoTracking';
-  static String windowSize = 'WindowsSize';
-  static String windowPosition = 'WindowsPosition';
-  static String androidWebviewUA = "AndroidWebviewUA";
-  static String windowsWebviewUA = "WindowsWebviewUA";
-  static String proxy = "Proxy";
-  static String proxyType = "ProxyType";
-  static String saveLog = "SaveLog";
+  static const theme = "Theme";
+  static const miruRepoUrl = "MiruRepoUrl";
+  static const tmdbKey = 'TMDBKey';
+  static const autoCheckUpdate = 'AutoCheckUpdate';
+  static const language = 'Language';
+  static const novelFontSize = 'NovelFontSize';
+  static const enableNSFW = 'EnableNSFW';
+  static const videoPlayer = 'VideoPlayer';
+  static const databaseVersion = 'DatabaseVersion';
+  static const listMode = 'ListMode';
+  static const keyI = 'KeyI';
+  static const keyJ = 'KeyJ';
+  static const arrowLeft = 'Arrowleft';
+  static const arrowRight = 'Arrowright';
+  static const readingMode = 'ReadingMode';
+  static const aniListToken = 'AniListToken';
+  static const aniListUserId = 'AniListUserId';
+  static const autoTracking = 'AutoTracking';
+  static const windowSize = 'WindowsSize';
+  static const windowPosition = 'WindowsPosition';
+  static const androidWebviewUA = "AndroidWebviewUA";
+  static const windowsWebviewUA = "WindowsWebviewUA";
+  static const proxy = "Proxy";
+  static const proxyType = "ProxyType";
+  static const saveLog = "SaveLog";
+  static const subtitleFontSize = "SubtitleFontSize";
+  static const subtitleFontWeight = "SubtitleFontWeight";
+  static const subtitleFontColor = "SubtitleFontColor";
+  static const subtitleBackgroundColor = "SubtitleBackgroundColor";
+  static const subtitleBackgroundOpacity = "SubtitleBackgroundOpacity";
+  static const subtitleTextAlign = "SubtitleTextAlign";
+  static const subtitleLastLanguageSelected = "SubtitleLastLanguageSelected";
+  static const subtitleLastTitleSelected = "SubtitleLastTitleSelected";
 }

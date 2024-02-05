@@ -556,6 +556,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
             ),
           ],
         ),
+        const SizedBox(height: 10),
         const Text('Font color'),
         const SizedBox(height: 10),
         Obx(
@@ -804,7 +805,7 @@ class _TrackSelector extends StatelessWidget {
               SubtitleTrack.no() == controller.player.state.track.subtitle,
           title: const Text('Off'),
           onTap: () {
-            controller.player.setSubtitleTrack(
+            controller.setSubtitleTrack(
               SubtitleTrack.no(),
             );
             controller.showSidebar.value = false;
@@ -824,7 +825,7 @@ class _TrackSelector extends StatelessWidget {
             title: Text(subtitle.title ?? ''),
             subtitle: Text(subtitle.language ?? ''),
             onTap: () {
-              controller.player.setSubtitleTrack(
+              controller.setSubtitleTrack(
                 subtitle,
               );
               controller.showSidebar.value = false;
@@ -839,7 +840,7 @@ class _TrackSelector extends StatelessWidget {
               title: Text(subtitle.title ?? ''),
               subtitle: Text(subtitle.language ?? ''),
               onTap: () {
-                controller.player.setSubtitleTrack(
+                controller.setSubtitleTrack(
                   subtitle,
                 );
                 controller.showSidebar.value = false;

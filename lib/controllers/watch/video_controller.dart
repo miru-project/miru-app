@@ -149,12 +149,12 @@ class VideoPlayerController extends GetxController {
   final isGettingWatchData = true.obs;
 
   // 字幕配置
-  final subtitleFontSize = 34.0.obs;
+  final subtitleFontSize = 46.0.obs;
   final subtitleFontWeight = FontWeight.normal.obs;
   final subtitleTextAlign = TextAlign.center.obs;
   final subtitleFontColor = Colors.white.obs;
   final subtitleBackgroundColor = Colors.black.obs;
-  final subtitleBackgroundOpacity = 0.7.obs;
+  final subtitleBackgroundOpacity = 0.5.obs;
 
   // 侧边栏初始化 tab
   final initSidebarTab = SidebarTab.episodes.obs;
@@ -172,7 +172,70 @@ class VideoPlayerController extends GetxController {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       await AutoOrientation.landscapeAutoMode(forceSensor: true);
     }
+    _initSettings();
+    _initPlayer();
+    play();
+    super.onInit();
+  }
 
+  _initSettings() {
+    subtitleFontSize.value =
+        MiruStorage.getSetting(SettingKey.subtitleFontSize);
+    subtitleFontColor.value = Color(
+      MiruStorage.getSetting(
+        SettingKey.subtitleFontColor,
+      ),
+    );
+    final fontWeightText =
+        MiruStorage.getSetting(SettingKey.subtitleFontWeight);
+    subtitleFontWeight.value =
+        fontWeightText == 'bold' ? FontWeight.bold : FontWeight.normal;
+    subtitleBackgroundColor.value = Color(MiruStorage.getSetting(
+      SettingKey.subtitleBackgroundColor,
+    ));
+    subtitleBackgroundOpacity.value = MiruStorage.getSetting(
+      SettingKey.subtitleBackgroundOpacity,
+    );
+    subtitleTextAlign.value = TextAlign.values[MiruStorage.getSetting(
+      SettingKey.subtitleTextAlign,
+    )];
+
+    ever(subtitleFontSize, (callback) {
+      MiruStorage.setSetting(SettingKey.subtitleFontSize, callback);
+    });
+    ever(subtitleFontColor, (callback) {
+      MiruStorage.setSetting(
+        SettingKey.subtitleFontColor,
+        callback.value,
+      );
+    });
+    ever(subtitleFontWeight, (callback) {
+      MiruStorage.setSetting(
+        SettingKey.subtitleFontWeight,
+        callback == FontWeight.bold ? 'bold' : 'normal',
+      );
+    });
+    ever(subtitleBackgroundColor, (callback) {
+      MiruStorage.setSetting(
+        SettingKey.subtitleBackgroundColor,
+        callback.value,
+      );
+    });
+    ever(subtitleBackgroundOpacity, (callback) {
+      MiruStorage.setSetting(
+        SettingKey.subtitleBackgroundOpacity,
+        callback,
+      );
+    });
+    ever(subtitleTextAlign, (callback) {
+      MiruStorage.setSetting(
+        SettingKey.subtitleTextAlign,
+        callback.index,
+      );
+    });
+  }
+
+  _initPlayer() {
     // 切换剧集
     ever(index, (callback) {
       play();
@@ -240,13 +303,41 @@ class VideoPlayerController extends GetxController {
       }
     });
 
+    // 监听 track
+    player.stream.tracks.listen((event) {
+      if (event.subtitle.isEmpty) {
+        return;
+      }
+
+      final latestLanguageSelected = MiruStorage.getSetting(
+        SettingKey.subtitleLastLanguageSelected,
+      );
+      final latestTitleSelected = MiruStorage.getSetting(
+        SettingKey.subtitleLastTitleSelected,
+      );
+      if (latestLanguageSelected == null && latestTitleSelected == null) {
+        return;
+      }
+
+      final subtitle = event.subtitle.firstWhereOrNull(
+        (element) {
+          if (element.id == "no" || element.id == "auto") {
+            return false;
+          }
+          return element.language == latestLanguageSelected ||
+              element.title == latestTitleSelected;
+        },
+      );
+
+      if (subtitle != null) {
+        player.setSubtitleTrack(subtitle);
+      }
+    });
+
     // 错误监听
     player.stream.error.listen((event) {
       sendMessage(Message(Text(event)));
     });
-
-    play();
-    super.onInit();
   }
 
   // 播放
@@ -468,6 +559,18 @@ class VideoPlayerController extends GetxController {
         timer.cancel();
       }
     });
+  }
+
+  setSubtitleTrack(SubtitleTrack subtitle) {
+    player.setSubtitleTrack(subtitle);
+    MiruStorage.setSetting(
+      SettingKey.subtitleLastLanguageSelected,
+      subtitle.language,
+    );
+    MiruStorage.setSetting(
+      SettingKey.subtitleLastTitleSelected,
+      subtitle.title,
+    );
   }
 
   _saveHistory() async {
