@@ -6,6 +6,8 @@ import 'dart:io';
 
 import 'package:auto_orientation/auto_orientation.dart';
 import 'package:dio/dio.dart';
+import 'package:dlna_dart/dlna.dart';
+import 'package:dlna_dart/xmlParser.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -162,6 +164,21 @@ class VideoPlayerController extends GetxController {
   // 播放方式
   final playMode = PlaylistMode.none.obs;
 
+  // 进度
+  final position = Duration.zero.obs;
+
+  // 总时长
+  final duration = Duration.zero.obs;
+
+  // 播放状态
+  final isPlaying = false.obs;
+
+  // dlna 设备
+  final dlnaDevice = Rx<DLNADevice?>(null);
+
+  // 定时器
+  Timer? _dlnaTimer;
+
   @override
   void onInit() async {
     if (Platform.isAndroid) {
@@ -273,7 +290,7 @@ class VideoPlayerController extends GetxController {
       }
     });
 
-    //讀取現在的畫質
+    // 讀取現在的畫質
     player.stream.height.listen((event) async {
       if (player.state.width != null) {
         final width = player.state.width;
@@ -334,6 +351,30 @@ class VideoPlayerController extends GetxController {
       }
     });
 
+    // 总时长监听
+    player.stream.duration.listen((event) {
+      if (dlnaDevice.value != null) {
+        return;
+      }
+      duration.value = event;
+    });
+
+    // 监听播放状态
+    player.stream.playing.listen((event) {
+      if (dlnaDevice.value != null) {
+        return;
+      }
+      isPlaying.value = event;
+    });
+
+    // 监听进度
+    player.stream.position.listen((event) {
+      if (dlnaDevice.value != null) {
+        return;
+      }
+      position.value = event;
+    });
+
     // 错误监听
     player.stream.error.listen((event) {
       sendMessage(Message(Text(event)));
@@ -365,16 +406,22 @@ class VideoPlayerController extends GetxController {
           error.value = e.toString();
           return;
         }
+
         playTorrentFile(torrentMediaFileList.first);
       } else {
-        getQuality();
-        await player.open(
-          Media(watchData!.url, httpHeaders: watchData!.headers),
-        );
-        if (watchData!.audioTrack != null) {
-          await player.setAudioTrack(
-            AudioTrack.uri(watchData!.audioTrack!),
+        if (dlnaDevice.value != null) {
+          await dlnaDevice.value!.setUrl(watchData!.url);
+          await dlnaDevice.value!.play();
+        } else {
+          getQuality();
+          await player.open(
+            Media(watchData!.url, httpHeaders: watchData!.headers),
           );
+          if (watchData!.audioTrack != null) {
+            await player.setAudioTrack(
+              AudioTrack.uri(watchData!.audioTrack!),
+            );
+          }
         }
       }
       isGettingWatchData.value = false;
@@ -418,6 +465,7 @@ class VideoPlayerController extends GetxController {
     }
   }
 
+  // 获取 watch 数据
   getWatchData() async {
     watchData = null;
     subtitles.clear();
@@ -425,6 +473,7 @@ class VideoPlayerController extends GetxController {
     watchData = await runtime.watch(playUrl) as ExtensionBangumiWatch;
   }
 
+  // 获取 torrent 媒体文件
   getTorrentMediaFile() async {
     if (Get.find<MainController>().btServerisRunning.value == false) {
       await BTServerUtils.startServer();
@@ -461,6 +510,7 @@ class VideoPlayerController extends GetxController {
     }
   }
 
+  // 获取画质
   getQuality() async {
     final url = watchData!.url;
     final headers = watchData!.headers;
@@ -535,17 +585,20 @@ class VideoPlayerController extends GetxController {
     }
   }
 
+  // 播放 torrent 媒体文件
   playTorrentFile(String file) {
     currentTorrentFile.value = file;
     (player.platform as NativePlayer).setProperty("network-timeout", "60");
     player.open(Media('${BTServerApi.baseApi}/torrent/$_torrenHash/$file'));
   }
 
+  // 切换全屏
   toggleFullscreen() async {
     await WindowManager.instance.setFullScreen(!isFullScreen.value);
     isFullScreen.value = !isFullScreen.value;
   }
 
+  // 切换画质
   switchQuality(String qualityUrl) async {
     final currentSecond = player.state.position.inSeconds;
     final headers = watchData!.headers;
@@ -561,6 +614,7 @@ class VideoPlayerController extends GetxController {
     });
   }
 
+  // 设置字幕
   setSubtitleTrack(SubtitleTrack subtitle) {
     player.setSubtitleTrack(subtitle);
     MiruStorage.setSetting(
@@ -573,8 +627,9 @@ class VideoPlayerController extends GetxController {
     );
   }
 
+  // 保存历史记录
   _saveHistory() async {
-    if (player.state.duration.inSeconds == 0) {
+    if (duration.value.inSeconds == 0) {
       return;
     }
 
@@ -613,12 +668,14 @@ class VideoPlayerController extends GetxController {
     await Get.find<HomePageController>().onRefresh();
   }
 
+  // 判断文件是否是字幕
   _isSubtitle(String file) {
     return file.endsWith('.srt') ||
         file.endsWith('.vtt') ||
         file.endsWith(".ass");
   }
 
+  // 发送消息
   sendMessage(Message message) {
     messageQueue.add(message);
 
@@ -627,6 +684,7 @@ class VideoPlayerController extends GetxController {
     }
   }
 
+  // 处理消息提示
   _processNextMessage() async {
     if (messageQueue.isEmpty) {
       cuurentMessageWidget.value = null;
@@ -641,6 +699,7 @@ class VideoPlayerController extends GetxController {
     _processNextMessage();
   }
 
+  // 切换侧边栏
   toggleSideBar(SidebarTab tab) {
     if (showSidebar.value) {
       showSidebar.value = false;
@@ -650,6 +709,7 @@ class VideoPlayerController extends GetxController {
     showSidebar.value = true;
   }
 
+  // 添加本地字幕文件
   addSubtitleFile() async {
     final file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -666,6 +726,81 @@ class VideoPlayerController extends GetxController {
         title: file.files.first.name,
       ),
     );
+  }
+
+  // 连接 DLNA 设备
+  connectDLNADevice(DLNADevice device) async {
+    if (watchData == null) {
+      sendMessage(Message(Text('等待视频加载'.i18n)));
+      return;
+    }
+    final url = watchData!.url;
+    dlnaDevice.value = device;
+    await device.setUrl(url);
+    await device.play();
+    await player.stop();
+    _dlnaTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _getDLNAStatus();
+    });
+  }
+
+  // 断开 DLNA 设备
+  disconnectDLNADevice() async {
+    if (dlnaDevice.value == null) {
+      return;
+    }
+    final device = dlnaDevice.value!;
+    dlnaDevice.value = null;
+    device.stop();
+    _dlnaTimer?.cancel();
+  }
+
+  // 获取 DLNA 播放状态
+  _getDLNAStatus() async {
+    final device = dlnaDevice.value;
+    if (device == null) {
+      return;
+    }
+    final transportInfo = await device.getTransportInfo();
+    if (transportInfo.contains("PLAYING")) {
+      isPlaying.value = true;
+    } else {
+      isPlaying.value = false;
+    }
+    final dlnaPosition = await device.position();
+    final positionParser = PositionParser(dlnaPosition);
+    final absTimeArr = positionParser.AbsTime.split(":");
+    final absTime = Duration(
+      hours: int.parse(absTimeArr[0]),
+      minutes: int.parse(absTimeArr[1]),
+      seconds: int.parse(absTimeArr[2]),
+    );
+    position.value = absTime;
+    positionParser.TrackDurationInt;
+    duration.value = Duration(seconds: positionParser.TrackDurationInt);
+  }
+
+  // 播放器相关操作
+  playOrPause() async {
+    if (dlnaDevice.value == null) {
+      player.playOrPause();
+      return;
+    }
+    if (isPlaying.value) {
+      await dlnaDevice.value!.pause();
+    } else {
+      await dlnaDevice.value!.play();
+    }
+  }
+
+  seek(Duration duration) async {
+    if (dlnaDevice.value == null) {
+      player.seek(duration);
+      return;
+    }
+    final curr = await dlnaDevice.value!.position();
+    final diff = duration - position.value;
+    await dlnaDevice.value!.seekByCurrent(curr, diff.inSeconds);
   }
 
   @override
@@ -690,11 +825,13 @@ class VideoPlayerController extends GetxController {
         ]);
       }
     }
+    _dlnaTimer?.cancel();
     player.pause();
     try {
       await _saveHistory();
     } catch (_) {}
     player.dispose();
+    logger.info('dispose video controller');
     super.onClose();
   }
 }

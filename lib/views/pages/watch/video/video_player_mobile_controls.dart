@@ -8,6 +8,7 @@ import 'package:miru_app/controllers/watch/video_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/router.dart';
+import 'package:miru_app/views/pages/watch/video/video_player_dlna.dart';
 import 'package:miru_app/views/pages/watch/video/video_player_sidebar.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/progress.dart';
@@ -150,7 +151,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                               ),
                               const Text('/'),
                               Text(
-                                '${_c.player.state.duration.inMinutes}:${(_c.player.state.duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                                '${_c.duration.value.inMinutes}:${(_c.duration.value.inSeconds % 60).toString().padLeft(2, '0')}',
                               ),
                             ],
                           ),
@@ -205,19 +206,15 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                   final dx = details.localPosition.dx;
                   final width = LayoutUtils.width / 3;
                   if (dx < width) {
-                    _c.player.seek(
-                      _c.player.state.position - const Duration(seconds: 10),
+                    _c.seek(
+                      _c.position.value - const Duration(seconds: 10),
                     );
                   } else if (dx > width * 2) {
-                    _c.player.seek(
-                      _c.player.state.position + const Duration(seconds: 10),
+                    _c.seek(
+                      _c.position.value + const Duration(seconds: 10),
                     );
                   } else {
-                    if (_c.player.state.playing) {
-                      _c.player.pause();
-                    } else {
-                      _c.player.play();
-                    }
+                    _c.playOrPause();
                   }
                 },
                 onVerticalDragStart: (details) {
@@ -241,7 +238,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                   setState(() {});
                 },
                 onHorizontalDragStart: (details) {
-                  _position = _c.player.state.position;
+                  _position = _c.position.value;
                 },
                 onVerticalDragEnd: (details) {
                   _isAdjusting = false;
@@ -257,14 +254,14 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                   _position = Duration(
                     milliseconds: pos.inMilliseconds.clamp(
                       0,
-                      _c.player.state.duration.inMilliseconds,
+                      _c.duration.value.inMilliseconds,
                     ),
                   );
                   _isSeeking = true;
                   setState(() {});
                 },
                 onHorizontalDragEnd: (details) {
-                  _c.player.seek(_position);
+                  _c.seek(_position);
                   _isSeeking = false;
                   setState(() {});
                 },
@@ -341,10 +338,34 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                             _c.player.state.buffering) {
                           return const ProgressRing();
                         }
+                        if (_c.dlnaDevice.value != null) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Playing on ${_c.dlnaDevice.value!.info.friendlyName}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              FilledButton(
+                                onPressed: () {
+                                  _c.disconnectDLNADevice();
+                                },
+                                child: Text(
+                                  'Disconnect'.i18n,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
                         return const SizedBox.shrink();
                       },
                     );
                   }
+
                   return Card(
                     color: Theme.of(context).colorScheme.surfaceVariant,
                     elevation: 0,
@@ -487,6 +508,34 @@ class _Header extends StatelessWidget {
               );
             }),
           ),
+          // DLNA
+          IconButton(
+            icon: const Icon(Icons.cast),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                useSafeArea: true,
+                showDragHandle: true,
+                isScrollControlled: true,
+                builder: (context) {
+                  return DraggableScrollableSheet(
+                    expand: false,
+                    builder: (context, scrollController) {
+                      return SingleChildScrollView(
+                        controller: scrollController,
+                        child: VideoPlayerDLNA(
+                          onDeviceSelected: (device) {
+                            controller.connectDLNADevice(device);
+                            Get.back();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
           // 设置按钮
           IconButton(
             icon: const Icon(Icons.settings),
@@ -535,28 +584,24 @@ class _Footer extends StatelessWidget {
                       : null,
                 ),
               ),
-              StreamBuilder(
-                stream: controller.player.stream.playing,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data! ||
-                      controller.player.state.playing) {
-                    return IconButton(
-                      onPressed: controller.player.pause,
-                      icon: const Icon(
-                        Icons.pause,
-                        size: 30,
-                      ),
-                    );
-                  }
+              Obx(() {
+                if (controller.isPlaying.value) {
                   return IconButton(
-                    onPressed: controller.player.play,
+                    onPressed: controller.playOrPause,
                     icon: const Icon(
-                      Icons.play_arrow,
+                      Icons.pause,
                       size: 30,
                     ),
                   );
-                },
-              ),
+                }
+                return IconButton(
+                  onPressed: controller.playOrPause,
+                  icon: const Icon(
+                    Icons.play_arrow,
+                    size: 30,
+                  ),
+                );
+              }),
               Obx(
                 () => IconButton(
                   icon: const Icon(Icons.skip_next),
@@ -570,44 +615,27 @@ class _Footer extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               // 播放进度
-              StreamBuilder(
-                stream: controller.player.stream.position,
-                builder: (context, snapshot) {
-                  late Duration position;
-                  if (snapshot.hasData) {
-                    position = snapshot.data as Duration;
-                  } else {
-                    position = controller.player.state.position;
-                  }
-
-                  return Text(
-                    '${position.inMinutes}:${(position.inSeconds % 60).toString().padLeft(2, '0')}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  );
-                },
-              ),
+              Obx(() {
+                final position = controller.position.value;
+                return Text(
+                  '${position.inMinutes}:${(position.inSeconds % 60).toString().padLeft(2, '0')}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                  ),
+                );
+              }),
               const Text('/'),
-              StreamBuilder(
-                stream: controller.player.stream.duration,
-                builder: (context, snapshot) {
-                  late Duration duration;
-                  if (snapshot.hasData) {
-                    duration = snapshot.data as Duration;
-                  } else {
-                    duration = controller.player.state.duration;
-                  }
-                  return Text(
-                    '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  );
-                },
-              ),
+              Obx(() {
+                final duration = controller.duration.value;
+                return Text(
+                  '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                  ),
+                );
+              }),
               const Spacer(),
               // 倍速
               Obx(
@@ -682,35 +710,16 @@ class _SeekBar extends StatefulWidget {
 
 class _SeekBarState extends State<_SeekBar> {
   bool _isSliderDraging = false;
-  Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
   Duration _buffer = Duration.zero;
 
-  StreamSubscription? _durationSubscription;
-  StreamSubscription? _positionSubscription;
   StreamSubscription? _bufferSubscription;
 
   @override
   void initState() {
     super.initState();
-    _duration = widget.controller.player.state.duration;
-    _position = widget.controller.player.state.position;
     _buffer = widget.controller.player.state.buffer;
 
-    _durationSubscription =
-        widget.controller.player.stream.duration.listen((event) {
-      setState(() {
-        _duration = event;
-      });
-    });
-    _positionSubscription =
-        widget.controller.player.stream.position.listen((event) {
-      if (!_isSliderDraging) {
-        setState(() {
-          _position = event;
-        });
-      }
-    });
     _bufferSubscription =
         widget.controller.player.stream.buffer.listen((event) {
       setState(() {
@@ -721,8 +730,6 @@ class _SeekBarState extends State<_SeekBar> {
 
   @override
   dispose() {
-    _durationSubscription?.cancel();
-    _positionSubscription?.cancel();
     _bufferSubscription?.cancel();
     super.dispose();
   }
@@ -732,47 +739,59 @@ class _SeekBarState extends State<_SeekBar> {
     return SizedBox(
       height: 13,
       child: SliderTheme(
-          data: const SliderThemeData(
-            trackHeight: 2,
-            thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: 6,
-            ),
-            overlayShape: RoundSliderOverlayShape(
-              overlayRadius: 12,
-            ),
+        data: const SliderThemeData(
+          trackHeight: 2,
+          thumbShape: RoundSliderThumbShape(
+            enabledThumbRadius: 6,
           ),
-          child: Slider(
-            min: 0,
-            max: _duration.inMilliseconds.toDouble(),
-            value: clampDouble(
-              _position.inMilliseconds.toDouble(),
-              0,
-              _duration.inMilliseconds.toDouble(),
-            ),
-            secondaryTrackValue: clampDouble(
-              _buffer.inMilliseconds.toDouble(),
-              0,
-              _duration.inMilliseconds.toDouble(),
-            ),
-            onChanged: (value) {
-              if (_isSliderDraging) {
-                setState(() {
-                  _position = Duration(milliseconds: value.toInt());
-                });
-              }
-            },
-            onChangeStart: (value) {
-              _isSliderDraging = true;
-            },
-            onChangeEnd: (value) {
-              if (_isSliderDraging) {
-                widget.controller.player.seek(
-                  Duration(milliseconds: value.toInt()),
-                );
-                _isSliderDraging = false;
-              }
-            },
-          )),
+          overlayShape: RoundSliderOverlayShape(
+            overlayRadius: 12,
+          ),
+        ),
+        child: Obx(
+          () {
+            final duration = widget.controller.duration.value.inMilliseconds;
+            int position = widget.controller.position.value.inMilliseconds;
+            if (_isSliderDraging) {
+              position = _position.inMilliseconds;
+            }
+
+            return Slider(
+              min: 0,
+              max: duration.toDouble(),
+              value: clampDouble(
+                position.toDouble(),
+                0,
+                duration.toDouble(),
+              ),
+              secondaryTrackValue: clampDouble(
+                _buffer.inMilliseconds.toDouble(),
+                0,
+                duration.toDouble(),
+              ),
+              onChanged: (value) {
+                if (_isSliderDraging) {
+                  setState(() {
+                    _position = Duration(milliseconds: value.toInt());
+                  });
+                }
+              },
+              onChangeStart: (value) {
+                _position = Duration(milliseconds: value.toInt());
+                _isSliderDraging = true;
+              },
+              onChangeEnd: (value) {
+                if (_isSliderDraging) {
+                  widget.controller.seek(
+                    Duration(milliseconds: value.toInt()),
+                  );
+                  _isSliderDraging = false;
+                }
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
