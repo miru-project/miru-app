@@ -725,7 +725,10 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
           ),
         ),
         const SizedBox(height: 20),
-        const Text("Play mode"),
+        Text(
+          'Play mode',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
         const SizedBox(height: 10),
         Obx(
           () => SegmentedButton(
