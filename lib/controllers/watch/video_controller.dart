@@ -336,7 +336,7 @@ class VideoPlayerController extends GetxController {
         return;
       }
 
-      final subtitle = event.subtitle.firstWhereOrNull(
+      final subtitle = [...event.subtitle, ...subtitles].firstWhereOrNull(
         (element) {
           if (element.id == "no" || element.id == "auto") {
             return false;
