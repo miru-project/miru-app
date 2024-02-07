@@ -35,12 +35,12 @@ class _ControlPanelFooterState<T extends ReaderController>
           ? _c.watchData.value?.content.length ?? 0
           : _c.watchData.value?.urls.length ?? 0;
     });
-    ever(_c.progress, (callback) {
-      progressObs.value = callback;
-    });
-    ever(_c.isShowControlPanel, (callback) {
-      // debugPrint("scrolled ${c.progress.value}");
+    ever(_c.index, (callback) {
       progressObs.value = _c.progress.value;
+      totalObs.value = _c.itemlength[_c.index.value];
+    });
+    ever(_c.currentLocalProgress, (callback) {
+      progressObs.value = callback;
     });
   }
 
@@ -48,7 +48,7 @@ class _ControlPanelFooterState<T extends ReaderController>
   final _desktopIntervalFlyoutController = fluent.FlyoutController();
   Widget _buildAndroid(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-
+    // return Container();
     return Align(
         alignment: const Alignment(0, 1),
         child: TweenAnimationBuilder(
@@ -70,7 +70,7 @@ class _ControlPanelFooterState<T extends ReaderController>
                               ),
                               child: IconButton(
                                   onPressed: () {
-                                    _c.index.value--;
+                                    _c.prevChap();
                                   },
                                   icon:
                                       const Icon(Icons.skip_previous_rounded))),
@@ -85,21 +85,24 @@ class _ControlPanelFooterState<T extends ReaderController>
                                   if (totalObs.value != 0 ||
                                       !_c.isShowControlPanel.value) {
                                     return Slider(
-                                      label: (progressObs.value + 1).toString(),
-                                      max: (totalObs.value - 1) < 0
+                                      label: (_c.currentLocalProgress.value + 1)
+                                          .toString(),
+                                      max: _c.itemlength[_c.index.value] < 1
                                           ? 1
-                                          : (totalObs.value - 1).toDouble(),
+                                          : (_c.itemlength[_c.index.value] - 1)
+                                              .toDouble(),
                                       min: 0,
                                       divisions: (totalObs.value - 1) < 0
                                           ? 1
                                           : totalObs.value - 1,
-                                      value: progressObs.value.toDouble(),
-                                      onChanged: _c.isShowControlPanel.value
-                                          ? (val) {
-                                              _c.updateSlider.value = true;
-                                              _c.progress.value = val.toInt();
-                                            }
-                                          : null,
+                                      value: _c.currentLocalProgress.value
+                                          .toDouble(),
+                                      onChanged: (val) {
+                                        _c.updateSlider.value = true;
+                                        _c.progress.value =
+                                            _c.localToGloabalProgress(
+                                                val.toInt());
+                                      },
                                     );
                                   }
                                   return const Slider(
@@ -116,7 +119,7 @@ class _ControlPanelFooterState<T extends ReaderController>
                               ),
                               child: IconButton(
                                   onPressed: () {
-                                    _c.index.value++;
+                                    _c.nextChap();
                                   },
                                   icon: const Icon(Icons.skip_next_rounded)))
                       ])))),

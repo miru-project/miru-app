@@ -181,7 +181,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                                 MiruStorage.setSetting(
                                     SettingKey.prevPageHitBox, val);
                               }),
-                          Obx(() => SettingsSwitchTile(
+                          SettingsSwitchTile(
                               icon: const Icon(Icons.coffee),
                               title: "reader-settings.enable-wakelock".i18n,
                               buildValue: () => _c.enableWakeLock.value,
@@ -190,7 +190,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                                 _c.enableWakeLock.value = val;
                                 MiruStorage.setSetting(
                                     SettingKey.enableWakelock, val);
-                              })),
+                              }),
                         ],
                       )),
                 ),

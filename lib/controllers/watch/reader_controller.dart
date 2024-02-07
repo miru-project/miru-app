@@ -8,7 +8,7 @@ import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class ReaderController<T> extends GetxController {
+abstract class ReaderController<T> extends GetxController {
   final String title;
   final List<ExtensionEpisode> playList;
   final String detailUrl;
@@ -33,6 +33,8 @@ class ReaderController<T> extends GetxController {
 
   late Rx<T?> watchData = Rx(null);
   final error = ''.obs;
+  final globalItemPositionsListener = ItemPositionsListener.create();
+  final globalItemScrollController = ItemScrollController();
   final isShowControlPanel = false.obs;
   late final index = playIndex.obs;
   late final progress = 0.obs;
@@ -40,6 +42,8 @@ class ReaderController<T> extends GetxController {
   Timer? autoScrollTimer;
   final isScrolled = true.obs;
   final updateSlider = true.obs;
+  final isInfinityScrollMode = false.obs;
+  final isLoading = false.obs;
   //點擊區域是否反轉
   final RxBool tapRegionIsReversed = false.obs;
   final dynamic _nextPageHitBox =
@@ -61,15 +65,22 @@ class ReaderController<T> extends GetxController {
   Timer? mouseTimer;
   final RxBool enableWakeLock = false.obs;
   final RxBool enableFullScreen = false.obs;
-  // final readType = MangaReadMode.standard.obs;
+  late final RxList<List<String>> items =
+      List.filled(playList.length, <String>[]).obs;
+  late final List<int> itemlength = List.filled(playList.length, 0);
+  final currentGlobalProgress = 0.obs;
+  final currentLocalProgress = 0.obs;
   @override
   void onInit() {
-    getContent();
+    // getContent();
     autoScrollInterval.value = _autoScrollInterval;
     autoScrollOffset.value = _autoScrollOffset;
     nextPageHitBox.value = _nextPageHitBox;
     prevPageHitBox.value = _prevPageHitBox;
-    ever(index, (callback) => getContent());
+    // ever(index, (callback) {
+    //   getContent();
+    // });
+
     ever(enableAutoScroll, (callback) {
       if (callback) {
         autoScrollTimer = Timer.periodic(
@@ -87,7 +98,6 @@ class ReaderController<T> extends GetxController {
       autoScrollTimer?.cancel();
     });
     mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
-      debugPrint(setControllPanel.toString());
       if (setControllPanel.value) {
         isShowControlPanel.value = true;
         return;
@@ -100,16 +110,38 @@ class ReaderController<T> extends GetxController {
   getContent() async {
     try {
       error.value = '';
-      watchData.value = null;
+      // watchData.value = null;
       watchData.value = await runtime.watch(cuurentPlayUrl) as T;
+      itemlength[index.value] = (watchData.value as dynamic)?.urls.length;
+      items[index.value] = (watchData.value as dynamic)?.urls;
     } catch (e) {
       error.value = e.toString();
     }
   }
 
-  void previousPage() {}
+  localToGloabalProgress(int localProgress) {
+    int progress = 0;
+    for (int i = 0; i < index.value; i++) {
+      progress += itemlength[i];
+    }
+    progress = localProgress.toInt() + progress;
+    return progress;
+  }
 
-  void nextPage() {}
+  void previousPage();
+
+  void nextPage();
+  void loadNextChapter() {}
+  void nextChap();
+  void prevChap();
+
+  void clearData() {
+    itemlength.fillRange(0, itemlength.length, 0);
+    items.fillRange(0, items.length, []);
+    progress.value = 0;
+    currentGlobalProgress.value = 0;
+    currentLocalProgress.value = 0;
+  }
 
   hideControlPanel() {
     setControllPanel.value = false;
