@@ -121,4 +121,13 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
     mouseTimer?.cancel();
     super.onClose();
   }
+
+  @override
+  void nextPage() {}
+  @override
+  void previousPage() {}
+  @override
+  void nextChap() {}
+  @override
+  void prevChap() {}
 }
