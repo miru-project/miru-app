@@ -11,9 +11,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'dart:async';
-import 'package:battery_plus/battery_plus.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:miru_app/utils/i18n.dart';
 import 'package:window_manager/window_manager.dart';
 
 class ComicController extends ReaderController<ExtensionMangaWatch> {
@@ -39,31 +37,12 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   // 当前页码
   final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
-  final alignMode = Alignment.bottomLeft.obs;
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
-  final batteryLevel = 100.obs;
   final readType = MangaReadMode.standard.obs;
   final globalScrollController = ScrollController();
-  Timer? _barreryTimer;
   final currentOffset = 0.0.obs;
-  final statusBarElement = <String, RxBool>{
-    'reader-settings.battery'.i18n: true.obs,
-    'reader-settings.time'.i18n: true.obs,
-    'reader-settings.page-indicator'.i18n: true.obs,
-    'reader-settings.battery-icon'.i18n: true.obs,
-  };
   final isZoom = false.obs;
-  final currentTime = "".obs;
-  Future<void> _statusBar() async {
-    final battery = Battery();
-    batteryLevel.value = await battery.batteryLevel;
-    final datenow = DateTime.now();
-    final hour = datenow.hour < 10 ? "0${datenow.hour}" : datenow.hour;
-    final minute = datenow.minute < 10 ? "0${datenow.minute}" : datenow.minute;
-    currentTime.value = "$hour:$minute";
-  }
-
   final isScrollEnd = false.obs;
 
   @override
@@ -80,9 +59,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     enableWakeLock.value = MiruStorage.getSetting(SettingKey.enableWakelock);
     WakelockPlus.toggle(enable: enableWakeLock.value);
-    await _statusBar();
-    _barreryTimer =
-        Timer.periodic(const Duration(seconds: 10), (timer) => _statusBar());
+
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -104,8 +81,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         callback,
       );
     });
-    // 如果切换章节，重置当前页码
-    // ever(super.index, (callback) => currentPage.value = 0);
     //control footer 的 slider 改變時，更新頁碼
     ever(progress, (callback) {
       // 防止逆向回饋
@@ -136,7 +111,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       if (isRecover.value || callback == null) {
         return;
       }
-      getTartgetContent(playIndex);
+      loadTargetContent(playIndex);
       isRecover.value = true;
       // 获取上次阅读的页码
       final history = await DatabaseService.getHistoryByPackageAndUrl(
@@ -157,20 +132,17 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     super.onInit();
   }
 
-  getTartgetContent(int targetIndex) async {
+  @override
+  Future<void> loadTargetContent(int targetIndex) async {
     try {
       if (targetIndex < 0 || targetIndex == itemlength.length) {
         return;
       }
       final dynamic updatedData =
           await runtime.watch(playList[targetIndex].url);
-      // if (targetIndex < index.value && items[targetIndex].isEmpty) {
-      //   _jumpPage(itemlength[targetIndex] + currentGlobalProgress.value);
-      // }
       items[targetIndex] = updatedData.urls as List<String>;
       itemlength[targetIndex] = updatedData.urls.length;
       isScrollEnd.value = false;
-      // index.value = targetIndex;
     } catch (e) {
       error.value = e.toString();
     }
@@ -277,12 +249,13 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
 
   @override
   Future<void> loadNextChapter() async {
-    await getTartgetContent(index.value + 1);
+    await loadTargetContent(index.value + 1);
     return;
   }
 
+  @override
   Future<void> loadPrevChapter() async {
-    await getTartgetContent(index.value - 1);
+    await loadTargetContent(index.value - 1);
     if (itemScrollController.isAttached) {
       itemScrollController.scrollTo(
           index: itemlength[index.value - 1],
@@ -315,7 +288,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         mediaId: anilistID,
       );
     }
-    _barreryTimer!.cancel();
+
     mouseTimer?.cancel();
     WakelockPlus.disable();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -326,18 +299,15 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   }
 
   @override
-  void nextChap() {
-    watchData.value = null;
-    clearData();
-    index.value++;
-    getContent();
-  }
-
-  @override
-  void prevChap() {
-    watchData.value = null;
-    clearData();
-    index.value--;
-    getContent();
+  Future<void> getContent() async {
+    try {
+      error.value = '';
+      watchData.value =
+          await runtime.watch(cuurentPlayUrl) as ExtensionMangaWatch;
+      itemlength[index.value] = (watchData.value as dynamic)?.urls.length;
+      items[index.value] = (watchData.value as dynamic)?.urls;
+    } catch (e) {
+      error.value = e.toString();
+    }
   }
 }

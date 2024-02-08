@@ -205,7 +205,8 @@
     "battery-icon": "Battery Icon"
   },
   "novel-settings": {
-    "font-size": "Font size"
+    "font-size": "Font size",
+    "line":"Lines"
   },
   "bugreport": {
     "auto-remove-subtitle": "delete in ~ days",

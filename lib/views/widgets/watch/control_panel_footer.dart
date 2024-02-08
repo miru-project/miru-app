@@ -31,9 +31,7 @@ class _ControlPanelFooterState<T extends ReaderController>
     super.initState();
     ever(_c.watchData, (callback) {
       progressObs.value = 0;
-      totalObs.value = (T == NovelController)
-          ? _c.watchData.value?.content.length ?? 0
-          : _c.watchData.value?.urls.length ?? 0;
+      totalObs.value = _c.itemlength[_c.index.value];
     });
     ever(_c.index, (callback) {
       progressObs.value = _c.progress.value;
@@ -135,7 +133,6 @@ class _ControlPanelFooterState<T extends ReaderController>
   }
 
   Widget _buildDesktop(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return Align(
         alignment: const Alignment(0, 1),

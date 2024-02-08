@@ -33,5 +33,9 @@
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <queries>
+  <intent>
+    <action android:name="android.intent.action.TTS_SERVICE" />
+  </intent>
+</queries>
 </manifest>

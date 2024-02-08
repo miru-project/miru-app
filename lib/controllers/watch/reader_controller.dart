@@ -7,6 +7,8 @@ import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:miru_app/utils/i18n.dart';
+import 'package:battery_plus/battery_plus.dart';
 
 abstract class ReaderController<T> extends GetxController {
   final String title;
@@ -44,6 +46,7 @@ abstract class ReaderController<T> extends GetxController {
   final updateSlider = true.obs;
   final isInfinityScrollMode = false.obs;
   final isLoading = false.obs;
+  Timer? _barreryTimer;
   //點擊區域是否反轉
   final RxBool tapRegionIsReversed = false.obs;
   final dynamic _nextPageHitBox =
@@ -70,13 +73,35 @@ abstract class ReaderController<T> extends GetxController {
   late final List<int> itemlength = List.filled(playList.length, 0);
   final currentGlobalProgress = 0.obs;
   final currentLocalProgress = 0.obs;
+  final statusBarElement = <String, RxBool>{
+    'reader-settings.battery'.i18n: true.obs,
+    'reader-settings.time'.i18n: true.obs,
+    'reader-settings.page-indicator'.i18n: true.obs,
+    'reader-settings.battery-icon'.i18n: true.obs,
+  };
+  final batteryLevel = 100.obs;
+  final currentTime = ''.obs;
+  Future<void> _statusBar() async {
+    final battery = Battery();
+    batteryLevel.value = await battery.batteryLevel;
+    final datenow = DateTime.now();
+    final hour = datenow.hour < 10 ? "0${datenow.hour}" : datenow.hour;
+    final minute = datenow.minute < 10 ? "0${datenow.minute}" : datenow.minute;
+    currentTime.value = "$hour:$minute";
+  }
+
+  final alignMode = Alignment.bottomLeft.obs;
+
   @override
-  void onInit() {
+  void onInit() async {
     // getContent();
     autoScrollInterval.value = _autoScrollInterval;
     autoScrollOffset.value = _autoScrollOffset;
     nextPageHitBox.value = _nextPageHitBox;
     prevPageHitBox.value = _prevPageHitBox;
+    await _statusBar();
+    _barreryTimer =
+        Timer.periodic(const Duration(seconds: 10), (timer) => _statusBar());
     // ever(index, (callback) {
     //   getContent();
     // });
@@ -107,19 +132,7 @@ abstract class ReaderController<T> extends GetxController {
     super.onInit();
   }
 
-  getContent() async {
-    try {
-      error.value = '';
-      // watchData.value = null;
-      watchData.value = await runtime.watch(cuurentPlayUrl) as T;
-      itemlength[index.value] = (watchData.value as dynamic)?.urls.length;
-      items[index.value] = (watchData.value as dynamic)?.urls;
-    } catch (e) {
-      error.value = e.toString();
-    }
-  }
-
-  localToGloabalProgress(int localProgress) {
+  int localToGloabalProgress(int localProgress) {
     int progress = 0;
     for (int i = 0; i < index.value; i++) {
       progress += itemlength[i];
@@ -128,16 +141,42 @@ abstract class ReaderController<T> extends GetxController {
     return progress;
   }
 
-  void previousPage();
+  int globalToLocalProgress(int globalProgress) {
+    int progress = globalProgress;
+    for (int i = 0; i < index.value; i++) {
+      if (globalProgress < itemlength[i]) {
+        break;
+      }
+      globalProgress -= itemlength[i];
+    }
+    debugPrint(progress.toString());
+    return progress;
+  }
 
-  void nextPage();
-  void loadNextChapter() {}
-  void nextChap();
-  void prevChap();
+  void previousPage() {}
+  void nextPage() {}
+  void loadNextChapter();
+  void loadPrevChapter();
+
+  void nextChap() {
+    clearData();
+    index.value++;
+    getContent();
+  }
+
+  void prevChap() {
+    clearData();
+    index.value--;
+    getContent();
+  }
+
+  Future<void> getContent();
+  Future<void> loadTargetContent(int targetIndex);
 
   void clearData() {
     itemlength.fillRange(0, itemlength.length, 0);
     items.fillRange(0, items.length, []);
+    watchData.value = null;
     progress.value = 0;
     currentGlobalProgress.value = 0;
     currentLocalProgress.value = 0;
@@ -162,5 +201,13 @@ abstract class ReaderController<T> extends GetxController {
         ..cover = cover,
     );
     await Get.find<HomePageController>().onRefresh();
+  }
+
+  @override
+  void onClose() {
+    _barreryTimer?.cancel();
+    autoScrollTimer?.cancel();
+    mouseTimer?.cancel();
+    super.onClose();
   }
 }
