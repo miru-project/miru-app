@@ -73,9 +73,6 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                 if (_c.watchData.value == null) {
                   return const Center(child: ProgressRing());
                 }
-
-                final watchData = _c.watchData.value!;
-
                 final listviewPadding =
                     maxWidth > 800 ? ((maxWidth - 800) / 2) : 16.0;
 
@@ -108,7 +105,8 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                           vertical: 16,
                         ),
                         itemBuilder: (context, index) {
-                          if (_c.globalToLocalProgress(index) == 0) {
+                          final localProgress = _c.globalToLocalProgress(index);
+                          if (localProgress[0] == 0) {
                             return Column(children: [
                               const SizedBox(
                                 height: 20,
@@ -116,15 +114,16 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: Text(
-                                  _c.title + _c.playList[_c.index.value].name,
+                                  _c.title + _c.playList[localProgress[1]].name,
                                   style: const TextStyle(fontSize: 26),
                                 ),
                               ),
-                              if (watchData.subtitle != null) ...[
+                              if (_c
+                                  .subtitles[localProgress[1]].isNotEmpty) ...[
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 20),
                                   child: Text(
-                                    watchData.subtitle!,
+                                    _c.subtitles[localProgress[1]],
                                     style: const TextStyle(fontSize: 20),
                                   ),
                                 )
@@ -186,7 +185,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
 
   Widget _textContent(int index, double fontSize) {
     final content = _c.items.expand((element) => element).toList();
-    return Padding(
+    return Obx(() => Padding(
         padding: const EdgeInsets.only(bottom: 20),
         child: SelectableText.rich(
           onTap: () {
@@ -198,6 +197,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
               TextSpan(
                 text: content[index],
                 style: TextStyle(
+                  color: _c.textColor.value,
                   fontSize: fontSize,
                   fontWeight: FontWeight.w400,
                   height: 2,
@@ -207,7 +207,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
               ),
             ],
           ),
-        ));
+        )));
     // Obx(() => Column(
     //       children: [
     //         _c.enableSelectText.value

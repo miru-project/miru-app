@@ -87,7 +87,7 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
           // ),
 
           ,
-          if (c.isShowControlPanel.value) ...[
+          if (c.isShowControlPanel.value || c.enableAutoScroll.value) ...[
             // 顶部控制
             Positioned(
               child: ControlPanelHeader<T>(
@@ -98,12 +98,6 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
             // 底部控制
           ],
           ControlPanelFooter<T>(tag),
-          if (c.enableAutoScroll.value && Platform.isAndroid)
-            ElevatedButton(
-                onPressed: () {
-                  c.enableAutoScroll.value = false;
-                },
-                child: const Icon(Icons.stop)),
         ],
       ),
     );

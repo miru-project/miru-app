@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
@@ -23,21 +25,43 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
 
   // 字体大小
   final fontSize = (18.0).obs;
+  final ttsRate = 0.3.obs;
+  final ttsVolume = 0.3.obs;
+  final ttsPitch = 0.3.obs;
   final itemPositionsListener = ItemPositionsListener.create();
   final isRecover = false.obs;
   late final FlutterTts flutterTts;
   final RxBool enableSelectText = false.obs;
+  final RxList ttsLang = [].obs;
+  final RxString ttsLangValue = ''.obs;
+  final playBackIsComplete = false;
+  late final RxList<String> subtitles =
+      List.generate(playList.length, (index) => "").obs;
+  final Rx<Color> textColor = Colors.white.obs;
+  initTts() {
+    ttsVolume.value = MiruStorage.getSetting(SettingKey.ttsVolume);
+    ttsRate.value = MiruStorage.getSetting(SettingKey.ttsRate);
+    ttsPitch.value = MiruStorage.getSetting(SettingKey.ttsPitch);
+    flutterTts = FlutterTts();
+    flutterTts.awaitSpeakCompletion(true);
+    flutterTts.setCompletionHandler(() {
+      debugPrint("completed");
+    });
+  }
+
   @override
   void onInit() async {
     super.onInit();
     getContent();
+    initTts();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    flutterTts = FlutterTts();
     fontSize.value = MiruStorage.getSetting(SettingKey.novelFontSize);
+    // textColor.value = MiruStorage.getSetting(SettingKey.textColor);
     WakelockPlus.toggle(
         enable: MiruStorage.getSetting(SettingKey.enableWakelock));
-    List<dynamic> languages = await flutterTts.getLanguages;
-    debugPrint(languages.toString());
+    ttsLangValue.value = MiruStorage.getSetting(SettingKey.ttsLanguage);
+    ttsLang.value = await flutterTts.getLanguages;
+    debugPrint(ttsLang.toString());
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -82,6 +106,26 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       }
       currentGlobalProgress.value = callback;
       _jumpLine(callback);
+    });
+    // tts 播放
+    ever(enableAutoScroll, (callback) async {
+      await flutterTts.setLanguage(ttsLangValue.value);
+      await flutterTts.setSpeechRate(ttsRate.value);
+      await flutterTts.setVolume(ttsVolume.value);
+      await flutterTts.setPitch(ttsPitch.value);
+      for (int i = currentLocalProgress.value;
+          i < itemlength[index.value];
+          i++) {
+        if (!enableAutoScroll.value) {
+          await flutterTts.stop();
+          break;
+        }
+        final readingProgress = items[index.value][i];
+        debugPrint("current reading: $readingProgress , progress: $i");
+        animeScrollTo(localToGloabalProgress(i) - 1);
+        await flutterTts.speak(items[index.value][i]);
+      }
+      enableAutoScroll.value = false;
     });
     ever(currentGlobalProgress, (callback) {
       if (updateSlider.value) {
@@ -131,6 +175,13 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
     itemScrollController.jumpTo(index: index);
   }
 
+  animeScrollTo(index) {
+    itemScrollController.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 10),
+    );
+  }
+
   @override
   void onClose() {
     if (super.watchData.value != null) {
@@ -141,10 +192,12 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       );
     }
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    flutterTts.stop();
     mouseTimer?.cancel();
     super.onClose();
   }
 
+  //獲取目標章節內容，但不更新當前頁面
   @override
   Future<void> loadTargetContent(int targetIndex) async {
     try {
@@ -155,6 +208,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
           await runtime.watch(playList[targetIndex].url);
       items[targetIndex] = updatedData.content as List<String>;
       itemlength[targetIndex] = updatedData.content.length;
+      subtitles[targetIndex] = updatedData.subtitle ?? '';
     } catch (e) {
       error.value = e.toString();
     }
@@ -166,6 +220,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
     return;
   }
 
+  // 加載上一章節，並跳轉到剛才的位置
   @override
   Future<void> loadPrevChapter() async {
     await loadTargetContent(index.value - 1);
@@ -185,6 +240,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
           await runtime.watch(cuurentPlayUrl) as ExtensionFikushonWatch;
       itemlength[index.value] = (watchData.value as dynamic)?.content.length;
       items[index.value] = (watchData.value as dynamic)?.content;
+      subtitles[index.value] = (watchData.value as dynamic)?.subtitle ?? '';
     } catch (e) {
       error.value = e.toString();
     }

@@ -45,7 +45,9 @@
     "login": "Login",
     "no-data": "No data",
     "clear": "Clear",
-    "export": "Export"
+    "export": "Export",
+    "tts":"Text to speech",
+    "common": "Common"
   },
   "home": {
     "continue-watching": "Continue",
@@ -202,11 +204,18 @@
     "battery": "Battery",
     "time": "Time",
     "page-indicator": "Page Indicator",
-    "battery-icon": "Battery Icon"
+    "battery-icon": "Battery Icon",
+    "indicator-alignment": "Indicator Alignment"
   },
   "novel-settings": {
     "font-size": "Font size",
-    "line":"Lines"
+    "line":"Lines",
+    "enable-tts": "Enable TTS",
+    "tts-rate": "TTS Rate",
+    "tts-lang": "TTS Language",
+    "tts-volume": "TTS Volume",
+    "tts-pitch": "TTS Pitch",
+    "text-color": "Text Color"
   },
   "bugreport": {
     "auto-remove-subtitle": "delete in ~ days",

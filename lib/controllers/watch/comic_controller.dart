@@ -70,9 +70,9 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     scrollOffsetListener.changes.listen((event) {
       hideControlPanel();
     });
-    ever(height, (callback) {
-      super.height.value = callback;
-    });
+    // ever(height, (callback) {
+    //   super.height.value = callback;
+    // });
     ever(readType, (callback) {
       _jumpPage(currentGlobalProgress.value);
       // 保存设置
@@ -80,6 +80,22 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         super.detailUrl,
         callback,
       );
+    });
+    ever(enableAutoScroll, (callback) {
+      if (callback) {
+        autoScrollTimer = Timer.periodic(
+            Duration(milliseconds: autoScrollInterval.value), (timer) {
+          if (isScrolled.value) {
+            scrollOffsetController.animateScroll(
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.ease,
+              offset: autoScrollOffset.value,
+            );
+          }
+        });
+        return;
+      }
+      autoScrollTimer?.cancel();
     });
     //control footer 的 slider 改變時，更新頁碼
     ever(progress, (callback) {

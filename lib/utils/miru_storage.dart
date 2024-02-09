@@ -134,6 +134,11 @@ class MiruStorage {
     await _initSetting(SettingKey.prevPageHitBox, 0.2);
     await _initSetting(SettingKey.autoScrollInterval, 300);
     await _initSetting(SettingKey.autoScrollOffset, 20.0);
+    await _initSetting(
+        SettingKey.ttsLanguage, Platform.localeName.split('_')[0]);
+    await _initSetting(SettingKey.ttsPitch, 0.3);
+    await _initSetting(SettingKey.ttsRate, 0.3);
+    await _initSetting(SettingKey.ttsVolume, 0.5);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -198,4 +203,8 @@ class SettingKey {
   static String prevPageHitBox = "PrevPageHitBox";
   static String autoScrollInterval = "AutoScrollInterval";
   static String autoScrollOffset = "AutoScrollOffset";
+  static String ttsLanguage = "TTSLanguage";
+  static String ttsPitch = "TTSPitch";
+  static String ttsRate = "TTSRate";
+  static String ttsVolume = "TTSVolume";
 }

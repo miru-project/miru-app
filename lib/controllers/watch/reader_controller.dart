@@ -45,7 +45,6 @@ abstract class ReaderController<T> extends GetxController {
   final isScrolled = true.obs;
   final updateSlider = true.obs;
   final isInfinityScrollMode = false.obs;
-  final isLoading = false.obs;
   Timer? _barreryTimer;
   //點擊區域是否反轉
   final RxBool tapRegionIsReversed = false.obs;
@@ -62,7 +61,7 @@ abstract class ReaderController<T> extends GetxController {
   final RxDouble nextPageHitBox = 0.3.obs;
   final RxDouble prevPageHitBox = 0.3.obs;
   final enableAutoScroll = false.obs;
-  final height = 1000.0.obs;
+  // final height = 1000.0.obs;
   final RxBool isMouseHover = false.obs;
   final RxBool setControllPanel = false.obs;
   Timer? mouseTimer;
@@ -102,26 +101,7 @@ abstract class ReaderController<T> extends GetxController {
     await _statusBar();
     _barreryTimer =
         Timer.periodic(const Duration(seconds: 10), (timer) => _statusBar());
-    // ever(index, (callback) {
-    //   getContent();
-    // });
 
-    ever(enableAutoScroll, (callback) {
-      if (callback) {
-        autoScrollTimer = Timer.periodic(
-            Duration(milliseconds: autoScrollInterval.value), (timer) {
-          if (isScrolled.value) {
-            scrollOffsetController.animateScroll(
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.ease,
-              offset: autoScrollOffset.value,
-            );
-          }
-        });
-        return;
-      }
-      autoScrollTimer?.cancel();
-    });
     mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (setControllPanel.value) {
         isShowControlPanel.value = true;
@@ -141,16 +121,20 @@ abstract class ReaderController<T> extends GetxController {
     return progress;
   }
 
-  int globalToLocalProgress(int globalProgress) {
-    int progress = globalProgress;
-    for (int i = 0; i < index.value; i++) {
-      if (globalProgress < itemlength[i]) {
+  List<int> globalToLocalProgress(int globalProgress) {
+    int fullIndex = 0;
+    int localProgress = 0;
+    int chapter = 0;
+    // debugPrint(currentLocalProgress.value.toString());
+    for (int i = 0; i < itemlength.length; i++) {
+      fullIndex += itemlength[i];
+      if (fullIndex > globalProgress) {
+        chapter = i;
+        localProgress = globalProgress - (fullIndex - itemlength[i]);
         break;
       }
-      globalProgress -= itemlength[i];
     }
-    debugPrint(progress.toString());
-    return progress;
+    return [localProgress, chapter];
   }
 
   void previousPage() {}

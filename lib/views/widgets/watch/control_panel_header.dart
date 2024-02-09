@@ -37,6 +37,13 @@ class _ControlPanelHeaderState<T extends ReaderController>
           title: Text(_c.title),
           actions: [
             IconButton(
+                onPressed: () {
+                  _c.enableAutoScroll.value = !_c.enableAutoScroll.value;
+                },
+                icon: _c.enableAutoScroll.value
+                    ? const Icon(Icons.stop_rounded)
+                    : const Icon(Icons.play_arrow_rounded)),
+            IconButton(
               onPressed: () {
                 showModalBottomSheet(
                   context: context,

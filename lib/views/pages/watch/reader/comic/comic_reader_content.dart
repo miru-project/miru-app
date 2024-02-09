@@ -369,7 +369,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
 
   @override
   Widget build(BuildContext context) {
-    _c.height.value = MediaQuery.of(context).size.height;
+    // _c.height.value = MediaQuery.of(context).size.height;
     return PlatformBuildWidget(
       androidBuilder: (context) {
         return Scaffold(
