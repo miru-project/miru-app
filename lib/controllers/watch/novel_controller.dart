@@ -38,6 +38,10 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
   late final RxList<String> subtitles =
       List.generate(playList.length, (index) => "").obs;
   final Rx<Color> textColor = Colors.white.obs;
+  final Rx<Color> heighLightColor = Colors.blue.obs;
+  final Rx<Color> heighLightTextColor = Colors.white.obs;
+  final RxInt currentLine = 0.obs;
+  final RxDouble leading = 20.0.obs;
   initTts() {
     ttsVolume.value = MiruStorage.getSetting(SettingKey.ttsVolume);
     ttsRate.value = MiruStorage.getSetting(SettingKey.ttsRate);
@@ -60,6 +64,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
     WakelockPlus.toggle(
         enable: MiruStorage.getSetting(SettingKey.enableWakelock));
     ttsLangValue.value = MiruStorage.getSetting(SettingKey.ttsLanguage);
+    leading.value = MiruStorage.getSetting(SettingKey.leading);
     ttsLang.value = await flutterTts.getLanguages;
     debugPrint(ttsLang.toString());
     itemPositionsListener.itemPositions.addListener(() {
@@ -122,10 +127,14 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
         }
         final readingProgress = items[index.value][i];
         debugPrint("current reading: $readingProgress , progress: $i");
-        animeScrollTo(localToGloabalProgress(i) - 1);
+        animeScrollTo((localToGloabalProgress(i) - 2) > 0
+            ? localToGloabalProgress(i) - 2
+            : 0);
+        currentLine.value = i;
         await flutterTts.speak(items[index.value][i]);
       }
       enableAutoScroll.value = false;
+      currentLine.value = -1;
     });
     ever(currentGlobalProgress, (callback) {
       if (updateSlider.value) {

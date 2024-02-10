@@ -186,7 +186,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
   Widget _textContent(int index, double fontSize) {
     final content = _c.items.expand((element) => element).toList();
     return Obx(() => Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+        padding: EdgeInsets.only(bottom: _c.leading.value),
         child: SelectableText.rich(
           onTap: () {
             _c.setControllPanel.value = !_c.setControllPanel.value;
@@ -197,9 +197,14 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
               TextSpan(
                 text: content[index],
                 style: TextStyle(
-                  color: _c.textColor.value,
+                  color: index == _c.currentLine.value
+                      ? _c.heighLightTextColor.value
+                      : _c.textColor.value,
                   fontSize: fontSize,
                   fontWeight: FontWeight.w400,
+                  backgroundColor: index == _c.currentLine.value
+                      ? _c.heighLightColor.value
+                      : null,
                   height: 2,
                   textBaseline: TextBaseline.ideographic,
                   fontFamily: 'Microsoft Yahei',

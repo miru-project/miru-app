@@ -122,7 +122,23 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                                 divisions: 24,
                                 min: 12,
                                 max: 24,
-                              ))
+                              )),
+                          const SizedBox(height: 16),
+                          Text("novel-settings.leading".i18n),
+                          const SizedBox(height: 5),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Slider(
+                              value: _c.leading.value,
+                              onChanged: (value) {
+                                _c.leading.value = value;
+                              },
+                              label: _c.leading.value.toString(),
+                              divisions: 40,
+                              min: 0,
+                              max: 40,
+                            ),
+                          ),
                         ],
                       )),
                 ),
@@ -254,6 +270,54 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                                     ),
                                     selected: ColorUtils.baseColors[index] ==
                                         _c.textColor.value)),
+                          ),
+                          const SizedBox(height: 16),
+                          Text("novel-settings.heighlight-color".i18n),
+                          const SizedBox(height: 5),
+                          Wrap(
+                            spacing: 5,
+                            children: List<Widget>.generate(
+                                ColorUtils.baseColors.length,
+                                (index) => ChoiceChip(
+                                    onSelected: (val) {
+                                      if (val) {
+                                        _c.heighLightColor.value =
+                                            ColorUtils.baseColors[index];
+                                      }
+                                    },
+                                    label: Container(
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: ColorUtils.baseColors[index],
+                                      ),
+                                    ),
+                                    selected: ColorUtils.baseColors[index] ==
+                                        _c.heighLightColor.value)),
+                          ),
+                          const SizedBox(height: 16),
+                          Text("novel-settings.heighlight-text-color".i18n),
+                          const SizedBox(height: 5),
+                          Wrap(
+                            spacing: 5,
+                            children: List<Widget>.generate(
+                                ColorUtils.baseColors.length,
+                                (index) => ChoiceChip(
+                                    onSelected: (val) {
+                                      if (val) {
+                                        _c.heighLightTextColor.value =
+                                            ColorUtils.baseColors[index];
+                                      }
+                                    },
+                                    label: Container(
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: ColorUtils.baseColors[index],
+                                      ),
+                                    ),
+                                    selected: ColorUtils.baseColors[index] ==
+                                        _c.heighLightTextColor.value)),
                           ),
                         ],
                       )),
