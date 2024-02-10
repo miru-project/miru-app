@@ -96,6 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 'languages.fr'.i18n: 'fr',
                 'languages.hi'.i18n: 'hi',
                 'languages.ja'.i18n: 'ja',
+                'languages.pl'.i18n: 'pl',
                 'languages.ru'.i18n: 'ru',
                 'languages.ryu'.i18n: 'ryu',
                 'languages.uk'.i18n: 'uk',
