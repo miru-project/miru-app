@@ -63,6 +63,8 @@ dependencies:
   battery_plus: ^5.0.2
   based_battery_indicator: ^1.0.3
   flutter_tts: ^3.8.5
+  screen_brightness: ^0.2.2+1
+  bookfx: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

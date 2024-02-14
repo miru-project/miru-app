@@ -41,7 +41,7 @@ class ReaderView<T extends ReaderController> extends StatelessWidget {
 
           // 点击中间显示控制面板
           // 左边上一页右边下一页
-          if (c.error.value.isEmpty) ...[
+          if (c.error.value.isEmpty || !c.enableTapRegion.value) ...[
             Padding(
                 padding: EdgeInsets.fromLTRB(
                     0, 120, width - c.prevPageHitBox.value * width, 120),

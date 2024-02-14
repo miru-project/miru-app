@@ -44,6 +44,34 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // 阅读模式
+                          Text('reader-settings.read-mode'.i18n),
+                          const SizedBox(height: 5),
+                          SizedBox(
+                            width: double.infinity,
+                            child: SegmentedButton(
+                              segments: [
+                                ButtonSegment<NovelReadMode>(
+                                  value: NovelReadMode.scroll,
+                                  label: Text('novel-settings.scroll'.i18n),
+                                ),
+                                ButtonSegment<NovelReadMode>(
+                                  value: NovelReadMode.singlePage,
+                                  label: Text('novel-settings.singlePage'.i18n),
+                                ),
+                                // ButtonSegment<NovelReadMode>(
+                                //   value: NovelReadMode.doublePage,
+                                //   label: Text('novel-settings.doublePage'.i18n),
+                                // ),
+                              ],
+                              selected: <NovelReadMode>{_c.readType.value},
+                              onSelectionChanged: (value) {
+                                if (value.isNotEmpty) {
+                                  _c.readType.value = value.first;
+                                }
+                              },
+                              showSelectedIcon: false,
+                            ),
+                          ),
                           const SizedBox(height: 16),
                           Text('reader-settings.indicator-alignment'.i18n),
                           const SizedBox(height: 16),
@@ -117,6 +145,8 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                                 value: _c.fontSize.value,
                                 onChanged: (value) {
                                   _c.fontSize.value = value;
+                                  MiruStorage.setSetting(
+                                      SettingKey.novelFontSize, value);
                                 },
                                 label: _c.fontSize.value.toString(),
                                 divisions: 24,
@@ -132,11 +162,13 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
                               value: _c.leading.value,
                               onChanged: (value) {
                                 _c.leading.value = value;
+                                MiruStorage.setSetting(
+                                    SettingKey.leading, value);
                               },
                               label: _c.leading.value.toString(),
                               divisions: 40,
                               min: 0,
-                              max: 40,
+                              max: 4,
                             ),
                           ),
                         ],

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bookfx/bookfx.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
@@ -10,6 +11,12 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/material.dart';
+
+enum NovelReadMode {
+  singlePage,
+  doublePage,
+  scroll,
+}
 
 class NovelController extends ReaderController<ExtensionFikushonWatch> {
   NovelController({
@@ -42,11 +49,24 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
   final Rx<Color> heighLightTextColor = Colors.white.obs;
   final RxInt currentLine = 0.obs;
   final RxDouble leading = 20.0.obs;
-  initTts() {
+  final RxInt bookPage = (-1).obs;
+  final RxInt totalBookPage = 0.obs;
+  Map<String, NovelReadMode> readmode = {
+    'singlePage': NovelReadMode.singlePage,
+    'doublePage': NovelReadMode.doublePage,
+    'scroll': NovelReadMode.scroll,
+  };
+  final readType = NovelReadMode.scroll.obs;
+  // final Rx<BookController> bookController = BookController().obs;
+  final bookController = BookController();
+  initTts() async {
+    ttsLangValue.value = MiruStorage.getSetting(SettingKey.ttsLanguage);
     ttsVolume.value = MiruStorage.getSetting(SettingKey.ttsVolume);
     ttsRate.value = MiruStorage.getSetting(SettingKey.ttsRate);
     ttsPitch.value = MiruStorage.getSetting(SettingKey.ttsPitch);
     flutterTts = FlutterTts();
+    ttsLang.value = await flutterTts.getLanguages;
+    debugPrint(ttsLang.toString());
     flutterTts.awaitSpeakCompletion(true);
     flutterTts.setCompletionHandler(() {
       debugPrint("completed");
@@ -57,16 +77,14 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
   void onInit() async {
     super.onInit();
     getContent();
-    initTts();
+    await initTts();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     fontSize.value = MiruStorage.getSetting(SettingKey.novelFontSize);
+    leading.value = MiruStorage.getSetting(SettingKey.leading);
     // textColor.value = MiruStorage.getSetting(SettingKey.textColor);
     WakelockPlus.toggle(
         enable: MiruStorage.getSetting(SettingKey.enableWakelock));
-    ttsLangValue.value = MiruStorage.getSetting(SettingKey.ttsLanguage);
-    leading.value = MiruStorage.getSetting(SettingKey.leading);
-    ttsLang.value = await flutterTts.getLanguages;
-    debugPrint(ttsLang.toString());
+
     itemPositionsListener.itemPositions.addListener(() {
       if (itemPositionsListener.itemPositions.value.isEmpty) {
         return;
@@ -78,11 +96,18 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       enableSelectText.value = false;
       hideControlPanel();
     });
-    ever(
-      fontSize,
-      (callback) => MiruStorage.setSetting(SettingKey.novelFontSize, callback),
-    );
+    ever(readType, (callback) {
+      if (callback == NovelReadMode.scroll) {
+        bookPage.value = -1;
+      }
+    });
 
+    ever(bookPage, (callback) {
+      if (callback == -1) {
+        return;
+      }
+      //只處理單頁模式
+    });
     // 切换章节时重置页码
     ever(super.watchData, (callback) async {
       if (isRecover.value || callback == null) {
@@ -136,6 +161,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
       enableAutoScroll.value = false;
       currentLine.value = -1;
     });
+
     ever(currentGlobalProgress, (callback) {
       if (updateSlider.value) {
         progress.value = callback;
@@ -203,6 +229,7 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     flutterTts.stop();
     mouseTimer?.cancel();
+    bookController.dispose();
     super.onClose();
   }
 
@@ -221,6 +248,10 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
     } catch (e) {
       error.value = e.toString();
     }
+  }
+
+  void setReadingPage(int page) {
+    bookPage.value = page;
   }
 
   @override

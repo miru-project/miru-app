@@ -9,6 +9,7 @@ import 'package:miru_app/utils/miru_storage.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:battery_plus/battery_plus.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 abstract class ReaderController<T> extends GetxController {
   final String title;
@@ -72,6 +73,7 @@ abstract class ReaderController<T> extends GetxController {
   late final List<int> itemlength = List.filled(playList.length, 0);
   final currentGlobalProgress = 0.obs;
   final currentLocalProgress = 0.obs;
+  final RxBool enableTapRegion = true.obs;
   final statusBarElement = <String, RxBool>{
     'reader-settings.battery'.i18n: true.obs,
     'reader-settings.time'.i18n: true.obs,
@@ -90,6 +92,7 @@ abstract class ReaderController<T> extends GetxController {
   }
 
   final alignMode = Alignment.bottomLeft.obs;
+  final RxDouble brightness = 0.5.obs;
 
   @override
   void onInit() async {
@@ -99,6 +102,7 @@ abstract class ReaderController<T> extends GetxController {
     nextPageHitBox.value = _nextPageHitBox;
     prevPageHitBox.value = _prevPageHitBox;
     await _statusBar();
+    await _currentBrightness();
     _barreryTimer =
         Timer.periodic(const Duration(seconds: 10), (timer) => _statusBar());
 
@@ -110,6 +114,22 @@ abstract class ReaderController<T> extends GetxController {
       isShowControlPanel.value = false;
     });
     super.onInit();
+  }
+
+  Future<void> _currentBrightness() async {
+    try {
+      brightness.value = await ScreenBrightness().current;
+    } catch (e) {
+      throw 'Failed to get current brightness';
+    }
+  }
+
+  Future<void> setBrightness(double brightness) async {
+    try {
+      await ScreenBrightness().setScreenBrightness(brightness);
+    } catch (e) {
+      throw 'Failed to set brightness';
+    }
   }
 
   int localToGloabalProgress(int localProgress) {

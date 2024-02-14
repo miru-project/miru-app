@@ -8,6 +8,7 @@ import 'package:miru_app/views/widgets/progress.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:based_battery_indicator/based_battery_indicator.dart';
+import 'package:bookfx/bookfx.dart';
 
 class NovelReaderContent extends StatefulWidget {
   const NovelReaderContent(this.tag, {super.key});
@@ -19,6 +20,10 @@ class NovelReaderContent extends StatefulWidget {
 
 class _NovelReaderContentState extends State<NovelReaderContent> {
   late final _c = Get.find<NovelController>(tag: widget.tag);
+  // final _controller = GlobalKey<PageFlipWidgetState>();
+  final RxList<List<Widget>> singlePageText = <List<Widget>>[].obs;
+  final List<Widget> line = <Widget>[];
+  late int totalPage = singlePageText.length;
   Widget _buildDisplay(Widget child) {
     if (_c.statusBarElement.values.every((element) => element.value == false)) {
       return child;
@@ -50,7 +55,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                 // // 宽度 大于 800 就是整体宽度的一半
                 final maxWidth = constraints.maxWidth;
                 // final width = maxWidth > 800 ? maxWidth / 2 : maxWidth;
-                // final height = constraints.maxHeight;
+                final height = constraints.maxHeight;
                 if (_c.error.value.isNotEmpty) {
                   return SizedBox(
                     width: double.infinity,
@@ -77,65 +82,167 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                     maxWidth > 800 ? ((maxWidth - 800) / 2) : 16.0;
 
                 final fontSize = _c.fontSize.value;
-
-                return Center(
-                  child: NotificationListener<ScrollEndNotification>(
-                      onNotification: (notification) {
-                        final metrics = notification.metrics;
-                        if (metrics.atEdge) {
-                          bool isTop = metrics.pixels <= 0;
-                          if (isTop) {
-                            debugPrint('At the top');
-                            _c.loadPrevChapter();
-                          } else {
-                            debugPrint('At the bottom');
-                            _c.loadNextChapter();
+                final leading = _c.leading.value;
+                if (_c.readType.value == NovelReadMode.scroll) {
+                  return Center(
+                    child: NotificationListener<ScrollEndNotification>(
+                        onNotification: (notification) {
+                          final metrics = notification.metrics;
+                          if (metrics.atEdge) {
+                            bool isTop = metrics.pixels <= 0;
+                            if (isTop) {
+                              debugPrint('At the top');
+                              _c.loadPrevChapter();
+                            } else {
+                              debugPrint('At the bottom');
+                              _c.loadNextChapter();
+                            }
                           }
-                        }
 
-                        return true;
-                      },
-                      child: ScrollablePositionedList.builder(
-                        itemPositionsListener: _c.itemPositionsListener,
-                        initialScrollIndex: _c.currentGlobalProgress.value,
-                        itemScrollController: _c.itemScrollController,
-                        scrollOffsetController: _c.scrollOffsetController,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: listviewPadding,
-                          vertical: 16,
-                        ),
-                        itemBuilder: (context, index) {
-                          final localProgress = _c.globalToLocalProgress(index);
-                          if (localProgress[0] == 0) {
-                            return Column(children: [
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: Text(
+                          return true;
+                        },
+                        child: ScrollablePositionedList.builder(
+                          itemPositionsListener: _c.itemPositionsListener,
+                          initialScrollIndex: _c.currentGlobalProgress.value,
+                          itemScrollController: _c.itemScrollController,
+                          scrollOffsetController: _c.scrollOffsetController,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: listviewPadding,
+                            vertical: 16,
+                          ),
+                          itemBuilder: (context, index) {
+                            final localProgress =
+                                _c.globalToLocalProgress(index);
+                            if (localProgress[0] == 0) {
+                              return Column(children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
                                   _c.title + _c.playList[localProgress[1]].name,
                                   style: const TextStyle(fontSize: 26),
                                 ),
-                              ),
-                              if (_c
-                                  .subtitles[localProgress[1]].isNotEmpty) ...[
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  child: Text(
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                if (_c.subtitles[localProgress[1]]
+                                    .isNotEmpty) ...[
+                                  Text(
                                     _c.subtitles[localProgress[1]],
                                     style: const TextStyle(fontSize: 20),
                                   ),
-                                )
-                              ],
-                              _textContent(index, fontSize)
-                            ]);
-                          }
-                          return _textContent(index, fontSize);
-                        },
-                        itemCount: _c.items.expand((element) => element).length,
-                      )),
-                );
+                                  const SizedBox(
+                                    height: 20,
+                                  )
+                                ],
+                                _textContent(index, fontSize, leading)
+                              ]);
+                            }
+                            return _textContent(index, fontSize, leading);
+                          },
+                          itemCount:
+                              _c.items.expand((element) => element).length,
+                        )),
+                  );
+                }
+
+                List<PlaceholderDimensions> dimensions = [
+                  const PlaceholderDimensions(
+                    size: Size(40, 0), //widget span size
+                    alignment: PlaceholderAlignment.bottom,
+                  )
+                ];
+                double heightSum = 0;
+                line.clear();
+                singlePageText.clear();
+                for (int index = 0;
+                    index < _c.items.expand((element) => element).length;
+                    index++) {
+                  final textPainter = TextPainter(
+                    text: _text(index, fontSize),
+                    textDirection: TextDirection.ltr,
+                  )
+                    ..setPlaceholderDimensions(dimensions)
+                    ..layout(maxWidth: maxWidth / 2);
+                  line.add(_textContent(index, fontSize, leading));
+                  //處理超出高度的情況
+                  if (heightSum + textPainter.size.height + leading > height) {
+                    if (index > _c.currentGlobalProgress.value) {
+                      // _c.bookPage.value = index;
+                    }
+                    singlePageText.add(List<Widget>.from(line));
+                    line.clear();
+                    heightSum = 0;
+                    continue;
+                  }
+                  heightSum += (textPainter.size.height + leading);
+                  // debugPrint("${textPainter.size.height} $height $heightSum");
+                }
+                if (line.isNotEmpty) {
+                  singlePageText.add(List<Widget>.from(line));
+                }
+                totalPage = singlePageText.length;
+                debugPrint(singlePageText.length.toString());
+                //old page flip
+                // return Obx(() => PageFlipWidget(
+                //       key: _controller,
+                //       backgroundColor:
+                //           Theme.of(context).scaffoldBackgroundColor,
+                //       children: singlePageText,
+                //     ));
+                //pageview
+                // return Obx(() => PageView.builder(
+                //       itemBuilder: (context, index) {
+                //         return Padding(
+                //           padding: EdgeInsets.symmetric(
+                //               horizontal: listviewPadding, vertical: 16),
+                //           child: Column(
+                //             children: singlePageText[index],
+                //           ),
+                //         );
+                //       },
+                //       itemCount: singlePageText.length,
+                //     ));
+                return BookFx(
+                    pageCount: singlePageText.length,
+                    currentBgColor: Colors.black,
+                    size: Size(maxWidth, height),
+                    lastCallBack: (val) {
+                      _c.setReadingPage(val);
+                    },
+                    nextCallBack: (val) {
+                      _c.setReadingPage(val);
+                    },
+                    currentPage: (index) {
+                      if (index > singlePageText.length) {
+                        _c.bookController.goTo(singlePageText.length - 1);
+                        return Container();
+                      }
+                      return Container(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: listviewPadding, vertical: 16),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: singlePageText[index]),
+                          ));
+                    },
+                    nextPage: (index) {
+                      //處理頁數到底的情況
+                      if (index > singlePageText.length) {
+                        _c.bookController.goTo(singlePageText.length - 1);
+                        return Container();
+                      }
+
+                      return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: listviewPadding, vertical: 16),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: singlePageText[index]));
+                    },
+                    controller: _c.bookController);
               },
             ),
           ))
@@ -145,11 +252,25 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
   Widget _indicatorBuilder() {
     return Obx(() => Row(mainAxisSize: MainAxisSize.min, children: [
           if (_c.statusBarElement["reader-settings.page-indicator".i18n]!
-              .value) ...[
+                  .value &&
+              _c.readType.value == NovelReadMode.scroll) ...[
             Text(
               "${_c.currentLocalProgress.value + 1} ${"novel-settings.line".i18n}",
               style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
+            const SizedBox(width: 8)
+          ],
+          if (_c.statusBarElement["reader-settings.page-indicator".i18n]!
+                  .value &&
+              _c.readType.value != NovelReadMode.scroll) ...[
+            ListenableBuilder(
+                listenable: _c.bookController,
+                builder: (context, child) {
+                  return Text(
+                      "${_c.bookController.currentIndex + 1}/$totalPage",
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 15));
+                }),
             const SizedBox(width: 8)
           ],
           if (_c.statusBarElement["reader-settings.battery-icon".i18n]!
@@ -183,78 +304,60 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
         ]));
   }
 
-  Widget _textContent(int index, double fontSize) {
+  TextSpan _text(int index, double fontSize) {
     final content = _c.items.expand((element) => element).toList();
-    return Obx(() => Padding(
-        padding: EdgeInsets.only(bottom: _c.leading.value),
-        child: SelectableText.rich(
-          onTap: () {
-            _c.setControllPanel.value = !_c.setControllPanel.value;
-          },
-          TextSpan(
-            children: [
-              const WidgetSpan(child: SizedBox(width: 40.0)),
-              TextSpan(
-                text: content[index],
-                style: TextStyle(
-                  color: index == _c.currentLine.value
-                      ? _c.heighLightTextColor.value
-                      : _c.textColor.value,
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w400,
-                  backgroundColor: index == _c.currentLine.value
-                      ? _c.heighLightColor.value
-                      : null,
-                  height: 2,
-                  textBaseline: TextBaseline.ideographic,
-                  fontFamily: 'Microsoft Yahei',
-                ),
-              ),
-            ],
+    return TextSpan(
+      children: [
+        const WidgetSpan(child: SizedBox(width: 40.0)),
+        TextSpan(
+          text: content[index],
+          style: TextStyle(
+            color: index == _c.currentLine.value
+                ? _c.heighLightTextColor.value
+                : _c.textColor.value,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w400,
+            backgroundColor:
+                index == _c.currentLine.value ? _c.heighLightColor.value : null,
+            height: 2,
+            textBaseline: TextBaseline.ideographic,
+            fontFamily: 'Microsoft Yahei',
           ),
-        )));
-    // Obx(() => Column(
-    //       children: [
-    //         _c.enableSelectText.value
-    //             ? SelectableText.rich(
-    //                 onTap: () {
-    //                   _c.setControllPanel.value =
-    //                       !_c.setControllPanel.value;
-    //                 },
-    //                 TextSpan(
-    //                   children: [
-    //                     const WidgetSpan(child: SizedBox(width: 40.0)),
-    //                     TextSpan(
-    //                       text: content[index],
-    //                       style: TextStyle(
-    //                         fontSize: fontSize,
-    //                         fontWeight: FontWeight.w400,
-    //                         height: 2,
-    //                         textBaseline: TextBaseline.ideographic,
-    //                         fontFamily: 'Microsoft Yahei',
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               )
-    //             : GestureDetector(
-    //                 onTap: () {
-    //                   _c.setControllPanel.value =
-    //                       !_c.setControllPanel.value;
-    //                   _c.enableSelectText.value = true;
-    //                 },
-    //                 child: Text(
-    //                   content[index],
-    //                   style: TextStyle(
-    //                     fontSize: fontSize,
-    //                     fontWeight: FontWeight.w400,
-    //                     height: 2,
-    //                     textBaseline: TextBaseline.ideographic,
-    //                     fontFamily: 'Microsoft Yahei',
-    //                   ),
-    //                 ))
-    //       ],
-    //     )));
+        ),
+      ],
+    );
+  }
+
+  Widget _textContent(int index, double fontSize, double leading) {
+    final content = _c.items.expand((element) => element).toList();
+
+    return SelectableText.rich(
+      // key: globalKeys[index],
+      onTap: () {
+        _c.setControllPanel.value = !_c.setControllPanel.value;
+      },
+      TextSpan(
+        children: [
+          const WidgetSpan(child: SizedBox(width: 40.0)),
+          TextSpan(
+            text: content[index],
+            style: TextStyle(
+              color: index == _c.currentLine.value
+                  ? _c.heighLightTextColor.value
+                  : _c.textColor.value,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w400,
+              backgroundColor: index == _c.currentLine.value
+                  ? _c.heighLightColor.value
+                  : null,
+              height: leading,
+              textBaseline: TextBaseline.ideographic,
+              fontFamily: 'Microsoft Yahei',
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildAndroid(BuildContext context) {

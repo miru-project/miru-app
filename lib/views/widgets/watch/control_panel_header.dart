@@ -30,58 +30,82 @@ class _ControlPanelHeaderState<T extends ReaderController>
 
   Widget _buildAndroid(BuildContext context) {
     return SafeArea(
-      child: Container(
-        height: 60,
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: AppBar(
-          title: Text(_c.title),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  _c.enableAutoScroll.value = !_c.enableAutoScroll.value;
-                },
-                icon: _c.enableAutoScroll.value
-                    ? const Icon(Icons.stop_rounded)
-                    : const Icon(Icons.play_arrow_rounded)),
-            IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => DraggableScrollableSheet(
-                    expand: false,
-                    builder: (context, controller) => SingleChildScrollView(
-                        controller: controller,
-                        child: widget.buildSettings(context)),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.settings),
-            ),
-            IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Obx(
-                      () => PlayList(
-                        title: _c.title,
-                        list: _c.playList.map((e) => e.name).toList(),
-                        selectIndex: _c.index.value,
-                        onChange: (value) {
-                          _c.index.value = value;
-                          Get.back();
-                        },
-                      ),
-                    );
+      child: Column(children: [
+        Container(
+          height: 60,
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: AppBar(
+            title: Text(_c.title),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    _c.enableAutoScroll.value = !_c.enableAutoScroll.value;
                   },
-                );
-              },
-              icon: const Icon(Icons.list),
-            ),
-          ],
+                  icon: _c.enableAutoScroll.value
+                      ? const Icon(Icons.stop_rounded)
+                      : const Icon(Icons.play_arrow_rounded)),
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => DraggableScrollableSheet(
+                      expand: false,
+                      builder: (context, controller) => SingleChildScrollView(
+                          controller: controller,
+                          child: widget.buildSettings(context)),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.settings),
+              ),
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => DraggableScrollableSheet(
+                        expand: false,
+                        builder: (context, controller) {
+                          return Obx(
+                            () => PlayList(
+                              title: _c.title,
+                              list: _c.playList.map((e) => e.name).toList(),
+                              selectIndex: _c.index.value,
+                              scrollController: controller,
+                              onChange: (value) {
+                                _c.clearData();
+                                _c.index.value = value;
+                                _c.getContent();
+                                Get.back();
+                              },
+                            ),
+                          );
+                        }),
+                  );
+                },
+                icon: const Icon(Icons.list),
+              ),
+            ],
+          ),
         ),
-      ),
+        Material(
+            child: Obx(() => Row(children: [
+                  const SizedBox(width: 30),
+                  const Icon(Icons.brightness_medium_rounded),
+                  Expanded(
+                      child: Slider(
+                    value: _c.brightness.value,
+                    max: 1,
+                    min: 0,
+                    onChanged: (val) async {
+                      _c.brightness.value = val;
+                      await _c.setBrightness(val);
+                    },
+                  )),
+                  const SizedBox(width: 30)
+                ])))
+      ]),
     ).animate().fade();
   }
 
@@ -128,7 +152,9 @@ class _ControlPanelHeaderState<T extends ReaderController>
                                   list: _c.playList.map((e) => e.name).toList(),
                                   selectIndex: _c.index.value,
                                   onChange: (value) {
+                                    _c.clearData();
                                     _c.index.value = value;
+                                    _c.getContent();
                                     router.pop();
                                   },
                                 ),

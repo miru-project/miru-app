@@ -139,7 +139,7 @@ class MiruStorage {
     await _initSetting(SettingKey.ttsPitch, 1.0);
     await _initSetting(SettingKey.ttsRate, 0.3);
     await _initSetting(SettingKey.ttsVolume, 0.5);
-    await _initSetting(SettingKey.leading, 20.0);
+    await _initSetting(SettingKey.leading, 2.0);
   }
 
   static _initSetting(String key, dynamic value) async {
