@@ -8,7 +8,7 @@ import 'package:miru_app/controllers/watch/video_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/layout.dart';
 import 'package:miru_app/utils/router.dart';
-import 'package:miru_app/views/pages/watch/video/video_player_dlna.dart';
+import 'package:miru_app/views/pages/watch/video/video_player_cast.dart';
 import 'package:miru_app/views/pages/watch/video/video_player_sidebar.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/progress.dart';
@@ -523,7 +523,7 @@ class _Header extends StatelessWidget {
                     builder: (context, scrollController) {
                       return SingleChildScrollView(
                         controller: scrollController,
-                        child: VideoPlayerDLNA(
+                        child: VideoPlayerCast(
                           onDeviceSelected: (device) {
                             controller.connectDLNADevice(device);
                             Get.back();

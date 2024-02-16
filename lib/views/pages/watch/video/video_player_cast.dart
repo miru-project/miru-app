@@ -3,18 +3,18 @@ import 'package:dlna_dart/dlna.dart';
 import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 
-class VideoPlayerDLNA extends StatefulWidget {
-  const VideoPlayerDLNA({
+class VideoPlayerCast extends StatefulWidget {
+  const VideoPlayerCast({
     super.key,
     this.onDeviceSelected,
   });
   final Function(DLNADevice device)? onDeviceSelected;
 
   @override
-  State<VideoPlayerDLNA> createState() => _VideoPlayerDLNAState();
+  State<VideoPlayerCast> createState() => _VideoPlayerCastState();
 }
 
-class _VideoPlayerDLNAState extends State<VideoPlayerDLNA> {
+class _VideoPlayerCastState extends State<VideoPlayerCast> {
   late DLNAManager searcher;
   Map<String, DLNADevice> deviceList = {};
 
@@ -52,7 +52,7 @@ class _VideoPlayerDLNAState extends State<VideoPlayerDLNA> {
         const Padding(
           padding: EdgeInsets.only(left: 16),
           child: Text(
-            'DLNA devices',
+            'Cast',
             style: TextStyle(
               fontSize: 18,
             ),
