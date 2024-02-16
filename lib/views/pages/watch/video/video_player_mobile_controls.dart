@@ -637,6 +637,42 @@ class _Footer extends StatelessWidget {
                 );
               }),
               const Spacer(),
+              Obx(() {
+                if (controller.currentQuality.value.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return FilledButton.tonal(
+                  onPressed: () {
+                    if (controller.qualityMap.isEmpty) {
+                      controller.sendMessage(
+                        Message(
+                          const Text(
+                            'No quality available',
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+                    controller.toggleSideBar(SidebarTab.qualitys);
+                  },
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    controller.currentQuality.value,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                );
+              }),
+              const SizedBox(width: 10),
               // 倍速
               Obx(
                 () => PopupMenuButton<double>(
