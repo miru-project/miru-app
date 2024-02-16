@@ -313,12 +313,12 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
           text: content[index],
           style: TextStyle(
             color: index == _c.currentLine.value
-                ? _c.heighLightTextColor.value
+                ? _c.highLightTextColor.value
                 : _c.textColor.value,
             fontSize: fontSize,
             fontWeight: FontWeight.w400,
             backgroundColor:
-                index == _c.currentLine.value ? _c.heighLightColor.value : null,
+                index == _c.currentLine.value ? _c.highLightColor.value : null,
             height: 2,
             textBaseline: TextBaseline.ideographic,
             fontFamily: 'Microsoft Yahei',
@@ -343,12 +343,12 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
             text: content[index],
             style: TextStyle(
               color: index == _c.currentLine.value
-                  ? _c.heighLightTextColor.value
+                  ? _c.highLightTextColor.value
                   : _c.textColor.value,
               fontSize: fontSize,
               fontWeight: FontWeight.w400,
               backgroundColor: index == _c.currentLine.value
-                  ? _c.heighLightColor.value
+                  ? _c.highLightColor.value
                   : null,
               height: leading,
               textBaseline: TextBaseline.ideographic,

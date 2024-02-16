@@ -219,7 +219,7 @@ class _ControlPanelFooterState<T extends ReaderController>
                               const Spacer(flex: 10),
                               _desktopMangaPlayerButton(
                                   20, fluent.FluentIcons.previous, () {
-                                _c.index.value--;
+                                _c.prevChap();
                               }),
                               const Spacer(),
                               _desktopMangaPlayerButton(
@@ -233,7 +233,7 @@ class _ControlPanelFooterState<T extends ReaderController>
                               const Spacer(),
                               _desktopMangaPlayerButton(
                                   20, fluent.FluentIcons.next, () {
-                                _c.index.value++;
+                                _c.nextChap();
                               }),
                               const Spacer(flex: 10),
                               fluent.FlyoutTarget(

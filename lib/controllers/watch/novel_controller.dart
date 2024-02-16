@@ -45,8 +45,8 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
   late final RxList<String> subtitles =
       List.generate(playList.length, (index) => "").obs;
   final Rx<Color> textColor = Colors.white.obs;
-  final Rx<Color> heighLightColor = Colors.blue.obs;
-  final Rx<Color> heighLightTextColor = Colors.white.obs;
+  final Rx<Color> highLightColor = Colors.blue.obs;
+  final Rx<Color> highLightTextColor = Colors.white.obs;
   final RxInt currentLine = 0.obs;
   final RxDouble leading = 20.0.obs;
   final RxInt bookPage = (-1).obs;
@@ -95,6 +95,13 @@ class NovelController extends ReaderController<ExtensionFikushonWatch> {
     scrollOffsetListener.changes.listen((event) {
       enableSelectText.value = false;
       hideControlPanel();
+    });
+    mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
+      if (setControllPanel.value) {
+        isShowControlPanel.value = true;
+        return;
+      }
+      isShowControlPanel.value = false;
     });
     ever(readType, (callback) {
       if (callback == NovelReadMode.scroll) {

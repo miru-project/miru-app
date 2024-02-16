@@ -205,7 +205,8 @@
     "time": "Time",
     "page-indicator": "Page Indicator",
     "battery-icon": "Battery Icon",
-    "indicator-alignment": "Indicator Alignment"
+    "indicator-alignment": "Indicator Alignment",
+    "enable-fullScreen": "Enable Full Screen"
   },
   "novel-settings": {
     "font-size": "Font size",
@@ -216,9 +217,10 @@
     "tts-volume": "TTS Volume",
     "tts-pitch": "TTS Pitch",
     "text-color": "Text Color",
-    "heighlight-color": "Highlight Color",
-    "heighlight-text-color": "Highlight Text Color",
-    "leading": "Leading"
+    "highlight-color": "Highlight Background Color",
+    "highlight-text-color": "Highlight Text Color",
+    "leading": "Leading",
+    "color-settings":"Color Settings"
   },
   "bugreport": {
     "auto-remove-subtitle": "delete in ~ days",

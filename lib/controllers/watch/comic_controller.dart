@@ -73,6 +73,13 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     // ever(height, (callback) {
     //   super.height.value = callback;
     // });
+    mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
+      if (setControllPanel.value) {
+        isShowControlPanel.value = true;
+        return;
+      }
+      isShowControlPanel.value = false;
+    });
     ever(readType, (callback) {
       _jumpPage(currentGlobalProgress.value);
       // 保存设置
@@ -106,6 +113,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       currentGlobalProgress.value = callback;
       _jumpPage(callback);
     });
+
     ever(currentGlobalProgress, (callback) {
       if (updateSlider.value) {
         progress.value = callback;

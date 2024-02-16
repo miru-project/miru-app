@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 // import 'package:flutter_box_transform/flutter_box_transform.dart';
+import 'package:miru_app/views/widgets/watch/desktop_command_bar.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/comic_controller.dart';
@@ -22,8 +23,17 @@ class ComicReaderSettings extends StatefulWidget {
 class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   late final ComicController _c = Get.find<ComicController>(tag: widget.tag);
   final fluent.FlyoutController _readModeFlyout = fluent.FlyoutController();
-  // double nextPageHitBox = MiruStorage.getSetting(SettingKey.nextPageHitBox);
-  // double prevPageHitBox = MiruStorage.getSetting(SettingKey.prevPageHitBox);
+  final fluent.FlyoutController _indicatorConfigFlyout =
+      fluent.FlyoutController();
+  final fluent.FlyoutController _indicatorAlignmentFlyout =
+      fluent.FlyoutController();
+  final alignMode = <String, Alignment>{
+    "comic-settings.bottomLeft".i18n: Alignment.bottomLeft,
+    "comic-settings.bottomRight".i18n: Alignment.bottomRight,
+    "comic-settings.topLeft".i18n: Alignment.topLeft,
+    "comic-settings.topRight".i18n: Alignment.topRight,
+  }.obs;
+
   Widget _buildAndroid(BuildContext context) {
     return DefaultTabController(
         length: 2,
@@ -242,7 +252,13 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return Obx(() => fluent.CommandBar(
+    return Obx(() => fluent.CommandBarCard(
+        // backgroundColor: fluent.FluentTheme.of(context).micaBackgroundColor,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        margin: const EdgeInsets.fromLTRB(40, 20, 40, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+        child: fluent.CommandBar(
+          isCompact: true,
           primaryItems: <fluent.CommandBarItem>[
             CommandBarFlyOutTarget(
                 controller: _readModeFlyout,
@@ -258,42 +274,19 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                   onPressed: () {
                     _readModeFlyout.showFlyout(
                         builder: (context) => fluent.MenuFlyout(
-                              items: [
-                                fluent.MenuFlyoutItem(
-                                    leading: _c.readType.value ==
-                                            MangaReadMode.standard
-                                        ? const Icon(
-                                            fluent.FluentIcons.location_dot)
-                                        : null,
-                                    text: Text("comic-settings.standard".i18n),
-                                    onPressed: () {
-                                      _c.readType.value =
-                                          MangaReadMode.standard;
-                                    }),
-                                fluent.MenuFlyoutItem(
-                                    leading: _c.readType.value ==
-                                            MangaReadMode.rightToLeft
-                                        ? const Icon(
-                                            fluent.FluentIcons.location_dot)
-                                        : null,
-                                    text: Text(
-                                        "comic-settings.right-to-left".i18n),
-                                    onPressed: () {
-                                      _c.readType.value =
-                                          MangaReadMode.rightToLeft;
-                                    }),
-                                fluent.MenuFlyoutItem(
-                                    leading: _c.readType.value ==
-                                            MangaReadMode.webTonn
-                                        ? const Icon(
-                                            fluent.FluentIcons.location_dot)
-                                        : null,
-                                    text: Text("comic-settings.web-tonn".i18n),
-                                    onPressed: () {
-                                      _c.readType.value = MangaReadMode.webTonn;
-                                    })
-                              ],
-                            ));
+                            items: _c.readmode.keys
+                                .map((e) => fluent.MenuFlyoutItem(
+                                      leading: _c.readType.value ==
+                                              _c.readmode[e]!
+                                          ? const Icon(
+                                              fluent.FluentIcons.location_dot)
+                                          : null,
+                                      onPressed: () {
+                                        _c.readType.value = _c.readmode[e]!;
+                                      },
+                                      text: Text(e),
+                                    ))
+                                .toList()));
                   },
                 )),
             fluent.CommandBarBuilderItem(
@@ -320,7 +313,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                       child: w,
                     )),
             CommandBarText(text: "/ ${_c.watchData.value?.urls.length ?? 0}"),
-            const fluent.CommandBarSeparator(thickness: 3),
+            const CommnadBarDivider(),
             fluent.CommandBarBuilderItem(
               builder: (context, mode, w) => Tooltip(
                 message: "reader-settings.enable-wakelock".i18n,
@@ -336,7 +329,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                   child:
                       const Icon(fluent.FluentIcons.coffee_script, size: 17)),
             ),
-            const fluent.CommandBarSeparator(thickness: 3),
+            const CommnadBarDivider(),
             fluent.CommandBarBuilderItem(
               builder: (context, mode, w) => Tooltip(
                 message: "reader-settings.enable-fullScreen".i18n,
@@ -349,9 +342,109 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                   },
                   checked: _c.enableFullScreen.value,
                   child: const Icon(fluent.FluentIcons.full_screen, size: 17)),
-            )
+            ),
+            const CommnadBarDivider(),
+            CommandBarFlyOutTarget(
+                controller: _indicatorConfigFlyout,
+                child: Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: fluent.IconButton(
+                      icon: Row(children: [
+                        const Icon(fluent.FluentIcons.number_field, size: 17),
+                        const SizedBox(width: 8),
+                        Text("comic-settings.status-bar".i18n)
+                      ]),
+                      onPressed: () {
+                        _indicatorConfigFlyout.showFlyout(
+                            builder: (context) => fluent.FlyoutContent(
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 200),
+                                  child: Obx(() => Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: List.generate(
+                                          _c.statusBarElement.length,
+                                          (index) => fluent.FlyoutListTile(
+                                                onPressed: () {
+                                                  _c
+                                                          .statusBarElement[
+                                                              _c.statusBarElement
+                                                                  .keys
+                                                                  .elementAt(
+                                                                      index)]!
+                                                          .value =
+                                                      !_c
+                                                          .statusBarElement[_c
+                                                              .statusBarElement
+                                                              .keys
+                                                              .elementAt(
+                                                                  index)]!
+                                                          .value;
+                                                },
+                                                text: Row(children: [
+                                                  fluent.Checkbox(
+                                                    checked: _c
+                                                        .statusBarElement.values
+                                                        .elementAt(index)
+                                                        .value,
+                                                    onChanged: (val) {
+                                                      if (val == null) {
+                                                        return;
+                                                      }
+                                                      _c
+                                                          .statusBarElement[_c
+                                                              .statusBarElement
+                                                              .keys
+                                                              .elementAt(
+                                                                  index)]!
+                                                          .value = val;
+                                                    },
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(_c.statusBarElement.keys
+                                                      .elementAt(index))
+                                                ]),
+                                              )))),
+                                ));
+                      },
+                    ))),
+            const CommnadBarDivider(),
+            CommandBarFlyOutTarget(
+              controller: _indicatorAlignmentFlyout,
+              child: Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: fluent.IconButton(
+                    icon: Row(children: [
+                      const Icon(fluent.FluentIcons.align_center, size: 17),
+                      const SizedBox(width: 8),
+                      Text("comic-settings.indicator-alignment".i18n)
+                    ]),
+                    onPressed: () {
+                      _indicatorAlignmentFlyout.showFlyout(
+                          builder: (context) => fluent.FlyoutContent(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 200),
+                                child: Obx(() => Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: List.generate(
+                                        alignMode.keys.length,
+                                        (index) => fluent.FlyoutListTile(
+                                              onPressed: () {
+                                                _c.alignMode.value = alignMode
+                                                    .values
+                                                    .elementAt(index);
+                                              },
+                                              selected: _c.alignMode.value ==
+                                                  alignMode.values
+                                                      .elementAt(index),
+                                              text: Text(alignMode.keys
+                                                  .elementAt(index)),
+                                            )))),
+                              ));
+                    },
+                  )),
+            ),
           ],
-        ));
+        )));
   }
 
   @override
@@ -360,79 +453,5 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
       androidBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
     );
-  }
-}
-
-class CommandBarDropDownButton extends fluent.CommandBarItem {
-  const CommandBarDropDownButton(
-      {super.key, required this.items, this.onPressed, this.icon, this.label});
-  final List<fluent.MenuFlyoutItem> items;
-  final VoidCallback? onPressed;
-  final Widget? icon;
-  final Widget? label;
-
-  @override
-  Widget build(
-      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      if (icon != null) ...[icon!, const SizedBox(width: 8)],
-      fluent.DropDownButton(items: items)
-    ]);
-  }
-}
-
-class CommandBarFlyOutTarget extends fluent.CommandBarItem {
-  const CommandBarFlyOutTarget(
-      {super.key, required this.controller, required this.child, this.label});
-  final fluent.FlyoutController controller;
-  final Widget child;
-  final Widget? label;
-  @override
-  Widget build(
-      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      if (label != null) ...[
-        label!,
-        const SizedBox(
-          width: 6.0,
-        )
-      ],
-      fluent.FlyoutTarget(
-        controller: controller,
-        child: child,
-      )
-    ]);
-  }
-}
-
-class CommandBarText extends fluent.CommandBarItem {
-  const CommandBarText({super.key, required this.text});
-  final String text;
-  @override
-  Widget build(
-      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
-    return Padding(padding: const EdgeInsets.all(10), child: Text(text));
-  }
-}
-
-class CommandBarToggleButton extends fluent.CommandBarItem {
-  const CommandBarToggleButton(
-      {super.key,
-      required this.onchange,
-      required this.checked,
-      required this.child});
-  final bool checked;
-  final void Function(bool)? onchange;
-  final Widget child;
-  @override
-  Widget build(
-      BuildContext context, fluent.CommandBarItemDisplayMode displayMode) {
-    return Padding(
-        padding: const EdgeInsets.all(10),
-        child: fluent.ToggleButton(
-          checked: checked,
-          onChanged: onchange,
-          child: child,
-        ));
   }
 }

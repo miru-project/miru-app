@@ -106,13 +106,6 @@ abstract class ReaderController<T> extends GetxController {
     _barreryTimer =
         Timer.periodic(const Duration(seconds: 10), (timer) => _statusBar());
 
-    mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
-      if (setControllPanel.value) {
-        isShowControlPanel.value = true;
-        return;
-      }
-      isShowControlPanel.value = false;
-    });
     super.onInit();
   }
 
