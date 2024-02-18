@@ -503,6 +503,7 @@ class _Header extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Text(
@@ -510,6 +511,7 @@ class _Header extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
