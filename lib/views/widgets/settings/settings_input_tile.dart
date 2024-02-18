@@ -10,7 +10,7 @@ class SettingsIntpuTile extends fluent.StatefulWidget {
     this.icon,
     required this.title,
     required this.onChanged,
-    required this.text,
+    required this.buildText,
     required this.buildSubtitle,
     this.trailing = const Icon(Icons.chevron_right),
     this.isCard = false,
@@ -18,7 +18,7 @@ class SettingsIntpuTile extends fluent.StatefulWidget {
   final Widget? icon;
   final String title;
   final String Function() buildSubtitle;
-  final String text;
+  final String Function() buildText;
   final Widget trailing;
   final Function(String) onChanged;
   final bool isCard;
@@ -28,6 +28,20 @@ class SettingsIntpuTile extends fluent.StatefulWidget {
 }
 
 class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.buildText());
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
   Widget _buildAndroid(BuildContext context) {
     return ListTile(
       leading: widget.icon,
@@ -41,7 +55,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
             return AlertDialog(
               title: Text(widget.title),
               content: TextField(
-                controller: TextEditingController(text: widget.text),
+                controller: _controller,
                 onChanged: (value) {
                   widget.onChanged(value);
                   setState(() {});
@@ -70,7 +84,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
       buildSubtitle: widget.buildSubtitle,
       trailing: Expanded(
           child: fluent.TextBox(
-        controller: TextEditingController(text: widget.text),
+        controller: _controller,
         onChanged: (value) {
           widget.onChanged(value);
         },

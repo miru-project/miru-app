@@ -84,7 +84,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   defaultLanguage: MiruStorage.getSetting(SettingKey.language),
                 );
               },
-              text: MiruStorage.getSetting(SettingKey.tmdbKey),
+              buildText: () {
+                return MiruStorage.getSetting(SettingKey.tmdbKey);
+              },
             ),
             // 语言设置
             SettingsRadiosTile(
@@ -179,7 +181,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 MiruStorage.setSetting(SettingKey.miruRepoUrl, value);
                 Get.find<ExtensionRepoPageController>().onRefresh();
               },
-              text: MiruStorage.getSetting(SettingKey.miruRepoUrl),
+              buildText: () {
+                return MiruStorage.getSetting(SettingKey.miruRepoUrl);
+              },
             ),
             const SizedBox(height: 8),
           ],
@@ -422,7 +426,9 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) {
                 MiruStorage.setUASetting(value);
               },
-              text: MiruStorage.getUASetting(),
+              buildText: () {
+                return MiruStorage.getUASetting();
+              },
             ),
             SettingsRadiosTile(
               title: 'settings.proxy-type'.i18n,
@@ -449,7 +455,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 MiruStorage.setSetting(SettingKey.proxy, value);
                 MiruRequest.refreshProxy();
               },
-              text: MiruStorage.getSetting(SettingKey.proxy),
+              buildText: () {
+                return MiruStorage.getSetting(SettingKey.proxy);
+              },
             ),
           ],
         ),
