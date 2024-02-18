@@ -46,7 +46,10 @@
     "login": "Login",
     "no-data": "No data",
     "clear": "Clear",
-    "export": "Export"
+    "export": "Export",
+    "off": "Off",
+    "error-message": "Error message",
+    "disconnect": "Disconnect"
   },
   "home": {
     "continue-watching": "Continue",
@@ -169,8 +172,12 @@
     "subtitle-none": "No Subtitle",
     "subtitle": "Subtitle",
     "subtitle-change": "Change Subtitle {title}",
-    "subtitle-file": "Subtitle File",
+    "subtitle-file": "Add subtitle File",
     "torrent-downloading": "Torrent downloading",
+    "no-qualities": "No quality available",
+    "audio": "Audio",
+    "getting-streamlink": "Getting streamlink...",
+    "streamlink-error": "Failed to get streamlink",
     "tooltip": {
       "close": "Close",
       "subtitle": "Subtitle",
@@ -184,6 +191,34 @@
       "full-screen": "Full Screen",
       "volume": "Volume",
       "torrent-file-list": "Torrent file list"
+    },
+    "cast": "Cast to device",
+    "cast-device": "playing on {device}",
+    "sidebar": {
+      "tab": {
+        "episodes": "Episodes",
+        "qualitys": "Qualitys",
+        "torrentFiles": "Torrent Files",
+        "tracks": "Tracks",
+        "settings": "Settings"
+      },
+      "subtitle": {
+        "title": "Subtitle",
+        "font-size": "Font size",
+        "font-color": "Font color",
+        "background-color": "Background color",
+        "background-opacity": "Background opacity",
+        "text-align": "Text align",
+        "font-weight": "Font weight",
+        "font-weight-normal": "Normal",
+        "font-weight-bold": "Bold"
+      },
+      "play-mode": {
+        "title": "Play mode",
+        "loop": "Loop",
+        "single": "Single",
+        "auto-next": "Auto next"
+      }
     }
   },
   "comic-settings": {
