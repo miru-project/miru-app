@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dlna_dart/dlna.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 
@@ -49,11 +50,11 @@ class _VideoPlayerCastState extends State<VideoPlayerCast> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 16),
+        Padding(
+          padding: const EdgeInsets.only(left: 16),
           child: Text(
-            'Cast',
-            style: TextStyle(
+            'video.cast'.i18n,
+            style: const TextStyle(
               fontSize: 18,
             ),
           ),

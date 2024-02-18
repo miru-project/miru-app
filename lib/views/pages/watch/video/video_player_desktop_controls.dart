@@ -128,9 +128,9 @@ class _VideoPlayerDesktopControlsState
                         return Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
-                              "Getting streamlink error",
-                              style: TextStyle(
+                            Text(
+                              'video.streamlink-error'.i18n,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -140,7 +140,7 @@ class _VideoPlayerDesktopControlsState
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Button(
-                                  child: const Text('Error message'),
+                                  child: Text('common.error-message'.i18n),
                                   onPressed: () {
                                     showDialog(
                                       context: context,
@@ -148,7 +148,8 @@ class _VideoPlayerDesktopControlsState
                                         constraints: const BoxConstraints(
                                           maxWidth: 500,
                                         ),
-                                        title: const Text('Error message'),
+                                        title:
+                                            Text('common.error-message'.i18n),
                                         content: SelectableText(_c.error.value),
                                         actions: [
                                           Button(
@@ -164,7 +165,7 @@ class _VideoPlayerDesktopControlsState
                                 ),
                                 const SizedBox(width: 10),
                                 Button(
-                                  child: Text('Retry'.i18n),
+                                  child: Text('common.retry'.i18n),
                                   onPressed: () {
                                     _c.error.value = '';
                                     _c.play();
@@ -215,9 +216,9 @@ class _VideoPlayerDesktopControlsState
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Text(
-                                  'Getting streamlink...',
-                                  style: TextStyle(
+                                Text(
+                                  'video.getting-streamlink'.i18n,
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w300,
                                   ),
@@ -782,7 +783,7 @@ class _QualityState extends State<_Quality> {
         onPressed: () {
           if (widget.controller.qualityMap.isEmpty) {
             widget.controller.sendMessage(
-              Message(const Text("No quality available")),
+              Message(Text("video.no-qualities".i18n)),
             );
             return;
           }
@@ -872,7 +873,7 @@ class _TrackState extends State<_Track> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            "Subtitles",
+                            "video.subtitle".i18n,
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.white.withAlpha(200),
@@ -883,7 +884,7 @@ class _TrackState extends State<_Track> {
                         ListTile.selectable(
                           selected: SubtitleTrack.no() ==
                               widget.controller.player.state.track.subtitle,
-                          title: const Text('Off'),
+                          title: Text('common.off'.i18n),
                           onPressed: () {
                             widget.controller.setSubtitleTrack(
                               SubtitleTrack.no(),
@@ -892,7 +893,7 @@ class _TrackState extends State<_Track> {
                           },
                         ),
                         ListTile.selectable(
-                          title: const Text('Add subtitle file'),
+                          title: Text('video.subtitle-file'.i18n),
                           onPressed: () {
                             widget.controller.addSubtitleFile();
                           },
@@ -933,7 +934,7 @@ class _TrackState extends State<_Track> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            "Audio",
+                            "video.audio".i18n,
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.white.withAlpha(200),

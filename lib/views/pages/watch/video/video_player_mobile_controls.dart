@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
@@ -286,9 +287,9 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          "Getting streamlink error",
-                          style: TextStyle(
+                        Text(
+                          "video.streamlink-error".i18n,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -298,12 +299,12 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             FilledButton(
-                              child: const Text('Error message'),
+                              child: Text('common.error-message'.i18n),
                               onPressed: () {
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: const Text('Error message'),
+                                    title: Text('common.error-message'.i18n),
                                     content: SelectableText(_c.error.value),
                                     actions: [
                                       FilledButton(
@@ -319,7 +320,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                             ),
                             const SizedBox(width: 10),
                             FilledButton(
-                              child: Text('Retry'.i18n),
+                              child: Text('common.retry'.i18n),
                               onPressed: () {
                                 _c.error.value = '';
                                 _c.play();
@@ -343,7 +344,14 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Playing on ${_c.dlnaDevice.value!.info.friendlyName}',
+                                FlutterI18n.translate(
+                                  context,
+                                  'video.cast-device',
+                                  translationParams: {
+                                    'device':
+                                        _c.dlnaDevice.value!.info.friendlyName,
+                                  },
+                                ),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -355,7 +363,7 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                                   _c.disconnectDLNADevice();
                                 },
                                 child: Text(
-                                  'Disconnect'.i18n,
+                                  'common.disconnect'.i18n,
                                 ),
                               ),
                             ],
@@ -398,9 +406,9 @@ class _VideoPlayerMobileControlsState extends State<VideoPlayerMobileControls> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const Text(
-                                'Getting streamlink...',
-                                style: TextStyle(
+                              Text(
+                                'video.getting-streamlink'.i18n,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -646,8 +654,8 @@ class _Footer extends StatelessWidget {
                     if (controller.qualityMap.isEmpty) {
                       controller.sendMessage(
                         Message(
-                          const Text(
-                            'No quality available',
+                          Text(
+                            'video.no-qualities'.i18n,
                           ),
                         ),
                       );

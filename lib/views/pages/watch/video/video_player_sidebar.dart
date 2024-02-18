@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:miru_app/controllers/watch/video_controller.dart';
 import 'package:miru_app/utils/color.dart';
+import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/views/widgets/list_title.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/watch/playlist.dart';
@@ -14,6 +15,10 @@ enum SidebarTab {
   torrentFiles,
   tracks,
   settings,
+}
+
+_sidebarTabToString(SidebarTab tab) {
+  return "video.sidebar.tab.${tab.name}".i18n;
 }
 
 class VideoPlayerSidebar extends StatefulWidget {
@@ -55,7 +60,9 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
             TabBar(
               tabAlignment: TabAlignment.center,
               isScrollable: true,
-              tabs: _tabs.keys.map((e) => Tab(text: e.name)).toList(),
+              tabs: _tabs.keys
+                  .map((e) => Tab(text: _sidebarTabToString(e)))
+                  .toList(),
             ),
             Expanded(
               child: TabBarView(
@@ -81,7 +88,7 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
             Row(
               children: [
                 Text(
-                  "Settings",
+                  "common.settings".i18n,
                   style: fluent.FluentThemeData.dark().typography.bodyLarge,
                 ),
                 const Spacer(),
@@ -162,11 +169,11 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Subtitle'),
+              Text('video.sidebar.subtitle.title'.i18n),
               const SizedBox(height: 10),
               Row(
                 children: [
-                  const Text('Font size'),
+                  Text('video.sidebar.subtitle.font-size'.i18n),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Obx(
@@ -191,7 +198,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  const Text('Font color'),
+                  Text('video.sidebar.subtitle.font-color'.i18n),
                   const SizedBox(width: 10),
                   fluent.SplitButton(
                     flyout: fluent.FlyoutContent(
@@ -243,7 +250,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  const Text('Background color'),
+                  Text('video.sidebar.subtitle.background-color'.i18n),
                   const SizedBox(width: 10),
                   fluent.SplitButton(
                     flyout: fluent.FlyoutContent(
@@ -296,7 +303,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  const Text('Background opacity'),
+                  Text('video.sidebar.subtitle.background-opacity'.i18n),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Obx(
@@ -322,7 +329,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
               // textAlign
               Row(
                 children: [
-                  const Text('Text align'),
+                  Text('video.sidebar.subtitle.text-align'.i18n),
                   const SizedBox(width: 10),
                   fluent.SplitButton(
                     flyout: fluent.FlyoutContent(
@@ -445,7 +452,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
                 ],
               ),
               const SizedBox(height: 10),
-              const Text("Font weight"),
+              Text('video.sidebar.subtitle.font-weight'.i18n),
               const SizedBox(height: 10),
               Obx(
                 () => Wrap(
@@ -457,14 +464,18 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
                       onChanged: (value) {
                         _c.subtitleFontWeight.value = FontWeight.normal;
                       },
-                      child: const Text("Normal"),
+                      child: Text(
+                        'video.sidebar.subtitle.font-weight-normal'.i18n,
+                      ),
                     ),
                     fluent.ToggleButton(
                       checked: _c.subtitleFontWeight.value == FontWeight.bold,
                       onChanged: (value) {
                         _c.subtitleFontWeight.value = FontWeight.bold;
                       },
-                      child: const Text("Bold"),
+                      child: Text(
+                        'video.sidebar.subtitle.font-weight-bold'.i18n,
+                      ),
                     ),
                   ],
                 ),
@@ -478,7 +489,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Play mode"),
+              Text('video.sidebar.play-mode.title'.i18n),
               const SizedBox(
                 height: 10,
                 width: double.infinity,
@@ -493,21 +504,21 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
                       onChanged: (value) {
                         _c.playMode.value = PlaylistMode.loop;
                       },
-                      child: const Text("Loop"),
+                      child: Text('video.sidebar.play-mode.loop'.i18n),
                     ),
                     fluent.ToggleButton(
                       checked: _c.playMode.value == PlaylistMode.single,
                       onChanged: (value) {
                         _c.playMode.value = PlaylistMode.single;
                       },
-                      child: const Text("Single"),
+                      child: Text('video.sidebar.play-mode.single'.i18n),
                     ),
                     fluent.ToggleButton(
                       checked: _c.playMode.value == PlaylistMode.none,
                       onChanged: (value) {
                         _c.playMode.value = PlaylistMode.none;
                       },
-                      child: const Text("Auto next"),
+                      child: Text('video.sidebar.play-mode.auto-next'.i18n),
                     ),
                   ],
                 ),
@@ -524,11 +535,11 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       children: [
         Text(
-          'Subtitle',
+          'video.sidebar.subtitle.title'.i18n,
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         const SizedBox(height: 20),
-        const Text('Font size'),
+        Text('video.sidebar.subtitle.font-size'.i18n),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -557,7 +568,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
           ],
         ),
         const SizedBox(height: 10),
-        const Text('Font color'),
+        Text('video.sidebar.subtitle.font-color'.i18n),
         const SizedBox(height: 10),
         Obx(
           () {
@@ -596,7 +607,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
           },
         ),
         const SizedBox(height: 10),
-        const Text('Background color'),
+        Text('video.sidebar.subtitle.background-color'.i18n),
         const SizedBox(height: 10),
         Obx(
           () {
@@ -635,7 +646,9 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
           },
         ),
         const SizedBox(height: 10),
-        const Text('Background opacity'),
+        Text(
+          'video.sidebar.subtitle.background-opacity'.i18n,
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -665,7 +678,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
         ),
         const SizedBox(height: 10),
         // textAlign
-        const Text('Text align'),
+        Text('video.sidebar.subtitle.text-align'.i18n),
         const SizedBox(height: 10),
 
         Obx(
@@ -709,14 +722,26 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
           ),
         ),
         const SizedBox(height: 10),
-        const Text("Font weight"),
+        Text(
+          'video.sidebar.subtitle.font-weight'.i18n,
+        ),
         const SizedBox(height: 10),
         Obx(
           () => SegmentedButton(
             showSelectedIcon: false,
-            segments: const [
-              ButtonSegment(value: FontWeight.normal, label: Text("Normal")),
-              ButtonSegment(value: FontWeight.bold, label: Text("Bold")),
+            segments: [
+              ButtonSegment(
+                value: FontWeight.normal,
+                label: Text(
+                  'video.sidebar.subtitle.font-weight-normal'.i18n,
+                ),
+              ),
+              ButtonSegment(
+                value: FontWeight.bold,
+                label: Text(
+                  'video.sidebar.subtitle.font-weight-bold'.i18n,
+                ),
+              ),
             ],
             selected: <FontWeight>{_c.subtitleFontWeight.value},
             onSelectionChanged: (value) {
@@ -726,17 +751,32 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
         ),
         const SizedBox(height: 20),
         Text(
-          'Play mode',
+          'video.sidebar.play-mode.title'.i18n,
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         const SizedBox(height: 10),
         Obx(
           () => SegmentedButton(
             showSelectedIcon: false,
-            segments: const [
-              ButtonSegment(value: PlaylistMode.loop, label: Text("Loop")),
-              ButtonSegment(value: PlaylistMode.single, label: Text("Single")),
-              ButtonSegment(value: PlaylistMode.none, label: Text("Auto next")),
+            segments: [
+              ButtonSegment(
+                value: PlaylistMode.loop,
+                label: Text(
+                  'video.sidebar.play-mode.loop'.i18n,
+                ),
+              ),
+              ButtonSegment(
+                value: PlaylistMode.single,
+                label: Text(
+                  'video.sidebar.play-mode.single'.i18n,
+                ),
+              ),
+              ButtonSegment(
+                value: PlaylistMode.none,
+                label: Text(
+                  'video.sidebar.play-mode.auto-next'.i18n,
+                ),
+              ),
             ],
             selected: <PlaylistMode>{_c.playMode.value},
             onSelectionChanged: (value) {
@@ -800,13 +840,13 @@ class _TrackSelector extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 10),
       children: [
-        const ListTitle(
-          title: "Subtitle",
+        ListTitle(
+          title: 'video.subtitle'.i18n,
         ),
         ListTile(
           selected:
               SubtitleTrack.no() == controller.player.state.track.subtitle,
-          title: const Text('Off'),
+          title: Text('common.off'.i18n),
           onTap: () {
             controller.setSubtitleTrack(
               SubtitleTrack.no(),
@@ -815,7 +855,7 @@ class _TrackSelector extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text('Add subtitle file'),
+          title: Text('video.subtitle-file'.i18n),
           onTap: () {
             controller.addSubtitleFile();
             controller.showSidebar.value = false;
@@ -850,8 +890,8 @@ class _TrackSelector extends StatelessWidget {
               },
             ),
         const SizedBox(height: 10),
-        const ListTitle(
-          title: "Audio",
+        ListTitle(
+          title: 'video.audio'.i18n,
         ),
         const SizedBox(height: 5),
         for (final audio in controller.player.state.tracks.audio)
