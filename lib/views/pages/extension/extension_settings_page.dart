@@ -72,7 +72,9 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
               setState(() {});
             }
           },
-          text: setting.value ?? setting.defaultValue,
+          buildText: () {
+            return setting.value ?? setting.defaultValue;
+          },
           buildSubtitle: () {
             if (Platform.isAndroid) {
               return '${setting.value ?? setting.defaultValue}\n${setting.description ?? ''}';

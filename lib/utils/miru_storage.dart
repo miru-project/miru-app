@@ -140,6 +140,12 @@ class MiruStorage {
     await _initSetting(SettingKey.ttsRate, 0.3);
     await _initSetting(SettingKey.ttsVolume, 0.5);
     await _initSetting(SettingKey.leading, 2.0);
+    await _initSetting(SettingKey.subtitleFontSize, 46.0);
+    await _initSetting(SettingKey.subtitleFontColor, Colors.white.value);
+    await _initSetting(SettingKey.subtitleFontWeight, 'bold');
+    await _initSetting(SettingKey.subtitleBackgroundColor, Colors.black.value);
+    await _initSetting(SettingKey.subtitleBackgroundOpacity, 0.5);
+    await _initSetting(SettingKey.subtitleTextAlign, TextAlign.center.index);
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -209,4 +215,37 @@ class SettingKey {
   static String ttsRate = "TTSRate";
   static String ttsVolume = "TTSVolume";
   static String leading = "Leading";
+  static const theme = "Theme";
+  static const miruRepoUrl = "MiruRepoUrl";
+  static const tmdbKey = 'TMDBKey';
+  static const autoCheckUpdate = 'AutoCheckUpdate';
+  static const language = 'Language';
+  static const novelFontSize = 'NovelFontSize';
+  static const enableNSFW = 'EnableNSFW';
+  static const videoPlayer = 'VideoPlayer';
+  static const databaseVersion = 'DatabaseVersion';
+  static const listMode = 'ListMode';
+  static const keyI = 'KeyI';
+  static const keyJ = 'KeyJ';
+  static const arrowLeft = 'Arrowleft';
+  static const arrowRight = 'Arrowright';
+  static const readingMode = 'ReadingMode';
+  static const aniListToken = 'AniListToken';
+  static const aniListUserId = 'AniListUserId';
+  static const autoTracking = 'AutoTracking';
+  static const windowSize = 'WindowsSize';
+  static const windowPosition = 'WindowsPosition';
+  static const androidWebviewUA = "AndroidWebviewUA";
+  static const windowsWebviewUA = "WindowsWebviewUA";
+  static const proxy = "Proxy";
+  static const proxyType = "ProxyType";
+  static const saveLog = "SaveLog";
+  static const subtitleFontSize = "SubtitleFontSize";
+  static const subtitleFontWeight = "SubtitleFontWeight";
+  static const subtitleFontColor = "SubtitleFontColor";
+  static const subtitleBackgroundColor = "SubtitleBackgroundColor";
+  static const subtitleBackgroundOpacity = "SubtitleBackgroundOpacity";
+  static const subtitleTextAlign = "SubtitleTextAlign";
+  static const subtitleLastLanguageSelected = "SubtitleLastLanguageSelected";
+  static const subtitleLastTitleSelected = "SubtitleLastTitleSelected";
 }
