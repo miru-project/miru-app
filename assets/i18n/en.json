@@ -233,7 +233,12 @@
     "topLeft": "Top left",
     "topRight": "Top right",
     "indicator-alignment": "Indicator alignment",
-    "status-bar":"Status bar"
+    "status-bar":"Status bar",
+    "prevPageHitBox": "Tapping region of previous page",
+    "nextPageHitBox": "Tapping region of next page",
+    "enable-autoscroller": "Enable autoscroller",
+    "autoscroller-interval": "Autoscroller interval",
+    "autoscroller-offset": "Autoscroller offset"
   },
   "reader-settings": {
     "enable-wakelock": "Keep screen on",

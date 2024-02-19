@@ -103,41 +103,25 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                               segments: [
                                 ButtonSegment<Alignment>(
                                   value: Alignment.bottomLeft,
-                                  label: Column(children: [
-                                    Text('comic-settings.bottomLeft'.i18n),
-                                    const SizedBox(height: 5),
-                                    Transform.rotate(
-                                        angle: -3.14,
-                                        child: const Icon(Icons.arrow_outward))
-                                  ]),
+                                  label: Transform.rotate(
+                                      angle: -3.14,
+                                      child: const Icon(Icons.arrow_outward)),
                                 ),
                                 ButtonSegment<Alignment>(
                                   value: Alignment.bottomRight,
-                                  label: Column(children: [
-                                    Text('comic-settings.bottomRight'.i18n),
-                                    const SizedBox(height: 5),
-                                    Transform.rotate(
-                                        angle: 1.57,
-                                        child: const Icon(Icons.arrow_outward))
-                                  ]),
+                                  label: Transform.rotate(
+                                      angle: 1.57,
+                                      child: const Icon(Icons.arrow_outward)),
                                 ),
                                 ButtonSegment<Alignment>(
                                   value: Alignment.topLeft,
-                                  label: Column(children: [
-                                    Text('comic-settings.topLeft'.i18n),
-                                    const SizedBox(height: 5),
-                                    Transform.rotate(
-                                        angle: -1.57,
-                                        child: const Icon(Icons.arrow_outward))
-                                  ]),
+                                  label: Transform.rotate(
+                                      angle: -1.57,
+                                      child: const Icon(Icons.arrow_outward)),
                                 ),
-                                ButtonSegment<Alignment>(
+                                const ButtonSegment<Alignment>(
                                   value: Alignment.topRight,
-                                  label: Column(children: [
-                                    Text('comic-settings.topRight'.i18n),
-                                    const SizedBox(height: 5),
-                                    const Icon(Icons.arrow_outward)
-                                  ]),
+                                  label: Icon(Icons.arrow_outward),
                                 )
                               ],
                               selected: <Alignment>{_c.alignMode.value},
@@ -212,14 +196,14 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                         children: [
                           SettingsSwitchTile(
                               icon: const Icon(Icons.play_arrow_rounded),
-                              title: "reader-settings.enable-autoscroller".i18n,
+                              title: "comic-settings.enable-autoscroller".i18n,
                               buildValue: () => _c.enableAutoScroll.value,
                               onChanged: (val) {
                                 Get.back();
                                 _c.enableAutoScroll.value = val;
                               }),
                           const SizedBox(height: 16),
-                          Text('reader-settings.auto-scroller-interval'.i18n),
+                          Text('comic-settings.autoscroller-interval'.i18n),
                           Slider(
                               value: _c.autoScrollInterval.value.toDouble(),
                               max: 500.0,
@@ -231,7 +215,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                                     SettingKey.autoScrollInterval, val.toInt());
                               }),
                           const SizedBox(height: 16),
-                          Text('reader-settings.auto-scroller-offset'.i18n),
+                          Text('comic-settings.autoscroller-offset'.i18n),
                           Slider(
                               value: _c.autoScrollOffset.value,
                               max: 300.0,
