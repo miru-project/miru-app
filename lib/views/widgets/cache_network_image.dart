@@ -93,8 +93,7 @@ class CacheNetWorkImagePic extends StatelessWidget {
   }
 }
 
-void saveImage(url, Map<String, dynamic>? headers, bool mounted,
-    BuildContext context) async {
+void saveImage(url, Map<String, dynamic>? headers, BuildContext context) async {
   // final url = widget.url;
   final fileName = url.split('/').last;
   final res = await dio.get(
@@ -109,13 +108,14 @@ void saveImage(url, Map<String, dynamic>? headers, bool mounted,
       res.data,
       name: fileName,
     );
-    if (mounted) {
+    if (context.mounted) {
       final msg = result['isSuccess'] == true
           ? 'common.save-success'.i18n
           : result['errorMessage'];
       showPlatformSnackbar(
         context: context,
         content: msg,
+        severity: fluent.InfoBarSeverity.success,
       );
     }
     return;
@@ -154,45 +154,6 @@ class _ThumnailPageState extends State<_ThumnailPage> {
     menuController.dispose();
     super.dispose();
   }
-
-  // _saveImage() async {
-  //   final url = widget.url;
-  //   final fileName = url.split('/').last;
-  //   final res = await dio.get(
-  //     url,
-  //     options: Options(
-  //       responseType: ResponseType.bytes,
-  //       headers: widget.headers,
-  //     ),
-  //   );
-  //   if (Platform.isAndroid) {
-  //     final result = await ImageGallerySaver.saveImage(
-  //       res.data,
-  //       name: fileName,
-  //     );
-  //     if (mounted) {
-  //       final msg = result['isSuccess'] == true
-  //           ? 'common.save-success'.i18n
-  //           : result['errorMessage'];
-  //       showPlatformSnackbar(
-  //         context: context,
-  //         content: msg,
-  //       );
-  //     }
-  //     return;
-  //   }
-  //   // 打开目录选择对话框file_picker
-
-  //   final path = await FilePicker.platform.saveFile(
-  //     type: FileType.image,
-  //     fileName: fileName,
-  //   );
-  //   if (path == null) {
-  //     return;
-  //   }
-  //   // 保存
-  //   File(path).writeAsBytesSync(res.data);
-  // }
 
   Widget _buildContent(BuildContext context) {
     return Center(
@@ -250,7 +211,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
                     title: Text('common.save'.i18n),
                     onTap: () {
                       Navigator.of(context).pop();
-                      saveImage(widget.url, widget.headers, mounted, context);
+                      saveImage(widget.url, widget.headers, context);
                     },
                   ),
                 ],
@@ -281,7 +242,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
                 text: Text('common.save'.i18n),
                 onPressed: () {
                   fluent.Flyout.of(context).close();
-                  saveImage(widget.url, widget.headers, mounted, context);
+                  saveImage(widget.url, widget.headers, context);
                 },
               ),
             ]);

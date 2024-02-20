@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/comic_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/views/widgets/button.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 
@@ -27,17 +28,9 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
 
   // 按下数量
   final List<int> _pointer = [];
-  // late final List<Widget> _chapterItems = List.generate(
-  //     _c.playList.length,
-  //     ((val) => Container(
-  //         color: Colors.green,
-  //         width: MediaQuery.of(context).size.width,
-  //         height: MediaQuery.of(context).size.height,
-  //         child: Center(child: Text(val.toString())))));
-  // late final List<Widget> _chapterItems = List.generate(
-  //     _c.playList.length, ((val) => webtoonContent(context, val)));
   final menuController = fluent.FlyoutController();
   final contextAttachKey = GlobalKey();
+
   _buildPlaceholder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -52,13 +45,6 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // ever(_c.index,
-    //     (callback) => _chapterItems[callback] = webtoonContent(context));
-  }
-
   Widget _buildDisplay(Widget child) {
     if (_c.statusBarElement.values.every((element) => element.value == false)) {
       return child;
@@ -66,20 +52,25 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     return Stack(
       children: [
         child,
-        Obx(() => Align(
-              alignment: _c.alignMode.value,
-              child: Container(
-                color: Colors.black.withAlpha(200),
-                padding: const EdgeInsets.fromLTRB(20, 2, 12, 2),
-                child: _indicatorBuilder(),
-              ),
-            )),
+        Obx(
+          () => Align(
+            alignment: _c.alignMode.value,
+            child: Container(
+              color: Colors.black.withAlpha(200),
+              padding: const EdgeInsets.fromLTRB(20, 2, 12, 2),
+              child: _indicatorBuilder(),
+            ),
+          ),
+        ),
       ],
     );
   }
 
   Widget _indicatorBuilder() {
-    return Obx(() => Row(mainAxisSize: MainAxisSize.min, children: [
+    return Obx(
+      () => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
           if (_c.statusBarElement["reader-settings.page-indicator".i18n]!
               .value) ...[
             Text(
@@ -116,7 +107,9 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             ),
             const SizedBox(width: 8)
           ],
-        ]));
+        ],
+      ),
+    );
   }
 
   Widget webtoonContent(BuildContext context) {
@@ -124,55 +117,56 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    return Obx(() => SizedBox(
-          width: width,
-          height: height,
-          child: Listener(
-            onPointerDown: (event) {
-              _pointer.add(event.pointer);
-              if (_pointer.length == 2) {
-                _c.isZoom.value = true;
-              }
-            },
-            onPointerUp: (event) {
-              _pointer.remove(event.pointer);
-              if (_pointer.length == 1) {
-                _c.isZoom.value = false;
-              }
-            },
-            child: InteractiveViewer(
-              scaleEnabled: _c.isZoom.value,
-              child: ScrollablePositionedList.builder(
-                physics: _c.isZoom.value
-                    ? const NeverScrollableScrollPhysics()
-                    : null,
-                padding: EdgeInsets.symmetric(
-                  horizontal: viewPadding,
-                ),
-                initialScrollIndex: _c.currentGlobalProgress.value,
-                itemScrollController: _c.itemScrollController,
-                itemPositionsListener: _c.itemPositionsListener,
-                scrollOffsetController: _c.scrollOffsetController,
-                scrollOffsetListener: _c.scrollOffsetListener,
-                itemBuilder: (context, index) {
-                  final img = _c.items.expand((element) => element).toList();
-                  final url = img[index];
-                  SizedBox(
-                    width: width,
-                    height: height,
-                    child: const Center(
-                      child: Center(
-                        child: ProgressRing(),
-                      ),
-                    ),
-                  );
-                  return imageBuilder(url);
-                },
-                itemCount: _c.items.expand((element) => element).length,
+    return Obx(
+      () => SizedBox(
+        width: width,
+        height: height,
+        child: Listener(
+          onPointerDown: (event) {
+            _pointer.add(event.pointer);
+            if (_pointer.length == 2) {
+              _c.isZoom.value = true;
+            }
+          },
+          onPointerUp: (event) {
+            _pointer.remove(event.pointer);
+            if (_pointer.length == 1) {
+              _c.isZoom.value = false;
+            }
+          },
+          child: InteractiveViewer(
+            scaleEnabled: _c.isZoom.value,
+            child: ScrollablePositionedList.builder(
+              physics:
+                  _c.isZoom.value ? const NeverScrollableScrollPhysics() : null,
+              padding: EdgeInsets.symmetric(
+                horizontal: viewPadding,
               ),
+              initialScrollIndex: _c.currentGlobalProgress.value,
+              itemScrollController: _c.itemScrollController,
+              itemPositionsListener: _c.itemPositionsListener,
+              scrollOffsetController: _c.scrollOffsetController,
+              scrollOffsetListener: _c.scrollOffsetListener,
+              itemBuilder: (context, index) {
+                final img = _c.items.expand((element) => element).toList();
+                final url = img[index];
+                SizedBox(
+                  width: width,
+                  height: height,
+                  child: const Center(
+                    child: Center(
+                      child: ProgressRing(),
+                    ),
+                  ),
+                );
+                return imageBuilder(url);
+              },
+              itemCount: _c.items.expand((element) => element).length,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   _buildContent() {
@@ -231,23 +225,23 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                         _c.loadNextChapter();
                       }
                     }
-
                     return true;
                   },
                 );
               }
 
               //common mode and left to right mode
-              return Obx(() => NotificationListener<ScrollEndNotification>(
+              return Obx(
+                () => NotificationListener<ScrollEndNotification>(
                   onNotification: (notification) {
                     final metrics = notification.metrics;
                     if (metrics.atEdge) {
                       bool isTop = metrics.pixels <= 0;
                       if (isTop) {
-                        debugPrint('At the start');
+                        logger.info('At the start');
                         _c.loadPrevChapter();
                       } else {
-                        debugPrint('At the end');
+                        logger.info('At the end');
                         _c.loadNextChapter();
                       }
                     }
@@ -263,24 +257,6 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                     scrollDirection: Axis.horizontal,
                     controller: _c.pageController.value,
                     itemBuilder: (BuildContext context, int index) {
-                      // final urls = _c.items[_c.index.value];
-                      // final url = images[index];
-                      // if (index == 0) {
-                      //   return Container(
-                      //     padding: EdgeInsets.symmetric(
-                      //       horizontal: viewPadding,
-                      //     ),
-                      //     color: Colors.red,
-                      //   );
-                      // }
-                      // if (index == _c.itemlength[_c.index.value] - 1) {
-                      //   return Container(
-                      //     padding: EdgeInsets.symmetric(
-                      //       horizontal: viewPadding,
-                      //     ),
-                      //     color: Colors.red,
-                      //   );
-                      // }
                       final img =
                           _c.items.expand((element) => element).toList();
                       final url = img[index];
@@ -291,7 +267,9 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                         child: imageBuilder(url),
                       );
                     },
-                  )));
+                  ),
+                ),
+              );
             });
           }),
         ),
@@ -322,7 +300,10 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                   onPressed: () {
                     fluent.Flyout.of(context).close();
                     saveImage(
-                        url, _c.watchData.value?.headers, mounted, context);
+                      url,
+                      _c.watchData.value?.headers,
+                      context,
+                    );
                   },
                 ),
               ]);
@@ -344,8 +325,8 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                           title: Text('common.save'.i18n),
                           onTap: () {
                             Navigator.of(context).pop();
-                            saveImage(url, _c.watchData.value?.headers, mounted,
-                                context);
+                            saveImage(
+                                url, _c.watchData.value?.headers, context);
                           },
                         ),
                       ],
@@ -373,10 +354,8 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     return PlatformBuildWidget(
       androidBuilder: (context) {
         return Scaffold(
-            body: SafeArea(
-          child: _buildDisplay(
-            _buildContent(),
-          ),
+            body: _buildDisplay(
+          _buildContent(),
         ));
       },
       desktopBuilder: (context) => _buildDisplay(
