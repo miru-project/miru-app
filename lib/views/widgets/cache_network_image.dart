@@ -25,6 +25,8 @@ class CacheNetWorkImagePic extends StatelessWidget {
     this.canFullScreen = false,
     this.mode = ExtendedImageMode.none,
     this.initGestureConfigHandler,
+    this.loadStateChanged,
+    this.enableLoadState = true,
   });
   final String url;
   final BoxFit fit;
@@ -36,6 +38,8 @@ class CacheNetWorkImagePic extends StatelessWidget {
   final Widget? placeholder;
   final ExtendedImageMode mode;
   final InitGestureConfigHandler? initGestureConfigHandler;
+  final Widget? Function(ExtendedImageState)? loadStateChanged;
+  final bool enableLoadState;
   _errorBuild() {
     if (fallback != null) {
       return fallback!;
@@ -53,17 +57,19 @@ class CacheNetWorkImagePic extends StatelessWidget {
       height: height,
       cache: true,
       mode: mode,
+      enableLoadState: enableLoadState,
       initGestureConfigHandler: initGestureConfigHandler,
-      loadStateChanged: (state) {
-        switch (state.extendedImageLoadState) {
-          case LoadState.loading:
-            return placeholder ?? const SizedBox();
-          case LoadState.completed:
-            return state.completedWidget;
-          case LoadState.failed:
-            return _errorBuild();
-        }
-      },
+      loadStateChanged: loadStateChanged ??
+          (state) {
+            switch (state.extendedImageLoadState) {
+              case LoadState.loading:
+                return placeholder ?? const SizedBox();
+              case LoadState.completed:
+                return state.completedWidget;
+              case LoadState.failed:
+                return _errorBuild();
+            }
+          },
     );
 
     if (canFullScreen) {

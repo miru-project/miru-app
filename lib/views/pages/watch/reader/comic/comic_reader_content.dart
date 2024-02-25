@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
@@ -8,7 +9,6 @@ import 'package:miru_app/utils/i18n.dart';
 import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/views/widgets/button.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
-
 import 'package:miru_app/views/widgets/platform_widget.dart';
 import 'package:miru_app/views/widgets/progress.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -30,6 +30,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
   final List<int> _pointer = [];
   final menuController = fluent.FlyoutController();
   final contextAttachKey = GlobalKey();
+  List<Widget> _scrollitems = [];
 
   _buildPlaceholder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -74,7 +75,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
           if (_c.statusBarElement["reader-settings.page-indicator".i18n]!
               .value) ...[
             Text(
-              "${_c.currentLocalProgress.value + 1}/${_c.itemlength[_c.index.value]}",
+              "${_c.currentGlobalProgress.value + 1}/${_c.itemlength[_c.index.value]}",
               style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
             const SizedBox(width: 8)
@@ -112,15 +113,39 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     );
   }
 
-  Widget webtoonContent(BuildContext context) {
+  Widget pageViewContent(BuildContext context, int conentIndex, int initIndex) {
     final maxWidth = MediaQuery.of(context).size.width;
     final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    return ExtendedImageGesturePageView.builder(
+      itemCount: _c.itemlength[_c.index.value],
+      reverse: _c.readType.value == MangaReadMode.rightToLeft,
+      onPageChanged: (index) {
+        _c.currentGlobalProgress.value = index;
+      },
+      scrollDirection: Axis.horizontal,
+      controller: _c.extendedPageController.value,
+      itemBuilder: (BuildContext context, int index) {
+        final img = _c.items[_c.index.value];
+        final url = img[index];
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: viewPadding,
+          ),
+          child: imageBuilder(url),
+        );
+      },
+    );
+  }
+
+  Widget webtoonContent(BuildContext context, int contentIndex, int initIndex) {
+    final maxWidth = MediaQuery.of(context).size.width;
+    final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
+    _c.width.value = MediaQuery.of(context).size.width;
+    _c.height.value = MediaQuery.of(context).size.height;
     return Obx(
       () => SizedBox(
-        width: width,
-        height: height,
+        width: _c.width.value,
+        height: _c.height.value,
         child: Listener(
           onPointerDown: (event) {
             _pointer.add(event.pointer);
@@ -136,33 +161,27 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
           },
           child: InteractiveViewer(
             scaleEnabled: _c.isZoom.value,
-            child: ScrollablePositionedList.builder(
-              physics:
-                  _c.isZoom.value ? const NeverScrollableScrollPhysics() : null,
-              padding: EdgeInsets.symmetric(
-                horizontal: viewPadding,
-              ),
-              initialScrollIndex: _c.currentGlobalProgress.value,
-              itemScrollController: _c.itemScrollController,
-              itemPositionsListener: _c.itemPositionsListener,
-              scrollOffsetController: _c.scrollOffsetController,
-              scrollOffsetListener: _c.scrollOffsetListener,
-              itemBuilder: (context, index) {
-                final img = _c.items.expand((element) => element).toList();
-                final url = img[index];
-                SizedBox(
-                  width: width,
-                  height: height,
-                  child: const Center(
-                    child: Center(
-                      child: ProgressRing(),
-                    ),
+            child: Obx(() => ScrollablePositionedList.builder(
+                  physics:
+                      //  const NeverScrollableScrollPhysics(),
+                      _c.isZoom.value
+                          ? const NeverScrollableScrollPhysics()
+                          : null,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: viewPadding,
                   ),
-                );
-                return imageBuilder(url);
-              },
-              itemCount: _c.items.expand((element) => element).length,
-            ),
+                  initialScrollIndex: initIndex,
+                  itemScrollController: _c.itemScrollController,
+                  itemPositionsListener: _c.itemPositionsListener,
+                  scrollOffsetController: _c.scrollOffsetController,
+                  scrollOffsetListener: _c.scrollOffsetListener,
+                  itemBuilder: (context, index) {
+                    final img = _c.items[contentIndex];
+                    final url = img[index];
+                    return imageBuilder(url);
+                  },
+                  itemCount: _c.itemlength[contentIndex],
+                )),
           ),
         ),
       ),
@@ -185,7 +204,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
         width: double.infinity,
         child: LayoutBuilder(
           builder: ((context, constraints) {
-            final maxWidth = constraints.maxWidth;
+            // final maxWidth = constraints.maxWidth;
             return Obx(() {
               if (_c.error.value.isNotEmpty) {
                 return Column(
@@ -202,73 +221,99 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                 );
               }
 
-              // 加载中
-              if (_c.watchData.value == null) {
-                return const Center(child: ProgressRing());
-              }
-
-              final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
+              // final viewPadding = maxWidth > 800 ? ((maxWidth - 800) / 2) : 0.0;
               final readerType = _c.readType.value;
 
-              if (readerType == MangaReadMode.webTonn) {
-                return NotificationListener<ScrollEndNotification>(
-                  child: webtoonContent(context),
-                  onNotification: (notification) {
-                    final metrics = notification.metrics;
-                    if (metrics.atEdge) {
-                      bool isTop = metrics.pixels <= 0;
-                      if (isTop) {
-                        debugPrint('At the top');
-                        _c.loadPrevChapter();
-                      } else {
-                        debugPrint('At the bottom');
-                        _c.loadNextChapter();
-                      }
+              return StreamBuilder<RxList<List<String>>>(
+                stream: _c.contentStreamController.stream,
+                builder: (context, snapshot) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    if (_c.readType.value == MangaReadMode.webTonn) {
+                      if (!_c.scrollController.hasClients) return;
+                      _c.scrollController.animateTo(_c.height * _c.index.value,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                      _c.itemScrollController
+                          .jumpTo(index: _c.currentGlobalProgress.value);
+                      return;
                     }
-                    return true;
-                  },
-                );
-              }
+                    if (_c.pagecontroller.hasClients) {
+                      _c.pagecontroller.animateToPage(_c.index.value,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
+                    }
+                    if (_c.extendedPageController.value.hasClients) {
+                      _c.extendedPageController.value
+                          .jumpToPage(_c.currentGlobalProgress.value);
+                    }
+                    _c.pageCall = 0;
+                  });
+                  // 加载中
+                  if (_c.watchData.value == null ||
+                      _c.itemlength[_c.index.value] == 0) {
+                    return const Center(child: ProgressRing());
+                  }
+                  _c.height.value = MediaQuery.of(context).size.height;
 
-              //common mode and left to right mode
-              return Obx(
-                () => NotificationListener<ScrollEndNotification>(
-                  onNotification: (notification) {
-                    final metrics = notification.metrics;
-                    if (metrics.atEdge) {
-                      bool isTop = metrics.pixels <= 0;
-                      if (isTop) {
-                        logger.info('At the start');
-                        _c.loadPrevChapter();
-                      } else {
-                        logger.info('At the end');
-                        _c.loadNextChapter();
-                      }
-                    }
-                    // debugPrint(metrics.pixels.toString());
-                    return true;
-                  },
-                  child: ExtendedImageGesturePageView.builder(
-                    itemCount: _c.items.expand((element) => element).length,
-                    reverse: readerType == MangaReadMode.rightToLeft,
-                    onPageChanged: (index) {
-                      _c.currentGlobalProgress.value = index;
-                    },
-                    scrollDirection: Axis.horizontal,
-                    controller: _c.pageController.value,
-                    itemBuilder: (BuildContext context, int index) {
-                      final img =
-                          _c.items.expand((element) => element).toList();
-                      final url = img[index];
-                      return Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: viewPadding,
+                  int overrideIndex = _c.index.value;
+                  int initScrollIndex = _c.currentGlobalProgress.value;
+                  switch (_c.pageCall) {
+                    //上一頁
+                    case -1:
+                      overrideIndex = _c.index.value + 1;
+                      initScrollIndex = _c.itemlength[_c.index.value] - 1;
+                      break;
+                    //下一頁
+                    case 1:
+                      overrideIndex = _c.index.value - 1;
+                      initScrollIndex = 0;
+                      break;
+                  } //_scrollitems 只有一個scrollablePositionedList or ExtendPageView 其餘都是Container
+                  _scrollitems[overrideIndex] = Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      color: Colors.green,
+                      child: Center(
+                        child: Text(
+                          overrideIndex.toString(),
                         ),
-                        child: imageBuilder(url),
-                      );
-                    },
-                  ),
-                ),
+                      ));
+
+                  //webtoon mode
+                  if (readerType == MangaReadMode.webTonn) {
+                    _scrollitems[_c.index.value] = webtoonContent(
+                        context, _c.index.value, initScrollIndex);
+                    return EasyRefresh(
+                        onRefresh: () async {
+                          logger.info("top");
+                          await _c.loadPrevChapter();
+                        },
+                        onLoad: () async {
+                          await _c.loadNextChapter();
+                          logger.info("bottom");
+                        },
+                        child: ListView.builder(
+                          controller: _c.scrollController,
+                          itemCount: _scrollitems.length,
+                          itemBuilder: (context, index) => _scrollitems[index],
+                        ));
+                  }
+                  //common mode and left to right mode
+                  _scrollitems[_c.index.value] = pageViewContent(
+                      context, _c.index.value, _c.currentGlobalProgress.value);
+
+                  return EasyRefresh(
+                      onRefresh: () async {
+                        await _c.loadPrevChapter();
+                      },
+                      onLoad: () async {
+                        await _c.loadNextChapter();
+                      },
+                      child: PageView.builder(
+                        controller: _c.pagecontroller,
+                        itemBuilder: (context, index) => _scrollitems[index],
+                      ));
+                },
               );
             });
           }),
@@ -338,6 +383,34 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
         child: CacheNetWorkImagePic(
           url,
           fit: BoxFit.fitWidth,
+          loadStateChanged: (state) {
+            if (state.extendedImageLoadState == LoadState.loading) {
+              if (state.loadingProgress == null) {
+                return SizedBox(
+                    width: _c.width.value,
+                    height: _c.height.value,
+                    child: const Center(
+                      child: ProgressRing(),
+                    ));
+              }
+              return SizedBox(
+                  width: _c.width.value,
+                  height: _c.width.value,
+                  child: Center(
+                    child: state.loadingProgress!.expectedTotalBytes == null
+                        ? const ProgressRing()
+                        : ProgressRing(
+                            value:
+                                state.loadingProgress!.cumulativeBytesLoaded /
+                                    state.loadingProgress!.expectedTotalBytes!,
+                          ),
+                  ));
+            }
+            if (state.extendedImageLoadState == LoadState.completed) {
+              return state.completedWidget;
+            }
+            return const Center(child: Icon(fluent.FluentIcons.error));
+          },
           placeholder: _buildPlaceholder(context),
           headers: _c.watchData.value?.headers,
           initGestureConfigHandler: (state) {
@@ -349,8 +422,27 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // _c.height.value = MediaQuery.of(context).size.height;
+    _scrollitems = List<Widget>.generate(_c.itemlength.length, (index) {
+      if (index == _c.index.value) {
+        return webtoonContent(
+            context, _c.index.value, _c.currentGlobalProgress.value);
+      }
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.green,
+        child: Center(
+          child: Text("$index"),
+        ),
+      );
+    });
     return PlatformBuildWidget(
       androidBuilder: (context) {
         return Scaffold(
@@ -364,3 +456,10 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     );
   }
 }
+/*
+Streambuilder
+  |
+  |---(webtooon)ListView.builder->ScrollablePositionedList.builder->InteractiveViewer->ExtendedImageGesturePageView.builder
+  |
+  |---(common,reversed)PageView.builder->ExtendedImageGesturePageView.builder
+*/

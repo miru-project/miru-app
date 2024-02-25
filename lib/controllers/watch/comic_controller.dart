@@ -35,27 +35,25 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
 
   final currentScale = 1.0.obs;
   // 当前页码
-  final pageController = ExtendedPageController().obs;
+  final extendedPageController = ExtendedPageController().obs;
+  final pagecontroller = PageController();
   final itemPositionsListener = ItemPositionsListener.create();
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
   final readType = MangaReadMode.standard.obs;
-  final globalScrollController = ScrollController();
   final currentOffset = 0.0.obs;
   final isZoom = false.obs;
-  final isScrollEnd = false.obs;
-
+  final ScrollController scrollController = ScrollController();
+  final RxDouble height = RxDouble(-1.0);
+  final RxDouble width = RxDouble(-1.0);
+  final StreamController<RxList<List<String>>> contentStreamController =
+      StreamController<RxList<List<String>>>();
+  //用來判斷是否觸發上一頁(1)下一頁(-1)，會在觸發StreamBuilder 時使用
+  int pageCall = 0;
   @override
   void onInit() async {
     _initSetting();
     getContent();
-    // getTartgetContent(playIndex);
-    Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      if (globalItemScrollController.isAttached) {
-        globalItemScrollController.jumpTo(index: index.value);
-        timer.cancel();
-      }
-    });
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     enableWakeLock.value = MiruStorage.getSetting(SettingKey.enableWakelock);
     WakelockPlus.toggle(enable: enableWakeLock.value);
@@ -70,9 +68,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     scrollOffsetListener.changes.listen((event) {
       hideControlPanel();
     });
-    // ever(height, (callback) {
-    //   super.height.value = callback;
-    // });
+    //300ms 偵測是否觸發控制面板
     mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (setControllPanel.value) {
         isShowControlPanel.value = true;
@@ -119,23 +115,12 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         progress.value = callback;
       }
       updateSlider.value = false;
-      int fullIndex = 0;
-      debugPrint(currentLocalProgress.value.toString());
-      for (int i = 0; i < itemlength.length; i++) {
-        fullIndex += itemlength[i];
-        if (fullIndex > callback) {
-          index.value = i;
-          super.index.value = i;
-          currentLocalProgress.value = callback - (fullIndex - itemlength[i]);
-          break;
-        }
-      }
     });
     ever(super.watchData, (callback) async {
       if (isRecover.value || callback == null) {
         return;
       }
-      loadTargetContent(playIndex);
+      // loadTargetContent(playIndex);
       isRecover.value = true;
       // 获取上次阅读的页码
       final history = await DatabaseService.getHistoryByPackageAndUrl(
@@ -166,7 +151,6 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
           await runtime.watch(playList[targetIndex].url);
       items[targetIndex] = updatedData.urls as List<String>;
       itemlength[targetIndex] = updatedData.urls.length;
-      isScrollEnd.value = false;
     } catch (e) {
       error.value = e.toString();
     }
@@ -210,38 +194,39 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     );
   }
 
-  jumpScroller(int pos) async {
-    if (readType.value == MangaReadMode.webTonn) {
-      if (globalItemScrollController.isAttached) {
-        globalItemScrollController.jumpTo(
-          index: pos,
-        );
-      }
-      return;
-    }
-  }
+  // jumpScroller(int pos) async {
+  //   // if (readType.value == MangaReadMode.webTonn) {
+  //   //   if (itemScrollController.isAttached && pageCall == 0) {
+  //   //     itemScrollController.scrollTo(
+  //   //       index: pos,
+  //   //       duration: const Duration(milliseconds: 300),
+  //   //     );
+  //   //   }
+  //   //   return;
+  //   // }
+  // }
 
-  _jumpPage(int page) async {
+  _jumpPage(int page) {
     if (readType.value == MangaReadMode.webTonn) {
-      if (itemScrollController.isAttached) {
+      if (itemScrollController.isAttached && pageCall == 0) {
         itemScrollController.jumpTo(
           index: page,
         );
       }
       return;
     }
-    if (pageController.value.hasClients) {
-      pageController.value.jumpToPage(page);
+    if (extendedPageController.value.hasClients) {
+      extendedPageController.value.jumpToPage(page);
       return;
     }
-    pageController.value = ExtendedPageController(initialPage: page);
+    extendedPageController.value = ExtendedPageController(initialPage: page);
   }
 
   // 下一页
   @override
   void nextPage() {
     if (readType.value != MangaReadMode.webTonn) {
-      pageController.value.nextPage(
+      extendedPageController.value.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
@@ -258,7 +243,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   @override
   void previousPage() {
     if (readType.value != MangaReadMode.webTonn) {
-      pageController.value.previousPage(
+      extendedPageController.value.previousPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
@@ -273,22 +258,40 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
 
   @override
   Future<void> loadNextChapter() async {
-    await loadTargetContent(index.value + 1);
+    if (index.value == itemlength.length - 1) return;
+    index.value++;
+    if (items[index.value].isNotEmpty) return;
+    await loadTargetContent(index.value);
+    contentStreamController.add(items);
+    pageCall = 1;
+    currentGlobalProgress.value = 0;
     return;
   }
 
   @override
   Future<void> loadPrevChapter() async {
-    await loadTargetContent(index.value - 1);
-    if (itemScrollController.isAttached) {
-      itemScrollController.scrollTo(
-          index: itemlength[index.value - 1],
-          duration: const Duration(milliseconds: 10));
-      return;
-    }
-    if (pageController.value.hasClients) {
-      pageController.value.jumpToPage(itemlength[index.value - 1]);
-    }
+    if (index.value == 0) return;
+    index.value--;
+    if (items[index.value].isNotEmpty) return;
+    await loadTargetContent(index.value);
+    contentStreamController.add(items);
+    pageCall = -1;
+    currentGlobalProgress.value = itemlength[index.value] - 1;
+    // if (readType.value == MangaReadMode.webTonn) {
+    //   if (itemScrollController.isAttached) {
+    //     itemScrollController.jumpTo(
+    //       index: itemlength[index.value] - 1,
+    //     );
+    //   }
+    //   return;
+    // }
+    // if (extendedPageController.value.hasClients) {
+    //   extendedPageController.value.jumpToPage(itemlength[index.value] - 1);
+    // }
+    return;
+    // if (pageController.value.hasClients) {
+    //   pageController.value.jumpToPage(itemlength[index.value - 1]);
+    // }
   }
 
   @override
@@ -301,10 +304,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         pages.toString(),
       );
     }
-    //check auto scroller is closed or not
-    if (autoScrollTimer != null) {
-      autoScrollTimer!.cancel();
-    }
+    autoScrollTimer?.cancel();
     if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
       AniListProvider.editList(
         status: AnilistMediaListStatus.current,
@@ -319,6 +319,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     if (!Platform.isAndroid) {
       await WindowManager.instance.setFullScreen(false);
     }
+    scrollController.dispose();
     super.onClose();
   }
 
@@ -326,10 +327,13 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   Future<void> getContent() async {
     try {
       error.value = '';
-      watchData.value =
+
+      final response =
           await runtime.watch(cuurentPlayUrl) as ExtensionMangaWatch;
-      itemlength[index.value] = (watchData.value as dynamic)?.urls.length;
-      items[index.value] = (watchData.value as dynamic)?.urls;
+      itemlength[index.value] = response.urls.length;
+      items[index.value] = response.urls;
+      watchData.value = response;
+      contentStreamController.add(items);
     } catch (e) {
       error.value = e.toString();
     }
