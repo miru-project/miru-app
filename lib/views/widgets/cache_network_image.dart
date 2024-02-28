@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:miru_app/utils/i18n.dart';
@@ -25,8 +27,7 @@ class CacheNetWorkImagePic extends StatelessWidget {
     this.canFullScreen = false,
     this.mode = ExtendedImageMode.none,
     this.initGestureConfigHandler,
-    this.loadStateChanged,
-    this.enableLoadState = true,
+    this.postFrameCallback,
   });
   final String url;
   final BoxFit fit;
@@ -38,8 +39,7 @@ class CacheNetWorkImagePic extends StatelessWidget {
   final Widget? placeholder;
   final ExtendedImageMode mode;
   final InitGestureConfigHandler? initGestureConfigHandler;
-  final Widget? Function(ExtendedImageState)? loadStateChanged;
-  final bool enableLoadState;
+  final void Function(GlobalKey contextkey)? postFrameCallback;
   _errorBuild() {
     if (fallback != null) {
       return fallback!;
@@ -49,7 +49,14 @@ class CacheNetWorkImagePic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final contextkey = GlobalKey();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (postFrameCallback != null) {
+        postFrameCallback!(contextkey);
+      }
+    });
     final image = ExtendedImage.network(
+      key: contextkey,
       url,
       headers: headers,
       fit: fit,
@@ -57,19 +64,17 @@ class CacheNetWorkImagePic extends StatelessWidget {
       height: height,
       cache: true,
       mode: mode,
-      enableLoadState: enableLoadState,
       initGestureConfigHandler: initGestureConfigHandler,
-      loadStateChanged: loadStateChanged ??
-          (state) {
-            switch (state.extendedImageLoadState) {
-              case LoadState.loading:
-                return placeholder ?? const SizedBox();
-              case LoadState.completed:
-                return state.completedWidget;
-              case LoadState.failed:
-                return _errorBuild();
-            }
-          },
+      loadStateChanged: (state) {
+        switch (state.extendedImageLoadState) {
+          case LoadState.loading:
+            return placeholder ?? const SizedBox();
+          case LoadState.completed:
+            return state.completedWidget;
+          case LoadState.failed:
+            return _errorBuild();
+        }
+      },
     );
 
     if (canFullScreen) {

@@ -37,7 +37,7 @@ class _ControlPanelFooterState<T extends ReaderController>
       progressObs.value = _c.progress.value;
       totalObs.value = _c.itemlength[_c.index.value];
     });
-    ever(_c.currentGlobalProgress, (callback) {
+    ever(_c.currentLocalProgress, (callback) {
       progressObs.value = callback;
     });
   }
@@ -83,9 +83,8 @@ class _ControlPanelFooterState<T extends ReaderController>
                                   if (totalObs.value != 0 ||
                                       !_c.isShowControlPanel.value) {
                                     return Slider(
-                                      label:
-                                          (_c.currentGlobalProgress.value + 1)
-                                              .toString(),
+                                      label: (_c.currentLocalProgress.value + 1)
+                                          .toString(),
                                       max: _c.itemlength[_c.index.value] < 1
                                           ? 1
                                           : (_c.itemlength[_c.index.value] - 1)
@@ -94,12 +93,14 @@ class _ControlPanelFooterState<T extends ReaderController>
                                       divisions: (totalObs.value - 1) < 0
                                           ? 1
                                           : totalObs.value - 1,
-                                      value: _c.currentGlobalProgress.value
+                                      value: _c.currentLocalProgress.value
                                           .toDouble(),
                                       onChanged: (val) {
-                                        _c.updateSlider.value = true;
                                         _c.setControllPanel.value = true;
-                                        _c.progress.value = val.toInt();
+                                        _c.updateSlider.value = true;
+                                        _c.progress.value =
+                                            _c.localToGloabalProgress(
+                                                val.toInt());
                                       },
                                     );
                                   }

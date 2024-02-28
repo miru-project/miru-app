@@ -7,6 +7,7 @@ import 'package:miru_app/data/providers/anilist_provider.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
+import 'package:miru_app/utils/log.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:miru_app/utils/miru_storage.dart';
@@ -32,43 +33,52 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   };
   final String setting = MiruStorage.getSetting(SettingKey.readingMode);
   // final readType = MangaReadMode.standard.obs;
-
+  // final StreamController<double> visbility = StreamController();
   final currentScale = 1.0.obs;
   // 当前页码
-  final extendedPageController = ExtendedPageController().obs;
-  final pagecontroller = PageController();
+  final pageController = ExtendedPageController().obs;
   final itemPositionsListener = ItemPositionsListener.create();
   // 是否已经恢复上次阅读
   final isRecover = false.obs;
   final readType = MangaReadMode.standard.obs;
+  final globalScrollController = ScrollController();
   final currentOffset = 0.0.obs;
   final isZoom = false.obs;
-  final ScrollController scrollController = ScrollController();
-  final RxDouble height = RxDouble(-1.0);
-  final RxDouble width = RxDouble(-1.0);
-  final StreamController<RxList<List<String>>> contentStreamController =
-      StreamController<RxList<List<String>>>();
-  //用來判斷是否觸發上一頁(1)下一頁(-1)，會在觸發StreamBuilder 時使用
-  int pageCall = 0;
+  final isScrollEnd = false.obs;
+  final positionedindex = 0.obs;
+  final scrollController = ScrollController();
+  final RxDouble height = (-1.0).obs;
+
   @override
   void onInit() async {
     _initSetting();
     getContent();
+    // getTartgetContent(playIndex);
+    // Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    //   // if (globalItemScrollController.isAttached) {
+    //   //   globalItemScrollController.jumpTo(index: index.value);
+    //   //   timer.cancel();
+    //   // }
+    // });
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     enableWakeLock.value = MiruStorage.getSetting(SettingKey.enableWakelock);
     WakelockPlus.toggle(enable: enableWakeLock.value);
+    //webtoon 模式的scrollcontroller
+    scrollController.addListener(_onscroll);
 
-    itemPositionsListener.itemPositions.addListener(() {
-      if (itemPositionsListener.itemPositions.value.isEmpty) {
-        return;
-      }
-      final pos = itemPositionsListener.itemPositions.value.first;
-      currentGlobalProgress.value = pos.index;
-    });
-    scrollOffsetListener.changes.listen((event) {
-      hideControlPanel();
-    });
-    //300ms 偵測是否觸發控制面板
+    // itemPositionsListener.itemPositions.addListener(() {
+    //   if (itemPositionsListener.itemPositions.value.isEmpty) {
+    //     return;
+    //   }
+    //   final pos = itemPositionsListener.itemPositions.value.first;
+    //   currentGlobalProgress.value = pos.index;
+    // });
+    // scrollOffsetListener.changes.listen((event) {
+    //   hideControlPanel();
+    // });
+    // ever(height, (callback) {
+    //   super.height.value = callback;
+    // });
     mouseTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
       if (setControllPanel.value) {
         isShowControlPanel.value = true;
@@ -77,7 +87,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       isShowControlPanel.value = false;
     });
     ever(readType, (callback) {
-      _jumpPage(currentGlobalProgress.value);
+      _jumpToPage(currentGlobalProgress.value);
       // 保存设置
       DatabaseService.setMangaReaderType(
         super.detailUrl,
@@ -106,8 +116,9 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       if (!updateSlider.value) {
         return;
       }
+      logger.info(progress);
       currentGlobalProgress.value = callback;
-      _jumpPage(callback);
+      _jumpToPage(callback);
     });
 
     ever(currentGlobalProgress, (callback) {
@@ -115,12 +126,23 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         progress.value = callback;
       }
       updateSlider.value = false;
+      int fullIndex = 0;
+      // debugPrint(currentLocalProgress.value.toString());
+      for (int i = 0; i < itemlength.length; i++) {
+        fullIndex += itemlength[i];
+        if (fullIndex > callback) {
+          index.value = i;
+          super.index.value = i;
+          currentLocalProgress.value = callback - (fullIndex - itemlength[i]);
+          break;
+        }
+      }
     });
     ever(super.watchData, (callback) async {
       if (isRecover.value || callback == null) {
         return;
       }
-      // loadTargetContent(playIndex);
+      loadTargetContent(playIndex);
       isRecover.value = true;
       // 获取上次阅读的页码
       final history = await DatabaseService.getHistoryByPackageAndUrl(
@@ -135,50 +157,63 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         return;
       }
       currentGlobalProgress.value = int.parse(history.progress);
-      _jumpPage(currentGlobalProgress.value);
-      // jumpScroller(index.value);
+      _jumpToPage(currentGlobalProgress.value);
     });
     super.onInit();
+  }
+
+  void _onscroll() {
+    if (updateSlider.value) {
+      hideControlPanel();
+    }
+    // 現在位置
+    final pos =
+        scrollController.offset - scrollController.position.minScrollExtent;
+    currentGlobalProgress.value = pos ~/ height.value;
   }
 
   @override
   Future<void> loadTargetContent(int targetIndex) async {
     try {
-      if (targetIndex < 0 || targetIndex == itemlength.length) {
+      if (targetIndex < 0 ||
+          targetIndex == itemlength.length ||
+          items[targetIndex].isNotEmpty) {
         return;
       }
       final dynamic updatedData =
           await runtime.watch(playList[targetIndex].url);
       items[targetIndex] = updatedData.urls as List<String>;
       itemlength[targetIndex] = updatedData.urls.length;
+      isScrollEnd.value = false;
     } catch (e) {
       error.value = e.toString();
     }
   }
 
-  onKey(RawKeyEvent event) {
+  onKey(KeyEvent event) {
     // 按下 ctrl
-    isZoom.value = event.isControlPressed;
+    isZoom.value = event.logicalKey == LogicalKeyboardKey.controlLeft ||
+        event.logicalKey == LogicalKeyboardKey.controlRight;
     // 上下
-    if (event.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
       if (readType.value == MangaReadMode.webTonn) {
         return previousPage();
       }
     }
-    if (event.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
       if (readType.value == MangaReadMode.webTonn) {
         return nextPage();
       }
     }
 
-    if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
       if (readType.value == MangaReadMode.rightToLeft) {
         return nextPage();
       }
       previousPage();
     }
 
-    if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
       if (readType.value == MangaReadMode.rightToLeft) {
         return previousPage();
       }
@@ -194,48 +229,44 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     );
   }
 
-  // jumpScroller(int pos) async {
-  //   // if (readType.value == MangaReadMode.webTonn) {
-  //   //   if (itemScrollController.isAttached && pageCall == 0) {
-  //   //     itemScrollController.scrollTo(
-  //   //       index: pos,
-  //   //       duration: const Duration(milliseconds: 300),
-  //   //     );
-  //   //   }
-  //   //   return;
-  //   // }
-  // }
-
-  _jumpPage(int page) {
+  _jumpToPage(int page) async {
     if (readType.value == MangaReadMode.webTonn) {
-      if (itemScrollController.isAttached && pageCall == 0) {
-        itemScrollController.jumpTo(
-          index: page,
-        );
+      // if (itemScrollController.isAttached) {
+      //   itemScrollController.jumpTo(
+      //     index: page,
+      //   );
+      // }
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(
+            scrollController.position.minScrollExtent + page * height.value);
       }
       return;
     }
-    if (extendedPageController.value.hasClients) {
-      extendedPageController.value.jumpToPage(page);
+    if (pageController.value.hasClients) {
+      pageController.value.jumpToPage(page);
       return;
     }
-    extendedPageController.value = ExtendedPageController(initialPage: page);
+    pageController.value = ExtendedPageController(initialPage: page);
   }
 
   // 下一页
   @override
   void nextPage() {
     if (readType.value != MangaReadMode.webTonn) {
-      extendedPageController.value.nextPage(
+      pageController.value.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     } else {
-      scrollOffsetController.animateScroll(
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.ease,
-        offset: 200.0,
-      );
+      // scrollOffsetController.animateScroll(
+      //   duration: const Duration(milliseconds: 100),
+      //   curve: Curves.ease,
+      //   offset: 200.0,
+      // );
+      scrollController.animateTo(
+          scrollController.offset + scrollController.position.viewportDimension,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.ease);
     }
   }
 
@@ -243,55 +274,50 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   @override
   void previousPage() {
     if (readType.value != MangaReadMode.webTonn) {
-      extendedPageController.value.previousPage(
+      pageController.value.previousPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     } else {
-      scrollOffsetController.animateScroll(
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.ease,
-        offset: -200.0,
-      );
+      scrollController.animateTo(
+          scrollController.offset - scrollController.position.viewportDimension,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.ease);
     }
   }
 
   @override
   Future<void> loadNextChapter() async {
-    if (index.value == itemlength.length - 1) return;
-    index.value++;
-    if (items[index.value].isNotEmpty) return;
-    await loadTargetContent(index.value);
-    contentStreamController.add(items);
-    pageCall = 1;
-    currentGlobalProgress.value = 0;
+    await loadTargetContent(index.value + 1);
     return;
   }
 
   @override
   Future<void> loadPrevChapter() async {
-    if (index.value == 0) return;
-    index.value--;
-    if (items[index.value].isNotEmpty) return;
-    await loadTargetContent(index.value);
-    contentStreamController.add(items);
-    pageCall = -1;
-    currentGlobalProgress.value = itemlength[index.value] - 1;
-    // if (readType.value == MangaReadMode.webTonn) {
-    //   if (itemScrollController.isAttached) {
-    //     itemScrollController.jumpTo(
-    //       index: itemlength[index.value] - 1,
-    //     );
-    //   }
+    await loadTargetContent(index.value - 1);
+    // if (itemScrollController.isAttached) {
+    //   itemScrollController.scrollTo(
+    //       index: itemlength[index.value - 1],
+    //       duration: const Duration(milliseconds: 10));
     //   return;
     // }
-    // if (extendedPageController.value.hasClients) {
-    //   extendedPageController.value.jumpToPage(itemlength[index.value] - 1);
-    // }
-    return;
-    // if (pageController.value.hasClients) {
-    //   pageController.value.jumpToPage(itemlength[index.value - 1]);
-    // }
+    if (pageController.value.hasClients) {
+      pageController.value.jumpToPage(itemlength[index.value - 1]);
+    }
+  }
+
+  @override
+  Future<void> getContent() async {
+    try {
+      error.value = '';
+      watchData.value =
+          await runtime.watch(cuurentPlayUrl) as ExtensionMangaWatch;
+      itemlength[index.value] = (watchData.value as dynamic)?.urls.length;
+      items[index.value] = (watchData.value as dynamic)?.urls;
+      positionedindex.value = index.value;
+    } catch (e) {
+      error.value = e.toString();
+    }
   }
 
   @override
@@ -300,7 +326,7 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       // 获取所有页数量
       final pages = super.watchData.value!.urls.length;
       super.addHistory(
-        currentGlobalProgress.value.toString(),
+        currentLocalProgress.value.toString(),
         pages.toString(),
       );
     }
@@ -321,21 +347,5 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
     }
     scrollController.dispose();
     super.onClose();
-  }
-
-  @override
-  Future<void> getContent() async {
-    try {
-      error.value = '';
-
-      final response =
-          await runtime.watch(cuurentPlayUrl) as ExtensionMangaWatch;
-      itemlength[index.value] = response.urls.length;
-      items[index.value] = response.urls;
-      watchData.value = response;
-      contentStreamController.add(items);
-    } catch (e) {
-      error.value = e.toString();
-    }
   }
 }
