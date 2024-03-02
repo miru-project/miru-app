@@ -8,6 +8,7 @@ import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/reader_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/utils/log.dart';
+import 'package:miru_app/views/widgets/watch/playlist.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:miru_app/utils/miru_storage.dart';
@@ -48,7 +49,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
   final positionedindex = 0.obs;
   final scrollController = ScrollController();
   final RxDouble height = (-1.0).obs;
-
+  late final List<List<GlobalKey>> keys =
+      List.generate(playList.length, (index) => []);
   @override
   void onInit() async {
     _initSetting();
@@ -87,7 +89,9 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       isShowControlPanel.value = false;
     });
     ever(readType, (callback) {
-      _jumpToPage(currentGlobalProgress.value);
+      if (items.isNotEmpty) {
+        _jumpToPage(currentGlobalProgress.value);
+      }
       // 保存设置
       DatabaseService.setMangaReaderType(
         super.detailUrl,
@@ -121,7 +125,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       _jumpToPage(callback);
     });
 
-    ever(currentGlobalProgress, (callback) {
+    ever(currentGlobalProgress, (callback) async {
+      await Future.delayed(const Duration(milliseconds: 50));
       if (updateSlider.value) {
         progress.value = callback;
       }
@@ -167,9 +172,9 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       hideControlPanel();
     }
     // 現在位置
-    final pos =
-        scrollController.offset - scrollController.position.minScrollExtent;
-    currentGlobalProgress.value = pos ~/ height.value;
+    // final pos =
+    //     scrollController.offset - scrollController.position.minScrollExtent;
+    // currentGlobalProgress.value = pos ~/ height.value;
   }
 
   @override
@@ -184,6 +189,8 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
           await runtime.watch(playList[targetIndex].url);
       items[targetIndex] = updatedData.urls as List<String>;
       itemlength[targetIndex] = updatedData.urls.length;
+      keys[targetIndex] =
+          List.generate(updatedData.urls.length, (index) => GlobalKey());
       isScrollEnd.value = false;
     } catch (e) {
       error.value = e.toString();
@@ -231,15 +238,24 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
 
   _jumpToPage(int page) async {
     if (readType.value == MangaReadMode.webTonn) {
+      // final local = globalToLocalProgress(page);
+      // final localpage = local[0];
+      // final chap = local[1];
+      // if (keys[chap][localpage].currentContext == null) {
+      //   return;
+      // }
+      // Scrollable.ensureVisible(keys[chap][localpage].currentContext!,
+      //     alignment: 0.0, duration: const Duration(milliseconds: 10));
       // if (itemScrollController.isAttached) {
       //   itemScrollController.jumpTo(
       //     index: page,
       //   );
       // }
-      if (scrollController.hasClients) {
-        scrollController.jumpTo(
-            scrollController.position.minScrollExtent + page * height.value);
-      }
+      // if (scrollController.hasClients) {
+      //   scrollController.jumpTo(
+      //       scrollController.position.minScrollExtent + page * height.value);
+      // }
+
       return;
     }
     if (pageController.value.hasClients) {
@@ -258,15 +274,23 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         curve: Curves.ease,
       );
     } else {
+      if (keys[index.value][currentLocalProgress.value + 1].currentContext ==
+          null) {
+        return;
+      }
+      Scrollable.ensureVisible(
+          keys[index.value][currentLocalProgress.value + 1].currentContext!,
+          alignment: 0.0,
+          duration: const Duration(milliseconds: 300));
       // scrollOffsetController.animateScroll(
       //   duration: const Duration(milliseconds: 100),
       //   curve: Curves.ease,
       //   offset: 200.0,
       // );
-      scrollController.animateTo(
-          scrollController.offset + scrollController.position.viewportDimension,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.ease);
+      // scrollController.animateTo(
+      //     scrollController.offset + scrollController.position.viewportDimension,
+      //     duration: const Duration(milliseconds: 300),
+      //     curve: Curves.ease);
     }
   }
 
@@ -279,10 +303,18 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
         curve: Curves.ease,
       );
     } else {
-      scrollController.animateTo(
-          scrollController.offset - scrollController.position.viewportDimension,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.ease);
+      if (keys[index.value][currentLocalProgress.value - 1].currentContext ==
+          null) {
+        return;
+      }
+      Scrollable.ensureVisible(
+          keys[index.value][currentLocalProgress.value - 1].currentContext!,
+          alignment: 0.0,
+          duration: const Duration(milliseconds: 300));
+      // scrollController.animateTo(
+      //     scrollController.offset - scrollController.position.viewportDimension,
+      //     duration: const Duration(milliseconds: 300),
+      //     curve: Curves.ease);
     }
   }
 
@@ -312,8 +344,12 @@ class ComicController extends ReaderController<ExtensionMangaWatch> {
       error.value = '';
       watchData.value =
           await runtime.watch(cuurentPlayUrl) as ExtensionMangaWatch;
-      itemlength[index.value] = (watchData.value as dynamic)?.urls.length;
-      items[index.value] = (watchData.value as dynamic)?.urls;
+      itemlength[index.value] = watchData.value!.urls.length;
+      items[index.value] = watchData.value!.urls;
+      keys[index.value] = List.generate(
+        watchData.value!.urls.length,
+        (index) => GlobalKey(),
+      );
       positionedindex.value = index.value;
     } catch (e) {
       error.value = e.toString();

@@ -68,7 +68,7 @@ dependencies:
   screen_brightness: ^0.2.2+1
   auto_orientation: ^2.3.1
   dlna_dart: ^0.0.8
-
+  inview_notifier_list: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

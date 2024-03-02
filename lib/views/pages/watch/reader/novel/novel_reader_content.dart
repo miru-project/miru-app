@@ -56,6 +56,10 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
                 final maxWidth = constraints.maxWidth;
                 // final width = maxWidth > 800 ? maxWidth / 2 : maxWidth;
                 final height = constraints.maxHeight;
+                _c.height.value = height;
+                _c.width.value = maxWidth;
+                _c.padding.value =
+                    maxWidth > 800 ? ((maxWidth - 800) / 2) : 16.0;
                 if (_c.error.value.isNotEmpty) {
                   return SizedBox(
                     width: double.infinity,
@@ -83,66 +87,79 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
 
                 final fontSize = _c.fontSize.value;
                 final leading = _c.leading.value;
-                if (_c.readType.value == NovelReadMode.scroll) {
-                  return Center(
-                    child: NotificationListener<ScrollEndNotification>(
-                        onNotification: (notification) {
-                          final metrics = notification.metrics;
-                          if (metrics.atEdge) {
-                            bool isTop = metrics.pixels <= 0;
-                            if (isTop) {
-                              debugPrint('At the top');
-                              _c.loadPrevChapter();
-                            } else {
-                              debugPrint('At the bottom');
-                              _c.loadNextChapter();
-                            }
-                          }
 
-                          return true;
-                        },
-                        child: ScrollablePositionedList.builder(
-                          itemPositionsListener: _c.itemPositionsListener,
-                          initialScrollIndex: _c.currentGlobalProgress.value,
-                          itemScrollController: _c.itemScrollController,
-                          scrollOffsetController: _c.scrollOffsetController,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: listviewPadding,
-                            vertical: 16,
-                          ),
-                          itemBuilder: (context, index) {
-                            final localProgress =
-                                _c.globalToLocalProgress(index);
-                            if (localProgress[0] == 0) {
-                              return Column(children: [
-                                const SizedBox(
-                                  height: 20,
+                if (_c.readType.value == NovelReadMode.scroll) {
+                  return StreamBuilder(
+                    stream: _c.streamController.stream,
+                    builder: ((context, snapshot) {
+                      if (snapshot.hasData) {
+                        Center(
+                          child: NotificationListener<ScrollEndNotification>(
+                              onNotification: (notification) {
+                                final metrics = notification.metrics;
+                                if (metrics.atEdge) {
+                                  bool isTop = metrics.pixels <= 0;
+                                  if (isTop) {
+                                    debugPrint('At the top');
+                                    _c.loadPrevChapter();
+                                  } else {
+                                    debugPrint('At the bottom');
+                                    _c.loadNextChapter();
+                                  }
+                                }
+
+                                return true;
+                              },
+                              child: ScrollablePositionedList.builder(
+                                itemPositionsListener: _c.itemPositionsListener,
+                                initialScrollIndex:
+                                    _c.currentGlobalProgress.value,
+                                itemScrollController: _c.itemScrollController,
+                                scrollOffsetController:
+                                    _c.scrollOffsetController,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: listviewPadding,
+                                  vertical: 16,
                                 ),
-                                Text(
-                                  _c.title + _c.playList[localProgress[1]].name,
-                                  style: const TextStyle(fontSize: 26),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                if (_c.subtitles[localProgress[1]]
-                                    .isNotEmpty) ...[
-                                  Text(
-                                    _c.subtitles[localProgress[1]],
-                                    style: const TextStyle(fontSize: 20),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  )
-                                ],
-                                _textContent(index, fontSize, leading)
-                              ]);
-                            }
-                            return _textContent(index, fontSize, leading);
-                          },
-                          itemCount:
-                              _c.items.expand((element) => element).length,
-                        )),
+                                itemBuilder: (context, index) {
+                                  final localProgress =
+                                      _c.globalToLocalProgress(index);
+                                  if (localProgress[0] == 0) {
+                                    return Column(children: [
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        _c.title +
+                                            _c.playList[localProgress[1]].name,
+                                        style: const TextStyle(fontSize: 26),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      if (_c.subtitles[localProgress[1]]
+                                          .isNotEmpty) ...[
+                                        Text(
+                                          _c.subtitles[localProgress[1]],
+                                          style: const TextStyle(fontSize: 20),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        )
+                                      ],
+                                      _textContent(index, fontSize, leading)
+                                    ]);
+                                  }
+                                  return _textContent(index, fontSize, leading);
+                                },
+                                itemCount: _c.items
+                                    .expand((element) => element)
+                                    .length,
+                              )),
+                        );
+                      }
+                      return const Center(child: ProgressRing());
+                    }),
                   );
                 }
 

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:miru_app/models/index.dart';
 import 'package:miru_app/controllers/watch/comic_controller.dart';
 import 'package:miru_app/utils/i18n.dart';
@@ -117,18 +118,30 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     _c.height.value = height;
+    final listPrev = _c.items
+        .sublist(0, _c.positionedindex.value)
+        .expand((element) => element)
+        .toList()
+        .reversed
+        .toList();
+    final listNext = _c.items
+        .sublist(_c.positionedindex.value + 1)
+        .expand((element) => element)
+        .toList();
+    final keyPrev = _c.keys
+        .sublist(0, _c.positionedindex.value)
+        .expand((element) => element)
+        .toList()
+        .reversed
+        .toList();
+    final keyNext = _c.keys
+        .sublist(_c.positionedindex.value + 1)
+        .expand((element) => element)
+        .toList();
     return Obx(
       () {
         //切成三份，中間固定在同個index(positionedindex) 之後，做出分割
-        final listPrev = _c.items
-            .sublist(0, _c.positionedindex.value)
-            .reversed
-            .expand((element) => element.reversed)
-            .toList();
-        final listNext = _c.items
-            .sublist(_c.positionedindex.value + 1)
-            .expand((element) => element)
-            .toList();
+
         return SizedBox(
           width: width,
           height: height,
@@ -146,9 +159,13 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
               }
             },
             child: InteractiveViewer(
-              minScale: .5,
               scaleEnabled: _c.isZoom.value,
-              child: CustomScrollView(
+              child: InViewNotifierCustomScrollView(
+                isInViewPortCondition: (double deltaTop, double deltaBottom,
+                    double viewPortDimension) {
+                  return deltaTop < 0.5 * viewPortDimension &&
+                      deltaBottom > 0.5 * viewPortDimension;
+                },
                 controller: _c.scrollController,
                 physics: _c.isZoom.value
                     ? const NeverScrollableScrollPhysics()
@@ -186,33 +203,67 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                     //   )
                     // ]
                     [
-                  SliverFixedExtentList(
-                    itemExtent: height,
+                  SliverList(
+                    // itemExtent: height,
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final url = listPrev[index];
-                        return imageBuilder(url);
+                        return InViewNotifierWidget(
+                            key: keyPrev[index],
+                            id: (listPrev.length - index).toString(),
+                            builder: (context, isRendered, widget) {
+                              if (isRendered) {
+                                // logger.info(listPrev.length - index);
+                                _c.currentGlobalProgress.value =
+                                    listPrev.length - index;
+                              }
+                              return imageBuilder(url);
+                            });
                       },
                       childCount: listPrev.length,
                     ),
                   ),
                   //設為中心點
-                  SliverFixedExtentList.builder(
-                    itemExtent: height,
+                  SliverList.builder(
+                    // itemExtent: height,
                     key: _centerKey,
                     itemBuilder: (context, index) {
                       final img = _c.items[_c.positionedindex.value];
                       final url = img[index];
-                      return imageBuilder(url);
+                      return InViewNotifierWidget(
+                          key: _c.keys[_c.positionedindex.value][index],
+                          id: (index + listPrev.length + 1).toString(),
+                          builder: (context, isRendered, widget) {
+                            if (isRendered) {
+                              // logger.info(index + listPrev.length + 1);
+                              _c.currentGlobalProgress.value =
+                                  index + listPrev.length;
+                            }
+                            return imageBuilder(url);
+                          });
                     },
                     itemCount: _c.itemlength[_c.positionedindex.value],
                   ),
-                  SliverFixedExtentList(
-                    itemExtent: height,
+                  SliverList(
+                    // itemExtent: height,
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final url = listNext[index];
-                        return imageBuilder(url);
+                        return InViewNotifierWidget(
+                            key: keyNext[index],
+                            id: index.toString(),
+                            builder: (context, isRendered, widget) {
+                              if (isRendered) {
+                                // logger.info(index +
+                                //     listPrev.length +
+                                //     _c.itemlength[_c.positionedindex.value] +
+                                //     1);
+                                _c.currentGlobalProgress.value = index +
+                                    listPrev.length +
+                                    _c.itemlength[_c.positionedindex.value];
+                              }
+                              return imageBuilder(url);
+                            });
                       },
                       childCount: listNext.length,
                     ),
@@ -395,12 +446,13 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
             : null,
         child: CacheNetWorkImagePic(
           url,
+
           // postFrameCallback: (context) {
           //   RenderBox renderBox =
           //       context.currentContext!.findRenderObject() as RenderBox;
           //   logger.info('renderBox.size: ${renderBox.size}');
           // },
-          fit: BoxFit.cover,
+          fit: BoxFit.fitWidth,
           placeholder: _buildPlaceholder(context),
           headers: _c.watchData.value?.headers,
           initGestureConfigHandler: (state) {
