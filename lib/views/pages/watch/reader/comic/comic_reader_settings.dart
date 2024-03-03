@@ -217,15 +217,16 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
                           const SizedBox(height: 16),
                           Text('comic-settings.autoscroller-offset'.i18n),
                           Slider(
-                              value: _c.autoScrollOffset.value,
-                              max: 300.0,
-                              divisions: 30,
-                              label: "${_c.autoScrollOffset} pixels",
-                              onChanged: (val) {
-                                _c.autoScrollOffset.value = val;
-                                MiruStorage.setSetting(
-                                    SettingKey.autoScrollOffset, val);
-                              }),
+                            value: _c.autoScrollOffset.value,
+                            max: 300.0,
+                            divisions: 30,
+                            label: "${_c.autoScrollOffset} pixels",
+                            onChanged: (val) {
+                              _c.autoScrollOffset.value = val;
+                              MiruStorage.setSetting(
+                                  SettingKey.autoScrollOffset, val);
+                            },
+                          ),
                         ],
                       )),
                 )
@@ -236,14 +237,12 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   }
 
   Widget _buildDesktop(BuildContext context) {
-    return Obx(() => fluent.CommandBarCard(
-        // backgroundColor: fluent.FluentTheme.of(context).micaBackgroundColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        margin: const EdgeInsets.fromLTRB(40, 20, 40, 0),
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+    return Obx(
+      () => fluent.Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         child: fluent.CommandBar(
           isCompact: true,
-          primaryItems: <fluent.CommandBarItem>[
+          primaryItems: [
             CommandBarFlyOutTarget(
                 controller: _readModeFlyout,
                 child: fluent.IconButton(
@@ -329,106 +328,109 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
             ),
             const CommnadBarDivider(),
             CommandBarFlyOutTarget(
-                controller: _indicatorConfigFlyout,
-                child: Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: fluent.IconButton(
-                      icon: Row(children: [
-                        const Icon(fluent.FluentIcons.number_field, size: 17),
-                        const SizedBox(width: 8),
-                        Text("comic-settings.status-bar".i18n)
-                      ]),
-                      onPressed: () {
-                        _indicatorConfigFlyout.showFlyout(
-                            builder: (context) => fluent.FlyoutContent(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 200),
-                                  child: Obx(() => Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: List.generate(
-                                          _c.statusBarElement.length,
-                                          (index) => fluent.FlyoutListTile(
-                                                onPressed: () {
-                                                  _c
-                                                          .statusBarElement[
-                                                              _c.statusBarElement
-                                                                  .keys
-                                                                  .elementAt(
-                                                                      index)]!
-                                                          .value =
-                                                      !_c
-                                                          .statusBarElement[_c
-                                                              .statusBarElement
-                                                              .keys
-                                                              .elementAt(
-                                                                  index)]!
-                                                          .value;
-                                                },
-                                                text: Row(children: [
-                                                  fluent.Checkbox(
-                                                    checked: _c
-                                                        .statusBarElement.values
-                                                        .elementAt(index)
-                                                        .value,
-                                                    onChanged: (val) {
-                                                      if (val == null) {
-                                                        return;
-                                                      }
-                                                      _c
-                                                          .statusBarElement[_c
-                                                              .statusBarElement
-                                                              .keys
-                                                              .elementAt(
-                                                                  index)]!
-                                                          .value = val;
-                                                    },
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  Text(_c.statusBarElement.keys
-                                                      .elementAt(index))
-                                                ]),
-                                              )))),
-                                ));
-                      },
-                    ))),
+              controller: _indicatorConfigFlyout,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: fluent.IconButton(
+                  icon: Row(children: [
+                    const Icon(fluent.FluentIcons.number_field, size: 17),
+                    const SizedBox(width: 8),
+                    Text("comic-settings.status-bar".i18n)
+                  ]),
+                  onPressed: () {
+                    _indicatorConfigFlyout.showFlyout(
+                      builder: (context) => fluent.FlyoutContent(
+                        constraints: const BoxConstraints(maxWidth: 200),
+                        child: Obx(
+                          () => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(
+                              _c.statusBarElement.length,
+                              (index) => fluent.FlyoutListTile(
+                                onPressed: () {
+                                  _c
+                                          .statusBarElement[_c
+                                              .statusBarElement.keys
+                                              .elementAt(index)]!
+                                          .value =
+                                      !_c
+                                          .statusBarElement[_c
+                                              .statusBarElement.keys
+                                              .elementAt(index)]!
+                                          .value;
+                                },
+                                text: Row(children: [
+                                  fluent.Checkbox(
+                                    checked: _c.statusBarElement.values
+                                        .elementAt(index)
+                                        .value,
+                                    onChanged: (val) {
+                                      if (val == null) {
+                                        return;
+                                      }
+                                      _c
+                                          .statusBarElement[_c
+                                              .statusBarElement.keys
+                                              .elementAt(index)]!
+                                          .value = val;
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                      _c.statusBarElement.keys.elementAt(index))
+                                ]),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
             const CommnadBarDivider(),
             CommandBarFlyOutTarget(
               controller: _indicatorAlignmentFlyout,
               child: Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: fluent.IconButton(
-                    icon: Row(children: [
-                      const Icon(fluent.FluentIcons.align_center, size: 17),
-                      const SizedBox(width: 8),
-                      Text("comic-settings.indicator-alignment".i18n)
-                    ]),
-                    onPressed: () {
-                      _indicatorAlignmentFlyout.showFlyout(
-                          builder: (context) => fluent.FlyoutContent(
-                                constraints:
-                                    const BoxConstraints(maxWidth: 200),
-                                child: Obx(() => Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(
-                                        alignMode.keys.length,
-                                        (index) => fluent.FlyoutListTile(
-                                              onPressed: () {
-                                                _c.alignMode.value = alignMode
-                                                    .values
-                                                    .elementAt(index);
-                                              },
-                                              selected: _c.alignMode.value ==
-                                                  alignMode.values
-                                                      .elementAt(index),
-                                              text: Text(alignMode.keys
-                                                  .elementAt(index)),
-                                            )))),
-                              ));
-                    },
-                  )),
+                padding: const EdgeInsets.only(right: 8),
+                child: fluent.IconButton(
+                  icon: Row(children: [
+                    const Icon(fluent.FluentIcons.align_center, size: 17),
+                    const SizedBox(width: 8),
+                    Text("comic-settings.indicator-alignment".i18n)
+                  ]),
+                  onPressed: () {
+                    _indicatorAlignmentFlyout.showFlyout(
+                      builder: (context) => fluent.FlyoutContent(
+                        constraints: const BoxConstraints(maxWidth: 200),
+                        child: Obx(
+                          () => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(
+                              alignMode.keys.length,
+                              (index) => fluent.FlyoutListTile(
+                                onPressed: () {
+                                  _c.alignMode.value =
+                                      alignMode.values.elementAt(index);
+                                },
+                                selected: _c.alignMode.value ==
+                                    alignMode.values.elementAt(index),
+                                text: Text(alignMode.keys.elementAt(index)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ],
-        )));
+        ),
+      ),
+    );
   }
 
   @override

@@ -120,65 +120,69 @@ class _ControlPanelHeaderState<T extends ReaderController>
           color: fluent.FluentTheme.of(context).micaBackgroundColor,
           padding: const EdgeInsets.only(left: 16),
           child: MouseRegion(
-              onHover: (detail) {
-                _c.setControllPanel.value = true;
-              },
-              child: DragToMoveArea(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    fluent.IconButton(
-                      icon: const Icon(fluent.FluentIcons.back),
-                      onPressed: () {
-                        RouterUtils.pop();
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    Text(_c.title + _c.playList[_c.index.value].name),
-                    const Spacer(),
-                    // const SizedBox(width: 8),
-                    fluent.FlyoutTarget(
-                      controller: _playListFlayoutcontroller,
-                      child: fluent.IconButton(
-                        icon: const Icon(fluent.FluentIcons.collapse_menu),
-                        onPressed: () {
-                          _playListFlayoutcontroller.showFlyout(
-                              builder: (context) {
-                            return SizedBox(
-                              width: 300,
-                              child: Obx(
-                                () => PlayList(
-                                  title: _c.title,
-                                  list: _c.playList.map((e) => e.name).toList(),
-                                  selectIndex: _c.index.value,
-                                  onChange: (value) {
-                                    _c.clearData();
-                                    _c.index.value = value;
-                                    _c.getContent();
-                                    router.pop();
-                                  },
-                                ),
-                              ),
-                            );
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 138,
-                      child: WindowCaption(
-                        backgroundColor: Colors.transparent,
-                        brightness: fluent.FluentTheme.of(context).brightness,
-                      ),
-                    )
-                  ],
+            onHover: (detail) {
+              _c.setControllPanel.value = true;
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                fluent.IconButton(
+                  icon: const Icon(fluent.FluentIcons.back),
+                  onPressed: () {
+                    RouterUtils.pop();
+                  },
                 ),
-              )),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: DragToMoveArea(
+                    child: Text(
+                      _c.title + _c.playList[_c.index.value].name,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                fluent.FlyoutTarget(
+                  controller: _playListFlayoutcontroller,
+                  child: fluent.IconButton(
+                    icon: const Icon(fluent.FluentIcons.collapse_menu),
+                    onPressed: () {
+                      _playListFlayoutcontroller.showFlyout(builder: (context) {
+                        return SizedBox(
+                          width: 300,
+                          child: Obx(
+                            () => PlayList(
+                              title: _c.title,
+                              list: _c.playList.map((e) => e.name).toList(),
+                              selectIndex: _c.index.value,
+                              onChange: (value) {
+                                _c.clearData();
+                                _c.index.value = value;
+                                _c.getContent();
+                                router.pop();
+                              },
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 138,
+                  child: WindowCaption(
+                    backgroundColor: Colors.transparent,
+                    brightness: fluent.FluentTheme.of(context).brightness,
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
         fluent.Container(
-            height: 70,
-            color: fluent.FluentTheme.of(context).micaBackgroundColor,
-            child: widget.buildSettings(context)),
+          height: 60,
+          color: fluent.FluentTheme.of(context).micaBackgroundColor,
+          child: widget.buildSettings(context),
+        ),
         //  Obx())
       ]).animate().fade(),
     );
