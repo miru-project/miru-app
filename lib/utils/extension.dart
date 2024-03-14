@@ -44,7 +44,7 @@ class ExtensionUtils {
             break;
           case FileSystemEvent.create:
           case FileSystemEvent.modify:
-            await _installByPath(event.path);
+            await installByPath(event.path);
             break;
         }
         _reloadPage();
@@ -57,7 +57,7 @@ class ExtensionUtils {
     final extensionsList = Directory(extensionsDir).listSync();
     // 遍历扩展列表
     for (final extension in extensionsList) {
-      await _installByPath(extension.path);
+      await installByPath(extension.path);
     }
 
     _reloadPage();
@@ -67,6 +67,31 @@ class ExtensionUtils {
     final file = File(path.join(extensionsDir, '$package.js'));
     if (file.existsSync()) {
       file.deleteSync();
+    }
+  }
+
+  static localInstall(String p, BuildContext context) async {
+    try {
+      final file = File(p);
+      await file.copy(path.join(extensionsDir, path.basename(p)));
+      _loadExtensions();
+    } catch (e) {
+      if (context.mounted) {
+        showPlatformDialog(
+          context: context,
+          title: 'extension-install-error'.i18n,
+          content: Text(e.toString()),
+          actions: [
+            PlatformButton(
+              child: Text('common.close'.i18n),
+              onPressed: () {
+                RouterUtils.pop();
+              },
+            )
+          ],
+        );
+      }
+      rethrow;
     }
   }
 
@@ -100,7 +125,7 @@ class ExtensionUtils {
     }
   }
 
-  static _installByPath(String p) async {
+  static installByPath(String p) async {
     if (path.extension(p) == '.js') {
       try {
         final file = File(p);

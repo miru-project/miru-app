@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,21 +52,60 @@ class _ExtensionPageState extends State<ExtensionPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PlatformWidget(
-            androidWidget: TextField(
-              decoration: InputDecoration(
-                labelText: 'extension.import.url-label'.i18n,
-                hintText: "https://example.com/extension.js",
-              ),
-              onChanged: (value) {
-                url = value;
-              },
-            ),
-            desktopWidget: fluent.TextBox(
-              placeholder: 'extension.import.url-label'.i18n,
-              onChanged: (value) {
-                url = value;
-              },
-            ),
+            androidWidget: Row(children: [
+              Expanded(
+                  child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'extension.import.url-label'.i18n,
+                  hintText: "https://example.com/extension.js",
+                ),
+                onChanged: (value) {
+                  url = value;
+                },
+              )),
+              const SizedBox(width: 8),
+              Tooltip(
+                  message: 'extension.import.extension-dir'.i18n,
+                  child: IconButton(
+                    icon: const Icon(Icons.folder_copy_rounded),
+                    onPressed: () async {
+                      RouterUtils.pop();
+                      // 定位目录
+                      final dir = ExtensionUtils.extensionsDir;
+                      Clipboard.setData(ClipboardData(text: dir));
+                      if (!mounted) {
+                        return;
+                      }
+                      showPlatformSnackbar(
+                        context: context,
+                        title: 'extension.import.extension-dir'.i18n,
+                        content: 'common.copied'.i18n,
+                      );
+                    },
+                  ))
+            ]),
+            desktopWidget: Row(children: [
+              Expanded(
+                  child: fluent.TextBox(
+                placeholder: 'extension.import.url-label'.i18n,
+                onChanged: (value) {
+                  url = value;
+                },
+              )),
+              const SizedBox(width: 8),
+              fluent.Tooltip(
+                  message: 'extension.import.extension-dir'.i18n,
+                  child: fluent.IconButton(
+                    icon: const Icon(fluent.FluentIcons.fabric_folder),
+                    onPressed: () async {
+                      RouterUtils.pop();
+                      // 定位目录
+                      final dir = ExtensionUtils.extensionsDir;
+                      final uri = Uri.directory(dir);
+                      await launchUrl(uri);
+                    },
+                  ))
+            ]),
           ),
           const SizedBox(height: 16),
           Row(
@@ -94,32 +132,24 @@ class _ExtensionPageState extends State<ExtensionPage> {
         PlatformFilledButton(
           onPressed: () async {
             RouterUtils.pop();
-            // 定位目录
-            final dir = ExtensionUtils.extensionsDir;
-            if (Platform.isAndroid) {
-              Clipboard.setData(ClipboardData(text: dir));
-              if (!mounted) {
-                return;
-              }
-              showPlatformSnackbar(
-                context: context,
-                title: 'extension.import.extension-dir'.i18n,
-                content: 'common.copied'.i18n,
-              );
-              return;
-            }
-            final uri = Uri.directory(dir);
-            await launchUrl(uri);
-          },
-          child: Text('extension.import.extension-dir'.i18n),
-        ),
-        PlatformFilledButton(
-          onPressed: () async {
-            RouterUtils.pop();
             await ExtensionUtils.install(url, context);
           },
           child: Text('extension.import.import-by-url'.i18n),
         ),
+        PlatformFilledButton(
+            child: Text('extension.import.import-by-local'.i18n),
+            onPressed: () async {
+              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                type: FileType.custom,
+                allowedExtensions: ['js'],
+              );
+              final path = result?.files.single.path;
+              if (result == null || !mounted) {
+                return;
+              }
+              await ExtensionUtils.localInstall(path!, context);
+              RouterUtils.pop();
+            }),
       ],
     );
   }
