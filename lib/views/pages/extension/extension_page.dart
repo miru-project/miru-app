@@ -47,6 +47,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
     showPlatformDialog(
       context: context,
       title: 'extension.import.title'.i18n,
+      maxWidth: 500,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
