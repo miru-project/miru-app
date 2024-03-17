@@ -72,8 +72,12 @@ class ExtensionUtils {
 
   static localInstall(String p, BuildContext context) async {
     try {
-      final file = File(p);
-      await file.copy(path.join(extensionsDir, path.basename(p)));
+      final res = await File(p).readAsString();
+      final ext = ExtensionUtils.parseExtension(res);
+      final savePath = path.join(extensionsDir, '${ext.package}.js');
+      // 保存
+      File(savePath).writeAsStringSync(res);
+      //reload
       _loadExtensions();
     } catch (e) {
       if (context.mounted) {
@@ -105,6 +109,8 @@ class ExtensionUtils {
       final savePath = path.join(extensionsDir, '${ext.package}.js');
       // 保存文件
       File(savePath).writeAsStringSync(res.data!);
+      //reload
+      _loadExtensions();
     } catch (e) {
       if (context.mounted) {
         showPlatformDialog(
