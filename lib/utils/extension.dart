@@ -44,7 +44,7 @@ class ExtensionUtils {
             break;
           case FileSystemEvent.create:
           case FileSystemEvent.modify:
-            await _installByPath(event.path);
+            await installByPath(event.path);
             break;
         }
         _reloadPage();
@@ -57,7 +57,7 @@ class ExtensionUtils {
     final extensionsList = Directory(extensionsDir).listSync();
     // 遍历扩展列表
     for (final extension in extensionsList) {
-      await _installByPath(extension.path);
+      await installByPath(extension.path);
     }
 
     _reloadPage();
@@ -80,6 +80,8 @@ class ExtensionUtils {
       final savePath = path.join(extensionsDir, '${ext.package}.js');
       // 保存文件
       File(savePath).writeAsStringSync(res.data!);
+      //reload
+      _loadExtensions();
     } catch (e) {
       if (context.mounted) {
         showPlatformDialog(
@@ -100,7 +102,35 @@ class ExtensionUtils {
     }
   }
 
-  static _installByPath(String p) async {
+  static installByScript(String script, BuildContext context) async {
+    try {
+      final ext = ExtensionUtils.parseExtension(script);
+      final savePath = path.join(extensionsDir, '${ext.package}.js');
+      // 保存文件
+      File(savePath).writeAsStringSync(script);
+      runtimes[ext.package] = await ExtensionService().initRuntime(ext);
+      _reloadPage();
+    } catch (e) {
+      if (context.mounted) {
+        showPlatformDialog(
+          context: context,
+          title: 'extension-install-error'.i18n,
+          content: Text(e.toString()),
+          actions: [
+            PlatformButton(
+              child: Text('common.close'.i18n),
+              onPressed: () {
+                RouterUtils.pop();
+              },
+            )
+          ],
+        );
+      }
+      rethrow;
+    }
+  }
+
+  static installByPath(String p) async {
     if (path.extension(p) == '.js') {
       try {
         final file = File(p);

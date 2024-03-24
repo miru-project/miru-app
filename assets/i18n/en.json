@@ -70,7 +70,8 @@
       "url-label": "Extension URL",
       "tips": "You can import extensions through a link, or click on the extension directory below and place the extension file there.",
       "extension-dir": "Extension Directory",
-      "import-by-url": "Import by URL"
+      "import-by-url": "Import by URL",
+      "import-by-local": "Import Locally"
     },
     "error-dialog": "Error Message",
     "installed": "Installed",
