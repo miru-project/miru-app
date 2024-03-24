@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:miru_app/controllers/extension/extension_controller.dart';
 import 'package:miru_app/views/widgets/extension/extension_tile.dart';
@@ -55,48 +54,26 @@ class _ExtensionPageState extends State<ExtensionPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PlatformWidget(
-            androidWidget: Row(children: [
-              Expanded(
-                  child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'extension.import.url-label'.i18n,
-                  hintText: "https://example.com/extension.js",
-                ),
-                onChanged: (value) {
-                  url = value;
-                },
-              )),
-              const SizedBox(width: 8),
-              Tooltip(
-                  message: 'extension.import.extension-dir'.i18n,
-                  child: IconButton(
-                    icon: const Icon(Icons.folder_copy_rounded),
-                    onPressed: () async {
-                      RouterUtils.pop();
-                      // 定位目录
-                      final dir = ExtensionUtils.extensionsDir;
-                      Clipboard.setData(ClipboardData(text: dir));
-                      if (!mounted) {
-                        return;
-                      }
-                      showPlatformSnackbar(
-                        context: context,
-                        title: 'extension.import.extension-dir'.i18n,
-                        content: 'common.copied'.i18n,
-                      );
-                    },
-                  ))
-            ]),
-            desktopWidget: Row(children: [
-              Expanded(
-                  child: fluent.TextBox(
-                placeholder: 'extension.import.url-label'.i18n,
-                onChanged: (value) {
-                  url = value;
-                },
-              )),
-              const SizedBox(width: 8),
-              fluent.Tooltip(
+            androidWidget: TextField(
+              decoration: InputDecoration(
+                labelText: 'extension.import.url-label'.i18n,
+                hintText: "https://example.com/extension.js",
+              ),
+              onChanged: (value) {
+                url = value;
+              },
+            ),
+            desktopWidget: Row(
+              children: [
+                Expanded(
+                    child: fluent.TextBox(
+                  placeholder: 'extension.import.url-label'.i18n,
+                  onChanged: (value) {
+                    url = value;
+                  },
+                )),
+                const SizedBox(width: 8),
+                fluent.Tooltip(
                   message: 'extension.import.extension-dir'.i18n,
                   child: fluent.IconButton(
                     icon: const Icon(fluent.FluentIcons.fabric_folder),
@@ -107,8 +84,10 @@ class _ExtensionPageState extends State<ExtensionPage> {
                       final uri = Uri.directory(dir);
                       await launchUrl(uri);
                     },
-                  ))
-            ]),
+                  ),
+                )
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           Row(
