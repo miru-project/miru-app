@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
@@ -138,19 +140,24 @@ class _ExtensionPageState extends State<ExtensionPage> {
           child: Text('extension.import.import-by-url'.i18n),
         ),
         PlatformFilledButton(
-            child: Text('extension.import.import-by-local'.i18n),
-            onPressed: () async {
-              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                type: FileType.custom,
-                allowedExtensions: ['js'],
-              );
-              final path = result?.files.single.path;
-              if (result == null || !mounted) {
-                return;
-              }
-              await ExtensionUtils.localInstall(path!, context);
-              RouterUtils.pop();
-            }),
+          child: Text('extension.import.import-by-local'.i18n),
+          onPressed: () async {
+            FilePickerResult? result = await FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowedExtensions: ['js'],
+            );
+            if (result == null || !mounted) {
+              return;
+            }
+            final path = result.files.single.path;
+            if (path == null) {
+              return;
+            }
+            final script = File(path).readAsStringSync();
+            await ExtensionUtils.installByScript(script, context);
+            RouterUtils.pop();
+          },
+        ),
       ],
     );
   }

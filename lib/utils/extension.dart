@@ -70,13 +70,16 @@ class ExtensionUtils {
     }
   }
 
-  static localInstall(String p, BuildContext context) async {
+  static install(String url, BuildContext context) async {
     try {
-      final res = await File(p).readAsString();
-      final ext = ExtensionUtils.parseExtension(res);
+      final res = await dio.get<String>(url);
+      if (res.data == null) {
+        throw Exception("Does not seem to be an extension");
+      }
+      final ext = ExtensionUtils.parseExtension(res.data!);
       final savePath = path.join(extensionsDir, '${ext.package}.js');
-      // 保存
-      File(savePath).writeAsStringSync(res);
+      // 保存文件
+      File(savePath).writeAsStringSync(res.data!);
       //reload
       _loadExtensions();
     } catch (e) {
@@ -99,18 +102,14 @@ class ExtensionUtils {
     }
   }
 
-  static install(String url, BuildContext context) async {
+  static installByScript(String script, BuildContext context) async {
     try {
-      final res = await dio.get<String>(url);
-      if (res.data == null) {
-        throw Exception("Does not seem to be an extension");
-      }
-      final ext = ExtensionUtils.parseExtension(res.data!);
+      final ext = ExtensionUtils.parseExtension(script);
       final savePath = path.join(extensionsDir, '${ext.package}.js');
       // 保存文件
-      File(savePath).writeAsStringSync(res.data!);
-      //reload
-      _loadExtensions();
+      File(savePath).writeAsStringSync(script);
+      runtimes[ext.package] = await ExtensionService().initRuntime(ext);
+      _reloadPage();
     } catch (e) {
       if (context.mounted) {
         showPlatformDialog(
