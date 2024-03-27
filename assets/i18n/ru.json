@@ -1,5 +1,7 @@
 {
   "common": {
+    "anime": "Аниме",
+    "manga": "Манга",
     "home": "Главная",
     "search": "Поиск",
     "extension": "Расширения",
@@ -24,16 +26,27 @@
     "show-all": "Показать всё",
     "delete": "Удалить",
     "delete-all": "Удалить всё"
+    "save": "Сохранить",
+    "save-success": "Сохранение прошло успешно",
+    "logout": "Выйти",
+    "login": "Войти",
+    "no-data": "Нет данных",
+    "clear": "Очистить",
+    "export": "Экспорт",
+    "off": "Откл.",
+    "error-message": "Сообщение об ошибке",
+    "disconnect": "Отключение сети"
   },
   "home": {
     "continue-watching": "Продолжить",
     "favorite": "Избранное",
     "no-record": "Нет избранного или просмотра записей",
     "watched": "Просмотрен {ep}"
+    "favorite-all": "Все {type} избранные"
   },
   "search": {
     "hint-text": "Пожалуйста, используйте поиск с умом!~",
-    "all": "Все",
+    "all": "Всё",
     "filter": "Фильтр"
   },
   "extension": {
@@ -42,9 +55,10 @@
       "url-label": "URL расширения",
       "tips": "Вы можете импортировать расширения по ссылке или щёлкнуть каталог расширения ниже и поместить туда файл расширения",
       "extension-dir": "Каталог расширений",
-      "import-by-url": "Импорт по URL"
+      "import-by-url": "Импорт по URL",
+      "import-by-local": "Локальный импорт"
     },
-    "error-dialog": "Сообщение об ошибке",
+    "error-dialog": "Диалоговое окно об ошибке",
     "installed": "Установлено",
     "edit-code": "Редактировать код"
   },
@@ -55,34 +69,70 @@
     "upgrade": "Обновление"
   },
   "settings": {
-    "repo-url": "URL репозитория расширений",
-    "repo-url-subtitle": "Получить URL репозитория для расширений",
+    "general": "Основные",
+    "general-subtitle": "TMDB, Язык, Тема, Проверка обновлений...",
+    "extension": "Расширения",
+    "extension-subtitle": "Репозиторий расширений",
+    "video-player": "Видеоплеер",
+    "video-player-subtitle": "BT-сервер, Сторонний плеер...",
+    "comic-reader": "Просмотрщик комиксов",
+    "comic-reader-subtitle": "Режим чтения по умолчанию...",
+    "tracking": "Отслеживание",
+    "tracking-subtitle": "AniList...",
+    "auto-tracking": "Автоотслеживание",
+    "auto-tracking-subtitle": "Автоматически синхронизировать прогресс по окончании просмотра/чтения",
+    "about": "О приложении",
+    "links": "Ссылки",
+    "contributors": "Участники разработки",
+    "repo-url": "URL-адрес репозитория расширений",
+    "repo-url-subtitle": "Получить URL-адрес репозитория расширений",
     "tmdb-key": "Ключ API TMDB",
     "tmdb-key-subtitle": "Получить ключ API для метаданных TMDB",
-    "bt-server": "Сервер BT",
-    "bt-server-subtitle": "Сервер BT является необходимым компонентом для онлайн-воспроизведения торрентов",
-    "bt-server-manager": "Управлять",
-    "upgrade": "Обновление ПО",
+    "bt-server": "BT-сервер",
+    "bt-server-subtitle": "BT-сервер - необходимый компонент для онлайн-воспроизведения торрента",
+    "bt-server-manager": "Управление",
+    "upgrade": "Обновление",
     "upgrade-subtitle": "версия: {version}",
     "upgrade-training": "Проверить",
-    "auto-check-update": "Автоматическая проверка",
-    "auto-check-update-subtitle": "Проверять наличие обновлений при каждом запуске",
+    "auto-check-update": "Автоматически проверять наличие обновлений",
+    "auto-check-update-subtitle": "Проверять наличие обновлений при запуске",
     "language": "Язык",
     "theme": "Тема",
     "theme-subtitle": "Изменить тему приложения",
-    "theme-system": "Системная",
+    "theme-system": "Как в системе",
     "theme-light": "Светлая",
     "theme-dark": "Тёмная",
     "theme-black": "Чёрная",
     "nsfw": "NSFW",
-    "nsfw-subtitle": "Показывать NSFW контент",
+    "nsfw-subtitle": "Показать NSFW-контент",
     "external-player": "Предпочтительный видеоплеер",
-    "external-player-subtitle": "На данный момент предпочтительным видеоплеером является {player}",
+    "external-player-subtitle": "На данный момент, предпочтительным видеоплеером является {player}",
     "external-player-builtin": "Встроенный",
     "language-subtitle": "Изменить язык приложения",
-    "extension-log": "Окно журнала расширений",
+    "extension-log": "Окно журнала расширения",
     "extension-log-subtitle": "Используется для отладки расширений",
-    "about": "О приложении"
+    "skip-interval": "Пропустить интервал",
+    "skip-interval-subtitle": "Пропуск интервала для встроенного видеоплеера",
+    "default-reader-mode": "Режим чтения по умолчанию",
+    "network": "Сеть",
+    "network-subtitle": "Прокси, User-Agent...",
+    "network-ua": "Webview User-Agent'а",
+    "network-ua-subtitle": "Измените User-Agent в заголовке запроса для Webview и расширений.",
+    "proxy-type": "Тип прокси",
+    "proxy-type-subtitle": "Тип прокси для запросов",
+    "proxy-type-direct": "Прямой",
+    "proxy-type-socks4": "Socks4",
+    "proxy-type-socks5": "Socks5",
+    "proxy-type-http": "HTTP",
+    "proxy": "Прокси",
+    "proxy-subtitle": "Адрес прокси (например, имя пользователя:пароль@хост:порт)",
+    "log": "Журнал",
+    "log-subtitle": "Сохранить журнал, экспортировать журнал...",
+    "save-log": "Сохранить журнал",
+    "save-log-subtitle": "Автоматическое сохранение файла журнала",
+    "export-log": "Экспортировать журнал",
+    "export-log-subtitle": "Экспорт файла журнала",
+    "advanced": "Расширенные"
   },
   "external-player-launching": "Запуск {player}",
   "detail": {
@@ -122,6 +172,34 @@
       "full-screen": "Полноэкранный режим",
       "volume": "Громкость",
       "torrent-file-list": "Список торрент-файлов"
+    },
+    "cast": "Трансляция на устройство",
+    "cast-device": "играет на {device}",
+    "sidebar": {
+      "tab": {
+        "episodes": "Эпизоды",
+        "qualitys": "Качества",
+        "torrentFiles": "Торрент-файлы",
+        "tracks": "Треки",
+        "settings": "Настройки"
+      },
+      "subtitle": {
+        "title": "Субтитры",
+        "font-size": "Размер шрифта",
+        "font-color": "Цвет шрифта",
+        "background-color": "Цвет фона",
+        "background-opacity": "Непрозрачность фона",
+        "text-align": "Выравнивание текста",
+        "font-weight": "Стиль текста",
+        "font-weight-normal": "Нормальный",
+        "font-weight-bold": "Жирный"
+      },
+      "play-mode": {
+        "title": "Режим воспроизведения",
+        "loop": "Зацикливание",
+        "single": "Единичный просмотр",
+        "auto-next": "Автопереход к следующему"
+      }
     }
   },
   "comic-settings": {
@@ -131,7 +209,12 @@
     "web-tonn": "Манхва"
   },
   "novel-settings": {
-    "font-size": "Размер текста"
+    "font-size": "Размер шрифта"
+  },
+  "bugreport": {
+    "auto-remove-subtitle": "удалить через ~ дней",
+    "show-report-dialog": "Показывать диалоговое окно отчёта",
+    "show-report-dialog-subtitle": "Показывать диалоговое окно отчёта об ошибках"
   },
   "reader": {
     "chapters": "Главы",
@@ -144,7 +227,7 @@
     "download": "Скачать обновление",
     "no-update": "Используется последняя версия",
     "not-now": "Не сейчас",
-    "error": "Не удалось проверить наличие обновлений, произошла сетевая ошибка"
+    "error": "Не удалось проверить наличие обновлений, произошла ошибка сети"
   },
   "extension-install-error": "Не удалось установить расширение",
   "extension-type": {
@@ -178,13 +261,42 @@
     "languages": "Языки"
   },
   "bt-server": {
-    "not-installed": "BT-Сервер не установлен",
-    "running": "BT-Сервер работает",
-    "stopped": "BT-Сервер остановлен",
+    "not-installed": "BT-сервер не установлен",
+    "running": "BT-сервер работает",
+    "stopped": "BT-сервер остановлен",
     "version": "Версия {version}",
-    "remote-version": "Удаленная версия {version}",
+    "remote-version": "Удалённая версия {version}",
     "stop": "Остановить",
     "upgrade": "Обновить",
     "start": "Запустить"
+  },
+  "report": {
+    "copied": "Скопировано в буфер обмена",
+    "github-bug-report": "Сообщить о проблеме на GitHub",
+    "title": "Отчёт об ошибке",
+    "copy-message": "Копировать сообщение об ошибке",
+    "show-report-checkbox": "Показывать диалоговое окно отчёта при запуске"
+  },
+  "anilist": {
+    "title": "Отслеживание AniList",
+    "login-hint-1": "Кажется, вы ещё не авторизовались в AniList",
+    "login-hint-2": "Пожалуйста, сначала войдите в AniList",
+    "status": "Состояние",
+    "score": "Счёт",
+    "watching": "Смотрю",
+    "reading": "Читаю",
+    "completed": "Завершено",
+    "paused": "Приостановлено",
+    "dropped": "Заброшено",
+    "planning": "Запланировано",
+    "hold-on": "В ожидании",
+    "re-watching": "Пересматриваю",
+    "re-reading": "Перечитываю",
+    "start-date": "Дата начала",
+    "end-date": "Дата окончания",
+    "unbind": "Отвязать",
+    "episodes": "Эпизоды",
+    "manga-chapter-read": "Прочитано глав манги: {chapters}",
+    "anime-episode-watch": "Просмотрено аниме-эпизодов: {episodes}"
   }
 }
