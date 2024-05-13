@@ -29,7 +29,7 @@ class SettingsRadiosTile<T> extends StatefulWidget {
 }
 
 class _SettingsRadiosTileState<T> extends State<SettingsRadiosTile<T>> {
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return SettingsTile(
       isCard: widget.isCard,
       icon: widget.icon,
@@ -89,7 +89,7 @@ class _SettingsRadiosTileState<T> extends State<SettingsRadiosTile<T>> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

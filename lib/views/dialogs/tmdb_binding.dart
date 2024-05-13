@@ -76,14 +76,14 @@ class _TMDBBindingState extends State<TMDBBinding> {
 
   _onSearch(String keyWord) {
     _keyWord = keyWord;
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       _easyRefreshController.callRefresh();
     } else {
       _onRefresh();
     }
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Scaffold(
       appBar: SearchAppBar(
         title: 'detail.modify-tmdb-binding'.i18n,
@@ -227,7 +227,7 @@ class _TMDBBindingState extends State<TMDBBinding> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

@@ -24,7 +24,7 @@ class GridItemTile extends StatefulWidget {
 class _GridItemTileState extends State<GridItemTile> {
   bool _isHover = false;
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Stack(
       children: [
         Container(
@@ -166,7 +166,7 @@ class _GridItemTileState extends State<GridItemTile> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

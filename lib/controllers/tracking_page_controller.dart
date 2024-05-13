@@ -44,7 +44,7 @@ class TrackingPageController extends GetxController {
   loginAniList() async {
     const loginUrl =
         "https://anilist.co/api/v2/oauth/authorize?client_id=16214&response_type=token";
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       final result = await Get.to(
         () => const AnilistWebViewPage(url: loginUrl),
       );

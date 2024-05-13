@@ -272,7 +272,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: () {
-            if (Platform.isAndroid) {
+            if (Platform.isAndroid || Platform.isIOS) {
               Get.to(
                 DetailPage(
                   url: widget.history.url,
@@ -299,7 +299,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return GestureDetector(
       onLongPress: () {
         showModalBottomSheet(
@@ -382,7 +382,7 @@ class _HomeRecentCardState extends State<HomeRecentCard> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

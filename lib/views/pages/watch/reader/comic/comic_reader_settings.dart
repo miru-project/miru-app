@@ -17,7 +17,7 @@ class ComicReaderSettings extends StatefulWidget {
 class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   late final ComicController _c = Get.find<ComicController>(tag: widget.tag);
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -119,7 +119,7 @@ class _ComicReaderSettingsState extends State<ComicReaderSettings> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

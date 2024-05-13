@@ -254,7 +254,7 @@ class ExtensionService {
         'querySelectorAll', (dynamic args) => jsQuerySelectorAll(args));
     // css 选择器
     runtime.onMessage('querySelector', (arg) => jsQuerySelector(arg));
-    if (Platform.isLinux) {
+    if (Platform.isLinux || Platform.isIOS) {
       handleDartBridge(String channelName, Function fn) {
         jsBridge.setHandler(channelName, (message) async {
           final args = jsonDecode(message);
@@ -284,7 +284,7 @@ class ExtensionService {
     final cryptoJs = await rootBundle.loadString('assets/js/CryptoJS.min.js');
     final jsencrypt = await rootBundle.loadString('assets/js/jsencrypt.min.js');
     final md5 = await rootBundle.loadString('assets/js/md5.min.js');
-    runtime.evaluate(Platform.isLinux
+    runtime.evaluate((Platform.isLinux || Platform.isIOS)
         ? '''
 $cryptoJs
 $jsencrypt
@@ -625,7 +625,7 @@ async function stringify(callback) {
       }
       var ${className}Instance = new $className();
       ${className}Instance.load().then(()=>{
-        if(${Platform.isLinux}){
+        if(${Platform.isLinux || Platform.isIOS}){
            DartBridge.sendMessage("cleanSettings$className",JSON.stringify([extension.settingKeys]));
         }
         sendMessage("cleanSettings", JSON.stringify([extension.settingKeys]));
@@ -674,7 +674,7 @@ async function stringify(callback) {
   Future<List<ExtensionListItem>> latest(int page) async {
     return runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync(Platform.isLinux
+        await runtime.evaluateAsync((Platform.isLinux || Platform.isIOS)
             ? '${className}Instance.latest($page)'
             : 'stringify(()=>${className}Instance.latest($page))'),
       );
@@ -697,7 +697,7 @@ async function stringify(callback) {
   }) async {
     return runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync(Platform.isLinux
+        await runtime.evaluateAsync((Platform.isLinux || Platform.isIOS)
             ? '${className}Instance.search("$kw",$page,${filter == null ? null : jsonEncode(filter)})'
             : 'stringify(()=>${className}Instance.search("$kw",$page,${filter == null ? null : jsonEncode(filter)}))'),
       );
@@ -717,11 +717,11 @@ async function stringify(callback) {
   }) async {
     late String eval;
     if (filter == null) {
-      eval = Platform.isLinux
+      eval = (Platform.isLinux || Platform.isIOS)
           ? '${className}Instance.createFilter()'
           : 'stringify(()=>${className}Instance.createFilter())';
     } else {
-      eval = Platform.isLinux
+      eval = (Platform.isLinux || Platform.isIOS)
           ? '${className}Instance.createFilter(JSON.parse(\'${jsonEncode(filter)}\'))'
           : 'stringify(()=>${className}Instance.createFilter(JSON.parse(\'${jsonEncode(filter)}\')))';
     }
@@ -742,7 +742,7 @@ async function stringify(callback) {
   Future<ExtensionDetail> detail(String url) async {
     return runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync(Platform.isLinux
+        await runtime.evaluateAsync((Platform.isLinux || Platform.isIOS)
             ? '${className}Instance.detail("$url")'
             : 'stringify(()=>${className}Instance.detail("$url"))'),
       );
@@ -756,7 +756,7 @@ async function stringify(callback) {
   Future<Object?> watch(String url) async {
     return runExtension(() async {
       final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync(Platform.isLinux
+        await runtime.evaluateAsync((Platform.isLinux || Platform.isIOS)
             ? '${className}Instance.watch("$url")'
             : 'stringify(()=>${className}Instance.watch("$url"))'),
       );

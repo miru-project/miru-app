@@ -168,7 +168,7 @@ class DetailPageController extends GetxController {
     }
 
     dynamic data;
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       data = await Get.to(TMDBBinding(
         title: detail!.title,
       ));

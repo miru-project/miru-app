@@ -43,7 +43,7 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
 
         return GridItemTile(
           onTap: () {
-            if (Platform.isAndroid) {
+            if (Platform.isAndroid || Platform.isIOS) {
               Get.to(() => const SearchPage());
             } else {
               router.push("/search");
@@ -57,7 +57,7 @@ class _AnilistHorizontalListState extends State<AnilistHorizontalList> {
       },
       itemCount: count,
       onClickMore: () {
-        if (Platform.isAndroid) {
+        if (Platform.isAndroid || Platform.isIOS) {
           Get.to(
             () => AnilistMorePage(
               anilistType: type,

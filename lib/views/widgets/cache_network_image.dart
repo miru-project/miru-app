@@ -73,7 +73,7 @@ class CacheNetWorkImagePic extends StatelessWidget {
               url: url,
               headers: headers,
             );
-            if (Platform.isAndroid) {
+            if (Platform.isAndroid || Platform.isIOS) {
               Get.to(thumnailPage);
               return;
             }
@@ -123,7 +123,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
         headers: widget.headers,
       ),
     );
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       final result = await ImageGallerySaver.saveImage(
         res.data,
         name: fileName,
@@ -188,7 +188,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: GestureDetector(
@@ -256,7 +256,7 @@ class _ThumnailPageState extends State<_ThumnailPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

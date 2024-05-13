@@ -181,7 +181,7 @@ class VideoPlayerController extends GetxController {
 
   @override
   void onInit() async {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       // 切换到横屏
       SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight],
@@ -438,7 +438,7 @@ class VideoPlayerController extends GetxController {
       player.setSubtitleTrack(SubtitleTrack.no());
     } on StartServerException catch (_) {
       // 如果是 启动 bt server 失败
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid || Platform.isIOS) {
         await showDialog(
           context: currentContext,
           builder: (context) => const BTDialog(),
@@ -812,7 +812,7 @@ class VideoPlayerController extends GetxController {
         mediaId: anilistID,
       );
     }
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.edgeToEdge,
       );

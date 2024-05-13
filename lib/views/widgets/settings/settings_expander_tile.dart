@@ -26,7 +26,7 @@ class SettingsExpanderTile extends StatelessWidget {
   // 不使用二级页面
   final bool noPage;
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     if (noPage) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -97,7 +97,7 @@ class SettingsExpanderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

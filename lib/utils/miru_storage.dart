@@ -122,6 +122,8 @@ class MiruStorage {
     await _initSetting(SettingKey.aniListUserId, '');
     await _initSetting(SettingKey.autoTracking, true);
     await _initSetting(SettingKey.windowSize, "1280,720");
+    await _initSetting(SettingKey.iosWebviewUA,
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1");
     await _initSetting(SettingKey.androidWebviewUA,
         "Mozilla/5.0 (Linux; Android 13; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.43 Mobile Safari/537.36");
     await _initSetting(SettingKey.windowsWebviewUA,
@@ -155,12 +157,17 @@ class MiruStorage {
     if (Platform.isAndroid) {
       return settings.get(SettingKey.androidWebviewUA);
     }
+    if (Platform.isIOS) {
+      return settings.get(SettingKey.iosWebviewUA);
+    }
     return settings.get(SettingKey.windowsWebviewUA);
   }
 
   static setUASetting(String value) async {
     if (Platform.isAndroid) {
       setSetting(SettingKey.androidWebviewUA, value);
+    } else if (Platform.isIOS) {
+      setSetting(SettingKey.iosWebviewUA, value);
     } else {
       setSetting(SettingKey.windowsWebviewUA, value);
     }
@@ -190,6 +197,7 @@ class SettingKey {
   static const windowPosition = 'WindowsPosition';
   static const androidWebviewUA = "AndroidWebviewUA";
   static const windowsWebviewUA = "WindowsWebviewUA";
+  static const iosWebviewUA = "iosWebviewUA";
   static const proxy = "Proxy";
   static const proxyType = "ProxyType";
   static const saveLog = "SaveLog";

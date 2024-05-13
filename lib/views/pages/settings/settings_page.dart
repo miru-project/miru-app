@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   List<Widget> _buildContent() {
     return [
-      if (!Platform.isAndroid) ...[
+      if (!Platform.isAndroid && !Platform.isIOS) ...[
         Text(
           'common.settings'.i18n,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsIntpuTile(
               title: 'settings.tmdb-key'.i18n,
               buildSubtitle: () {
-                if (!Platform.isAndroid) {
+                if (!Platform.isAndroid && !Platform.isIOS) {
                   return 'settings.tmdb-key-subtitle'.i18n;
                 }
                 final key =
@@ -125,7 +125,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   'settings.theme-light'.i18n: 'light',
                   'settings.theme-dark'.i18n: 'dark',
                 };
-                if (Platform.isAndroid) {
+                if (Platform.isAndroid || Platform.isIOS) {
                   map['settings.theme-black'.i18n] = 'black';
                 }
                 return map;
@@ -174,7 +174,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsIntpuTile(
               title: 'settings.repo-url'.i18n,
               buildSubtitle: () {
-                if (!Platform.isAndroid) {
+                if (!Platform.isAndroid && !Platform.isIOS) {
                   return 'settings.repo-url-subtitle'.i18n;
                 }
                 return MiruStorage.getSetting(SettingKey.miruRepoUrl);
@@ -205,7 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: 'settings.bt-server'.i18n,
               buildSubtitle: () => "settings.bt-server-subtitle".i18n,
               trailing: PlatformWidget(
-                androidWidget: TextButton(
+                mobileWidget: TextButton(
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -228,6 +228,13 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsRadiosTile(
               title: 'settings.external-player'.i18n,
               itemNameValue: () {
+                if (Platform.isIOS) {
+                  return {
+                    "settings.external-player-builtin".i18n: "built-in",
+                    "VLC": "vlc",
+                    "Other": "other",
+                  };
+                }
                 if (Platform.isAndroid) {
                   return {
                     "settings.external-player-builtin".i18n: "built-in",
@@ -263,7 +270,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             const SizedBox(height: 10),
-            if (!Platform.isAndroid) ...[
+            if (!Platform.isAndroid && !Platform.isIOS) ...[
               Text("settings.skip-interval".i18n),
               const SizedBox(height: 2),
               Text(
@@ -403,7 +410,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: 'Anilist',
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                if (!Platform.isAndroid) {
+                if (!Platform.isAndroid && !Platform.isIOS) {
                   router.push('/settings/anilist');
                 } else {
                   Get.to(() => const AniListTrackingPage());
@@ -427,7 +434,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsIntpuTile(
               title: 'settings.network-ua'.i18n,
               buildSubtitle: () {
-                if (!Platform.isAndroid) {
+                if (!Platform.isAndroid && !Platform.isIOS) {
                   return 'settings.network-ua-subtitle'.i18n;
                 }
                 return MiruStorage.getUASetting();
@@ -500,7 +507,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: 'settings.export-log'.i18n,
               buildSubtitle: () => 'settings.export-log-subtitle'.i18n,
               trailing: PlatformWidget(
-                androidWidget: TextButton(
+                mobileWidget: TextButton(
                   onPressed: () {
                     Share.shareXFiles([XFile(MiruLog.logFilePath)]);
                   },
@@ -524,7 +531,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       ),
-      if (!Platform.isAndroid) ...[
+      if (!Platform.isAndroid && !Platform.isIOS) ...[
         const SizedBox(height: 10),
         Obx(
           () {
@@ -552,7 +559,7 @@ class _SettingsPageState extends State<SettingsPage> {
       SettingsTile(
         isCard: true,
         icon: const PlatformWidget(
-          androidWidget: Icon(Icons.update),
+          mobileWidget: Icon(Icons.update),
           desktopWidget: Icon(fluent.FluentIcons.update_restore, size: 24),
         ),
         title: 'settings.upgrade'.i18n,
@@ -564,7 +571,7 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
         trailing: PlatformWidget(
-          androidWidget: TextButton(
+          mobileWidget: TextButton(
             onPressed: () {
               ApplicationUtils.checkUpdate(
                 context,
@@ -670,7 +677,7 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('common.settings'.i18n),
@@ -685,7 +692,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: (context) => ListView(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         children: _buildContent(),

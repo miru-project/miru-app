@@ -28,7 +28,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
   late List<ExtensionEpisodeGroup> episodes = [];
   late String listMode = MiruStorage.getSetting(SettingKey.listMode);
   bool isRevered = false;
-  Widget _buildAndroidEpisodes(BuildContext context) {
+  Widget _buildMobileEpisodes(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -264,7 +264,7 @@ class _DetailEpisodesState extends State<DetailEpisodes> {
           )
       ];
       return PlatformBuildWidget(
-        androidBuilder: _buildAndroidEpisodes,
+        mobileBuilder: _buildMobileEpisodes,
         desktopBuilder: _buildDesktopEpisodes,
       );
     });

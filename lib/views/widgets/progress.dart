@@ -9,7 +9,7 @@ class ProgressRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: (context) => CircularProgressIndicator(
+      mobileBuilder: (context) => CircularProgressIndicator(
         value: value,
       ),
       desktopBuilder: (context) => fluent.ProgressRing(
@@ -26,7 +26,7 @@ class ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: (context) => LinearProgressIndicator(
+      mobileBuilder: (context) => LinearProgressIndicator(
         value: value,
       ),
       desktopBuilder: (context) => fluent.ProgressBar(

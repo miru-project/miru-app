@@ -5,7 +5,7 @@ import 'package:miru_app/router/router.dart';
 
 class RouterUtils {
   static pop() {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       return Get.back();
     }
     return router.pop();

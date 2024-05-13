@@ -20,7 +20,7 @@ class DetailFavoriteButton extends StatefulWidget {
 class _DetailFavoriteButtonState extends State<DetailFavoriteButton> {
   late DetailPageController c = Get.find<DetailPageController>(tag: widget.tag);
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Obx(
       () {
         final isFavorite = c.isFavorite.value;
@@ -82,7 +82,7 @@ class _DetailFavoriteButtonState extends State<DetailFavoriteButton> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

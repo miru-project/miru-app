@@ -23,7 +23,7 @@ final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 BuildContext get currentContext {
-  if (Platform.isAndroid) {
+  if (Platform.isAndroid || Platform.isIOS) {
     return Get.context!;
   }
   return _shellNavigatorKey.currentContext!;

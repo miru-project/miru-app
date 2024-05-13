@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAndroidHome(BuildContext context) {
+  Widget _buildMobileHome(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("common.home".i18n),
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroidHome,
+      mobileBuilder: _buildMobileHome,
       desktopBuilder: _buildDesktopHome,
     );
   }

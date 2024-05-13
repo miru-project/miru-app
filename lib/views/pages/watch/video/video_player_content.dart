@@ -23,7 +23,7 @@ class VideoPlayerConten extends StatelessWidget {
         visible: false,
       ),
       controls: (state) {
-        if (Platform.isAndroid) {
+        if (Platform.isAndroid || Platform.isIOS) {
           return VideoPlayerMobileControls(
             controller: c,
           );

@@ -69,7 +69,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
 
   _buildContent() {
     late Color backgroundColor;
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       backgroundColor = Theme.of(context).colorScheme.background;
     } else {
       backgroundColor = fluent.FluentTheme.of(context).micaBackgroundColor;
@@ -194,7 +194,7 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: (context) {
+      mobileBuilder: (context) {
         return Scaffold(
             body: SafeArea(
           child: _buildDisplay(

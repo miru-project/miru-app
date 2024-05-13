@@ -30,6 +30,10 @@ class BTServerUtils {
     debugPrint("最新版本: $remoteVersion");
     late String arch;
     late String platform;
+    if (Platform.isIOS) {
+      arch = "arm64";
+      platform = "ios";
+    }
     if (Platform.isAndroid) {
       final supportedAbis = androidDeviceInfo.supportedAbis;
       if (supportedAbis.contains("armeabi-v7a")) {
@@ -170,7 +174,9 @@ class BTServerUtils {
 
 class StartServerException implements Exception {
   final String message;
+
   StartServerException(this.message);
+
   @override
   String toString() {
     return message;

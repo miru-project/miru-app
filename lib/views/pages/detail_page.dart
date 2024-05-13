@@ -62,7 +62,7 @@ class _DetailPageState extends State<DetailPage> {
     super.dispose();
   }
 
-  Widget _buildAndroidDetail(BuildContext context) {
+  Widget _buildMobileDetail(BuildContext context) {
     return Scaffold(
       body: Obx(() {
         late String episodesString;
@@ -560,7 +560,7 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroidDetail,
+      mobileBuilder: _buildMobileDetail,
       desktopBuilder: _buildDesktopDetail,
     );
   }

@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 class PlatformBuildWidget extends StatelessWidget {
   const PlatformBuildWidget({
     super.key,
-    required this.androidBuilder,
+    required this.mobileBuilder,
     required this.desktopBuilder,
   });
 
-  final WidgetBuilder androidBuilder;
+  final WidgetBuilder mobileBuilder;
   final WidgetBuilder desktopBuilder;
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return androidBuilder(context);
+    if (Platform.isAndroid || Platform.isIOS) {
+      return mobileBuilder(context);
     }
     return desktopBuilder(context);
   }
@@ -25,17 +25,17 @@ class PlatformBuildWidget extends StatelessWidget {
 class PlatformWidget extends StatelessWidget {
   const PlatformWidget({
     super.key,
-    required this.androidWidget,
+    required this.mobileWidget,
     required this.desktopWidget,
   });
 
-  final Widget androidWidget;
+  final Widget mobileWidget;
   final Widget desktopWidget;
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      return androidWidget;
+    if (Platform.isAndroid || Platform.isIOS) {
+      return mobileWidget;
     }
     return desktopWidget;
   }

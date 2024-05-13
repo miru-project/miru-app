@@ -18,11 +18,15 @@ late PackageInfo packageInfo;
 late AndroidDeviceInfo androidDeviceInfo;
 late WindowsDeviceInfo windowsDeviceInfo;
 late LinuxDeviceInfo linuxDeviceInfo;
+late IosDeviceInfo iosDeviceInfo;
 
 class ApplicationUtils {
   static Future ensureInitialized() async {
     packageInfo = await PackageInfo.fromPlatform();
     final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      iosDeviceInfo = await deviceInfo.iosInfo;
+    }
     if (Platform.isAndroid) {
       androidDeviceInfo = await deviceInfo.androidInfo;
       return packageInfo;
@@ -46,7 +50,7 @@ class ApplicationUtils {
           (res.data["tag_name"] as String).replaceFirst('v', '');
       debugPrint('remoteVersion: $remoteVersion');
       if (packageInfo.version != remoteVersion) {
-        if (Platform.isAndroid) {
+        if (Platform.isAndroid || Platform.isIOS) {
           Get.to(
             Scaffold(
               appBar: AppBar(

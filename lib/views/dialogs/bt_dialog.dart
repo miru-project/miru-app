@@ -130,7 +130,7 @@ class _BTDialogState extends State<BTDialog> {
     });
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return AlertDialog(
       title: const Text("BT-Server"),
       content: _buildContent(context),
@@ -163,7 +163,7 @@ class _BTDialogState extends State<BTDialog> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

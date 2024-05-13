@@ -39,7 +39,7 @@ class _SearchAllExtSearchState extends State<SearchAllExtSearch> {
             PlatformFilledButton(
               child: Text("common.extension-repo".i18n),
               onPressed: () {
-                if (Platform.isAndroid) {
+                if (Platform.isAndroid || Platform.isIOS) {
                   Get.find<MainController>().selectedTab.value = 2;
                   return;
                 }

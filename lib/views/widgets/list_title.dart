@@ -6,7 +6,7 @@ class ListTitle extends StatelessWidget {
 
   final String title;
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: Text(
@@ -26,7 +26,7 @@ class ListTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

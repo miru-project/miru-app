@@ -137,7 +137,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
     }
 
     return PlatformBuildWidget(
-      androidBuilder: (context) => ListView(
+      mobileBuilder: (context) => ListView(
         children: extensionCards,
       ),
       desktopBuilder: (context) => LayoutBuilder(
@@ -153,7 +153,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Obx(
       () => Scaffold(
         appBar: SearchAppBar(
@@ -271,7 +271,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

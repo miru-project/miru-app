@@ -15,7 +15,7 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformWidget(
-      androidWidget: Container(
+      mobileWidget: Container(
         width: 130,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         child: Column(

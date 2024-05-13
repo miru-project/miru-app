@@ -9,7 +9,7 @@ class PlatformCard extends StatelessWidget {
   });
   final Widget child;
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -27,7 +27,7 @@ class PlatformCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

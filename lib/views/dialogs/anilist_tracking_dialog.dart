@@ -420,7 +420,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
     ];
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return _buildAndroidContent(context);
   }
 
@@ -436,7 +436,7 @@ class _AnilistTrackingDialogState extends State<AnilistTrackingDialog> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

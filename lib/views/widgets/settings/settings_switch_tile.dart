@@ -33,7 +33,7 @@ class _SettingsSwitchTileState extends State<SettingsSwitchTile> {
       title: widget.title,
       buildSubtitle: widget.buildSubtitle,
       trailing: PlatformWidget(
-        androidWidget: Switch(
+        mobileWidget: Switch(
           value: widget.buildValue(),
           onChanged: (value) {
             widget.onChanged(value);

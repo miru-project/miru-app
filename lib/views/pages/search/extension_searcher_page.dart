@@ -112,7 +112,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
 
   _onSearch(String keyWord) {
     _keyWord = keyWord;
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       _easyRefreshController.callRefresh();
     } else {
       _onRefresh();
@@ -130,7 +130,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
       },
     );
 
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       showModalBottomSheet(
         context: context,
         builder: (context) => Column(
@@ -203,7 +203,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Scaffold(
       appBar: SearchAppBar(
         title: _runtime.extension.name,
@@ -361,7 +361,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
     );
     if (runtime == null) {
       return PlatformWidget(
-        androidWidget: Scaffold(
+        mobileWidget: Scaffold(
           body: extensionMissing,
         ),
         desktopWidget: Center(
@@ -371,7 +371,7 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
     }
     _runtime = runtime;
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

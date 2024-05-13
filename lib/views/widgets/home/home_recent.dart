@@ -26,7 +26,7 @@ class _HomeRecentState extends State<HomeRecent> {
         curve: Curves.ease);
   }
 
-  Widget _buildAndroidHomeRecent(BuildContext context) {
+  Widget _buildMobileHomeRecent(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -92,7 +92,7 @@ class _HomeRecentState extends State<HomeRecent> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroidHomeRecent,
+      mobileBuilder: _buildMobileHomeRecent,
       desktopBuilder: _buildDesktopHomeRecent,
     );
   }

@@ -27,7 +27,7 @@ class ExtensionItemCard extends StatefulWidget {
 }
 
 class _ExtensionItemCardState extends State<ExtensionItemCard> {
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Hero(
       tag: widget.url,
       child: GridItemTile(
@@ -69,7 +69,7 @@ class _ExtensionItemCardState extends State<ExtensionItemCard> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

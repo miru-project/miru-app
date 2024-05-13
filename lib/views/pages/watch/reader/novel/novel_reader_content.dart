@@ -200,7 +200,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Scaffold(
       body: SafeArea(child: _buildContent()),
     );
@@ -216,7 +216,7 @@ class _NovelReaderContentState extends State<NovelReaderContent> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

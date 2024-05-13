@@ -54,7 +54,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PlatformWidget(
-            androidWidget: TextField(
+            mobileWidget: TextField(
               decoration: InputDecoration(
                 labelText: 'extension.import.url-label'.i18n,
                 hintText: "https://example.com/extension.js",
@@ -153,7 +153,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
             // 输出key 和 value
             for (final e in c.errors.entries)
               PlatformWidget(
-                androidWidget: Card(
+                mobileWidget: Card(
                   margin: const EdgeInsets.only(bottom: 8),
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -183,7 +183,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Obx(() {
       return Scaffold(
         appBar: AppBar(
@@ -299,7 +299,7 @@ class _ExtensionPageState extends State<ExtensionPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

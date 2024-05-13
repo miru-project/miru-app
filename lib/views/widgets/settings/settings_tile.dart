@@ -24,7 +24,7 @@ class SettingsTile extends StatefulWidget {
 }
 
 class _SettingsTileState extends State<SettingsTile> {
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return ListTile(
       leading: widget.icon,
       title: Text(widget.title),
@@ -85,7 +85,7 @@ class _SettingsTileState extends State<SettingsTile> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

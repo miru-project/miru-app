@@ -11,7 +11,7 @@ showPlatformSnackbar({
   dynamic action,
   fluent.InfoBarSeverity severity = fluent.InfoBarSeverity.info,
 }) {
-  if (Platform.isAndroid) {
+  if (Platform.isAndroid || Platform.isIOS) {
     return material.ScaffoldMessenger.of(context).showSnackBar(
       material.SnackBar(
         content: Text("$title $content"),
@@ -36,7 +36,7 @@ showPlatformDialog({
   required List<Widget>? actions,
   double? maxWidth,
 }) {
-  if (Platform.isAndroid) {
+  if (Platform.isAndroid || Platform.isIOS) {
     return material.showDialog(
       context: context,
       builder: (context) {

@@ -32,7 +32,7 @@ class _InfiniteScrollerState extends State<InfiniteScroller> {
 
   @override
   void initState() {
-    if (!Platform.isAndroid && widget.refreshOnStart) {
+    if (!Platform.isAndroid && !Platform.isIOS && widget.refreshOnStart) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         widget.onRefresh();
       });
@@ -55,7 +55,7 @@ class _InfiniteScrollerState extends State<InfiniteScroller> {
     }
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return EasyRefresh(
       controller: widget.easyRefreshController,
       onRefresh: widget.onRefresh,
@@ -90,7 +90,7 @@ class _InfiniteScrollerState extends State<InfiniteScroller> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

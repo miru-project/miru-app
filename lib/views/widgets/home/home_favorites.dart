@@ -32,7 +32,7 @@ class _HomeFavoritesState extends State<HomeFavorites> {
       child: HorizontalList(
         title: ExtensionUtils.typeToString(widget.type),
         onClickMore: () {
-          if (Platform.isAndroid) {
+          if (Platform.isAndroid || Platform.isIOS) {
             Get.to(FavoritesPage(type: widget.type));
           } else {
             router.push(

@@ -18,7 +18,7 @@ class FavoritesPage extends fluent.StatefulWidget {
 }
 
 class _FavoritesPageState extends fluent.State<FavoritesPage> {
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -166,7 +166,7 @@ class _FavoritesPageState extends fluent.State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

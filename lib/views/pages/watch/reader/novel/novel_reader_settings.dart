@@ -16,7 +16,7 @@ class NovelReaderSettings extends StatefulWidget {
 class _NovelReaderSettingsState extends State<NovelReaderSettings> {
   late final NovelController _c = Get.find<NovelController>(tag: widget.tag);
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -70,7 +70,7 @@ class _NovelReaderSettingsState extends State<NovelReaderSettings> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

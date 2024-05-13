@@ -21,7 +21,7 @@ class DetailContinuePlay extends StatefulWidget {
 class _DetailContinuePlayState extends State<DetailContinuePlay> {
   late DetailPageController c = Get.find<DetailPageController>(tag: widget.tag);
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Obx(() {
       late String noEpisodesString;
       late String watchNowString;
@@ -148,7 +148,7 @@ class _DetailContinuePlayState extends State<DetailContinuePlay> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

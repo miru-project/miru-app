@@ -54,7 +54,7 @@ void main(List<String> args) async {
     ExtensionUtils.ensureInitialized();
     MediaKit.ensureInitialized();
 
-    if (!Platform.isAndroid) {
+    if (!Platform.isAndroid && !Platform.isIOS) {
       await windowManager.ensureInitialized();
       final sizeArr = MiruStorage.getSetting(SettingKey.windowSize).split(",");
       final size = Size(double.parse(sizeArr[0]), double.parse(sizeArr[1]));
@@ -149,7 +149,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildMobileMain,
+      mobileBuilder: _buildMobileMain,
       desktopBuilder: _buildDesktopMain,
     );
   }

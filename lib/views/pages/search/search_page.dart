@@ -36,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
-  Widget _buildAndroidSearch(BuildContext context) {
+  Widget _buildMobileSearch(BuildContext context) {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -267,7 +267,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroidSearch,
+      mobileBuilder: _buildMobileSearch,
       desktopBuilder: _buildDesktopSearch,
     );
   }

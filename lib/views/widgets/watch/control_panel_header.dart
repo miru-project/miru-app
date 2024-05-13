@@ -30,7 +30,7 @@ class _ControlPanelHeaderState<T extends ReaderController>
   final fluent.FlyoutController _settingFlayoutcontroller =
       fluent.FlyoutController();
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return SafeArea(
       child: Container(
         height: 60,
@@ -147,7 +147,7 @@ class _ControlPanelHeaderState<T extends ReaderController>
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

@@ -47,7 +47,7 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
     ),
   };
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Container(
       color: ThemeData.dark().colorScheme.background,
       child: DefaultTabController(
@@ -141,7 +141,7 @@ class _VideoPlayerSidebarState extends State<VideoPlayerSidebar> {
       },
     );
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }
@@ -530,7 +530,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       children: [
@@ -791,7 +791,7 @@ class _SideBarSettingsState extends State<_SideBarSettings> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

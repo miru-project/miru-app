@@ -11,19 +11,19 @@ class PlatformButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onPressed;
 
-  Widget _builaAndroidButton(BuildContext context) {
+  Widget _buildMobileButton(BuildContext context) {
     return ElevatedButton(onPressed: onPressed, child: child);
   }
 
-  Widget _builaDesktopButton(BuildContext context) {
+  Widget _buildDesktopButton(BuildContext context) {
     return fluent.Button(onPressed: onPressed, child: child);
   }
 
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _builaAndroidButton,
-      desktopBuilder: _builaDesktopButton,
+      mobileBuilder: _buildMobileButton,
+      desktopBuilder: _buildDesktopButton,
     );
   }
 }
@@ -37,19 +37,19 @@ class PlatformFilledButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onPressed;
 
-  Widget _builaAndroidButton(BuildContext context) {
+  Widget _buildMobileButton(BuildContext context) {
     return FilledButton(onPressed: onPressed, child: child);
   }
 
-  Widget _builaDesktopButton(BuildContext context) {
+  Widget _buildDesktopButton(BuildContext context) {
     return fluent.FilledButton(onPressed: onPressed, child: child);
   }
 
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _builaAndroidButton,
-      desktopBuilder: _builaDesktopButton,
+      mobileBuilder: _buildMobileButton,
+      desktopBuilder: _buildDesktopButton,
     );
   }
 }
@@ -63,19 +63,19 @@ class PlatformTextButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onPressed;
 
-  Widget _builaAndroidButton(BuildContext context) {
+  Widget _buildMobileButton(BuildContext context) {
     return TextButton(onPressed: onPressed, child: child);
   }
 
-  Widget _builaDesktopButton(BuildContext context) {
+  Widget _buildDesktopButton(BuildContext context) {
     return fluent.HyperlinkButton(onPressed: onPressed, child: child);
   }
 
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _builaAndroidButton,
-      desktopBuilder: _builaDesktopButton,
+      mobileBuilder: _buildMobileButton,
+      desktopBuilder: _buildDesktopButton,
     );
   }
 }
@@ -89,19 +89,19 @@ class PlatformIconButton extends StatelessWidget {
   final Widget icon;
   final VoidCallback? onPressed;
 
-  Widget _builaAndroidButton(BuildContext context) {
+  Widget _buildMobileButton(BuildContext context) {
     return IconButton(onPressed: onPressed, icon: icon);
   }
 
-  Widget _builaDesktopButton(BuildContext context) {
+  Widget _buildDesktopButton(BuildContext context) {
     return fluent.IconButton(onPressed: onPressed, icon: icon);
   }
 
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _builaAndroidButton,
-      desktopBuilder: _builaDesktopButton,
+      mobileBuilder: _buildMobileButton,
+      desktopBuilder: _buildDesktopButton,
     );
   }
 }
@@ -118,7 +118,7 @@ class PlatformToggleButton extends fluent.StatelessWidget {
   final void Function(bool)? onChanged;
   final String text;
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return TextButton(
       onPressed: () => onChanged?.call(!checked),
       style: ButtonStyle(
@@ -152,7 +152,7 @@ class PlatformToggleButton extends fluent.StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

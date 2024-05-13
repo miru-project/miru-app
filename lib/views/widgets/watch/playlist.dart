@@ -16,7 +16,7 @@ class PlayList extends fluent.StatelessWidget {
   final int selectIndex;
   final Function(int) onChange;
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       color: Theme.of(context).colorScheme.background,
@@ -58,7 +58,7 @@ class PlayList extends fluent.StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

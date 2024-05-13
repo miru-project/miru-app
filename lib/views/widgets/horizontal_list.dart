@@ -36,7 +36,7 @@ class _HorizontalListState extends State<HorizontalList> {
     );
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -128,7 +128,7 @@ class _HorizontalListState extends State<HorizontalList> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

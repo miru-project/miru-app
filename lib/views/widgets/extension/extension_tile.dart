@@ -24,7 +24,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
   final fluent.FlyoutController moreFlyoutController =
       fluent.FlyoutController();
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return ListTile(
       leading: SizedBox(
         width: 35,
@@ -194,7 +194,7 @@ class _ExtensionTileState extends State<ExtensionTile> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }

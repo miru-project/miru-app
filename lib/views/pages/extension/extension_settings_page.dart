@@ -67,7 +67,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
               value,
             );
             setting.value = value;
-            if (Platform.isAndroid) {
+            if (Platform.isAndroid || Platform.isIOS) {
               // 如果是安卓，需要触发一下更新
               setState(() {});
             }
@@ -76,7 +76,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
             return setting.value ?? setting.defaultValue;
           },
           buildSubtitle: () {
-            if (Platform.isAndroid) {
+            if (Platform.isAndroid || Platform.isIOS) {
               return '${setting.value ?? setting.defaultValue}\n${setting.description ?? ''}';
             }
             return setting.description ?? '';
@@ -448,7 +448,7 @@ class _ExtensionSettingsPageState extends State<ExtensionSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildAndroid,
       desktopBuilder: _buildDesktop,
     );
   }

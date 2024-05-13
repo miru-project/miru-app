@@ -42,7 +42,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
     super.dispose();
   }
 
-  Widget _buildAndroid(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return ListTile(
       leading: widget.icon,
       title: Text(widget.title),
@@ -95,7 +95,7 @@ class _SettingsIntpuTileState extends fluent.State<SettingsIntpuTile> {
   @override
   Widget build(BuildContext context) {
     return PlatformBuildWidget(
-      androidBuilder: _buildAndroid,
+      mobileBuilder: _buildMobile,
       desktopBuilder: _buildDesktop,
     );
   }
