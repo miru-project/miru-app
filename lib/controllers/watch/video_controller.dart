@@ -485,18 +485,20 @@ class VideoPlayerController extends GetxController {
   @override
   void onClose() {
     if (Platform.isAndroid) {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.edgeToEdge,
-      );
       // 如果是平板则不改变
       if (LayoutUtils.isTablet) {
-        return;
+        SystemChrome.setPreferredOrientations([]);
       }
       // 切换回竖屏
+      else{
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
+      }
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.edgeToEdge,
+      );
     }
 
     if (MiruStorage.getSetting(SettingKey.autoTracking) && anilistID != "") {
