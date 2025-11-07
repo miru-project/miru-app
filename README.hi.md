@@ -1,4 +1,4 @@
-[English](README.md) | [简体中文](README-zh.md) | [日本語](README-ja.md) | [うちなーぐच](README-ryu.md) | [Русский](README-ru.md) | [Беларуская](README-be.md) | [Українська](README-uk.md) | हिन्दी
+[English](README.md) | [简体中文](README-zh.md) | [日本語](README-ja.md) | [うちなーぐच](README-ryu.md) | [Русский](README-ru.md) | [Беларуская](README-be.md) | [Українська](README-uk.md) | **हिन्दी**
 
 <div align="center">
   <img width="300" src="./assets/icon/logo.png" alt="Miru 看板娘"/>
