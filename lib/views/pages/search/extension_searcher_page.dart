@@ -81,9 +81,10 @@ class _ExtensionSearcherPageState extends fluent.State<ExtensionSearcherPage> {
       setState(() {});
       late List<ExtensionListItem> data;
       if (_keyWord.isEmpty && _filters == null) {
-        data = await _runtime.latest(_page);
+        data = await _runtime.latest(_page, currentContext);
       } else {
-        data = await _runtime.search(_keyWord, _page, filter: _selectedFilters);
+        data = await _runtime.search(_keyWord, _page, currentContext,
+            filter: _selectedFilters);
       }
       if (data.isEmpty && mounted) {
         showPlatformSnackbar(

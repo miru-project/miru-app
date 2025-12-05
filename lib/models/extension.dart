@@ -22,10 +22,12 @@ class Extension {
     required this.type,
     required this.webSite,
     required this.name,
+    required this.tags,
     this.nsfw = false,
     this.icon,
     this.url,
     this.description,
+    this.api,
   });
 
   final bool nsfw;
@@ -37,10 +39,11 @@ class Extension {
   final ExtensionType type;
   final String webSite;
   final String name;
-  String? icon;
-  String? url;
-  String? description;
-
+  final String? icon;
+  final String? url;
+  final String? description;
+  final int? api;
+  final List<String> tags;
   factory Extension.fromJson(Map<String, dynamic> json) =>
       _$ExtensionFromJson(json);
 
@@ -186,11 +189,12 @@ class ExtensionMangaWatch {
   ExtensionMangaWatch({
     required this.urls,
     this.headers,
+    this.needReconstruct,
   });
 
   final List<String> urls;
   late Map<String, String>? headers;
-
+  late bool? needReconstruct;
   factory ExtensionMangaWatch.fromJson(Map<String, dynamic> json) =>
       _$ExtensionMangaWatchFromJson(json);
 
@@ -260,4 +264,44 @@ class ExtensionNetworkLog {
       _$ExtensionNetworkLogFromJson(json);
 
   Map<String, dynamic> toJson() => _$ExtensionNetworkLogToJson(this);
+}
+
+@JsonSerializable()
+class ReconstructPicVertex {
+  final double sx1;
+  final double sy1;
+  final double sx2;
+  final double sy2;
+  final double dx1;
+  final double dy1;
+  final double dx2;
+  final double dy2;
+
+  ReconstructPicVertex({
+    required this.sx1,
+    required this.sy1,
+    required this.sx2,
+    required this.sy2,
+    required this.dx1,
+    required this.dy1,
+    required this.dx2,
+    required this.dy2,
+  });
+
+  factory ReconstructPicVertex.fromJson(Map<String, dynamic> json) {
+    return ReconstructPicVertex(
+      sx1: json['sx1'].toDouble(),
+      sy1: json['sy1'].toDouble(),
+      sx2: json['sx2'].toDouble(),
+      sy2: json['sy2'].toDouble(),
+      dx1: json['dx1'].toDouble(),
+      dy1: json['dy1'].toDouble(),
+      dx2: json['dx2'].toDouble(),
+      dy2: json['dy2'].toDouble(),
+    );
+  }
+  @override
+  String toString() {
+    return 'ReconstructPicVertex(sx1: $sx1, sy1: $sy1, sx2: $sx2, sy2: $sy2, dx1: $dx1, dy1: $dy1, dx2: $dx2, dy2: $dy2)';
+  }
 }

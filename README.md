@@ -53,6 +53,7 @@ Please refer to the [Flutter Official Documentation](https://flutter.dev/docs/ge
 
 ```bash
 flutter pub get
+
 ```
 
 ### Run

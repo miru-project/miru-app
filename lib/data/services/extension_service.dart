@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
 import 'package:flutter_js/extensions/fetch.dart';
 import 'package:get/get.dart';
@@ -28,16 +29,9 @@ class ExtensionService {
   late JsBridge jsBridge;
   static Map<dynamic, dynamic> evalMap = {};
   String className = '';
-  bool isinit = false;
   initRuntime(Extension ext) async {
     extension = ext;
-    className = extension.package.replaceAll('.', '');
-    // example: if the package name is com.example.extension the class name will be comexampleextension
-    // but if  the package name is 9anime.to the class name will be animetoRenamed
 
-    if (!className.isAlphabetOnly) {
-      className = "${className.replaceAll(RegExp(r'[^a-zA-z]'), '')}Renamed";
-    }
     // 读取文件
     final file =
         File('${ExtensionUtils.extensionsDir}/${extension.package}.js');
@@ -55,7 +49,20 @@ class ExtensionService {
     }
     runtime.enableFetch();
     runtime.enableHandlePromises();
+    className = extension.package.replaceAll('.', '');
+    // example: if the package name is com.example.extension the class name will be comexampleextension
+    // but if  the package name is 9anime.to the class name will be animetoRenamed
 
+    if (!className.isAlphabetOnly) {
+      className = "${className.replaceAll(RegExp(r'[^a-zA-z]'), '')}Renamed";
+    }
+    initService();
+    // 初始化运行扩展
+    await initRunExtension(content);
+    return this;
+  }
+
+  void initService() {
     jsLog(dynamic args) {
       logger.info(args[0]);
       ExtensionUtils.addLog(
@@ -254,6 +261,7 @@ class ExtensionService {
         'querySelectorAll', (dynamic args) => jsQuerySelectorAll(args));
     // css 选择器
     runtime.onMessage('querySelector', (arg) => jsQuerySelector(arg));
+
     if (Platform.isLinux) {
       handleDartBridge(String channelName, Function fn) {
         jsBridge.setHandler(channelName, (message) async {
@@ -275,15 +283,13 @@ class ExtensionService {
       handleDartBridge('registerSetting$className', jsRegisterSetting);
       handleDartBridge('getSetting$className', jsGetMessage);
     }
-    // 初始化运行扩展
-    await _initRunExtension(content);
-    return this;
   }
 
-  _initRunExtension(String extScript) async {
+  initRunExtension(String extScript) async {
     final cryptoJs = await rootBundle.loadString('assets/js/CryptoJS.min.js');
     final jsencrypt = await rootBundle.loadString('assets/js/jsencrypt.min.js');
     final md5 = await rootBundle.loadString('assets/js/md5.min.js');
+
     runtime.evaluate(Platform.isLinux
         ? '''
 $cryptoJs
@@ -631,7 +637,6 @@ async function stringify(callback) {
         sendMessage("cleanSettings", JSON.stringify([extension.settingKeys]));
       });
     ''');
-    isinit = true;
   }
 
   // 清理 cookie
@@ -641,7 +646,7 @@ async function stringify(callback) {
 
   /// 添加 cookie
   /// key=value; key=value
-  setCookie(String cookies) async {
+  Future<void> setCookie(String cookies) async {
     await MiruRequest.setCookie(cookies, extension.webSite);
   }
 
@@ -663,7 +668,7 @@ async function stringify(callback) {
     }
   }
 
-  Future<Map<String, String>> get _defaultHeaders async {
+  Future<Map<String, String>> get defaultHeaders async {
     return {
       "Referer": _cuurentRequestUrl,
       "User-Agent": MiruStorage.getUASetting(),
@@ -671,7 +676,8 @@ async function stringify(callback) {
     };
   }
 
-  Future<List<ExtensionListItem>> latest(int page) async {
+  Future<List<ExtensionListItem>> latest(
+      int page, material.BuildContext context) async {
     return runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync(Platform.isLinux
@@ -684,7 +690,7 @@ async function stringify(callback) {
         return ExtensionListItem.fromJson(e);
       }).toList();
       for (var element in result) {
-        element.headers ??= await _defaultHeaders;
+        element.headers ??= await defaultHeaders;
       }
       return result;
     });
@@ -692,7 +698,8 @@ async function stringify(callback) {
 
   Future<List<ExtensionListItem>> search(
     String kw,
-    int page, {
+    int page,
+    material.BuildContext context, {
     Map<String, List<String>>? filter,
   }) async {
     return runExtension(() async {
@@ -706,7 +713,7 @@ async function stringify(callback) {
         return ExtensionListItem.fromJson(e);
       }).toList();
       for (var element in result) {
-        element.headers ??= await _defaultHeaders;
+        element.headers ??= await defaultHeaders;
       }
       return result;
     });
@@ -739,7 +746,8 @@ async function stringify(callback) {
     });
   }
 
-  Future<ExtensionDetail> detail(String url) async {
+  Future<ExtensionDetail> detail(
+      String url, material.BuildContext context) async {
     return runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync(Platform.isLinux
@@ -748,12 +756,12 @@ async function stringify(callback) {
       );
       final result =
           ExtensionDetail.fromJson(jsonDecode(jsResult.stringResult));
-      result.headers ??= await _defaultHeaders;
+      result.headers ??= await defaultHeaders;
       return result;
     });
   }
 
-  Future<Object?> watch(String url) async {
+  Future<Object?> watch(String url, material.BuildContext context) async {
     return runExtension(() async {
       final jsResult = await runtime.handlePromise(
         await runtime.evaluateAsync(Platform.isLinux
@@ -765,11 +773,11 @@ async function stringify(callback) {
       switch (extension.type) {
         case ExtensionType.bangumi:
           final result = ExtensionBangumiWatch.fromJson(data);
-          result.headers ??= await _defaultHeaders;
+          result.headers ??= await defaultHeaders;
           return result;
         case ExtensionType.manga:
           final result = ExtensionMangaWatch.fromJson(data);
-          result.headers ??= await _defaultHeaders;
+          result.headers ??= await defaultHeaders;
           return result;
         default:
           return ExtensionFikushonWatch.fromJson(data);
@@ -779,10 +787,11 @@ async function stringify(callback) {
 
   Future<String> checkUpdate(url) async {
     return runExtension(() async {
-      final jsResult = await runtime.handlePromise(
-        await runtime.evaluateAsync(
-            'stringify(()=>${className}Instance.checkUpdate("$url"))'),
-      );
+      final jsResult = await runtime.handlePromise(await runtime.evaluateAsync(
+        Platform.isLinux
+            ? '${className}Instance.checkUpdate("$url")'
+            : 'stringify(()=>${className}Instance.checkUpdate("$url"))',
+      ));
       return jsResult.stringResult;
     });
   }

@@ -135,6 +135,7 @@ class MiruStorage {
     await _initSetting(SettingKey.subtitleBackgroundColor, Colors.black.value);
     await _initSetting(SettingKey.subtitleBackgroundOpacity, 0.5);
     await _initSetting(SettingKey.subtitleTextAlign, TextAlign.center.index);
+    await _initSetting(SettingKey.extensionData, {});
   }
 
   static _initSetting(String key, dynamic value) async {
@@ -145,6 +146,18 @@ class MiruStorage {
 
   static setSetting(String key, dynamic value) async {
     await settings.put(key, value);
+  }
+
+  static setExtensionData(String packageName, String key, dynamic value) async {
+    final data = settings.get(SettingKey.extensionData);
+    data[packageName] ??= {};
+    data[packageName][key] = value;
+    await settings.put(SettingKey.extensionData, data);
+  }
+
+  static getExtensionData(String packageName, String key) {
+    final data = settings.get(SettingKey.extensionData);
+    return data[packageName][key];
   }
 
   static getSetting(String key) {
@@ -201,4 +214,5 @@ class SettingKey {
   static const subtitleTextAlign = "SubtitleTextAlign";
   static const subtitleLastLanguageSelected = "SubtitleLastLanguageSelected";
   static const subtitleLastTitleSelected = "SubtitleLastTitleSelected";
+  static const extensionData = "ExtensionData";
 }

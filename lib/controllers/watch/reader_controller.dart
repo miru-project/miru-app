@@ -6,6 +6,7 @@ import 'package:miru_app/models/history.dart';
 import 'package:miru_app/controllers/home_controller.dart';
 import 'package:miru_app/data/services/database_service.dart';
 import 'package:miru_app/data/services/extension_service.dart';
+import 'package:miru_app/router/router.dart';
 
 class ReaderController<T> extends GetxController {
   final String title;
@@ -46,7 +47,8 @@ class ReaderController<T> extends GetxController {
     try {
       error.value = '';
       watchData.value = null;
-      watchData.value = await runtime.watch(cuurentPlayUrl) as T;
+      watchData.value =
+          await runtime.watch(cuurentPlayUrl, currentContext) as T;
     } catch (e) {
       error.value = e.toString();
     }

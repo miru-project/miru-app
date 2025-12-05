@@ -201,7 +201,7 @@ class DetailPageController extends GetxController {
 
   getRemoteDeatil() async {
     try {
-      detail = await runtime.value!.detail(url);
+      detail = await runtime.value!.detail(url, currentContext);
       await DatabaseService.putMiruDetail(
         package,
         url,
@@ -367,8 +367,8 @@ class DetailPageController extends GetxController {
         );
         late ExtensionBangumiWatch watchData;
         try {
-          watchData = await runtime.value!.watch(urls[index].url)
-              as ExtensionBangumiWatch;
+          watchData = await runtime.value!
+              .watch(urls[index].url, currentContext) as ExtensionBangumiWatch;
         } catch (e) {
           showPlatformSnackbar(
             context: currentContext,

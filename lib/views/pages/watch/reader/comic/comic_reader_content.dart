@@ -149,6 +149,10 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                             fit: BoxFit.fitWidth,
                             placeholder: _buildPlaceholder(context),
                             headers: _c.watchData.value?.headers,
+                            needReconstruct:
+                                _c.watchData.value?.needReconstruct ?? false,
+                            runtime: _c.runtime,
+                            imageIndex: index,
                           );
                         },
                         itemCount: images.length,
@@ -180,6 +184,10 @@ class _ComicReaderContentState extends State<ComicReaderContent> {
                       fit: BoxFit.contain,
                       placeholder: _buildPlaceholder(context),
                       headers: _c.watchData.value?.headers,
+                      needReconstruct:
+                          _c.watchData.value?.needReconstruct ?? false,
+                      imageIndex: index,
+                      runtime: _c.runtime,
                     ),
                   );
                 },

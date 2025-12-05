@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/utils/i18n.dart';
+import 'package:miru_app/utils/log.dart';
 import 'package:miru_app/utils/miru_storage.dart';
 import 'package:miru_app/views/widgets/cache_network_image.dart';
 import 'package:miru_app/views/widgets/platform_widget.dart';
@@ -18,6 +19,7 @@ class ExtensionCard extends StatefulWidget {
     required this.lang,
     required this.nsfw,
     required this.type,
+    required this.tags,
   });
   final String? icon;
   final String name;
@@ -26,7 +28,7 @@ class ExtensionCard extends StatefulWidget {
   final String lang;
   final ExtensionType type;
   final bool nsfw;
-
+  final List<String> tags;
   @override
   State<ExtensionCard> createState() => _ExtensionCardState();
 }
@@ -55,7 +57,7 @@ class _ExtensionCardState extends State<ExtensionCard> {
     try {
       final url = MiruStorage.getSetting(SettingKey.miruRepoUrl) +
           "/repo/${widget.package}.js";
-      debugPrint(url);
+      logger.info(url);
       await ExtensionUtils.install(url, context);
       isLoading = false;
       isInstall = true;

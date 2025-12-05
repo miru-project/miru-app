@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:miru_app/models/extension.dart';
+import 'package:miru_app/router/router.dart';
 import 'package:miru_app/utils/extension.dart';
 import 'package:miru_app/data/services/extension_service.dart';
 import 'package:miru_app/utils/miru_storage.dart';
@@ -54,9 +55,9 @@ class SearchPageController extends GetxController {
       Future<List<ExtensionListItem>> resultFuture;
 
       if (search.value.isEmpty) {
-        resultFuture = element.runitme.latest(1);
+        resultFuture = element.runitme.latest(1, currentContext);
       } else {
-        resultFuture = element.runitme.search(search.value, 1);
+        resultFuture = element.runitme.search(search.value, 1, currentContext);
       }
 
       futures.add(

@@ -117,6 +117,7 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
             package: e['package'],
             lang: e['lang'],
             nsfw: e['nsfw'] == 'true',
+            tags: e['tags'] == null ? [] : e['tags'].toLowerCase().split(','),
             type: ExtensionType.values.firstWhere(
               (element) => element.toString() == 'ExtensionType.${e['type']}',
             )))
@@ -124,7 +125,8 @@ class _ExtensionRepoPageState extends State<ExtensionRepoPage> {
     // 过滤
     if (c.search.value.isNotEmpty) {
       extensionCards.removeWhere((element) =>
-          !element.name.toLowerCase().contains(c.search.value.toLowerCase()));
+          !element.name.toLowerCase().contains(c.search.value.toLowerCase()) &&
+          !element.tags.contains(c.search.value.toLowerCase()));
     }
     if (c.searchType.value != null) {
       extensionCards.removeWhere(

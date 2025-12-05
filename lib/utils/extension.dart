@@ -5,6 +5,7 @@ import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:miru_app/data/services/extension_service_api_2.dart';
 import 'package:miru_app/models/extension.dart';
 import 'package:miru_app/controllers/extension/extension_controller.dart';
 import 'package:miru_app/controllers/search_controller.dart';
@@ -108,7 +109,7 @@ class ExtensionUtils {
       final savePath = path.join(extensionsDir, '${ext.package}.js');
       // 保存文件
       File(savePath).writeAsStringSync(script);
-      runtimes[ext.package] = await ExtensionService().initRuntime(ext);
+      runtimes[ext.package] = await _extensionApi(ext);
       _reloadPage();
     } catch (e) {
       if (context.mounted) {
@@ -140,10 +141,19 @@ class ExtensionUtils {
         if (path.basenameWithoutExtension(p) != ext.package) {
           throw Exception("Inconsistency between file name and package name");
         }
-        runtimes[ext.package] = await ExtensionService().initRuntime(ext);
+        runtimes[ext.package] = await _extensionApi(ext);
       } catch (e) {
         extensionErrorMap[p] = e.toString();
       }
+    }
+  }
+
+  static _extensionApi(Extension ext) async {
+    switch (ext.api) {
+      case 1:
+        return await ExtensionService().initRuntime(ext);
+      case 2:
+        return await ExtensionServiceApi2().initRuntime(ext);
     }
   }
 
@@ -234,6 +244,7 @@ class ExtensionUtils {
   // @package      moe.enime
   // @type         bangumi
   // @webSite      https://api.enime.moe/
+  // @api          1
   // @description  Enime API is an open source API service for developers to access anime info (as well as their video sources) https://github.com/Enime-Project/api.enime.moe
   // ==/MiruExtension==
 
@@ -246,6 +257,8 @@ class ExtensionUtils {
       result[match.group(1)!] = match.group(2);
     }
     result['nsfw'] = result['nsfw'] == "true";
+    result['api'] = int.parse(result['api'] ?? "1");
+    result['tags'] = (result['tags'] ?? '').split(',');
     return Extension.fromJson(result);
   }
 }
